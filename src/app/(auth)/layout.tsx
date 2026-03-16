@@ -1,7 +1,10 @@
 import { Audiowide, Montserrat } from 'next/font/google'
+import { Toaster } from 'sonner'
 
 import type { Metadata } from 'next'
+
 import '../globals.css'
+import Image from 'next/image'
 
 const audiowide = Audiowide({
     weight: ['400'],
@@ -27,11 +30,20 @@ export default function RootLayout({
         <html lang="en">
             <body className={`${audiowide.variable} ${montserrat.variable} antialiased`}>
                 <main className="h-svh flex items-center justify-center">
-                    <section className="flex p-2 border border-primary rounded-2xl min-h-[70vh] w-full max-w-5xl">
+                    <section className="flex p-2 border border-primary rounded-2xl min-h-[70vh] max-h-125 w-full max-w-5xl">
                         <div className="flex-1 p-10">{children}</div>
-                        <div className="flex-1 rounded-xl bg-primary"></div>
+                        <div className="flex-1 rounded-xl bg-primary">
+                            <Image
+                                src={'/assets/image.png'}
+                                alt={'Fantasy Football'}
+                                width={500}
+                                height={600}
+                                className="size-full rounded-xl object-cover"
+                            />
+                        </div>
                     </section>
                 </main>
+                <Toaster richColors position="top-right" />
             </body>
         </html>
     )

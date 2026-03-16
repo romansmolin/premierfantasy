@@ -1,8 +1,9 @@
 export interface User {
     id: string
+    name: string
     email: string
-    username: string
-    password: string
+    emailVerified: boolean
+    image: string | null
     createdAt: Date
     updatedAt: Date
 }
