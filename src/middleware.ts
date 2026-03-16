@@ -9,10 +9,10 @@ export function middleware(request: NextRequest) {
     const hasSession = !!sessionCookie?.value
 
     const isProtectedRoute = pathname.startsWith('/dashboard') || pathname.startsWith('/team-builder')
-    const isAuthRoute = pathname.startsWith('/sign-up')
+    const isAuthRoute = pathname.startsWith('/sign-up') || pathname.startsWith('/sign-in')
 
     if (isProtectedRoute && !hasSession) {
-        return NextResponse.redirect(new URL('/sign-up', request.url))
+        return NextResponse.redirect(new URL('/sign-in', request.url))
     }
 
     if (isAuthRoute && hasSession) {

@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -9,6 +10,7 @@ import { authClient } from '@/shared/lib/auth-client'
 import { signUpFormSchema } from './sign-up.schema'
 
 export const useSignUpForm = () => {
+    const router = useRouter()
     const [agreeToTerms, setAgreeToTerms] = useState(false)
 
     const form = useForm<z.infer<typeof signUpFormSchema>>({
@@ -37,7 +39,7 @@ export const useSignUpForm = () => {
             console.error('Error while signing up: ', error)
         }
 
-        return data
+        router.push('/dashboard')
     }
 
     return {
