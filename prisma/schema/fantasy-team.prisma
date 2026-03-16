@@ -1,0 +1,54 @@
+model FantasyTeam {
+    id            String @id @default(uuid())
+    userId        String @map("user_id")
+    competitionId String @map("competition_id")
+    name          String
+    budgetTotal   Float  @default(100) @map("budget_total")
+    budgetLeft    Float  @map("budget_left")
+
+    createdAt DateTime @default(now()) @map("created_at")
+
+    user        User        @relation(fields: [userId], references: [id])
+    competition Competition @relation(fields: [competitionId], references: [id])
+
+    players FantasyTeamPlayer[]
+    points  GameweekPoints[]
+
+    @@unique([userId, competitionId])
+    @@index([userId])
+    @@index([competitionId])
+    @@map("fantasy_teams")
+}
+
+model FantasyTeamPlayer {
+    id            String         @id @default(uuid())
+    fantasyTeamId String         @map("fantasy_team_id")
+    playerId      String         @map("player_id")
+    position      PlayerPosition
+    purchasePrice Float          @map("purchase_price")
+    createdAt     DateTime       @default(now()) @map("created_at")
+
+    fantasyTeam FantasyTeam @relation(fields: [fantasyTeamId], references: [id], onDelete: Cascade)
+    player      Player      @relation(fields: [playerId], references: [id])
+
+    @@unique([fantasyTeamId, playerId])
+    @@index([fantasyTeamId])
+    @@index([playerId])
+    @@map("fantasy_team_players")
+}
+
+model GameweekPoints {
+    id            String   @id @default(uuid())
+    fantasyTeamId String   @map("fantasy_team_id")
+    gameweekId    String   @map("gameweek_id")
+    points        Int      @default(0)
+    createdAt     DateTime @default(now()) @map("created_at")
+
+    fantasyTeam FantasyTeam @relation(fields: [fantasyTeamId], references: [id], onDelete: Cascade)
+    gameweek    Gameweek    @relation(fields: [gameweekId], references: [id])
+
+    @@unique([fantasyTeamId, gameweekId])
+    @@index([fantasyTeamId])
+    @@index([gameweekId])
+    @@map("gameweek_points")
+}
