@@ -16,9 +16,9 @@ export class HttpClient implements IHttpClient {
         }
     }
 
-    constructor() {
+    constructor(baseURL: string) {
         this.client = axios.create({
-            baseURL: process.env.NEXT_PUBLIC_APP_URL,
+            baseURL,
             headers: { 'Content-Type': 'application/json' },
         })
     }
@@ -44,4 +44,6 @@ export class HttpClient implements IHttpClient {
     }
 }
 
-export const httpClient = new HttpClient()
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+
+export const httpClient = new HttpClient(baseUrl)

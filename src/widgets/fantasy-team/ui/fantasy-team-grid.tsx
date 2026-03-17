@@ -1,8 +1,12 @@
 'use client'
 
-import { FantasyTeamDialogOnboardingButton } from '@/features/fantasy-team'
+import { PlusSignCircleIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import Link from 'next/link'
 
 import { useFantasyTeams } from '@/entities/fantasy-team'
+
+import { Button } from '@/shared/ui/button'
 
 export const FantasyTeamGrid = () => {
     const { fantasyTeams } = useFantasyTeams()
@@ -16,7 +20,12 @@ export const FantasyTeamGrid = () => {
                         In order to join competitions you have to create your own fantasy team of 11 best
                         players
                     </p>
-                    <FantasyTeamDialogOnboardingButton />
+                    <Button size={'lg'}>
+                        <Link href={'/fantasy-team-builder'} className="flex gap-2 items-center">
+                            <HugeiconsIcon icon={PlusSignCircleIcon} />
+                            Create Fantasy Team
+                        </Link>
+                    </Button>
                 </div>
             </div>
         )

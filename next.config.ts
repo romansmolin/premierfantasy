@@ -1,8 +1,16 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactCompiler: true,
-};
+    reactCompiler: true,
+    serverExternalPackages: ['reflect-metadata'],
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'media.api-sports.io',
+            },
+        ],
+    },
+}
 
-export default nextConfig;
+export default nextConfig
