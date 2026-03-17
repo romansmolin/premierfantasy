@@ -1,27 +1,27 @@
-import { User } from '@/entities/user/model/user.types'
+import { IUser } from '@/entities/user/model/user.types'
 
 import { prisma } from '@/shared/lib/prisma'
 
 import { IUserRepository } from './user.repository.interface'
 
 export class UserRepository implements IUserRepository {
-    async findById(id: string): Promise<User | null> {
+    async findById(id: string): Promise<IUser | null> {
         return prisma.user.findUnique({ where: { id } })
     }
 
-    async findByEmail(email: string): Promise<User | null> {
+    async findByEmail(email: string): Promise<IUser | null> {
         return prisma.user.findUnique({ where: { email } })
     }
 
-    async findAll(): Promise<User[]> {
+    async findAll(): Promise<IUser[]> {
         return prisma.user.findMany()
     }
 
-    async create(data: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> {
+    async create(data: Omit<IUser, 'id' | 'createdAt' | 'updatedAt'>): Promise<IUser> {
         return prisma.user.create({ data })
     }
 
-    async update(id: string, data: Partial<User>): Promise<User> {
+    async update(id: string, data: Partial<IUser>): Promise<IUser> {
         return prisma.user.update({ where: { id }, data })
     }
 

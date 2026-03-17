@@ -1,0 +1,52 @@
+import { NextRequest, NextResponse } from 'next/server'
+
+import type { IFantasyTeamService } from '../service/fantasy-team.service.interface'
+
+export class FantasyTeamController {
+    private readonly fantasyTeamService
+
+    constructor(fantasyTeamService: IFantasyTeamService) {
+        this.fantasyTeamService = fantasyTeamService
+    }
+
+    async getAll() {
+        const teams = await this.fantasyTeamService.getAllFantasyTeams()
+
+        return NextResponse.json(teams)
+    }
+
+    async getById(id: string) {
+        const team = await this.fantasyTeamService.getFantasyTeam(id)
+
+        if (!team) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+        return NextResponse.json(team)
+    }
+
+    async getByUserId(userId: string) {
+        const teams = await this.fantasyTeamService.getFantasyTeamsByUser(userId)
+
+        return NextResponse.json(teams)
+    }
+
+    async create(req: NextRequest) {
+        const body = await req.json()
+        // validate with zod here
+        const team = await this.fantasyTeamService.createFantasyTeam(body)
+
+        return NextResponse.json(team, { status: 201 })
+    }
+
+    async update(req: NextRequest, id: string) {
+        const body = await req.json()
+        const team = await this.fantasyTeamService.updateFantasyTeam(id, body)
+
+        return NextResponse.json(team)
+    }
+
+    async delete(id: string) {
+        await this.fantasyTeamService.deleteFantasyTeam(id)
+
+        return NextResponse.json(null, { status: 204 })
+    }
+}

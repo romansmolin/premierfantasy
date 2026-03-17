@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { IUserService } from '../../service/user.service.interface'
+import { IUserService } from '../service/user.service.interface'
 
 export class UserController {
     private readonly userService

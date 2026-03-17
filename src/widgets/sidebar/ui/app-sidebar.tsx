@@ -14,9 +14,12 @@ import {
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
+import { UserCard } from '@/entities/user'
+
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -92,6 +95,10 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
                     </SidebarGroup>
                 ))}
             </SidebarContent>
+
+            <SidebarFooter>
+                <UserCard />
+            </SidebarFooter>
             <SidebarRail />
         </Sidebar>
     )
