@@ -8,5 +8,11 @@
  * 🟢 You can import this file directly.
  */
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const PlayerPosition = {
+    GK: 'GK',
+    DEF: 'DEF',
+    MID: 'MID',
+    FWD: 'FWD',
+} as const
+
+export type PlayerPosition = (typeof PlayerPosition)[keyof typeof PlayerPosition]

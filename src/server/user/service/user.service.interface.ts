@@ -1,7 +1,7 @@
-import type { IUser, IUserProfile } from '@/entities/user/model/user.types'
+import type { IUser } from '@/entities/user/model/user.types'
 
 export interface IUserService {
-    getUser(id: string): Promise<IUserProfile | null>
+    getUser(id: string): Promise<IUser | null>
     getAllUsers(): Promise<IUser[]>
     createUser(data: Omit<IUser, 'id' | 'createdAt' | 'updatedAt'>): Promise<IUser>
     updateUser(id: string, data: Partial<IUser>): Promise<IUser>

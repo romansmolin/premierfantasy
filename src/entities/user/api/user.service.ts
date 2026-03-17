@@ -1,7 +1,7 @@
 import { ApiError } from '@/shared/api/api-error'
 import { httpClient } from '@/shared/api/http-client'
 
-import { IUser, IUserProfile } from '../model/user.types'
+import type { IUser } from '../model/user.types'
 
 const BASE_URL = '/api/users'
 
@@ -14,9 +14,9 @@ export const userService = {
         }
     },
 
-    async getById(id: string | undefined): Promise<IUserProfile> {
+    async getById(id: string | undefined): Promise<IUser> {
         try {
-            return await httpClient.get<IUserProfile>(`${BASE_URL}/${id}`)
+            return await httpClient.get<IUser>(`${BASE_URL}/${id}`)
         } catch (error) {
             throw ApiError.isApiError(error) ? error : new ApiError(500, `Failed to fetch user ${id}`)
         }

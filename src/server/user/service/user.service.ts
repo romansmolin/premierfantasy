@@ -1,36 +1,18 @@
-import { IFantasyTeamRepository } from '@/server/fantasy-team/repository/fantasy-team.repository.interface'
+import type { IUser } from '@/entities/user/model/user.types'
 
-import type { IUser, IUserProfile } from '@/entities/user/model/user.types'
+import type { IUserRepository } from '../repository/user.repository.interface'
 
-import { IUserRepository } from '../repository/user.repository.interface'
-
-import { IUserService } from './user.service.interface'
+import type { IUserService } from './user.service.interface'
 
 export class UserService implements IUserService {
     private readonly userRepository
-    private readonly fantasyTeamRepository
 
-    constructor(userRepository: IUserRepository, fantasyTeamRepository: IFantasyTeamRepository) {
+    constructor(userRepository: IUserRepository) {
         this.userRepository = userRepository
-        this.fantasyTeamRepository = fantasyTeamRepository
     }
 
-    async getUser(id: string): Promise<IUserProfile | null> {
-        const [userInfoResult, fantasyTeamsResult] = await Promise.allSettled([
-            this.userRepository.findById(id),
-            this.fantasyTeamRepository.findByUserId(id),
-        ])
-
-        if (userInfoResult.status === 'rejected') {
-            throw new Error(`Failed to fetch user: ${userInfoResult.reason}`)
-        }
-
-        if (!userInfoResult.value) return null
-
-        return {
-            userInfo: userInfoResult.value,
-            userFantasyTeams: fantasyTeamsResult.status === 'fulfilled' ? fantasyTeamsResult.value : [],
-        }
+    async getUser(id: string): Promise<IUser | null> {
+        return this.userRepository.findById(id)
     }
 
     async getAllUsers(): Promise<IUser[]> {

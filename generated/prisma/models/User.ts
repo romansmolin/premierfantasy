@@ -196,6 +196,7 @@ export type UserWhereInput = {
     updatedAt?: Prisma.DateTimeFilter<'User'> | Date | string
     sessions?: Prisma.SessionListRelationFilter
     accounts?: Prisma.AccountListRelationFilter
+    fantasyTeams?: Prisma.FantasyTeamListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -208,6 +209,7 @@ export type UserOrderByWithRelationInput = {
     updatedAt?: Prisma.SortOrder
     sessions?: Prisma.SessionOrderByRelationAggregateInput
     accounts?: Prisma.AccountOrderByRelationAggregateInput
+    fantasyTeams?: Prisma.FantasyTeamOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<
@@ -224,6 +226,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
         updatedAt?: Prisma.DateTimeFilter<'User'> | Date | string
         sessions?: Prisma.SessionListRelationFilter
         accounts?: Prisma.AccountListRelationFilter
+        fantasyTeams?: Prisma.FantasyTeamListRelationFilter
     },
     'id' | 'email'
 >
@@ -264,6 +267,7 @@ export type UserCreateInput = {
     updatedAt?: Date | string
     sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
     accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+    fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -276,6 +280,7 @@ export type UserUncheckedCreateInput = {
     updatedAt?: Date | string
     sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+    fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -288,6 +293,7 @@ export type UserUpdateInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
     accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+    fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -300,6 +306,7 @@ export type UserUncheckedUpdateInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+    fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -332,6 +339,11 @@ export type UserUncheckedUpdateManyInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type UserScalarRelationFilter = {
+    is?: Prisma.UserWhereInput
+    isNot?: Prisma.UserWhereInput
+}
+
 export type UserCountOrderByAggregateInput = {
     id?: Prisma.SortOrder
     name?: Prisma.SortOrder
@@ -362,25 +374,30 @@ export type UserMinOrderByAggregateInput = {
     updatedAt?: Prisma.SortOrder
 }
 
-export type UserScalarRelationFilter = {
-    is?: Prisma.UserWhereInput
-    isNot?: Prisma.UserWhereInput
+export type UserCreateNestedOneWithoutFantasyTeamsInput = {
+    create?: Prisma.XOR<
+        Prisma.UserCreateWithoutFantasyTeamsInput,
+        Prisma.UserUncheckedCreateWithoutFantasyTeamsInput
+    >
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutFantasyTeamsInput
+    connect?: Prisma.UserWhereUniqueInput
 }
 
-export type StringFieldUpdateOperationsInput = {
-    set?: string
-}
-
-export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
+export type UserUpdateOneRequiredWithoutFantasyTeamsNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.UserCreateWithoutFantasyTeamsInput,
+        Prisma.UserUncheckedCreateWithoutFantasyTeamsInput
+    >
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutFantasyTeamsInput
+    upsert?: Prisma.UserUpsertWithoutFantasyTeamsInput
+    connect?: Prisma.UserWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.UserUpdateToOneWithWhereWithoutFantasyTeamsInput,
+            Prisma.UserUpdateWithoutFantasyTeamsInput
+        >,
+        Prisma.UserUncheckedUpdateWithoutFantasyTeamsInput
+    >
 }
 
 export type UserCreateNestedOneWithoutSessionsInput = {
@@ -423,6 +440,82 @@ export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
     >
 }
 
+export type UserCreateWithoutFantasyTeamsInput = {
+    id?: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+    accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFantasyTeamsInput = {
+    id?: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFantasyTeamsInput = {
+    where: Prisma.UserWhereUniqueInput
+    create: Prisma.XOR<
+        Prisma.UserCreateWithoutFantasyTeamsInput,
+        Prisma.UserUncheckedCreateWithoutFantasyTeamsInput
+    >
+}
+
+export type UserUpsertWithoutFantasyTeamsInput = {
+    update: Prisma.XOR<
+        Prisma.UserUpdateWithoutFantasyTeamsInput,
+        Prisma.UserUncheckedUpdateWithoutFantasyTeamsInput
+    >
+    create: Prisma.XOR<
+        Prisma.UserCreateWithoutFantasyTeamsInput,
+        Prisma.UserUncheckedCreateWithoutFantasyTeamsInput
+    >
+    where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFantasyTeamsInput = {
+    where?: Prisma.UserWhereInput
+    data: Prisma.XOR<
+        Prisma.UserUpdateWithoutFantasyTeamsInput,
+        Prisma.UserUncheckedUpdateWithoutFantasyTeamsInput
+    >
+}
+
+export type UserUpdateWithoutFantasyTeamsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    email?: Prisma.StringFieldUpdateOperationsInput | string
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+    accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFantasyTeamsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    email?: Prisma.StringFieldUpdateOperationsInput | string
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutSessionsInput = {
     id?: string
     name: string
@@ -432,6 +525,7 @@ export type UserCreateWithoutSessionsInput = {
     createdAt?: Date | string
     updatedAt?: Date | string
     accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+    fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -443,6 +537,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
     createdAt?: Date | string
     updatedAt?: Date | string
     accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+    fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -470,6 +565,7 @@ export type UserUpdateWithoutSessionsInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+    fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -481,6 +577,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+    fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -492,6 +589,7 @@ export type UserCreateWithoutAccountsInput = {
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+    fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -503,6 +601,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+    fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -530,6 +629,7 @@ export type UserUpdateWithoutAccountsInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+    fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -541,6 +641,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+    fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
 }
 
 /**
@@ -550,6 +651,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
 export type UserCountOutputType = {
     sessions: number
     accounts: number
+    fantasyTeams: number
 }
 
 export type UserCountOutputTypeSelect<
@@ -557,6 +659,7 @@ export type UserCountOutputTypeSelect<
 > = {
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
+    fantasyTeams?: boolean | UserCountOutputTypeCountFantasyTeamsArgs
 }
 
 /**
@@ -589,6 +692,15 @@ export type UserCountOutputTypeCountAccountsArgs<
     where?: Prisma.AccountWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFantasyTeamsArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    where?: Prisma.FantasyTeamWhereInput
+}
+
 export type UserSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
@@ -602,6 +714,7 @@ export type UserSelect<
         updatedAt?: boolean
         sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
         accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
+        fantasyTeams?: boolean | Prisma.User$fantasyTeamsArgs<ExtArgs>
         _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
     },
     ExtArgs['result']['user']
@@ -658,6 +771,7 @@ export type UserInclude<
 > = {
     sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
     accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
+    fantasyTeams?: boolean | Prisma.User$fantasyTeamsArgs<ExtArgs>
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<
@@ -674,6 +788,7 @@ export type $UserPayload<
     objects: {
         sessions: Prisma.$SessionPayload<ExtArgs>[]
         accounts: Prisma.$AccountPayload<ExtArgs>[]
+        fantasyTeams: Prisma.$FantasyTeamPayload<ExtArgs>[]
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -1204,6 +1319,17 @@ export interface Prisma__UserClient<
         | runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, 'findMany', GlobalOmitOptions>
         | Null
     >
+    fantasyTeams<T extends Prisma.User$fantasyTeamsArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.User$fantasyTeamsArgs<ExtArgs>>,
+    ): Prisma.PrismaPromise<
+        | runtime.Types.Result.GetResult<
+              Prisma.$FantasyTeamPayload<ExtArgs>,
+              T,
+              'findMany',
+              GlobalOmitOptions
+          >
+        | Null
+    >
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1711,6 +1837,32 @@ export type User$accountsArgs<
     take?: number
     skip?: number
     distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
+}
+
+/**
+ * User.fantasyTeams
+ */
+export type User$fantasyTeamsArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the FantasyTeam
+     */
+    select?: Prisma.FantasyTeamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FantasyTeam
+     */
+    omit?: Prisma.FantasyTeamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.FantasyTeamInclude<ExtArgs> | null
+    where?: Prisma.FantasyTeamWhereInput
+    orderBy?: Prisma.FantasyTeamOrderByWithRelationInput | Prisma.FantasyTeamOrderByWithRelationInput[]
+    cursor?: Prisma.FantasyTeamWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Prisma.FantasyTeamScalarFieldEnum | Prisma.FantasyTeamScalarFieldEnum[]
 }
 
 /**

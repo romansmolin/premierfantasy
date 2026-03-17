@@ -48,6 +48,13 @@ export const JsonNull = runtime.JsonNull
 export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
+    Competition: 'Competition',
+    FantasyTeam: 'FantasyTeam',
+    FantasyTeamPlayer: 'FantasyTeamPlayer',
+    GameweekPoints: 'GameweekPoints',
+    Team: 'Team',
+    Player: 'Player',
+    Gameweek: 'Gameweek',
     User: 'User',
     Session: 'Session',
     Account: 'Account',
@@ -69,6 +76,86 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 
 export type TransactionIsolationLevel =
     (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+export const CompetitionScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    startGameweek: 'startGameweek',
+    endGameweek: 'endGameweek',
+    createdAt: 'createdAt',
+} as const
+
+export type CompetitionScalarFieldEnum =
+    (typeof CompetitionScalarFieldEnum)[keyof typeof CompetitionScalarFieldEnum]
+
+export const FantasyTeamScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    competitionId: 'competitionId',
+    name: 'name',
+    budgetTotal: 'budgetTotal',
+    budgetLeft: 'budgetLeft',
+    createdAt: 'createdAt',
+} as const
+
+export type FantasyTeamScalarFieldEnum =
+    (typeof FantasyTeamScalarFieldEnum)[keyof typeof FantasyTeamScalarFieldEnum]
+
+export const FantasyTeamPlayerScalarFieldEnum = {
+    id: 'id',
+    fantasyTeamId: 'fantasyTeamId',
+    playerId: 'playerId',
+    position: 'position',
+    purchasePrice: 'purchasePrice',
+    createdAt: 'createdAt',
+} as const
+
+export type FantasyTeamPlayerScalarFieldEnum =
+    (typeof FantasyTeamPlayerScalarFieldEnum)[keyof typeof FantasyTeamPlayerScalarFieldEnum]
+
+export const GameweekPointsScalarFieldEnum = {
+    id: 'id',
+    fantasyTeamId: 'fantasyTeamId',
+    gameweekId: 'gameweekId',
+    points: 'points',
+    createdAt: 'createdAt',
+} as const
+
+export type GameweekPointsScalarFieldEnum =
+    (typeof GameweekPointsScalarFieldEnum)[keyof typeof GameweekPointsScalarFieldEnum]
+
+export const TeamScalarFieldEnum = {
+    id: 'id',
+    externalId: 'externalId',
+    name: 'name',
+    shortName: 'shortName',
+    logo: 'logo',
+    createdAt: 'createdAt',
+} as const
+
+export type TeamScalarFieldEnum = (typeof TeamScalarFieldEnum)[keyof typeof TeamScalarFieldEnum]
+
+export const PlayerScalarFieldEnum = {
+    id: 'id',
+    externalId: 'externalId',
+    name: 'name',
+    position: 'position',
+    teamId: 'teamId',
+    createdAt: 'createdAt',
+} as const
+
+export type PlayerScalarFieldEnum = (typeof PlayerScalarFieldEnum)[keyof typeof PlayerScalarFieldEnum]
+
+export const GameweekScalarFieldEnum = {
+    id: 'id',
+    number: 'number',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+} as const
+
+export type GameweekScalarFieldEnum = (typeof GameweekScalarFieldEnum)[keyof typeof GameweekScalarFieldEnum]
 
 export const UserScalarFieldEnum = {
     id: 'id',

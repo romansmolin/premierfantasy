@@ -26,6 +26,8 @@ export class FantasyTeamController {
     async getByUserId(userId: string) {
         const teams = await this.fantasyTeamService.getFantasyTeamsByUser(userId)
 
+        console.log('fantasyTeams: ', teams)
+
         return NextResponse.json(teams)
     }
 

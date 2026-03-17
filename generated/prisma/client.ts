@@ -30,8 +30,8 @@ export * from './enums'
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more Competitions
+ * const competitions = await prisma.competition.findMany()
  * ```
  *
  * Read more in our [docs](https://pris.ly/d/client).
@@ -44,6 +44,41 @@ export type PrismaClient<
 > = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
+/**
+ * Model Competition
+ *
+ */
+export type Competition = Prisma.CompetitionModel
+/**
+ * Model FantasyTeam
+ *
+ */
+export type FantasyTeam = Prisma.FantasyTeamModel
+/**
+ * Model FantasyTeamPlayer
+ *
+ */
+export type FantasyTeamPlayer = Prisma.FantasyTeamPlayerModel
+/**
+ * Model GameweekPoints
+ *
+ */
+export type GameweekPoints = Prisma.GameweekPointsModel
+/**
+ * Model Team
+ *
+ */
+export type Team = Prisma.TeamModel
+/**
+ * Model Player
+ *
+ */
+export type Player = Prisma.PlayerModel
+/**
+ * Model Gameweek
+ *
+ */
+export type Gameweek = Prisma.GameweekModel
 /**
  * Model User
  *
