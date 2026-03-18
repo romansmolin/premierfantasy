@@ -1,1 +1,1 @@
-export { TeamExplorer } from './explore-teams/ui/team-explorer'
+export { TeamExplorer, TeamExplorerSkeleton } from './explore-teams/ui/team-explorer'

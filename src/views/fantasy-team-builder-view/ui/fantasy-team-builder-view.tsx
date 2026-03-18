@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 
-import { TeamExplorer } from '@/features/team'
+import { PlayersExplorer } from '@/features/player'
+import { TeamExplorer, TeamExplorerSkeleton } from '@/features/team'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 
@@ -24,22 +25,41 @@ export const FantasyTeamBuilderView = () => {
                             </CardHeader>
 
                             <CardContent>
-                                <TeamExplorer />
+                                <Suspense fallback={<TeamExplorerSkeleton />}>
+                                    <TeamExplorer />
+                                </Suspense>
                             </CardContent>
                         </Card>
 
-                        <Card className="flex-1">
-                            <CardHeader>
-                                <CardTitle>Team Explore</CardTitle>
-                                <CardDescription>
-                                    Select teams where your desired players are playing
-                                </CardDescription>
-                            </CardHeader>
+                        <div className="flex-1 flex gap-3">
+                            <Card className="flex-1">
+                                <CardHeader>
+                                    <CardTitle>Players Explorer</CardTitle>
+                                    <CardDescription>
+                                        Select teams where your desired players are playing
+                                    </CardDescription>
+                                </CardHeader>
 
-                            <CardContent>
-                                <TeamExplorer />
-                            </CardContent>
-                        </Card>
+                                <CardContent>
+                                    <PlayersExplorer />
+                                </CardContent>
+                            </Card>
+
+                            <Card className="flex-1">
+                                <CardHeader>
+                                    <CardTitle>Players Explorer</CardTitle>
+                                    <CardDescription>
+                                        Select teams where your desired players are playing
+                                    </CardDescription>
+                                </CardHeader>
+
+                                <CardContent>
+                                    <Suspense fallback={<TeamExplorerSkeleton />}>
+                                        <TeamExplorer />
+                                    </Suspense>
+                                </CardContent>
+                            </Card>
+                        </div>
                     </div>
                 </div>
             </div>

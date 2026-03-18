@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import { getAllTeams } from '@/entities/team/api/team.service'
 
 export const useAllTeams = () => {
-    const { data, error, isLoading } = useSWR('/api/teams', () => getAllTeams())
+    const { data, error } = useSWR('/api/teams', () => getAllTeams(), { suspense: true })
 
-    return { teams: data, error, isLoading }
+    return { teams: data, error }
 }
