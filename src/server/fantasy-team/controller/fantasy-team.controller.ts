@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+import { saveSquadSchema } from '@/entities/players'
+
 import type { IFantasyTeamService } from '../service/fantasy-team.service.interface'
 
 export class FantasyTeamController {
@@ -50,5 +52,31 @@ export class FantasyTeamController {
         await this.fantasyTeamService.deleteFantasyTeam(id)
 
         return NextResponse.json(null, { status: 204 })
+    }
+
+    async saveSquad(req: NextRequest, id: string) {
+        const body = await req.json()
+        const parsed = saveSquadSchema.safeParse(body)
+
+        if (!parsed.success) {
+            return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
+        }
+
+        try {
+            await this.fantasyTeamService.saveSquad(
+                id,
+                parsed.data.players.map((p) => ({
+                    ...p,
+                    name: '',
+                    photo: '',
+                })),
+            )
+
+            return NextResponse.json({ success: true })
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Failed to save squad'
+
+            return NextResponse.json({ error: message }, { status: 400 })
+        }
     }
 }

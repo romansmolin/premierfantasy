@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { FantasyTeamBuilderView } from '@/views/fantasy-team-builder-view'
 
 const FantasyTeamBuilder = () => {

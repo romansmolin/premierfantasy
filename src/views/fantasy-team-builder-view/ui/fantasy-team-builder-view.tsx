@@ -1,6 +1,6 @@
-import React, { Suspense } from 'react'
+import { Suspense } from 'react'
 
-import { PlayersExplorer } from '@/features/player'
+import { PlayersExplorer, SelectionSummary } from '@/features/player'
 import { TeamExplorer, TeamExplorerSkeleton } from '@/features/team'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
@@ -47,16 +47,14 @@ export const FantasyTeamBuilderView = () => {
 
                             <Card className="flex-1">
                                 <CardHeader>
-                                    <CardTitle>Players Explorer</CardTitle>
+                                    <CardTitle>Selection Summary</CardTitle>
                                     <CardDescription>
-                                        Select teams where your desired players are playing
+                                        Your squad budget, positions, and selected players
                                     </CardDescription>
                                 </CardHeader>
 
                                 <CardContent>
-                                    <Suspense fallback={<TeamExplorerSkeleton />}>
-                                        <TeamExplorer />
-                                    </Suspense>
+                                    <SelectionSummary />
                                 </CardContent>
                             </Card>
                         </div>

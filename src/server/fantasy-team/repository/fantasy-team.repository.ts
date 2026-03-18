@@ -34,4 +34,29 @@ export class FantasyTeamRepository implements IFantasyTeamRepository {
     async delete(id: string): Promise<void> {
         await prisma.fantasyTeam.delete({ where: { id } })
     }
+
+    async saveSquadPlayers(
+        fantasyTeamId: string,
+        players: { playerId: number; position: 'GK' | 'DEF' | 'MID' | 'FWD'; purchasePrice: number }[],
+    ): Promise<void> {
+        const budgetUsed = players.reduce((sum, p) => sum + p.purchasePrice, 0)
+
+        await prisma.$transaction([
+            prisma.fantasyTeamPlayer.deleteMany({ where: { fantasyTeamId } }),
+            ...players.map((p) =>
+                prisma.fantasyTeamPlayer.create({
+                    data: {
+                        fantasyTeamId,
+                        player: { connect: { externalId: p.playerId } },
+                        position: p.position,
+                        purchasePrice: p.purchasePrice,
+                    },
+                }),
+            ),
+            prisma.fantasyTeam.update({
+                where: { id: fantasyTeamId },
+                data: { budgetLeft: 100 - budgetUsed },
+            }),
+        ])
+    }
 }

@@ -8,4 +8,8 @@ export interface IFantasyTeamRepository {
     create(data: ICreateFantasyTeam): Promise<IFantasyTeam>
     update(id: string, data: Partial<IFantasyTeam>): Promise<IFantasyTeam>
     delete(id: string): Promise<void>
+    saveSquadPlayers(
+        fantasyTeamId: string,
+        players: { playerId: number; position: 'GK' | 'DEF' | 'MID' | 'FWD'; purchasePrice: number }[],
+    ): Promise<void>
 }
