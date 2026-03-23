@@ -1,41 +1,25 @@
 'use client'
 
 import Image from 'next/image'
-import { toast } from 'sonner'
-import { useShallow } from 'zustand/react/shallow'
 
-import {
-    BUDGET_TOTAL,
-    MAX_SQUAD_SIZE,
-    POSITION_LIMITS,
-    selectBudgetLeft,
-    selectPositionCounts,
-    usePlayersStorage,
-    validateSquadComplete,
-} from '@/entities/players'
+import { BUDGET_TOTAL, MAX_SQUAD_SIZE, POSITION_LIMITS } from '@/entities/players'
 import type { PlayerPosition } from '@/entities/players'
 
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 
+import { useSelectionSummary } from '../model/use-selection-summary'
+
 export const SelectionSummary = () => {
-    const { selectedPlayers, removePlayer } = usePlayersStorage(
-        useShallow((state) => ({ selectedPlayers: state.selectedPlayers, removePlayer: state.removePlayer })),
-    )
-    const budgetLeft = usePlayersStorage(selectBudgetLeft)
-    const positionCounts = usePlayersStorage(useShallow(selectPositionCounts))
-    const budgetUsedPercent = ((BUDGET_TOTAL - budgetLeft) / BUDGET_TOTAL) * 100
-    const squadComplete = validateSquadComplete(selectedPlayers)
-
-    const handleSave = () => {
-        if (!squadComplete.valid) {
-            toast.error(squadComplete.reason)
-
-            return
-        }
-
-        toast.success('Squad is valid and ready to save!')
-    }
+    const {
+        selectedPlayers,
+        removePlayer,
+        budgetLeft,
+        positionCounts,
+        budgetUsedPercent,
+        squadComplete,
+        handleSave,
+    } = useSelectionSummary()
 
     return (
         <div className="flex flex-col gap-4">

@@ -23,7 +23,7 @@ export const TeamExplorer = () => {
                         selectedTeamsIds.includes(team.id) && 'bg-primary',
                     )}
                 >
-                    <CardContent className="size-18 flex items-center justify-between">
+                    <CardContent className="size-16 flex items-center justify-between">
                         <Image
                             src={team.logo}
                             alt={`${team.name} logo`}
