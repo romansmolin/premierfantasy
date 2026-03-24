@@ -20,8 +20,8 @@ import {
     TableRow,
 } from '@/shared/ui/table'
 
-import { getPositionBadgeClass } from '../lib/position-badge-variant'
 import { SelectPlayerCheckbox } from '../../select-player/ui/select-player-checkbox'
+import { getPositionBadgeClass } from '../lib/position-badge-variant'
 import { usePlayersExplorer } from '../model/use-players-explorer'
 
 const POSITIONS = [
@@ -152,7 +152,7 @@ export const PlayersExplorer = () => {
                 </div>
             </div>
 
-            <div className="max-h-[60vh] overflow-auto">
+            <div className="max-h-[80vh] overflow-auto">
                 <Table>
                     <TableCaption>
                         {filteredCount} player{filteredCount !== 1 && 's'} from selected teams

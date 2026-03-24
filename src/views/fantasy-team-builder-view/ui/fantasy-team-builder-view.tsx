@@ -1,3 +1,4 @@
+import { FantasyTeamField } from '@/features/fantasy-team'
 import { PlayersExplorer, SelectionSummary } from '@/features/player'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
@@ -12,34 +13,43 @@ export const FantasyTeamBuilderView = () => {
                 </div>
 
                 <div className="flex w-full gap-3">
-                    <div className="flex flex-1 flex-col gap-3 min-w-0">
-                        <div className="flex-1 flex gap-3 min-w-0">
-                            <Card className="flex-1 min-w-0 overflow-hidden">
-                                <CardHeader>
-                                    <CardTitle>Players Explorer</CardTitle>
-                                    <CardDescription>
-                                        Select teams where your desired players are playing
-                                    </CardDescription>
-                                </CardHeader>
+                    <Card className="flex-2 min-w-0 overflow-hidden">
+                        <CardHeader>
+                            <CardTitle>Players Explorer</CardTitle>
+                            <CardDescription>
+                                Select teams where your desired players are playing
+                            </CardDescription>
+                        </CardHeader>
 
-                                <CardContent>
-                                    <PlayersExplorer />
-                                </CardContent>
-                            </Card>
+                        <CardContent>
+                            <PlayersExplorer />
+                        </CardContent>
+                    </Card>
 
-                            <Card className="flex-1">
-                                <CardHeader>
-                                    <CardTitle>Selection Summary</CardTitle>
-                                    <CardDescription>
-                                        Your squad budget, positions, and selected players
-                                    </CardDescription>
-                                </CardHeader>
+                    <div className="flex-1 flex flex-col gap-3">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Squad Builder</CardTitle>
+                                <CardDescription>Your selected players in formation</CardDescription>
+                            </CardHeader>
 
-                                <CardContent>
-                                    <SelectionSummary />
-                                </CardContent>
-                            </Card>
-                        </div>
+                            <CardContent>
+                                <FantasyTeamField />
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Selection Summary</CardTitle>
+                                <CardDescription>
+                                    Your squad budget, positions, and selected players
+                                </CardDescription>
+                            </CardHeader>
+
+                            <CardContent>
+                                <SelectionSummary />
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
             </div>
