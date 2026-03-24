@@ -1,41 +1,30 @@
 import { toast } from 'sonner'
-import { useShallow } from 'zustand/react/shallow'
 
-import {
-    BUDGET_TOTAL,
-    selectBudgetLeft,
-    selectPositionCounts,
-    usePlayersStorage,
-    validateSquadComplete,
-} from '@/entities/players'
+import { validateSquadComplete } from '@/entities/players'
+
+import { useSaveSquad } from './use-save-squad'
+import { useSquadSummary } from './use-squad-summary'
 
 export const useSelectionSummary = () => {
-    const { selectedPlayers, removePlayer } = usePlayersStorage(
-        useShallow((state) => ({ selectedPlayers: state.selectedPlayers, removePlayer: state.removePlayer })),
-    )
+    const squadSummary = useSquadSummary()
+    const { handleSave: save, isSaving, isNewTeam } = useSaveSquad()
 
-    const budgetLeft = usePlayersStorage(selectBudgetLeft)
-    const positionCounts = usePlayersStorage(useShallow(selectPositionCounts))
-    const budgetUsedPercent = ((BUDGET_TOTAL - budgetLeft) / BUDGET_TOTAL) * 100
-    const squadComplete = validateSquadComplete(selectedPlayers)
+    const handleSave = async () => {
+        const validation = validateSquadComplete(squadSummary.selectedPlayers)
 
-    const handleSave = () => {
-        if (!squadComplete.valid) {
-            toast.error(squadComplete.reason)
+        if (!validation.valid) {
+            toast.error(validation.reason)
 
             return
         }
 
-        toast.success('Squad is valid and ready to save!')
+        await save()
     }
 
     return {
-        selectedPlayers,
-        removePlayer,
-        budgetLeft,
-        positionCounts,
-        budgetUsedPercent,
-        squadComplete,
+        ...squadSummary,
         handleSave,
+        isSaving,
+        isNewTeam,
     }
 }

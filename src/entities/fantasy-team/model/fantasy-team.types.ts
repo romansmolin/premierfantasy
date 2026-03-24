@@ -14,3 +14,11 @@ export interface ICreateFantasyTeam {
     name: string
     budgetLeft: number
 }
+
+export interface ISquadPlayer {
+    externalId: number
+    name: string
+    position: 'GK' | 'DEF' | 'MID' | 'FWD'
+    teamExternalId: number
+    purchasePrice: number
+}

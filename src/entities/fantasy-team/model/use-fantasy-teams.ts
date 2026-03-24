@@ -10,9 +10,10 @@ export const useFantasyTeams = () => {
     const { data: session } = useSession()
     const userId = session?.user?.id
 
-    const { data, error, isLoading } = useSWR(userId ? `/api/fantasy-teams/user/${userId}` : null, () =>
-        fantasyTeamService.getByUserId(userId!),
+    const { data, error, isLoading, mutate } = useSWR(
+        userId ? `/api/fantasy-teams/user/${userId}` : null,
+        () => fantasyTeamService.getByUserId(userId!),
     )
 
-    return { fantasyTeams: data, isLoading, error }
+    return { fantasyTeams: data, isLoading, error, mutate }
 }

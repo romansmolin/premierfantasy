@@ -12,6 +12,7 @@ interface PlayersStorageActions {
     addPlayer: (player: SelectedPlayer) => void
     removePlayer: (playerId: number) => void
     clearPlayers: () => void
+    initPlayers: (players: SelectedPlayer[]) => void
 }
 
 type PlayersStorage = PlayersStorageState & PlayersStorageActions
@@ -31,6 +32,7 @@ export const usePlayersStorage = create<PlayersStorage>()((set) => ({
             selectedPlayers: state.selectedPlayers.filter((p) => p.id !== playerId),
         })),
     clearPlayers: () => set(initialState),
+    initPlayers: (players) => set({ selectedPlayers: players }),
 }))
 
 export const selectSelectedPlayerIds = (state: PlayersStorage) => state.selectedPlayers.map((p) => p.id)

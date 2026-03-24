@@ -1,9 +1,13 @@
-import { FantasyTeamField } from '@/features/fantasy-team'
+'use client'
+
+import { FantasyTeamField, useHydrateSquad } from '@/features/fantasy-team'
 import { PlayersExplorer, SelectionSummary } from '@/features/player'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 
 export const FantasyTeamBuilderView = () => {
+    useHydrateSquad()
+
     return (
         <div className="space-y-4 h-full flex flex-col">
             <div className="flex flex-col gap-3">

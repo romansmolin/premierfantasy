@@ -54,6 +54,18 @@ export class FantasyTeamController {
         return NextResponse.json(null, { status: 204 })
     }
 
+    async getSquad(id: string) {
+        try {
+            const players = await this.fantasyTeamService.getSquad(id)
+
+            return NextResponse.json(players)
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Failed to fetch squad'
+
+            return NextResponse.json({ error: message }, { status: 500 })
+        }
+    }
+
     async saveSquad(req: NextRequest, id: string) {
         const body = await req.json()
         const parsed = saveSquadSchema.safeParse(body)
@@ -63,14 +75,7 @@ export class FantasyTeamController {
         }
 
         try {
-            await this.fantasyTeamService.saveSquad(
-                id,
-                parsed.data.players.map((p) => ({
-                    ...p,
-                    name: '',
-                    photo: '',
-                })),
-            )
+            await this.fantasyTeamService.saveSquad(id, parsed.data.players)
 
             return NextResponse.json({ success: true })
         } catch (error) {

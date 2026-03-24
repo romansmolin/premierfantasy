@@ -8,6 +8,12 @@ const fantasyTeamRepository = new FantasyTeamRepository()
 const fantasyTeamService = new FantasyTeamService(fantasyTeamRepository)
 const fantasyTeamController = new FantasyTeamController(fantasyTeamService)
 
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
+
+    return fantasyTeamController.getSquad(id)
+}
+
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
 

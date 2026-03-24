@@ -1,5 +1,7 @@
 'use client'
 
+import { SaveIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 import Image from 'next/image'
 
 import { BUDGET_TOTAL, MAX_SQUAD_SIZE, POSITION_LIMITS } from '@/entities/players'
@@ -19,6 +21,7 @@ export const SelectionSummary = () => {
         budgetUsedPercent,
         squadComplete,
         handleSave,
+        isSaving,
     } = useSelectionSummary()
 
     return (
@@ -85,8 +88,14 @@ export const SelectionSummary = () => {
                 </div>
             )}
 
-            <Button className="w-full" disabled={!squadComplete.valid} onClick={handleSave}>
-                Save Team
+            <Button
+                className="w-full gap-2"
+                disabled={!squadComplete.valid || isSaving}
+                onClick={handleSave}
+                size={'lg'}
+            >
+                <HugeiconsIcon icon={SaveIcon} />
+                {isSaving ? 'Saving...' : 'Save Team'}
             </Button>
         </div>
     )
