@@ -5,19 +5,40 @@ model FantasyTeam {
     name          String
     budgetTotal   Float  @default(100) @map("budget_total")
     budgetLeft    Float  @map("budget_left")
+    freeTransfers Int    @default(1) @map("free_transfers")
 
     createdAt DateTime @default(now()) @map("created_at")
 
     user        User        @relation(fields: [userId], references: [id])
     competition Competition @relation(fields: [competitionId], references: [id])
 
-    players FantasyTeamPlayer[]
-    points  GameweekPoints[]
+    players   FantasyTeamPlayer[]
+    points    GameweekPoints[]
+    transfers Transfer[]
 
     @@unique([userId, competitionId])
     @@index([userId])
     @@index([competitionId])
     @@map("fantasy_teams")
+}
+
+model Transfer {
+    id            String   @id @default(uuid())
+    fantasyTeamId String   @map("fantasy_team_id")
+    gameweekId    String   @map("gameweek_id")
+    playerInId    String   @map("player_in_id")
+    playerOutId   String   @map("player_out_id")
+    isFree        Boolean  @default(true) @map("is_free")
+    createdAt     DateTime @default(now()) @map("created_at")
+
+    fantasyTeam FantasyTeam @relation(fields: [fantasyTeamId], references: [id], onDelete: Cascade)
+    gameweek    Gameweek    @relation(fields: [gameweekId], references: [id])
+    playerIn    Player      @relation("TransferIn", fields: [playerInId], references: [id])
+    playerOut   Player      @relation("TransferOut", fields: [playerOutId], references: [id])
+
+    @@index([fantasyTeamId])
+    @@index([gameweekId])
+    @@map("transfers")
 }
 
 model FantasyTeamPlayer {

@@ -2,7 +2,11 @@ import type { ICreateFantasyTeam, IFantasyTeam } from '@/entities/fantasy-team/m
 
 import { prisma } from '@/shared/lib/prisma'
 
-import type { IFantasyTeamRepository, SquadPlayerRow } from './fantasy-team.repository.interface'
+import type {
+    IFantasyTeamRepository,
+    SquadPlayerRow,
+    SquadPlayerWithStats,
+} from './fantasy-team.repository.interface'
 
 export class FantasyTeamRepository implements IFantasyTeamRepository {
     async getSquadPlayers(fantasyTeamId: string): Promise<SquadPlayerRow[]> {
@@ -116,5 +120,64 @@ export class FantasyTeamRepository implements IFantasyTeamRepository {
                 data: { budgetLeft: 100 - budgetUsed },
             }),
         ])
+    }
+
+    async getSquadWithGameweekStats(
+        fantasyTeamId: string,
+        gameweekId: string,
+    ): Promise<SquadPlayerWithStats[]> {
+        const rows = await prisma.fantasyTeamPlayer.findMany({
+            where: { fantasyTeamId },
+            include: {
+                player: {
+                    include: {
+                        team: { select: { externalId: true } },
+                        gameweekStats: {
+                            where: { gameweekId },
+                        },
+                    },
+                },
+            },
+        })
+
+        return rows.map((r) => {
+            const stat = r.player.gameweekStats[0] ?? null
+
+            return {
+                externalId: r.player.externalId,
+                name: r.player.name,
+                position: r.player.position as SquadPlayerWithStats['position'],
+                teamExternalId: r.player.team.externalId,
+                purchasePrice: r.purchasePrice,
+                stats: stat
+                    ? {
+                          minutesPlayed: stat.minutesPlayed,
+                          goals: stat.goals,
+                          assists: stat.assists,
+                          cleanSheet: stat.cleanSheet,
+                          saves: stat.saves,
+                          penaltySaved: stat.penaltySaved,
+                          penaltyMissed: stat.penaltyMissed,
+                          goalsConceded: stat.goalsConceded,
+                          yellowCards: stat.yellowCards,
+                          redCards: stat.redCards,
+                          ownGoals: stat.ownGoals,
+                          totalPoints: stat.totalPoints,
+                      }
+                    : null,
+            }
+        })
+    }
+
+    async getTeamsByCompetition(
+        competitionId: string,
+    ): Promise<{ id: string; players: { playerId: string }[] }[]> {
+        return prisma.fantasyTeam.findMany({
+            where: { competitionId },
+            select: {
+                id: true,
+                players: { select: { playerId: true } },
+            },
+        })
     }
 }

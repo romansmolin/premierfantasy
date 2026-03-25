@@ -5,6 +5,7 @@ export interface IFantasyTeam {
     name: string
     budgetTotal: number
     budgetLeft: number
+    freeTransfers: number
     createdAt: Date
 }
 
@@ -21,4 +22,48 @@ export interface ISquadPlayer {
     position: 'GK' | 'DEF' | 'MID' | 'FWD'
     teamExternalId: number
     purchasePrice: number
+}
+
+export interface ISquadPlayerWithStats {
+    externalId: number
+    name: string
+    position: 'GK' | 'DEF' | 'MID' | 'FWD'
+    teamExternalId: number
+    purchasePrice: number
+    stats: {
+        minutesPlayed: number
+        goals: number
+        assists: number
+        cleanSheet: boolean
+        saves: number
+        penaltySaved: number
+        penaltyMissed: number
+        goalsConceded: number
+        yellowCards: number
+        redCards: number
+        ownGoals: number
+        totalPoints: number
+    } | null
+}
+
+export interface ITransfer {
+    id: string
+    fantasyTeamId: string
+    gameweekId: string
+    playerIn: { externalId: number; name: string; position: 'GK' | 'DEF' | 'MID' | 'FWD' }
+    playerOut: { externalId: number; name: string; position: 'GK' | 'DEF' | 'MID' | 'FWD' }
+    isFree: boolean
+    createdAt: Date
+}
+
+export interface ICreateTransfer {
+    playerInId: number
+    playerOutId: number
+}
+
+export interface ITransferInfo {
+    freeTransfers: number
+    deadline: Date | null
+    transfersMade: number
+    pointsCost: number
 }

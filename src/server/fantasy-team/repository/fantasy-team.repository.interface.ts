@@ -1,5 +1,27 @@
 import type { ICreateFantasyTeam, IFantasyTeam } from '@/entities/fantasy-team/model/fantasy-team.types'
 
+export interface SquadPlayerWithStats {
+    externalId: number
+    name: string
+    position: 'GK' | 'DEF' | 'MID' | 'FWD'
+    teamExternalId: number
+    purchasePrice: number
+    stats: {
+        minutesPlayed: number
+        goals: number
+        assists: number
+        cleanSheet: boolean
+        saves: number
+        penaltySaved: number
+        penaltyMissed: number
+        goalsConceded: number
+        yellowCards: number
+        redCards: number
+        ownGoals: number
+        totalPoints: number
+    } | null
+}
+
 export interface SquadPlayerRow {
     externalId: number
     name: string
@@ -27,4 +49,6 @@ export interface IFantasyTeamRepository {
             teamId: number
         }[],
     ): Promise<void>
+    getTeamsByCompetition(competitionId: string): Promise<{ id: string; players: { playerId: string }[] }[]>
+    getSquadWithGameweekStats(fantasyTeamId: string, gameweekId: string): Promise<SquadPlayerWithStats[]>
 }

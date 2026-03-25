@@ -1,7 +1,12 @@
-import type { ICreateFantasyTeam, IFantasyTeam } from '@/entities/fantasy-team/model/fantasy-team.types'
+import type {
+    ICreateFantasyTeam,
+    ICreateTransfer,
+    IFantasyTeam,
+    ITransferInfo,
+} from '@/entities/fantasy-team/model/fantasy-team.types'
 import type { PlayerPosition } from '@/entities/players'
 
-import type { SquadPlayerRow } from '../repository/fantasy-team.repository.interface'
+import type { SquadPlayerRow, SquadPlayerWithStats } from '../repository/fantasy-team.repository.interface'
 
 export interface SaveSquadPlayer {
     id: number
@@ -20,4 +25,7 @@ export interface IFantasyTeamService {
     deleteFantasyTeam(id: string): Promise<void>
     saveSquad(fantasyTeamId: string, players: SaveSquadPlayer[]): Promise<void>
     getSquad(fantasyTeamId: string): Promise<SquadPlayerRow[]>
+    getSquadWithGameweekStats(fantasyTeamId: string, gameweekNumber: number): Promise<SquadPlayerWithStats[]>
+    getTransferInfo(fantasyTeamId: string): Promise<ITransferInfo>
+    makeTransfer(fantasyTeamId: string, data: ICreateTransfer): Promise<void>
 }

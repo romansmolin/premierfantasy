@@ -1,7 +1,14 @@
 import { ApiError } from '@/shared/api/api-error'
 import { httpClient } from '@/shared/api/http-client'
 
-import type { ICreateFantasyTeam, IFantasyTeam, ISquadPlayer } from '../model/fantasy-team.types'
+import type {
+    ICreateFantasyTeam,
+    ICreateTransfer,
+    IFantasyTeam,
+    ISquadPlayer,
+    ISquadPlayerWithStats,
+    ITransferInfo,
+} from '../model/fantasy-team.types'
 
 const BASE_URL = '/api/fantasy-teams'
 
@@ -73,6 +80,32 @@ export const fantasyTeamService = {
             await httpClient.post(`${BASE_URL}/${teamId}/squad`, { players })
         } catch (error) {
             throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to save squad')
+        }
+    },
+
+    async getSquadGameweekStats(teamId: string, gameweekNumber: number): Promise<ISquadPlayerWithStats[]> {
+        try {
+            return await httpClient.get<ISquadPlayerWithStats[]>(
+                `${BASE_URL}/${teamId}/gameweek/${gameweekNumber}`,
+            )
+        } catch (error) {
+            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to fetch gameweek stats')
+        }
+    },
+
+    async getTransferInfo(teamId: string): Promise<ITransferInfo> {
+        try {
+            return await httpClient.get<ITransferInfo>(`${BASE_URL}/${teamId}/transfers`)
+        } catch (error) {
+            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to fetch transfer info')
+        }
+    },
+
+    async makeTransfer(teamId: string, data: ICreateTransfer): Promise<void> {
+        try {
+            await httpClient.post(`${BASE_URL}/${teamId}/transfers`, data)
+        } catch (error) {
+            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to make transfer')
         }
     },
 }

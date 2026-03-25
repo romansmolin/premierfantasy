@@ -1,3 +1,4 @@
+import { useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import useSWRMutation from 'swr/mutation'
 
@@ -15,16 +16,19 @@ export const useSaveSquad = () => {
     const userId = session?.user?.id
     const userName = session?.user?.name
 
+    const searchParams = useSearchParams()
+    const competitionId = searchParams.get('competitionId')
+
     const { fantasyTeams, mutate } = useFantasyTeams()
     const fantasyTeamId = fantasyTeams?.[0]?.id
     const selectedPlayers = usePlayersStorage((s) => s.selectedPlayers)
 
     const { trigger: createTeamAndSaveSquad, isMutating: isCreating } = useSWRMutation(
-        userId ? '/api/fantasy-teams' : null,
+        userId && competitionId ? '/api/fantasy-teams' : null,
         async (_url: string, { arg }: { arg: SelectedPlayer[] }) => {
             const team = await fantasyTeamService.create({
                 userId: userId!,
-                competitionId: 'premier-league-2025',
+                competitionId: competitionId!,
                 name: `${userName}'s Team`,
                 budgetLeft: 100,
             })
@@ -43,6 +47,12 @@ export const useSaveSquad = () => {
     const handleSave = async () => {
         if (!userId) {
             toast.error('Please sign in to save your squad.')
+
+            return
+        }
+
+        if (!competitionId) {
+            toast.error('No competition selected.')
 
             return
         }

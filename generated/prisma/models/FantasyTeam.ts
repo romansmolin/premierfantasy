@@ -28,11 +28,13 @@ export type AggregateFantasyTeam = {
 export type FantasyTeamAvgAggregateOutputType = {
     budgetTotal: number | null
     budgetLeft: number | null
+    freeTransfers: number | null
 }
 
 export type FantasyTeamSumAggregateOutputType = {
     budgetTotal: number | null
     budgetLeft: number | null
+    freeTransfers: number | null
 }
 
 export type FantasyTeamMinAggregateOutputType = {
@@ -42,6 +44,7 @@ export type FantasyTeamMinAggregateOutputType = {
     name: string | null
     budgetTotal: number | null
     budgetLeft: number | null
+    freeTransfers: number | null
     createdAt: Date | null
 }
 
@@ -52,6 +55,7 @@ export type FantasyTeamMaxAggregateOutputType = {
     name: string | null
     budgetTotal: number | null
     budgetLeft: number | null
+    freeTransfers: number | null
     createdAt: Date | null
 }
 
@@ -62,6 +66,7 @@ export type FantasyTeamCountAggregateOutputType = {
     name: number
     budgetTotal: number
     budgetLeft: number
+    freeTransfers: number
     createdAt: number
     _all: number
 }
@@ -69,11 +74,13 @@ export type FantasyTeamCountAggregateOutputType = {
 export type FantasyTeamAvgAggregateInputType = {
     budgetTotal?: true
     budgetLeft?: true
+    freeTransfers?: true
 }
 
 export type FantasyTeamSumAggregateInputType = {
     budgetTotal?: true
     budgetLeft?: true
+    freeTransfers?: true
 }
 
 export type FantasyTeamMinAggregateInputType = {
@@ -83,6 +90,7 @@ export type FantasyTeamMinAggregateInputType = {
     name?: true
     budgetTotal?: true
     budgetLeft?: true
+    freeTransfers?: true
     createdAt?: true
 }
 
@@ -93,6 +101,7 @@ export type FantasyTeamMaxAggregateInputType = {
     name?: true
     budgetTotal?: true
     budgetLeft?: true
+    freeTransfers?: true
     createdAt?: true
 }
 
@@ -103,6 +112,7 @@ export type FantasyTeamCountAggregateInputType = {
     name?: true
     budgetTotal?: true
     budgetLeft?: true
+    freeTransfers?: true
     createdAt?: true
     _all?: true
 }
@@ -201,6 +211,7 @@ export type FantasyTeamGroupByOutputType = {
     name: string
     budgetTotal: number
     budgetLeft: number
+    freeTransfers: number
     createdAt: Date
     _count: FantasyTeamCountAggregateOutputType | null
     _avg: FantasyTeamAvgAggregateOutputType | null
@@ -231,11 +242,13 @@ export type FantasyTeamWhereInput = {
     name?: Prisma.StringFilter<'FantasyTeam'> | string
     budgetTotal?: Prisma.FloatFilter<'FantasyTeam'> | number
     budgetLeft?: Prisma.FloatFilter<'FantasyTeam'> | number
+    freeTransfers?: Prisma.IntFilter<'FantasyTeam'> | number
     createdAt?: Prisma.DateTimeFilter<'FantasyTeam'> | Date | string
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
     competition?: Prisma.XOR<Prisma.CompetitionScalarRelationFilter, Prisma.CompetitionWhereInput>
     players?: Prisma.FantasyTeamPlayerListRelationFilter
     points?: Prisma.GameweekPointsListRelationFilter
+    transfers?: Prisma.TransferListRelationFilter
 }
 
 export type FantasyTeamOrderByWithRelationInput = {
@@ -245,11 +258,13 @@ export type FantasyTeamOrderByWithRelationInput = {
     name?: Prisma.SortOrder
     budgetTotal?: Prisma.SortOrder
     budgetLeft?: Prisma.SortOrder
+    freeTransfers?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     user?: Prisma.UserOrderByWithRelationInput
     competition?: Prisma.CompetitionOrderByWithRelationInput
     players?: Prisma.FantasyTeamPlayerOrderByRelationAggregateInput
     points?: Prisma.GameweekPointsOrderByRelationAggregateInput
+    transfers?: Prisma.TransferOrderByRelationAggregateInput
 }
 
 export type FantasyTeamWhereUniqueInput = Prisma.AtLeast<
@@ -264,11 +279,13 @@ export type FantasyTeamWhereUniqueInput = Prisma.AtLeast<
         name?: Prisma.StringFilter<'FantasyTeam'> | string
         budgetTotal?: Prisma.FloatFilter<'FantasyTeam'> | number
         budgetLeft?: Prisma.FloatFilter<'FantasyTeam'> | number
+        freeTransfers?: Prisma.IntFilter<'FantasyTeam'> | number
         createdAt?: Prisma.DateTimeFilter<'FantasyTeam'> | Date | string
         user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
         competition?: Prisma.XOR<Prisma.CompetitionScalarRelationFilter, Prisma.CompetitionWhereInput>
         players?: Prisma.FantasyTeamPlayerListRelationFilter
         points?: Prisma.GameweekPointsListRelationFilter
+        transfers?: Prisma.TransferListRelationFilter
     },
     'id' | 'userId_competitionId'
 >
@@ -280,6 +297,7 @@ export type FantasyTeamOrderByWithAggregationInput = {
     name?: Prisma.SortOrder
     budgetTotal?: Prisma.SortOrder
     budgetLeft?: Prisma.SortOrder
+    freeTransfers?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     _count?: Prisma.FantasyTeamCountOrderByAggregateInput
     _avg?: Prisma.FantasyTeamAvgOrderByAggregateInput
@@ -302,6 +320,7 @@ export type FantasyTeamScalarWhereWithAggregatesInput = {
     name?: Prisma.StringWithAggregatesFilter<'FantasyTeam'> | string
     budgetTotal?: Prisma.FloatWithAggregatesFilter<'FantasyTeam'> | number
     budgetLeft?: Prisma.FloatWithAggregatesFilter<'FantasyTeam'> | number
+    freeTransfers?: Prisma.IntWithAggregatesFilter<'FantasyTeam'> | number
     createdAt?: Prisma.DateTimeWithAggregatesFilter<'FantasyTeam'> | Date | string
 }
 
@@ -310,11 +329,13 @@ export type FantasyTeamCreateInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
     user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
     competition: Prisma.CompetitionCreateNestedOneWithoutTeamsInput
     players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutFantasyTeamInput
     points?: Prisma.GameweekPointsCreateNestedManyWithoutFantasyTeamInput
+    transfers?: Prisma.TransferCreateNestedManyWithoutFantasyTeamInput
 }
 
 export type FantasyTeamUncheckedCreateInput = {
@@ -324,9 +345,11 @@ export type FantasyTeamUncheckedCreateInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
     players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutFantasyTeamInput
     points?: Prisma.GameweekPointsUncheckedCreateNestedManyWithoutFantasyTeamInput
+    transfers?: Prisma.TransferUncheckedCreateNestedManyWithoutFantasyTeamInput
 }
 
 export type FantasyTeamUpdateInput = {
@@ -334,11 +357,13 @@ export type FantasyTeamUpdateInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
     competition?: Prisma.CompetitionUpdateOneRequiredWithoutTeamsNestedInput
     players?: Prisma.FantasyTeamPlayerUpdateManyWithoutFantasyTeamNestedInput
     points?: Prisma.GameweekPointsUpdateManyWithoutFantasyTeamNestedInput
+    transfers?: Prisma.TransferUpdateManyWithoutFantasyTeamNestedInput
 }
 
 export type FantasyTeamUncheckedUpdateInput = {
@@ -348,9 +373,11 @@ export type FantasyTeamUncheckedUpdateInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutFantasyTeamNestedInput
     points?: Prisma.GameweekPointsUncheckedUpdateManyWithoutFantasyTeamNestedInput
+    transfers?: Prisma.TransferUncheckedUpdateManyWithoutFantasyTeamNestedInput
 }
 
 export type FantasyTeamCreateManyInput = {
@@ -360,6 +387,7 @@ export type FantasyTeamCreateManyInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
 }
 
@@ -368,6 +396,7 @@ export type FantasyTeamUpdateManyMutationInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -378,6 +407,7 @@ export type FantasyTeamUncheckedUpdateManyInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -403,12 +433,14 @@ export type FantasyTeamCountOrderByAggregateInput = {
     name?: Prisma.SortOrder
     budgetTotal?: Prisma.SortOrder
     budgetLeft?: Prisma.SortOrder
+    freeTransfers?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
 }
 
 export type FantasyTeamAvgOrderByAggregateInput = {
     budgetTotal?: Prisma.SortOrder
     budgetLeft?: Prisma.SortOrder
+    freeTransfers?: Prisma.SortOrder
 }
 
 export type FantasyTeamMaxOrderByAggregateInput = {
@@ -418,6 +450,7 @@ export type FantasyTeamMaxOrderByAggregateInput = {
     name?: Prisma.SortOrder
     budgetTotal?: Prisma.SortOrder
     budgetLeft?: Prisma.SortOrder
+    freeTransfers?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
 }
 
@@ -428,12 +461,14 @@ export type FantasyTeamMinOrderByAggregateInput = {
     name?: Prisma.SortOrder
     budgetTotal?: Prisma.SortOrder
     budgetLeft?: Prisma.SortOrder
+    freeTransfers?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
 }
 
 export type FantasyTeamSumOrderByAggregateInput = {
     budgetTotal?: Prisma.SortOrder
     budgetLeft?: Prisma.SortOrder
+    freeTransfers?: Prisma.SortOrder
 }
 
 export type FantasyTeamScalarRelationFilter = {
@@ -533,6 +568,32 @@ export type FloatFieldUpdateOperationsInput = {
     decrement?: number
     multiply?: number
     divide?: number
+}
+
+export type FantasyTeamCreateNestedOneWithoutTransfersInput = {
+    create?: Prisma.XOR<
+        Prisma.FantasyTeamCreateWithoutTransfersInput,
+        Prisma.FantasyTeamUncheckedCreateWithoutTransfersInput
+    >
+    connectOrCreate?: Prisma.FantasyTeamCreateOrConnectWithoutTransfersInput
+    connect?: Prisma.FantasyTeamWhereUniqueInput
+}
+
+export type FantasyTeamUpdateOneRequiredWithoutTransfersNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.FantasyTeamCreateWithoutTransfersInput,
+        Prisma.FantasyTeamUncheckedCreateWithoutTransfersInput
+    >
+    connectOrCreate?: Prisma.FantasyTeamCreateOrConnectWithoutTransfersInput
+    upsert?: Prisma.FantasyTeamUpsertWithoutTransfersInput
+    connect?: Prisma.FantasyTeamWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.FantasyTeamUpdateToOneWithWhereWithoutTransfersInput,
+            Prisma.FantasyTeamUpdateWithoutTransfersInput
+        >,
+        Prisma.FantasyTeamUncheckedUpdateWithoutTransfersInput
+    >
 }
 
 export type FantasyTeamCreateNestedOneWithoutPlayersInput = {
@@ -678,10 +739,12 @@ export type FantasyTeamCreateWithoutCompetitionInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
     user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
     players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutFantasyTeamInput
     points?: Prisma.GameweekPointsCreateNestedManyWithoutFantasyTeamInput
+    transfers?: Prisma.TransferCreateNestedManyWithoutFantasyTeamInput
 }
 
 export type FantasyTeamUncheckedCreateWithoutCompetitionInput = {
@@ -690,9 +753,11 @@ export type FantasyTeamUncheckedCreateWithoutCompetitionInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
     players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutFantasyTeamInput
     points?: Prisma.GameweekPointsUncheckedCreateNestedManyWithoutFantasyTeamInput
+    transfers?: Prisma.TransferUncheckedCreateNestedManyWithoutFantasyTeamInput
 }
 
 export type FantasyTeamCreateOrConnectWithoutCompetitionInput = {
@@ -746,7 +811,88 @@ export type FantasyTeamScalarWhereInput = {
     name?: Prisma.StringFilter<'FantasyTeam'> | string
     budgetTotal?: Prisma.FloatFilter<'FantasyTeam'> | number
     budgetLeft?: Prisma.FloatFilter<'FantasyTeam'> | number
+    freeTransfers?: Prisma.IntFilter<'FantasyTeam'> | number
     createdAt?: Prisma.DateTimeFilter<'FantasyTeam'> | Date | string
+}
+
+export type FantasyTeamCreateWithoutTransfersInput = {
+    id?: string
+    name: string
+    budgetTotal?: number
+    budgetLeft: number
+    freeTransfers?: number
+    createdAt?: Date | string
+    user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
+    competition: Prisma.CompetitionCreateNestedOneWithoutTeamsInput
+    players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutFantasyTeamInput
+    points?: Prisma.GameweekPointsCreateNestedManyWithoutFantasyTeamInput
+}
+
+export type FantasyTeamUncheckedCreateWithoutTransfersInput = {
+    id?: string
+    userId: string
+    competitionId: string
+    name: string
+    budgetTotal?: number
+    budgetLeft: number
+    freeTransfers?: number
+    createdAt?: Date | string
+    players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutFantasyTeamInput
+    points?: Prisma.GameweekPointsUncheckedCreateNestedManyWithoutFantasyTeamInput
+}
+
+export type FantasyTeamCreateOrConnectWithoutTransfersInput = {
+    where: Prisma.FantasyTeamWhereUniqueInput
+    create: Prisma.XOR<
+        Prisma.FantasyTeamCreateWithoutTransfersInput,
+        Prisma.FantasyTeamUncheckedCreateWithoutTransfersInput
+    >
+}
+
+export type FantasyTeamUpsertWithoutTransfersInput = {
+    update: Prisma.XOR<
+        Prisma.FantasyTeamUpdateWithoutTransfersInput,
+        Prisma.FantasyTeamUncheckedUpdateWithoutTransfersInput
+    >
+    create: Prisma.XOR<
+        Prisma.FantasyTeamCreateWithoutTransfersInput,
+        Prisma.FantasyTeamUncheckedCreateWithoutTransfersInput
+    >
+    where?: Prisma.FantasyTeamWhereInput
+}
+
+export type FantasyTeamUpdateToOneWithWhereWithoutTransfersInput = {
+    where?: Prisma.FantasyTeamWhereInput
+    data: Prisma.XOR<
+        Prisma.FantasyTeamUpdateWithoutTransfersInput,
+        Prisma.FantasyTeamUncheckedUpdateWithoutTransfersInput
+    >
+}
+
+export type FantasyTeamUpdateWithoutTransfersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+    budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
+    competition?: Prisma.CompetitionUpdateOneRequiredWithoutTeamsNestedInput
+    players?: Prisma.FantasyTeamPlayerUpdateManyWithoutFantasyTeamNestedInput
+    points?: Prisma.GameweekPointsUpdateManyWithoutFantasyTeamNestedInput
+}
+
+export type FantasyTeamUncheckedUpdateWithoutTransfersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    userId?: Prisma.StringFieldUpdateOperationsInput | string
+    competitionId?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+    budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutFantasyTeamNestedInput
+    points?: Prisma.GameweekPointsUncheckedUpdateManyWithoutFantasyTeamNestedInput
 }
 
 export type FantasyTeamCreateWithoutPlayersInput = {
@@ -754,10 +900,12 @@ export type FantasyTeamCreateWithoutPlayersInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
     user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
     competition: Prisma.CompetitionCreateNestedOneWithoutTeamsInput
     points?: Prisma.GameweekPointsCreateNestedManyWithoutFantasyTeamInput
+    transfers?: Prisma.TransferCreateNestedManyWithoutFantasyTeamInput
 }
 
 export type FantasyTeamUncheckedCreateWithoutPlayersInput = {
@@ -767,8 +915,10 @@ export type FantasyTeamUncheckedCreateWithoutPlayersInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
     points?: Prisma.GameweekPointsUncheckedCreateNestedManyWithoutFantasyTeamInput
+    transfers?: Prisma.TransferUncheckedCreateNestedManyWithoutFantasyTeamInput
 }
 
 export type FantasyTeamCreateOrConnectWithoutPlayersInput = {
@@ -804,10 +954,12 @@ export type FantasyTeamUpdateWithoutPlayersInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
     competition?: Prisma.CompetitionUpdateOneRequiredWithoutTeamsNestedInput
     points?: Prisma.GameweekPointsUpdateManyWithoutFantasyTeamNestedInput
+    transfers?: Prisma.TransferUpdateManyWithoutFantasyTeamNestedInput
 }
 
 export type FantasyTeamUncheckedUpdateWithoutPlayersInput = {
@@ -817,8 +969,10 @@ export type FantasyTeamUncheckedUpdateWithoutPlayersInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     points?: Prisma.GameweekPointsUncheckedUpdateManyWithoutFantasyTeamNestedInput
+    transfers?: Prisma.TransferUncheckedUpdateManyWithoutFantasyTeamNestedInput
 }
 
 export type FantasyTeamCreateWithoutPointsInput = {
@@ -826,10 +980,12 @@ export type FantasyTeamCreateWithoutPointsInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
     user: Prisma.UserCreateNestedOneWithoutFantasyTeamsInput
     competition: Prisma.CompetitionCreateNestedOneWithoutTeamsInput
     players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutFantasyTeamInput
+    transfers?: Prisma.TransferCreateNestedManyWithoutFantasyTeamInput
 }
 
 export type FantasyTeamUncheckedCreateWithoutPointsInput = {
@@ -839,8 +995,10 @@ export type FantasyTeamUncheckedCreateWithoutPointsInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
     players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutFantasyTeamInput
+    transfers?: Prisma.TransferUncheckedCreateNestedManyWithoutFantasyTeamInput
 }
 
 export type FantasyTeamCreateOrConnectWithoutPointsInput = {
@@ -876,10 +1034,12 @@ export type FantasyTeamUpdateWithoutPointsInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
     competition?: Prisma.CompetitionUpdateOneRequiredWithoutTeamsNestedInput
     players?: Prisma.FantasyTeamPlayerUpdateManyWithoutFantasyTeamNestedInput
+    transfers?: Prisma.TransferUpdateManyWithoutFantasyTeamNestedInput
 }
 
 export type FantasyTeamUncheckedUpdateWithoutPointsInput = {
@@ -889,8 +1049,10 @@ export type FantasyTeamUncheckedUpdateWithoutPointsInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutFantasyTeamNestedInput
+    transfers?: Prisma.TransferUncheckedUpdateManyWithoutFantasyTeamNestedInput
 }
 
 export type FantasyTeamCreateWithoutUserInput = {
@@ -898,10 +1060,12 @@ export type FantasyTeamCreateWithoutUserInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
     competition: Prisma.CompetitionCreateNestedOneWithoutTeamsInput
     players?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutFantasyTeamInput
     points?: Prisma.GameweekPointsCreateNestedManyWithoutFantasyTeamInput
+    transfers?: Prisma.TransferCreateNestedManyWithoutFantasyTeamInput
 }
 
 export type FantasyTeamUncheckedCreateWithoutUserInput = {
@@ -910,9 +1074,11 @@ export type FantasyTeamUncheckedCreateWithoutUserInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
     players?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutFantasyTeamInput
     points?: Prisma.GameweekPointsUncheckedCreateNestedManyWithoutFantasyTeamInput
+    transfers?: Prisma.TransferUncheckedCreateNestedManyWithoutFantasyTeamInput
 }
 
 export type FantasyTeamCreateOrConnectWithoutUserInput = {
@@ -962,6 +1128,7 @@ export type FantasyTeamCreateManyCompetitionInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
 }
 
@@ -970,10 +1137,12 @@ export type FantasyTeamUpdateWithoutCompetitionInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     user?: Prisma.UserUpdateOneRequiredWithoutFantasyTeamsNestedInput
     players?: Prisma.FantasyTeamPlayerUpdateManyWithoutFantasyTeamNestedInput
     points?: Prisma.GameweekPointsUpdateManyWithoutFantasyTeamNestedInput
+    transfers?: Prisma.TransferUpdateManyWithoutFantasyTeamNestedInput
 }
 
 export type FantasyTeamUncheckedUpdateWithoutCompetitionInput = {
@@ -982,9 +1151,11 @@ export type FantasyTeamUncheckedUpdateWithoutCompetitionInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutFantasyTeamNestedInput
     points?: Prisma.GameweekPointsUncheckedUpdateManyWithoutFantasyTeamNestedInput
+    transfers?: Prisma.TransferUncheckedUpdateManyWithoutFantasyTeamNestedInput
 }
 
 export type FantasyTeamUncheckedUpdateManyWithoutCompetitionInput = {
@@ -993,6 +1164,7 @@ export type FantasyTeamUncheckedUpdateManyWithoutCompetitionInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1002,6 +1174,7 @@ export type FantasyTeamCreateManyUserInput = {
     name: string
     budgetTotal?: number
     budgetLeft: number
+    freeTransfers?: number
     createdAt?: Date | string
 }
 
@@ -1010,10 +1183,12 @@ export type FantasyTeamUpdateWithoutUserInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     competition?: Prisma.CompetitionUpdateOneRequiredWithoutTeamsNestedInput
     players?: Prisma.FantasyTeamPlayerUpdateManyWithoutFantasyTeamNestedInput
     points?: Prisma.GameweekPointsUpdateManyWithoutFantasyTeamNestedInput
+    transfers?: Prisma.TransferUpdateManyWithoutFantasyTeamNestedInput
 }
 
 export type FantasyTeamUncheckedUpdateWithoutUserInput = {
@@ -1022,9 +1197,11 @@ export type FantasyTeamUncheckedUpdateWithoutUserInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     players?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutFantasyTeamNestedInput
     points?: Prisma.GameweekPointsUncheckedUpdateManyWithoutFantasyTeamNestedInput
+    transfers?: Prisma.TransferUncheckedUpdateManyWithoutFantasyTeamNestedInput
 }
 
 export type FantasyTeamUncheckedUpdateManyWithoutUserInput = {
@@ -1033,6 +1210,7 @@ export type FantasyTeamUncheckedUpdateManyWithoutUserInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     budgetTotal?: Prisma.FloatFieldUpdateOperationsInput | number
     budgetLeft?: Prisma.FloatFieldUpdateOperationsInput | number
+    freeTransfers?: Prisma.IntFieldUpdateOperationsInput | number
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -1043,6 +1221,7 @@ export type FantasyTeamUncheckedUpdateManyWithoutUserInput = {
 export type FantasyTeamCountOutputType = {
     players: number
     points: number
+    transfers: number
 }
 
 export type FantasyTeamCountOutputTypeSelect<
@@ -1050,6 +1229,7 @@ export type FantasyTeamCountOutputTypeSelect<
 > = {
     players?: boolean | FantasyTeamCountOutputTypeCountPlayersArgs
     points?: boolean | FantasyTeamCountOutputTypeCountPointsArgs
+    transfers?: boolean | FantasyTeamCountOutputTypeCountTransfersArgs
 }
 
 /**
@@ -1082,6 +1262,15 @@ export type FantasyTeamCountOutputTypeCountPointsArgs<
     where?: Prisma.GameweekPointsWhereInput
 }
 
+/**
+ * FantasyTeamCountOutputType without action
+ */
+export type FantasyTeamCountOutputTypeCountTransfersArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    where?: Prisma.TransferWhereInput
+}
+
 export type FantasyTeamSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
@@ -1092,11 +1281,13 @@ export type FantasyTeamSelect<
         name?: boolean
         budgetTotal?: boolean
         budgetLeft?: boolean
+        freeTransfers?: boolean
         createdAt?: boolean
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
         competition?: boolean | Prisma.CompetitionDefaultArgs<ExtArgs>
         players?: boolean | Prisma.FantasyTeam$playersArgs<ExtArgs>
         points?: boolean | Prisma.FantasyTeam$pointsArgs<ExtArgs>
+        transfers?: boolean | Prisma.FantasyTeam$transfersArgs<ExtArgs>
         _count?: boolean | Prisma.FantasyTeamCountOutputTypeDefaultArgs<ExtArgs>
     },
     ExtArgs['result']['fantasyTeam']
@@ -1112,6 +1303,7 @@ export type FantasyTeamSelectCreateManyAndReturn<
         name?: boolean
         budgetTotal?: boolean
         budgetLeft?: boolean
+        freeTransfers?: boolean
         createdAt?: boolean
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
         competition?: boolean | Prisma.CompetitionDefaultArgs<ExtArgs>
@@ -1129,6 +1321,7 @@ export type FantasyTeamSelectUpdateManyAndReturn<
         name?: boolean
         budgetTotal?: boolean
         budgetLeft?: boolean
+        freeTransfers?: boolean
         createdAt?: boolean
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
         competition?: boolean | Prisma.CompetitionDefaultArgs<ExtArgs>
@@ -1143,13 +1336,14 @@ export type FantasyTeamSelectScalar = {
     name?: boolean
     budgetTotal?: boolean
     budgetLeft?: boolean
+    freeTransfers?: boolean
     createdAt?: boolean
 }
 
 export type FantasyTeamOmit<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-    'id' | 'userId' | 'competitionId' | 'name' | 'budgetTotal' | 'budgetLeft' | 'createdAt',
+    'id' | 'userId' | 'competitionId' | 'name' | 'budgetTotal' | 'budgetLeft' | 'freeTransfers' | 'createdAt',
     ExtArgs['result']['fantasyTeam']
 >
 export type FantasyTeamInclude<
@@ -1159,6 +1353,7 @@ export type FantasyTeamInclude<
     competition?: boolean | Prisma.CompetitionDefaultArgs<ExtArgs>
     players?: boolean | Prisma.FantasyTeam$playersArgs<ExtArgs>
     points?: boolean | Prisma.FantasyTeam$pointsArgs<ExtArgs>
+    transfers?: boolean | Prisma.FantasyTeam$transfersArgs<ExtArgs>
     _count?: boolean | Prisma.FantasyTeamCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FantasyTeamIncludeCreateManyAndReturn<
@@ -1183,6 +1378,7 @@ export type $FantasyTeamPayload<
         competition: Prisma.$CompetitionPayload<ExtArgs>
         players: Prisma.$FantasyTeamPlayerPayload<ExtArgs>[]
         points: Prisma.$GameweekPointsPayload<ExtArgs>[]
+        transfers: Prisma.$TransferPayload<ExtArgs>[]
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -1192,6 +1388,7 @@ export type $FantasyTeamPayload<
             name: string
             budgetTotal: number
             budgetLeft: number
+            freeTransfers: number
             createdAt: Date
         },
         ExtArgs['result']['fantasyTeam']
@@ -1751,6 +1948,12 @@ export interface Prisma__FantasyTeamClient<
           >
         | Null
     >
+    transfers<T extends Prisma.FantasyTeam$transfersArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.FantasyTeam$transfersArgs<ExtArgs>>,
+    ): Prisma.PrismaPromise<
+        | runtime.Types.Result.GetResult<Prisma.$TransferPayload<ExtArgs>, T, 'findMany', GlobalOmitOptions>
+        | Null
+    >
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1788,6 +1991,7 @@ export interface FantasyTeamFieldRefs {
     readonly name: Prisma.FieldRef<'FantasyTeam', 'String'>
     readonly budgetTotal: Prisma.FieldRef<'FantasyTeam', 'Float'>
     readonly budgetLeft: Prisma.FieldRef<'FantasyTeam', 'Float'>
+    readonly freeTransfers: Prisma.FieldRef<'FantasyTeam', 'Int'>
     readonly createdAt: Prisma.FieldRef<'FantasyTeam', 'DateTime'>
 }
 
@@ -2268,6 +2472,32 @@ export type FantasyTeam$pointsArgs<
     take?: number
     skip?: number
     distinct?: Prisma.GameweekPointsScalarFieldEnum | Prisma.GameweekPointsScalarFieldEnum[]
+}
+
+/**
+ * FantasyTeam.transfers
+ */
+export type FantasyTeam$transfersArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the Transfer
+     */
+    select?: Prisma.TransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transfer
+     */
+    omit?: Prisma.TransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.TransferInclude<ExtArgs> | null
+    where?: Prisma.TransferWhereInput
+    orderBy?: Prisma.TransferOrderByWithRelationInput | Prisma.TransferOrderByWithRelationInput[]
+    cursor?: Prisma.TransferWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Prisma.TransferScalarFieldEnum | Prisma.TransferScalarFieldEnum[]
 }
 
 /**

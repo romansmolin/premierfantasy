@@ -1,14 +1,26 @@
-import type { ICreateFantasyTeam, IFantasyTeam } from '@/entities/fantasy-team/model/fantasy-team.types'
+import type {
+    ICreateFantasyTeam,
+    ICreateTransfer,
+    IFantasyTeam,
+    ITransferInfo,
+} from '@/entities/fantasy-team/model/fantasy-team.types'
 import { BUDGET_TOTAL } from '@/entities/players'
 
 import type { IFantasyTeamService, SaveSquadPlayer } from './fantasy-team.service.interface'
-import type { IFantasyTeamRepository, SquadPlayerRow } from '../repository/fantasy-team.repository.interface'
+import type {
+    IFantasyTeamRepository,
+    SquadPlayerRow,
+    SquadPlayerWithStats,
+} from '../repository/fantasy-team.repository.interface'
+import type { IGameweekRepository } from '@/server/gameweek/repository/gameweek.repository.interface'
 
 export class FantasyTeamService implements IFantasyTeamService {
     private readonly fantasyTeamRepository
+    private readonly gameweekRepository?: IGameweekRepository
 
-    constructor(fantasyTeamRepository: IFantasyTeamRepository) {
+    constructor(fantasyTeamRepository: IFantasyTeamRepository, gameweekRepository?: IGameweekRepository) {
         this.fantasyTeamRepository = fantasyTeamRepository
+        this.gameweekRepository = gameweekRepository
     }
 
     async getFantasyTeam(id: string): Promise<IFantasyTeam | null> {
@@ -67,5 +79,48 @@ export class FantasyTeamService implements IFantasyTeamService {
                 teamId: p.teamId,
             })),
         )
+    }
+
+    async getSquadWithGameweekStats(
+        fantasyTeamId: string,
+        gameweekNumber: number,
+    ): Promise<SquadPlayerWithStats[]> {
+        if (!this.gameweekRepository) {
+            throw new Error('Gameweek repository not provided')
+        }
+
+        const gameweek = await this.gameweekRepository.findByNumber(gameweekNumber)
+
+        if (!gameweek) throw new Error(`Gameweek ${gameweekNumber} not found`)
+
+        return this.fantasyTeamRepository.getSquadWithGameweekStats(fantasyTeamId, gameweek.id)
+    }
+
+    async getTransferInfo(fantasyTeamId: string): Promise<ITransferInfo> {
+        const team = await this.fantasyTeamRepository.findById(fantasyTeamId)
+
+        if (!team) throw new Error('Team not found')
+
+        const activeGameweek = this.gameweekRepository ? await this.gameweekRepository.findActive() : null
+
+        const transfersMade = 0 // TODO: count from transfers table
+        const freeTransfers = team.freeTransfers ?? 1
+        const pointsCost = Math.max(0, transfersMade - freeTransfers) * 4
+
+        return {
+            freeTransfers,
+            deadline: activeGameweek?.endDate ?? null,
+            transfersMade,
+            pointsCost,
+        }
+    }
+
+    async makeTransfer(fantasyTeamId: string, _data: ICreateTransfer): Promise<void> {
+        const team = await this.fantasyTeamRepository.findById(fantasyTeamId)
+
+        if (!team) throw new Error('Team not found')
+
+        // TODO: Implement full transfer logic
+        throw new Error('Transfer system not yet fully implemented')
     }
 }

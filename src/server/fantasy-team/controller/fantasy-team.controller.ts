@@ -66,6 +66,47 @@ export class FantasyTeamController {
         }
     }
 
+    async getSquadWithGameweekStats(fantasyTeamId: string, gameweekNumber: number) {
+        try {
+            const players = await this.fantasyTeamService.getSquadWithGameweekStats(
+                fantasyTeamId,
+                gameweekNumber,
+            )
+
+            return NextResponse.json(players)
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Failed to fetch gameweek stats'
+
+            return NextResponse.json({ error: message }, { status: 500 })
+        }
+    }
+
+    async getTransferInfo(fantasyTeamId: string) {
+        try {
+            const info = await this.fantasyTeamService.getTransferInfo(fantasyTeamId)
+
+            return NextResponse.json(info)
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Failed to fetch transfer info'
+
+            return NextResponse.json({ error: message }, { status: 500 })
+        }
+    }
+
+    async makeTransfer(req: NextRequest, fantasyTeamId: string) {
+        try {
+            const body = await req.json()
+
+            await this.fantasyTeamService.makeTransfer(fantasyTeamId, body)
+
+            return NextResponse.json({ success: true })
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Failed to make transfer'
+
+            return NextResponse.json({ error: message }, { status: 400 })
+        }
+    }
+
     async saveSquad(req: NextRequest, id: string) {
         const body = await req.json()
         const parsed = saveSquadSchema.safeParse(body)

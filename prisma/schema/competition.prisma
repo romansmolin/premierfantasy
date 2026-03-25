@@ -1,9 +1,11 @@
 model Competition {
-    id            String   @id @default(uuid())
+    id            String    @id @default(uuid())
     name          String
-    startGameweek Int      @map("start_gameweek")
-    endGameweek   Int      @map("end_gameweek")
-    createdAt     DateTime @default(now()) @map("created_at")
+    startGameweek Int       @map("start_gameweek")
+    endGameweek   Int       @map("end_gameweek")
+    status        String    @default("upcoming")
+    joinDeadline  DateTime? @map("join_deadline")
+    createdAt     DateTime  @default(now()) @map("created_at")
 
     teams FantasyTeam[]
 

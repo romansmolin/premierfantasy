@@ -26,22 +26,58 @@ model Player {
     teamId     String         @map("team_id")
     createdAt  DateTime       @default(now()) @map("created_at")
 
-    team             Team               @relation(fields: [teamId], references: [id])
+    team             Team                @relation(fields: [teamId], references: [id])
     fantasyTeamSlots FantasyTeamPlayer[]
+    gameweekStats    PlayerGameweekStats[]
+    transfersIn      Transfer[]          @relation("TransferIn")
+    transfersOut     Transfer[]          @relation("TransferOut")
 
     @@index([teamId])
     @@map("players")
 }
 
 model Gameweek {
-    id        String   @id @default(uuid())
-    number    Int      @unique
-    startDate DateTime @map("start_date")
-    endDate   DateTime @map("end_date")
-    isActive  Boolean  @default(false) @map("is_active")
-    createdAt DateTime @default(now()) @map("created_at")
+    id         String    @id @default(uuid())
+    number     Int       @unique
+    startDate  DateTime  @map("start_date")
+    endDate    DateTime  @map("end_date")
+    isActive   Boolean   @default(false) @map("is_active")
+    isFinished Boolean   @default(false) @map("is_finished")
+    deadline   DateTime? @map("deadline")
+    createdAt  DateTime  @default(now()) @map("created_at")
 
-    points GameweekPoints[]
+    points      GameweekPoints[]
+    playerStats PlayerGameweekStats[]
+    transfers   Transfer[]
 
     @@map("gameweeks")
+}
+
+model PlayerGameweekStats {
+    id         String @id @default(uuid())
+    playerId   String @map("player_id")
+    gameweekId String @map("gameweek_id")
+
+    minutesPlayed Int     @default(0) @map("minutes_played")
+    goals         Int     @default(0)
+    assists       Int     @default(0)
+    cleanSheet    Boolean @default(false) @map("clean_sheet")
+    saves         Int     @default(0)
+    penaltySaved  Int     @default(0) @map("penalty_saved")
+    penaltyMissed Int     @default(0) @map("penalty_missed")
+    goalsConceded Int     @default(0) @map("goals_conceded")
+    yellowCards   Int     @default(0) @map("yellow_cards")
+    redCards      Int     @default(0) @map("red_cards")
+    ownGoals      Int     @default(0) @map("own_goals")
+    totalPoints   Int     @default(0) @map("total_points")
+
+    createdAt DateTime @default(now()) @map("created_at")
+
+    player   Player   @relation(fields: [playerId], references: [id])
+    gameweek Gameweek @relation(fields: [gameweekId], references: [id])
+
+    @@unique([playerId, gameweekId])
+    @@index([playerId])
+    @@index([gameweekId])
+    @@map("player_gameweek_stats")
 }

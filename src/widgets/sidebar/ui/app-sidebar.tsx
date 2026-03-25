@@ -1,18 +1,8 @@
 'use client'
 
-import {
-    AnalyticsUpIcon,
-    DashboardSquare01Icon,
-    UserMultiple02Icon,
-    GlobalIcon,
-    ChartLineData02Icon,
-    FileExportIcon,
-    LinkSquare01Icon,
-    AlertCircleIcon,
-    NoteEditIcon,
-    TaskEdit01Icon,
-} from '@hugeicons/core-free-icons'
+import { AnalyticsUpIcon, DashboardSquare01Icon, GlobalIcon, NoteEditIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import Link from 'next/link'
 
 import { UserCard } from '@/entities/user'
 
@@ -25,7 +15,6 @@ import {
     SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
-    SidebarMenuBadge,
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarRail,
@@ -37,22 +26,10 @@ const navGroups = [
         items: [{ title: 'Dashboard', icon: DashboardSquare01Icon, href: '/dashboard' }],
     },
     {
-        label: 'Core Pages',
+        label: 'Fantasy',
         items: [
-            { title: 'User Behavior', icon: UserMultiple02Icon, href: '#', badge: 5 },
-            { title: 'Audience', icon: UserMultiple02Icon, href: '#' },
-            { title: 'Traffic Sources', icon: GlobalIcon, href: '#', badge: 3 },
-            { title: 'Engagement Metrics', icon: ChartLineData02Icon, href: '#' },
-            { title: 'Custom Reports', icon: NoteEditIcon, href: '#' },
-            { title: 'Error Logs', icon: AlertCircleIcon, href: '#' },
-            { title: 'Survey Results', icon: TaskEdit01Icon, href: '#' },
-        ],
-    },
-    {
-        label: 'Visualization',
-        items: [
-            { title: 'Data Export', icon: FileExportIcon, href: '#' },
-            { title: 'Integrations', icon: LinkSquare01Icon, href: '#' },
+            { title: 'Competitions', icon: GlobalIcon, href: '/competitions' },
+            { title: 'Team Builder', icon: NoteEditIcon, href: '/fantasy-team-builder' },
         ],
     },
 ]
@@ -83,11 +60,12 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
                             <SidebarMenu>
                                 {group.items.map((item) => (
                                     <SidebarMenuItem key={item.title}>
-                                        <SidebarMenuButton tooltip={item.title}>
-                                            <HugeiconsIcon icon={item.icon} size={16} />
-                                            <span>{item.title}</span>
-                                        </SidebarMenuButton>
-                                        {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
+                                        <Link href={item.href}>
+                                            <SidebarMenuButton tooltip={item.title}>
+                                                <HugeiconsIcon icon={item.icon} size={16} />
+                                                <span>{item.title}</span>
+                                            </SidebarMenuButton>
+                                        </Link>
                                     </SidebarMenuItem>
                                 ))}
                             </SidebarMenu>

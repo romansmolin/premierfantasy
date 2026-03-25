@@ -39,6 +39,8 @@ export type GameweekMinAggregateOutputType = {
     startDate: Date | null
     endDate: Date | null
     isActive: boolean | null
+    isFinished: boolean | null
+    deadline: Date | null
     createdAt: Date | null
 }
 
@@ -48,6 +50,8 @@ export type GameweekMaxAggregateOutputType = {
     startDate: Date | null
     endDate: Date | null
     isActive: boolean | null
+    isFinished: boolean | null
+    deadline: Date | null
     createdAt: Date | null
 }
 
@@ -57,6 +61,8 @@ export type GameweekCountAggregateOutputType = {
     startDate: number
     endDate: number
     isActive: number
+    isFinished: number
+    deadline: number
     createdAt: number
     _all: number
 }
@@ -75,6 +81,8 @@ export type GameweekMinAggregateInputType = {
     startDate?: true
     endDate?: true
     isActive?: true
+    isFinished?: true
+    deadline?: true
     createdAt?: true
 }
 
@@ -84,6 +92,8 @@ export type GameweekMaxAggregateInputType = {
     startDate?: true
     endDate?: true
     isActive?: true
+    isFinished?: true
+    deadline?: true
     createdAt?: true
 }
 
@@ -93,6 +103,8 @@ export type GameweekCountAggregateInputType = {
     startDate?: true
     endDate?: true
     isActive?: true
+    isFinished?: true
+    deadline?: true
     createdAt?: true
     _all?: true
 }
@@ -190,6 +202,8 @@ export type GameweekGroupByOutputType = {
     startDate: Date
     endDate: Date
     isActive: boolean
+    isFinished: boolean
+    deadline: Date | null
     createdAt: Date
     _count: GameweekCountAggregateOutputType | null
     _avg: GameweekAvgAggregateOutputType | null
@@ -219,8 +233,12 @@ export type GameweekWhereInput = {
     startDate?: Prisma.DateTimeFilter<'Gameweek'> | Date | string
     endDate?: Prisma.DateTimeFilter<'Gameweek'> | Date | string
     isActive?: Prisma.BoolFilter<'Gameweek'> | boolean
+    isFinished?: Prisma.BoolFilter<'Gameweek'> | boolean
+    deadline?: Prisma.DateTimeNullableFilter<'Gameweek'> | Date | string | null
     createdAt?: Prisma.DateTimeFilter<'Gameweek'> | Date | string
     points?: Prisma.GameweekPointsListRelationFilter
+    playerStats?: Prisma.PlayerGameweekStatsListRelationFilter
+    transfers?: Prisma.TransferListRelationFilter
 }
 
 export type GameweekOrderByWithRelationInput = {
@@ -229,8 +247,12 @@ export type GameweekOrderByWithRelationInput = {
     startDate?: Prisma.SortOrder
     endDate?: Prisma.SortOrder
     isActive?: Prisma.SortOrder
+    isFinished?: Prisma.SortOrder
+    deadline?: Prisma.SortOrderInput | Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     points?: Prisma.GameweekPointsOrderByRelationAggregateInput
+    playerStats?: Prisma.PlayerGameweekStatsOrderByRelationAggregateInput
+    transfers?: Prisma.TransferOrderByRelationAggregateInput
 }
 
 export type GameweekWhereUniqueInput = Prisma.AtLeast<
@@ -243,8 +265,12 @@ export type GameweekWhereUniqueInput = Prisma.AtLeast<
         startDate?: Prisma.DateTimeFilter<'Gameweek'> | Date | string
         endDate?: Prisma.DateTimeFilter<'Gameweek'> | Date | string
         isActive?: Prisma.BoolFilter<'Gameweek'> | boolean
+        isFinished?: Prisma.BoolFilter<'Gameweek'> | boolean
+        deadline?: Prisma.DateTimeNullableFilter<'Gameweek'> | Date | string | null
         createdAt?: Prisma.DateTimeFilter<'Gameweek'> | Date | string
         points?: Prisma.GameweekPointsListRelationFilter
+        playerStats?: Prisma.PlayerGameweekStatsListRelationFilter
+        transfers?: Prisma.TransferListRelationFilter
     },
     'id' | 'number'
 >
@@ -255,6 +281,8 @@ export type GameweekOrderByWithAggregationInput = {
     startDate?: Prisma.SortOrder
     endDate?: Prisma.SortOrder
     isActive?: Prisma.SortOrder
+    isFinished?: Prisma.SortOrder
+    deadline?: Prisma.SortOrderInput | Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     _count?: Prisma.GameweekCountOrderByAggregateInput
     _avg?: Prisma.GameweekAvgOrderByAggregateInput
@@ -272,6 +300,8 @@ export type GameweekScalarWhereWithAggregatesInput = {
     startDate?: Prisma.DateTimeWithAggregatesFilter<'Gameweek'> | Date | string
     endDate?: Prisma.DateTimeWithAggregatesFilter<'Gameweek'> | Date | string
     isActive?: Prisma.BoolWithAggregatesFilter<'Gameweek'> | boolean
+    isFinished?: Prisma.BoolWithAggregatesFilter<'Gameweek'> | boolean
+    deadline?: Prisma.DateTimeNullableWithAggregatesFilter<'Gameweek'> | Date | string | null
     createdAt?: Prisma.DateTimeWithAggregatesFilter<'Gameweek'> | Date | string
 }
 
@@ -281,8 +311,12 @@ export type GameweekCreateInput = {
     startDate: Date | string
     endDate: Date | string
     isActive?: boolean
+    isFinished?: boolean
+    deadline?: Date | string | null
     createdAt?: Date | string
     points?: Prisma.GameweekPointsCreateNestedManyWithoutGameweekInput
+    playerStats?: Prisma.PlayerGameweekStatsCreateNestedManyWithoutGameweekInput
+    transfers?: Prisma.TransferCreateNestedManyWithoutGameweekInput
 }
 
 export type GameweekUncheckedCreateInput = {
@@ -291,8 +325,12 @@ export type GameweekUncheckedCreateInput = {
     startDate: Date | string
     endDate: Date | string
     isActive?: boolean
+    isFinished?: boolean
+    deadline?: Date | string | null
     createdAt?: Date | string
     points?: Prisma.GameweekPointsUncheckedCreateNestedManyWithoutGameweekInput
+    playerStats?: Prisma.PlayerGameweekStatsUncheckedCreateNestedManyWithoutGameweekInput
+    transfers?: Prisma.TransferUncheckedCreateNestedManyWithoutGameweekInput
 }
 
 export type GameweekUpdateInput = {
@@ -301,8 +339,12 @@ export type GameweekUpdateInput = {
     startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    isFinished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     points?: Prisma.GameweekPointsUpdateManyWithoutGameweekNestedInput
+    playerStats?: Prisma.PlayerGameweekStatsUpdateManyWithoutGameweekNestedInput
+    transfers?: Prisma.TransferUpdateManyWithoutGameweekNestedInput
 }
 
 export type GameweekUncheckedUpdateInput = {
@@ -311,8 +353,12 @@ export type GameweekUncheckedUpdateInput = {
     startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    isFinished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     points?: Prisma.GameweekPointsUncheckedUpdateManyWithoutGameweekNestedInput
+    playerStats?: Prisma.PlayerGameweekStatsUncheckedUpdateManyWithoutGameweekNestedInput
+    transfers?: Prisma.TransferUncheckedUpdateManyWithoutGameweekNestedInput
 }
 
 export type GameweekCreateManyInput = {
@@ -321,6 +367,8 @@ export type GameweekCreateManyInput = {
     startDate: Date | string
     endDate: Date | string
     isActive?: boolean
+    isFinished?: boolean
+    deadline?: Date | string | null
     createdAt?: Date | string
 }
 
@@ -330,6 +378,8 @@ export type GameweekUpdateManyMutationInput = {
     startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    isFinished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -339,6 +389,8 @@ export type GameweekUncheckedUpdateManyInput = {
     startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    isFinished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -353,6 +405,8 @@ export type GameweekCountOrderByAggregateInput = {
     startDate?: Prisma.SortOrder
     endDate?: Prisma.SortOrder
     isActive?: Prisma.SortOrder
+    isFinished?: Prisma.SortOrder
+    deadline?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
 }
 
@@ -366,6 +420,8 @@ export type GameweekMaxOrderByAggregateInput = {
     startDate?: Prisma.SortOrder
     endDate?: Prisma.SortOrder
     isActive?: Prisma.SortOrder
+    isFinished?: Prisma.SortOrder
+    deadline?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
 }
 
@@ -375,11 +431,39 @@ export type GameweekMinOrderByAggregateInput = {
     startDate?: Prisma.SortOrder
     endDate?: Prisma.SortOrder
     isActive?: Prisma.SortOrder
+    isFinished?: Prisma.SortOrder
+    deadline?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
 }
 
 export type GameweekSumOrderByAggregateInput = {
     number?: Prisma.SortOrder
+}
+
+export type GameweekCreateNestedOneWithoutTransfersInput = {
+    create?: Prisma.XOR<
+        Prisma.GameweekCreateWithoutTransfersInput,
+        Prisma.GameweekUncheckedCreateWithoutTransfersInput
+    >
+    connectOrCreate?: Prisma.GameweekCreateOrConnectWithoutTransfersInput
+    connect?: Prisma.GameweekWhereUniqueInput
+}
+
+export type GameweekUpdateOneRequiredWithoutTransfersNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.GameweekCreateWithoutTransfersInput,
+        Prisma.GameweekUncheckedCreateWithoutTransfersInput
+    >
+    connectOrCreate?: Prisma.GameweekCreateOrConnectWithoutTransfersInput
+    upsert?: Prisma.GameweekUpsertWithoutTransfersInput
+    connect?: Prisma.GameweekWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.GameweekUpdateToOneWithWhereWithoutTransfersInput,
+            Prisma.GameweekUpdateWithoutTransfersInput
+        >,
+        Prisma.GameweekUncheckedUpdateWithoutTransfersInput
+    >
 }
 
 export type GameweekCreateNestedOneWithoutPointsInput = {
@@ -408,8 +492,110 @@ export type GameweekUpdateOneRequiredWithoutPointsNestedInput = {
     >
 }
 
-export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
+export type GameweekCreateNestedOneWithoutPlayerStatsInput = {
+    create?: Prisma.XOR<
+        Prisma.GameweekCreateWithoutPlayerStatsInput,
+        Prisma.GameweekUncheckedCreateWithoutPlayerStatsInput
+    >
+    connectOrCreate?: Prisma.GameweekCreateOrConnectWithoutPlayerStatsInput
+    connect?: Prisma.GameweekWhereUniqueInput
+}
+
+export type GameweekUpdateOneRequiredWithoutPlayerStatsNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.GameweekCreateWithoutPlayerStatsInput,
+        Prisma.GameweekUncheckedCreateWithoutPlayerStatsInput
+    >
+    connectOrCreate?: Prisma.GameweekCreateOrConnectWithoutPlayerStatsInput
+    upsert?: Prisma.GameweekUpsertWithoutPlayerStatsInput
+    connect?: Prisma.GameweekWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.GameweekUpdateToOneWithWhereWithoutPlayerStatsInput,
+            Prisma.GameweekUpdateWithoutPlayerStatsInput
+        >,
+        Prisma.GameweekUncheckedUpdateWithoutPlayerStatsInput
+    >
+}
+
+export type GameweekCreateWithoutTransfersInput = {
+    id?: string
+    number: number
+    startDate: Date | string
+    endDate: Date | string
+    isActive?: boolean
+    isFinished?: boolean
+    deadline?: Date | string | null
+    createdAt?: Date | string
+    points?: Prisma.GameweekPointsCreateNestedManyWithoutGameweekInput
+    playerStats?: Prisma.PlayerGameweekStatsCreateNestedManyWithoutGameweekInput
+}
+
+export type GameweekUncheckedCreateWithoutTransfersInput = {
+    id?: string
+    number: number
+    startDate: Date | string
+    endDate: Date | string
+    isActive?: boolean
+    isFinished?: boolean
+    deadline?: Date | string | null
+    createdAt?: Date | string
+    points?: Prisma.GameweekPointsUncheckedCreateNestedManyWithoutGameweekInput
+    playerStats?: Prisma.PlayerGameweekStatsUncheckedCreateNestedManyWithoutGameweekInput
+}
+
+export type GameweekCreateOrConnectWithoutTransfersInput = {
+    where: Prisma.GameweekWhereUniqueInput
+    create: Prisma.XOR<
+        Prisma.GameweekCreateWithoutTransfersInput,
+        Prisma.GameweekUncheckedCreateWithoutTransfersInput
+    >
+}
+
+export type GameweekUpsertWithoutTransfersInput = {
+    update: Prisma.XOR<
+        Prisma.GameweekUpdateWithoutTransfersInput,
+        Prisma.GameweekUncheckedUpdateWithoutTransfersInput
+    >
+    create: Prisma.XOR<
+        Prisma.GameweekCreateWithoutTransfersInput,
+        Prisma.GameweekUncheckedCreateWithoutTransfersInput
+    >
+    where?: Prisma.GameweekWhereInput
+}
+
+export type GameweekUpdateToOneWithWhereWithoutTransfersInput = {
+    where?: Prisma.GameweekWhereInput
+    data: Prisma.XOR<
+        Prisma.GameweekUpdateWithoutTransfersInput,
+        Prisma.GameweekUncheckedUpdateWithoutTransfersInput
+    >
+}
+
+export type GameweekUpdateWithoutTransfersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    number?: Prisma.IntFieldUpdateOperationsInput | number
+    startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    isFinished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    points?: Prisma.GameweekPointsUpdateManyWithoutGameweekNestedInput
+    playerStats?: Prisma.PlayerGameweekStatsUpdateManyWithoutGameweekNestedInput
+}
+
+export type GameweekUncheckedUpdateWithoutTransfersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    number?: Prisma.IntFieldUpdateOperationsInput | number
+    startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    isFinished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    points?: Prisma.GameweekPointsUncheckedUpdateManyWithoutGameweekNestedInput
+    playerStats?: Prisma.PlayerGameweekStatsUncheckedUpdateManyWithoutGameweekNestedInput
 }
 
 export type GameweekCreateWithoutPointsInput = {
@@ -418,7 +604,11 @@ export type GameweekCreateWithoutPointsInput = {
     startDate: Date | string
     endDate: Date | string
     isActive?: boolean
+    isFinished?: boolean
+    deadline?: Date | string | null
     createdAt?: Date | string
+    playerStats?: Prisma.PlayerGameweekStatsCreateNestedManyWithoutGameweekInput
+    transfers?: Prisma.TransferCreateNestedManyWithoutGameweekInput
 }
 
 export type GameweekUncheckedCreateWithoutPointsInput = {
@@ -427,7 +617,11 @@ export type GameweekUncheckedCreateWithoutPointsInput = {
     startDate: Date | string
     endDate: Date | string
     isActive?: boolean
+    isFinished?: boolean
+    deadline?: Date | string | null
     createdAt?: Date | string
+    playerStats?: Prisma.PlayerGameweekStatsUncheckedCreateNestedManyWithoutGameweekInput
+    transfers?: Prisma.TransferUncheckedCreateNestedManyWithoutGameweekInput
 }
 
 export type GameweekCreateOrConnectWithoutPointsInput = {
@@ -464,7 +658,11 @@ export type GameweekUpdateWithoutPointsInput = {
     startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    isFinished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    playerStats?: Prisma.PlayerGameweekStatsUpdateManyWithoutGameweekNestedInput
+    transfers?: Prisma.TransferUpdateManyWithoutGameweekNestedInput
 }
 
 export type GameweekUncheckedUpdateWithoutPointsInput = {
@@ -473,7 +671,91 @@ export type GameweekUncheckedUpdateWithoutPointsInput = {
     startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    isFinished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    playerStats?: Prisma.PlayerGameweekStatsUncheckedUpdateManyWithoutGameweekNestedInput
+    transfers?: Prisma.TransferUncheckedUpdateManyWithoutGameweekNestedInput
+}
+
+export type GameweekCreateWithoutPlayerStatsInput = {
+    id?: string
+    number: number
+    startDate: Date | string
+    endDate: Date | string
+    isActive?: boolean
+    isFinished?: boolean
+    deadline?: Date | string | null
+    createdAt?: Date | string
+    points?: Prisma.GameweekPointsCreateNestedManyWithoutGameweekInput
+    transfers?: Prisma.TransferCreateNestedManyWithoutGameweekInput
+}
+
+export type GameweekUncheckedCreateWithoutPlayerStatsInput = {
+    id?: string
+    number: number
+    startDate: Date | string
+    endDate: Date | string
+    isActive?: boolean
+    isFinished?: boolean
+    deadline?: Date | string | null
+    createdAt?: Date | string
+    points?: Prisma.GameweekPointsUncheckedCreateNestedManyWithoutGameweekInput
+    transfers?: Prisma.TransferUncheckedCreateNestedManyWithoutGameweekInput
+}
+
+export type GameweekCreateOrConnectWithoutPlayerStatsInput = {
+    where: Prisma.GameweekWhereUniqueInput
+    create: Prisma.XOR<
+        Prisma.GameweekCreateWithoutPlayerStatsInput,
+        Prisma.GameweekUncheckedCreateWithoutPlayerStatsInput
+    >
+}
+
+export type GameweekUpsertWithoutPlayerStatsInput = {
+    update: Prisma.XOR<
+        Prisma.GameweekUpdateWithoutPlayerStatsInput,
+        Prisma.GameweekUncheckedUpdateWithoutPlayerStatsInput
+    >
+    create: Prisma.XOR<
+        Prisma.GameweekCreateWithoutPlayerStatsInput,
+        Prisma.GameweekUncheckedCreateWithoutPlayerStatsInput
+    >
+    where?: Prisma.GameweekWhereInput
+}
+
+export type GameweekUpdateToOneWithWhereWithoutPlayerStatsInput = {
+    where?: Prisma.GameweekWhereInput
+    data: Prisma.XOR<
+        Prisma.GameweekUpdateWithoutPlayerStatsInput,
+        Prisma.GameweekUncheckedUpdateWithoutPlayerStatsInput
+    >
+}
+
+export type GameweekUpdateWithoutPlayerStatsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    number?: Prisma.IntFieldUpdateOperationsInput | number
+    startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    isFinished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    points?: Prisma.GameweekPointsUpdateManyWithoutGameweekNestedInput
+    transfers?: Prisma.TransferUpdateManyWithoutGameweekNestedInput
+}
+
+export type GameweekUncheckedUpdateWithoutPlayerStatsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    number?: Prisma.IntFieldUpdateOperationsInput | number
+    startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    isFinished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    deadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    points?: Prisma.GameweekPointsUncheckedUpdateManyWithoutGameweekNestedInput
+    transfers?: Prisma.TransferUncheckedUpdateManyWithoutGameweekNestedInput
 }
 
 /**
@@ -482,12 +764,16 @@ export type GameweekUncheckedUpdateWithoutPointsInput = {
 
 export type GameweekCountOutputType = {
     points: number
+    playerStats: number
+    transfers: number
 }
 
 export type GameweekCountOutputTypeSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     points?: boolean | GameweekCountOutputTypeCountPointsArgs
+    playerStats?: boolean | GameweekCountOutputTypeCountPlayerStatsArgs
+    transfers?: boolean | GameweekCountOutputTypeCountTransfersArgs
 }
 
 /**
@@ -511,6 +797,24 @@ export type GameweekCountOutputTypeCountPointsArgs<
     where?: Prisma.GameweekPointsWhereInput
 }
 
+/**
+ * GameweekCountOutputType without action
+ */
+export type GameweekCountOutputTypeCountPlayerStatsArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    where?: Prisma.PlayerGameweekStatsWhereInput
+}
+
+/**
+ * GameweekCountOutputType without action
+ */
+export type GameweekCountOutputTypeCountTransfersArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    where?: Prisma.TransferWhereInput
+}
+
 export type GameweekSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
@@ -520,8 +824,12 @@ export type GameweekSelect<
         startDate?: boolean
         endDate?: boolean
         isActive?: boolean
+        isFinished?: boolean
+        deadline?: boolean
         createdAt?: boolean
         points?: boolean | Prisma.Gameweek$pointsArgs<ExtArgs>
+        playerStats?: boolean | Prisma.Gameweek$playerStatsArgs<ExtArgs>
+        transfers?: boolean | Prisma.Gameweek$transfersArgs<ExtArgs>
         _count?: boolean | Prisma.GameweekCountOutputTypeDefaultArgs<ExtArgs>
     },
     ExtArgs['result']['gameweek']
@@ -536,6 +844,8 @@ export type GameweekSelectCreateManyAndReturn<
         startDate?: boolean
         endDate?: boolean
         isActive?: boolean
+        isFinished?: boolean
+        deadline?: boolean
         createdAt?: boolean
     },
     ExtArgs['result']['gameweek']
@@ -550,6 +860,8 @@ export type GameweekSelectUpdateManyAndReturn<
         startDate?: boolean
         endDate?: boolean
         isActive?: boolean
+        isFinished?: boolean
+        deadline?: boolean
         createdAt?: boolean
     },
     ExtArgs['result']['gameweek']
@@ -561,19 +873,23 @@ export type GameweekSelectScalar = {
     startDate?: boolean
     endDate?: boolean
     isActive?: boolean
+    isFinished?: boolean
+    deadline?: boolean
     createdAt?: boolean
 }
 
 export type GameweekOmit<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-    'id' | 'number' | 'startDate' | 'endDate' | 'isActive' | 'createdAt',
+    'id' | 'number' | 'startDate' | 'endDate' | 'isActive' | 'isFinished' | 'deadline' | 'createdAt',
     ExtArgs['result']['gameweek']
 >
 export type GameweekInclude<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     points?: boolean | Prisma.Gameweek$pointsArgs<ExtArgs>
+    playerStats?: boolean | Prisma.Gameweek$playerStatsArgs<ExtArgs>
+    transfers?: boolean | Prisma.Gameweek$transfersArgs<ExtArgs>
     _count?: boolean | Prisma.GameweekCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type GameweekIncludeCreateManyAndReturn<
@@ -589,6 +905,8 @@ export type $GameweekPayload<
     name: 'Gameweek'
     objects: {
         points: Prisma.$GameweekPointsPayload<ExtArgs>[]
+        playerStats: Prisma.$PlayerGameweekStatsPayload<ExtArgs>[]
+        transfers: Prisma.$TransferPayload<ExtArgs>[]
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -597,6 +915,8 @@ export type $GameweekPayload<
             startDate: Date
             endDate: Date
             isActive: boolean
+            isFinished: boolean
+            deadline: Date | null
             createdAt: Date
         },
         ExtArgs['result']['gameweek']
@@ -1117,6 +1437,23 @@ export interface Prisma__GameweekClient<
           >
         | Null
     >
+    playerStats<T extends Prisma.Gameweek$playerStatsArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.Gameweek$playerStatsArgs<ExtArgs>>,
+    ): Prisma.PrismaPromise<
+        | runtime.Types.Result.GetResult<
+              Prisma.$PlayerGameweekStatsPayload<ExtArgs>,
+              T,
+              'findMany',
+              GlobalOmitOptions
+          >
+        | Null
+    >
+    transfers<T extends Prisma.Gameweek$transfersArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.Gameweek$transfersArgs<ExtArgs>>,
+    ): Prisma.PrismaPromise<
+        | runtime.Types.Result.GetResult<Prisma.$TransferPayload<ExtArgs>, T, 'findMany', GlobalOmitOptions>
+        | Null
+    >
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1153,6 +1490,8 @@ export interface GameweekFieldRefs {
     readonly startDate: Prisma.FieldRef<'Gameweek', 'DateTime'>
     readonly endDate: Prisma.FieldRef<'Gameweek', 'DateTime'>
     readonly isActive: Prisma.FieldRef<'Gameweek', 'Boolean'>
+    readonly isFinished: Prisma.FieldRef<'Gameweek', 'Boolean'>
+    readonly deadline: Prisma.FieldRef<'Gameweek', 'DateTime'>
     readonly createdAt: Prisma.FieldRef<'Gameweek', 'DateTime'>
 }
 
@@ -1597,6 +1936,60 @@ export type Gameweek$pointsArgs<
     take?: number
     skip?: number
     distinct?: Prisma.GameweekPointsScalarFieldEnum | Prisma.GameweekPointsScalarFieldEnum[]
+}
+
+/**
+ * Gameweek.playerStats
+ */
+export type Gameweek$playerStatsArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the PlayerGameweekStats
+     */
+    select?: Prisma.PlayerGameweekStatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PlayerGameweekStats
+     */
+    omit?: Prisma.PlayerGameweekStatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.PlayerGameweekStatsInclude<ExtArgs> | null
+    where?: Prisma.PlayerGameweekStatsWhereInput
+    orderBy?:
+        | Prisma.PlayerGameweekStatsOrderByWithRelationInput
+        | Prisma.PlayerGameweekStatsOrderByWithRelationInput[]
+    cursor?: Prisma.PlayerGameweekStatsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Prisma.PlayerGameweekStatsScalarFieldEnum | Prisma.PlayerGameweekStatsScalarFieldEnum[]
+}
+
+/**
+ * Gameweek.transfers
+ */
+export type Gameweek$transfersArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the Transfer
+     */
+    select?: Prisma.TransferSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transfer
+     */
+    omit?: Prisma.TransferOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.TransferInclude<ExtArgs> | null
+    where?: Prisma.TransferWhereInput
+    orderBy?: Prisma.TransferOrderByWithRelationInput | Prisma.TransferOrderByWithRelationInput[]
+    cursor?: Prisma.TransferWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Prisma.TransferScalarFieldEnum | Prisma.TransferScalarFieldEnum[]
 }
 
 /**

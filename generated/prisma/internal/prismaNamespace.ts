@@ -374,11 +374,13 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
     Competition: 'Competition',
     FantasyTeam: 'FantasyTeam',
+    Transfer: 'Transfer',
     FantasyTeamPlayer: 'FantasyTeamPlayer',
     GameweekPoints: 'GameweekPoints',
     Team: 'Team',
     Player: 'Player',
     Gameweek: 'Gameweek',
+    PlayerGameweekStats: 'PlayerGameweekStats',
     User: 'User',
     Session: 'Session',
     Account: 'Account',
@@ -405,11 +407,13 @@ export type TypeMap<
         modelProps:
             | 'competition'
             | 'fantasyTeam'
+            | 'transfer'
             | 'fantasyTeamPlayer'
             | 'gameweekPoints'
             | 'team'
             | 'player'
             | 'gameweek'
+            | 'playerGameweekStats'
             | 'user'
             | 'session'
             | 'account'
@@ -562,6 +566,80 @@ export type TypeMap<
                 count: {
                     args: Prisma.FantasyTeamCountArgs<ExtArgs>
                     result: runtime.Types.Utils.Optional<Prisma.FantasyTeamCountAggregateOutputType> | number
+                }
+            }
+        }
+        Transfer: {
+            payload: Prisma.$TransferPayload<ExtArgs>
+            fields: Prisma.TransferFieldRefs
+            operations: {
+                findUnique: {
+                    args: Prisma.TransferFindUniqueArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TransferPayload> | null
+                }
+                findUniqueOrThrow: {
+                    args: Prisma.TransferFindUniqueOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TransferPayload>
+                }
+                findFirst: {
+                    args: Prisma.TransferFindFirstArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TransferPayload> | null
+                }
+                findFirstOrThrow: {
+                    args: Prisma.TransferFindFirstOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TransferPayload>
+                }
+                findMany: {
+                    args: Prisma.TransferFindManyArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TransferPayload>[]
+                }
+                create: {
+                    args: Prisma.TransferCreateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TransferPayload>
+                }
+                createMany: {
+                    args: Prisma.TransferCreateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                createManyAndReturn: {
+                    args: Prisma.TransferCreateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TransferPayload>[]
+                }
+                delete: {
+                    args: Prisma.TransferDeleteArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TransferPayload>
+                }
+                update: {
+                    args: Prisma.TransferUpdateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TransferPayload>
+                }
+                deleteMany: {
+                    args: Prisma.TransferDeleteManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateMany: {
+                    args: Prisma.TransferUpdateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateManyAndReturn: {
+                    args: Prisma.TransferUpdateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TransferPayload>[]
+                }
+                upsert: {
+                    args: Prisma.TransferUpsertArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$TransferPayload>
+                }
+                aggregate: {
+                    args: Prisma.TransferAggregateArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateTransfer>
+                }
+                groupBy: {
+                    args: Prisma.TransferGroupByArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.TransferGroupByOutputType>[]
+                }
+                count: {
+                    args: Prisma.TransferCountArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.TransferCountAggregateOutputType> | number
                 }
             }
         }
@@ -939,6 +1017,82 @@ export type TypeMap<
                 }
             }
         }
+        PlayerGameweekStats: {
+            payload: Prisma.$PlayerGameweekStatsPayload<ExtArgs>
+            fields: Prisma.PlayerGameweekStatsFieldRefs
+            operations: {
+                findUnique: {
+                    args: Prisma.PlayerGameweekStatsFindUniqueArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerGameweekStatsPayload> | null
+                }
+                findUniqueOrThrow: {
+                    args: Prisma.PlayerGameweekStatsFindUniqueOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerGameweekStatsPayload>
+                }
+                findFirst: {
+                    args: Prisma.PlayerGameweekStatsFindFirstArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerGameweekStatsPayload> | null
+                }
+                findFirstOrThrow: {
+                    args: Prisma.PlayerGameweekStatsFindFirstOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerGameweekStatsPayload>
+                }
+                findMany: {
+                    args: Prisma.PlayerGameweekStatsFindManyArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerGameweekStatsPayload>[]
+                }
+                create: {
+                    args: Prisma.PlayerGameweekStatsCreateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerGameweekStatsPayload>
+                }
+                createMany: {
+                    args: Prisma.PlayerGameweekStatsCreateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                createManyAndReturn: {
+                    args: Prisma.PlayerGameweekStatsCreateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerGameweekStatsPayload>[]
+                }
+                delete: {
+                    args: Prisma.PlayerGameweekStatsDeleteArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerGameweekStatsPayload>
+                }
+                update: {
+                    args: Prisma.PlayerGameweekStatsUpdateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerGameweekStatsPayload>
+                }
+                deleteMany: {
+                    args: Prisma.PlayerGameweekStatsDeleteManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateMany: {
+                    args: Prisma.PlayerGameweekStatsUpdateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateManyAndReturn: {
+                    args: Prisma.PlayerGameweekStatsUpdateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerGameweekStatsPayload>[]
+                }
+                upsert: {
+                    args: Prisma.PlayerGameweekStatsUpsertArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayerGameweekStatsPayload>
+                }
+                aggregate: {
+                    args: Prisma.PlayerGameweekStatsAggregateArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AggregatePlayerGameweekStats>
+                }
+                groupBy: {
+                    args: Prisma.PlayerGameweekStatsGroupByArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.PlayerGameweekStatsGroupByOutputType>[]
+                }
+                count: {
+                    args: Prisma.PlayerGameweekStatsCountArgs<ExtArgs>
+                    result:
+                        | runtime.Types.Utils.Optional<Prisma.PlayerGameweekStatsCountAggregateOutputType>
+                        | number
+                }
+            }
+        }
         User: {
             payload: Prisma.$UserPayload<ExtArgs>
             fields: Prisma.UserFieldRefs
@@ -1279,6 +1433,8 @@ export const CompetitionScalarFieldEnum = {
     name: 'name',
     startGameweek: 'startGameweek',
     endGameweek: 'endGameweek',
+    status: 'status',
+    joinDeadline: 'joinDeadline',
     createdAt: 'createdAt',
 } as const
 
@@ -1292,11 +1448,24 @@ export const FantasyTeamScalarFieldEnum = {
     name: 'name',
     budgetTotal: 'budgetTotal',
     budgetLeft: 'budgetLeft',
+    freeTransfers: 'freeTransfers',
     createdAt: 'createdAt',
 } as const
 
 export type FantasyTeamScalarFieldEnum =
     (typeof FantasyTeamScalarFieldEnum)[keyof typeof FantasyTeamScalarFieldEnum]
+
+export const TransferScalarFieldEnum = {
+    id: 'id',
+    fantasyTeamId: 'fantasyTeamId',
+    gameweekId: 'gameweekId',
+    playerInId: 'playerInId',
+    playerOutId: 'playerOutId',
+    isFree: 'isFree',
+    createdAt: 'createdAt',
+} as const
+
+export type TransferScalarFieldEnum = (typeof TransferScalarFieldEnum)[keyof typeof TransferScalarFieldEnum]
 
 export const FantasyTeamPlayerScalarFieldEnum = {
     id: 'id',
@@ -1349,10 +1518,34 @@ export const GameweekScalarFieldEnum = {
     startDate: 'startDate',
     endDate: 'endDate',
     isActive: 'isActive',
+    isFinished: 'isFinished',
+    deadline: 'deadline',
     createdAt: 'createdAt',
 } as const
 
 export type GameweekScalarFieldEnum = (typeof GameweekScalarFieldEnum)[keyof typeof GameweekScalarFieldEnum]
+
+export const PlayerGameweekStatsScalarFieldEnum = {
+    id: 'id',
+    playerId: 'playerId',
+    gameweekId: 'gameweekId',
+    minutesPlayed: 'minutesPlayed',
+    goals: 'goals',
+    assists: 'assists',
+    cleanSheet: 'cleanSheet',
+    saves: 'saves',
+    penaltySaved: 'penaltySaved',
+    penaltyMissed: 'penaltyMissed',
+    goalsConceded: 'goalsConceded',
+    yellowCards: 'yellowCards',
+    redCards: 'redCards',
+    ownGoals: 'ownGoals',
+    totalPoints: 'totalPoints',
+    createdAt: 'createdAt',
+} as const
+
+export type PlayerGameweekStatsScalarFieldEnum =
+    (typeof PlayerGameweekStatsScalarFieldEnum)[keyof typeof PlayerGameweekStatsScalarFieldEnum]
 
 export const UserScalarFieldEnum = {
     id: 'id',
@@ -1475,6 +1668,11 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+
+/**
  * Reference to a field of type 'PlayerPosition'
  */
 export type EnumPlayerPositionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlayerPosition'>
@@ -1486,11 +1684,6 @@ export type ListEnumPlayerPositionFieldRefInput<$PrismaModel> = FieldRefInputTyp
     $PrismaModel,
     'PlayerPosition[]'
 >
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
 
 /**
  * Batch Payload for updateMany & deleteMany & createMany
@@ -1597,11 +1790,13 @@ export type PrismaClientOptions = (
 export type GlobalOmitConfig = {
     competition?: Prisma.CompetitionOmit
     fantasyTeam?: Prisma.FantasyTeamOmit
+    transfer?: Prisma.TransferOmit
     fantasyTeamPlayer?: Prisma.FantasyTeamPlayerOmit
     gameweekPoints?: Prisma.GameweekPointsOmit
     team?: Prisma.TeamOmit
     player?: Prisma.PlayerOmit
     gameweek?: Prisma.GameweekOmit
+    playerGameweekStats?: Prisma.PlayerGameweekStatsOmit
     user?: Prisma.UserOmit
     session?: Prisma.SessionOmit
     account?: Prisma.AccountOmit

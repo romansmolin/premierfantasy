@@ -27,6 +27,11 @@ export type Competition = Prisma.CompetitionModel
  */
 export type FantasyTeam = Prisma.FantasyTeamModel
 /**
+ * Model Transfer
+ *
+ */
+export type Transfer = Prisma.TransferModel
+/**
  * Model FantasyTeamPlayer
  *
  */
@@ -51,6 +56,11 @@ export type Player = Prisma.PlayerModel
  *
  */
 export type Gameweek = Prisma.GameweekModel
+/**
+ * Model PlayerGameweekStats
+ *
+ */
+export type PlayerGameweekStats = Prisma.PlayerGameweekStatsModel
 /**
  * Model User
  *
