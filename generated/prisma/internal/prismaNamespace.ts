@@ -381,6 +381,7 @@ export const ModelName = {
     Player: 'Player',
     Gameweek: 'Gameweek',
     PlayerGameweekStats: 'PlayerGameweekStats',
+    PaymentToken: 'PaymentToken',
     User: 'User',
     Session: 'Session',
     Account: 'Account',
@@ -415,6 +416,7 @@ export type TypeMap<
             | 'player'
             | 'gameweek'
             | 'playerGameweekStats'
+            | 'paymentToken'
             | 'user'
             | 'session'
             | 'account'
@@ -1095,6 +1097,80 @@ export type TypeMap<
                 }
             }
         }
+        PaymentToken: {
+            payload: Prisma.$PaymentTokenPayload<ExtArgs>
+            fields: Prisma.PaymentTokenFieldRefs
+            operations: {
+                findUnique: {
+                    args: Prisma.PaymentTokenFindUniqueArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTokenPayload> | null
+                }
+                findUniqueOrThrow: {
+                    args: Prisma.PaymentTokenFindUniqueOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTokenPayload>
+                }
+                findFirst: {
+                    args: Prisma.PaymentTokenFindFirstArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTokenPayload> | null
+                }
+                findFirstOrThrow: {
+                    args: Prisma.PaymentTokenFindFirstOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTokenPayload>
+                }
+                findMany: {
+                    args: Prisma.PaymentTokenFindManyArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTokenPayload>[]
+                }
+                create: {
+                    args: Prisma.PaymentTokenCreateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTokenPayload>
+                }
+                createMany: {
+                    args: Prisma.PaymentTokenCreateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                createManyAndReturn: {
+                    args: Prisma.PaymentTokenCreateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTokenPayload>[]
+                }
+                delete: {
+                    args: Prisma.PaymentTokenDeleteArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTokenPayload>
+                }
+                update: {
+                    args: Prisma.PaymentTokenUpdateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTokenPayload>
+                }
+                deleteMany: {
+                    args: Prisma.PaymentTokenDeleteManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateMany: {
+                    args: Prisma.PaymentTokenUpdateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateManyAndReturn: {
+                    args: Prisma.PaymentTokenUpdateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTokenPayload>[]
+                }
+                upsert: {
+                    args: Prisma.PaymentTokenUpsertArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentTokenPayload>
+                }
+                aggregate: {
+                    args: Prisma.PaymentTokenAggregateArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AggregatePaymentToken>
+                }
+                groupBy: {
+                    args: Prisma.PaymentTokenGroupByArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.PaymentTokenGroupByOutputType>[]
+                }
+                count: {
+                    args: Prisma.PaymentTokenCountArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.PaymentTokenCountAggregateOutputType> | number
+                }
+            }
+        }
         User: {
             payload: Prisma.$UserPayload<ExtArgs>
             fields: Prisma.UserFieldRefs
@@ -1625,6 +1701,23 @@ export const PlayerGameweekStatsScalarFieldEnum = {
 export type PlayerGameweekStatsScalarFieldEnum =
     (typeof PlayerGameweekStatsScalarFieldEnum)[keyof typeof PlayerGameweekStatsScalarFieldEnum]
 
+export const PaymentTokenScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    token: 'token',
+    gatewayUid: 'gatewayUid',
+    status: 'status',
+    amountCents: 'amountCents',
+    currency: 'currency',
+    coinAmount: 'coinAmount',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+} as const
+
+export type PaymentTokenScalarFieldEnum =
+    (typeof PaymentTokenScalarFieldEnum)[keyof typeof PaymentTokenScalarFieldEnum]
+
 export const UserScalarFieldEnum = {
     id: 'id',
     name: 'name',
@@ -1777,6 +1870,19 @@ export type ListEnumPlayerPositionFieldRefInput<$PrismaModel> = FieldRefInputTyp
 >
 
 /**
+ * Reference to a field of type 'PaymentStatus'
+ */
+export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus'>
+
+/**
+ * Reference to a field of type 'PaymentStatus[]'
+ */
+export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
+    $PrismaModel,
+    'PaymentStatus[]'
+>
+
+/**
  * Reference to a field of type 'TransactionType'
  */
 export type EnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
@@ -1904,6 +2010,7 @@ export type GlobalOmitConfig = {
     player?: Prisma.PlayerOmit
     gameweek?: Prisma.GameweekOmit
     playerGameweekStats?: Prisma.PlayerGameweekStatsOmit
+    paymentToken?: Prisma.PaymentTokenOmit
     user?: Prisma.UserOmit
     session?: Prisma.SessionOmit
     account?: Prisma.AccountOmit

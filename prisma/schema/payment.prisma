@@ -1,0 +1,27 @@
+enum PaymentStatus {
+    CREATED
+    PENDING
+    SUCCESSFUL
+    FAILED
+    CANCELLED
+}
+
+model PaymentToken {
+    id          String        @id @default(cuid())
+    userId      String        @map("user_id")
+    token       String        @unique
+    gatewayUid  String?       @map("gateway_uid")
+    status      PaymentStatus @default(CREATED)
+    amountCents Int           @map("amount_cents")
+    currency    String        @default("USD")
+    coinAmount  Int           @map("coin_amount")
+    description String
+    createdAt   DateTime      @default(now()) @map("created_at")
+    updatedAt   DateTime      @updatedAt @map("updated_at")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+    @@index([token])
+    @@map("payment_tokens")
+}

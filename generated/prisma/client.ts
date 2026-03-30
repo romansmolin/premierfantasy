@@ -90,6 +90,11 @@ export type Gameweek = Prisma.GameweekModel
  */
 export type PlayerGameweekStats = Prisma.PlayerGameweekStatsModel
 /**
+ * Model PaymentToken
+ *
+ */
+export type PaymentToken = Prisma.PaymentTokenModel
+/**
  * Model User
  *
  */

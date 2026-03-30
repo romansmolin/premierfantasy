@@ -13,6 +13,7 @@ model User {
     accounts         Account[]
     fantasyTeams     FantasyTeam[]
     coinTransactions CoinTransaction[]
+    paymentTokens    PaymentToken[]
 
     @@map("users")
 }

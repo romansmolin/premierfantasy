@@ -1,7 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
+import useSWR from 'swr'
 
 import { useWallet, walletService } from '@/entities/wallet'
 
@@ -11,9 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 
-import type { TransactionType } from '@/entities/wallet'
-
-const COIN_PACKAGES = [100, 500, 1000] as const
+import type { ICoinPack, TransactionType } from '@/entities/wallet'
 
 const AI_FEATURES = [
     { name: 'AI Transfer Suggestions', cost: 50 },
@@ -36,17 +36,36 @@ const typeLabel: Record<TransactionType, string> = {
 export const WalletView = () => {
     const { balance, transactions, isLoading, mutate } = useWallet()
     const [loadingAction, setLoadingAction] = useState<string | null>(null)
+    const searchParams = useSearchParams()
 
-    const handlePurchase = async (amount: number) => {
-        setLoadingAction(`purchase-${amount}`)
+    const { data: coinPacks, isLoading: isPacksLoading } = useSWR<ICoinPack[]>('/api/wallet/packs', () =>
+        walletService.getCoinPacks(),
+    )
+
+    useEffect(() => {
+        const payment = searchParams.get('payment')
+
+        if (payment === 'success') {
+            toast.success('Payment successful! Coins have been added to your wallet.')
+            mutate()
+        } else if (payment === 'declined') {
+            toast.error('Payment was declined. Please try again.')
+        } else if (payment === 'failed') {
+            toast.error('Payment failed. Please try again.')
+        } else if (payment === 'cancelled') {
+            toast.info('Payment was cancelled.')
+        }
+    }, [searchParams, mutate])
+
+    const handleBuyCoins = async (coinAmount: number) => {
+        setLoadingAction(`buy-${coinAmount}`)
 
         try {
-            await walletService.purchaseCoins(amount)
-            await mutate()
-            toast.success(`Purchased ${amount} coins`)
+            const result = await walletService.createCheckout(coinAmount)
+
+            window.location.href = result.redirectUrl
         } catch {
-            toast.error('Failed to purchase coins')
-        } finally {
+            toast.error('Failed to start checkout. Please try again.')
             setLoadingAction(null)
         }
     }
@@ -96,17 +115,28 @@ export const WalletView = () => {
                     <CardHeader>
                         <CardTitle>Buy Coins</CardTitle>
                     </CardHeader>
-                    <CardContent className="flex flex-wrap gap-2">
-                        {COIN_PACKAGES.map((amount) => (
-                            <Button
-                                key={amount}
-                                variant="outline"
-                                disabled={loadingAction === `purchase-${amount}`}
-                                onClick={() => handlePurchase(amount)}
-                            >
-                                {loadingAction === `purchase-${amount}` ? 'Buying...' : `${amount} coins`}
-                            </Button>
-                        ))}
+                    <CardContent className="space-y-2">
+                        {isPacksLoading ? (
+                            <Skeleton className="h-24" />
+                        ) : (
+                            coinPacks?.map((pack) => (
+                                <div key={pack.coins} className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm font-medium">{pack.coins} coins</p>
+                                        <p className="text-xs text-muted-foreground">
+                                            ${(pack.priceCents / 100).toFixed(2)}
+                                        </p>
+                                    </div>
+                                    <Button
+                                        size="sm"
+                                        disabled={loadingAction === `buy-${pack.coins}`}
+                                        onClick={() => handleBuyCoins(pack.coins)}
+                                    >
+                                        {loadingAction === `buy-${pack.coins}` ? 'Processing...' : 'Buy'}
+                                    </Button>
+                                </div>
+                            ))
+                        )}
                     </CardContent>
                 </Card>
 

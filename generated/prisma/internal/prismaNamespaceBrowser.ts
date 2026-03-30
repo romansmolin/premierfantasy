@@ -57,6 +57,7 @@ export const ModelName = {
     Player: 'Player',
     Gameweek: 'Gameweek',
     PlayerGameweekStats: 'PlayerGameweekStats',
+    PaymentToken: 'PaymentToken',
     User: 'User',
     Session: 'Session',
     Account: 'Account',
@@ -198,6 +199,23 @@ export const PlayerGameweekStatsScalarFieldEnum = {
 
 export type PlayerGameweekStatsScalarFieldEnum =
     (typeof PlayerGameweekStatsScalarFieldEnum)[keyof typeof PlayerGameweekStatsScalarFieldEnum]
+
+export const PaymentTokenScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    token: 'token',
+    gatewayUid: 'gatewayUid',
+    status: 'status',
+    amountCents: 'amountCents',
+    currency: 'currency',
+    coinAmount: 'coinAmount',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+} as const
+
+export type PaymentTokenScalarFieldEnum =
+    (typeof PaymentTokenScalarFieldEnum)[keyof typeof PaymentTokenScalarFieldEnum]
 
 export const UserScalarFieldEnum = {
     id: 'id',

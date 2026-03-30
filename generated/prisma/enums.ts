@@ -17,6 +17,16 @@ export const PlayerPosition = {
 
 export type PlayerPosition = (typeof PlayerPosition)[keyof typeof PlayerPosition]
 
+export const PaymentStatus = {
+    CREATED: 'CREATED',
+    PENDING: 'PENDING',
+    SUCCESSFUL: 'SUCCESSFUL',
+    FAILED: 'FAILED',
+    CANCELLED: 'CANCELLED',
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
 export const TransactionType = {
     COMPETITION_REWARD: 'COMPETITION_REWARD',
     PURCHASE: 'PURCHASE',

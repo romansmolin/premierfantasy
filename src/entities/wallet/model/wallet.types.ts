@@ -13,3 +13,14 @@ export interface IWalletData {
     balance: number
     transactions: ICoinTransaction[]
 }
+
+export interface ICoinPack {
+    coins: number
+    priceCents: number
+    currency: string
+    label: string
+}
+
+export interface ICheckoutResponse {
+    redirectUrl: string
+}
