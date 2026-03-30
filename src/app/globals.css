@@ -6,7 +6,6 @@
 
 :root {
     --font-montserrat: 'Montserrat', sans-serif;
-    --font-audiowide: 'Audiowide', sans-serif;
     --background: oklch(0.96 0.01 271.34);
     --foreground: oklch(0.21 0.03 263.61);
     --card: oklch(0.98 0.01 271.41);
@@ -159,6 +158,14 @@
     }
     html {
         font-family: var(--font-montserrat), sans-serif;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-audiowide), sans-serif;
     }
 }
 

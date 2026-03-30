@@ -37,8 +37,8 @@ export function DashboardView() {
     return (
         <div className="space-y-4">
             <div>
-                <h2 className="text-lg font-semibold">Dashboard</h2>
-                <p className="text-sm text-muted-foreground">Your competition overview</p>
+                <h2 className="text-lg font-semibold tracking-wide">Dashboard</h2>
+                <p className="text-md text-muted-foreground">Your competition overview</p>
             </div>
 
             {state.canJoinActive && state.activeCompetition && (

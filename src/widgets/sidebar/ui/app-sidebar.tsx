@@ -1,6 +1,12 @@
 'use client'
 
-import { AnalyticsUpIcon, DashboardSquare01Icon, GlobalIcon, NoteEditIcon } from '@hugeicons/core-free-icons'
+import {
+    AnalyticsUpIcon,
+    Coins01Icon,
+    DashboardSquare01Icon,
+    GlobalIcon,
+    NoteEditIcon,
+} from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
 
@@ -31,6 +37,10 @@ const navGroups = [
             { title: 'Competitions', icon: GlobalIcon, href: '/competitions' },
             { title: 'Team Builder', icon: NoteEditIcon, href: '/fantasy-team-builder' },
         ],
+    },
+    {
+        label: 'Account',
+        items: [{ title: 'Wallet', icon: Coins01Icon, href: '/wallet' }],
     },
 ]
 

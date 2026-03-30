@@ -4,6 +4,7 @@ export interface IUser {
     email: string
     emailVerified: boolean
     image: string | null
+    coinBalance: number
     createdAt: Date
     updatedAt: Date
 }

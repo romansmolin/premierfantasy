@@ -385,6 +385,7 @@ export const ModelName = {
     Session: 'Session',
     Account: 'Account',
     Verification: 'Verification',
+    CoinTransaction: 'CoinTransaction',
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,6 +419,7 @@ export type TypeMap<
             | 'session'
             | 'account'
             | 'verification'
+            | 'coinTransaction'
         txIsolationLevel: TransactionIsolationLevel
     }
     model: {
@@ -1389,6 +1391,82 @@ export type TypeMap<
                 }
             }
         }
+        CoinTransaction: {
+            payload: Prisma.$CoinTransactionPayload<ExtArgs>
+            fields: Prisma.CoinTransactionFieldRefs
+            operations: {
+                findUnique: {
+                    args: Prisma.CoinTransactionFindUniqueArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$CoinTransactionPayload> | null
+                }
+                findUniqueOrThrow: {
+                    args: Prisma.CoinTransactionFindUniqueOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$CoinTransactionPayload>
+                }
+                findFirst: {
+                    args: Prisma.CoinTransactionFindFirstArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$CoinTransactionPayload> | null
+                }
+                findFirstOrThrow: {
+                    args: Prisma.CoinTransactionFindFirstOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$CoinTransactionPayload>
+                }
+                findMany: {
+                    args: Prisma.CoinTransactionFindManyArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$CoinTransactionPayload>[]
+                }
+                create: {
+                    args: Prisma.CoinTransactionCreateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$CoinTransactionPayload>
+                }
+                createMany: {
+                    args: Prisma.CoinTransactionCreateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                createManyAndReturn: {
+                    args: Prisma.CoinTransactionCreateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$CoinTransactionPayload>[]
+                }
+                delete: {
+                    args: Prisma.CoinTransactionDeleteArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$CoinTransactionPayload>
+                }
+                update: {
+                    args: Prisma.CoinTransactionUpdateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$CoinTransactionPayload>
+                }
+                deleteMany: {
+                    args: Prisma.CoinTransactionDeleteManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateMany: {
+                    args: Prisma.CoinTransactionUpdateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateManyAndReturn: {
+                    args: Prisma.CoinTransactionUpdateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$CoinTransactionPayload>[]
+                }
+                upsert: {
+                    args: Prisma.CoinTransactionUpsertArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$CoinTransactionPayload>
+                }
+                aggregate: {
+                    args: Prisma.CoinTransactionAggregateArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateCoinTransaction>
+                }
+                groupBy: {
+                    args: Prisma.CoinTransactionGroupByArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.CoinTransactionGroupByOutputType>[]
+                }
+                count: {
+                    args: Prisma.CoinTransactionCountArgs<ExtArgs>
+                    result:
+                        | runtime.Types.Utils.Optional<Prisma.CoinTransactionCountAggregateOutputType>
+                        | number
+                }
+            }
+        }
     }
 } & {
     other: {
@@ -1555,6 +1633,7 @@ export const UserScalarFieldEnum = {
     image: 'image',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    coinBalance: 'coinBalance',
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1601,6 +1680,18 @@ export const VerificationScalarFieldEnum = {
 
 export type VerificationScalarFieldEnum =
     (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+export const CoinTransactionScalarFieldEnum = {
+    id: 'id',
+    amount: 'amount',
+    type: 'type',
+    description: 'description',
+    createdAt: 'createdAt',
+    userId: 'userId',
+} as const
+
+export type CoinTransactionScalarFieldEnum =
+    (typeof CoinTransactionScalarFieldEnum)[keyof typeof CoinTransactionScalarFieldEnum]
 
 export const SortOrder = {
     asc: 'asc',
@@ -1683,6 +1774,22 @@ export type EnumPlayerPositionFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 export type ListEnumPlayerPositionFieldRefInput<$PrismaModel> = FieldRefInputType<
     $PrismaModel,
     'PlayerPosition[]'
+>
+
+/**
+ * Reference to a field of type 'TransactionType'
+ */
+export type EnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
+    $PrismaModel,
+    'TransactionType'
+>
+
+/**
+ * Reference to a field of type 'TransactionType[]'
+ */
+export type ListEnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
+    $PrismaModel,
+    'TransactionType[]'
 >
 
 /**
@@ -1801,6 +1908,7 @@ export type GlobalOmitConfig = {
     session?: Prisma.SessionOmit
     account?: Prisma.AccountOmit
     verification?: Prisma.VerificationOmit
+    coinTransaction?: Prisma.CoinTransactionOmit
 }
 
 /* Types for Logging */

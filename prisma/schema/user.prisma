@@ -7,9 +7,12 @@ model User {
     createdAt     DateTime @default(now()) @map("created_at")
     updatedAt     DateTime @updatedAt @map("updated_at")
 
-    sessions     Session[]
-    accounts     Account[]
-    fantasyTeams FantasyTeam[]
+    coinBalance      Int               @default(0) @map("coin_balance")
+
+    sessions         Session[]
+    accounts         Account[]
+    fantasyTeams     FantasyTeam[]
+    coinTransactions CoinTransaction[]
 
     @@map("users")
 }

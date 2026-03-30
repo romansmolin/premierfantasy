@@ -19,8 +19,18 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+    coinBalance: number | null
+}
+
+export type UserSumAggregateOutputType = {
+    coinBalance: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -31,6 +41,7 @@ export type UserMinAggregateOutputType = {
     image: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    coinBalance: number | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -41,6 +52,7 @@ export type UserMaxAggregateOutputType = {
     image: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    coinBalance: number | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -51,7 +63,16 @@ export type UserCountAggregateOutputType = {
     image: number
     createdAt: number
     updatedAt: number
+    coinBalance: number
     _all: number
+}
+
+export type UserAvgAggregateInputType = {
+    coinBalance?: true
+}
+
+export type UserSumAggregateInputType = {
+    coinBalance?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -62,6 +83,7 @@ export type UserMinAggregateInputType = {
     image?: true
     createdAt?: true
     updatedAt?: true
+    coinBalance?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -72,6 +94,7 @@ export type UserMaxAggregateInputType = {
     image?: true
     createdAt?: true
     updatedAt?: true
+    coinBalance?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -82,6 +105,7 @@ export type UserCountAggregateInputType = {
     image?: true
     createdAt?: true
     updatedAt?: true
+    coinBalance?: true
     _all?: true
 }
 
@@ -125,6 +149,18 @@ export type UserAggregateArgs<
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      *
+     * Select which fields to average
+     **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to sum
+     **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
      * Select which fields to find the minimum value
      **/
     _min?: UserMinAggregateInputType
@@ -154,6 +190,8 @@ export type UserGroupByArgs<
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
 }
@@ -166,7 +204,10 @@ export type UserGroupByOutputType = {
     image: string | null
     createdAt: Date
     updatedAt: Date
+    coinBalance: number
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
 }
@@ -194,9 +235,11 @@ export type UserWhereInput = {
     image?: Prisma.StringNullableFilter<'User'> | string | null
     createdAt?: Prisma.DateTimeFilter<'User'> | Date | string
     updatedAt?: Prisma.DateTimeFilter<'User'> | Date | string
+    coinBalance?: Prisma.IntFilter<'User'> | number
     sessions?: Prisma.SessionListRelationFilter
     accounts?: Prisma.AccountListRelationFilter
     fantasyTeams?: Prisma.FantasyTeamListRelationFilter
+    coinTransactions?: Prisma.CoinTransactionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -207,9 +250,11 @@ export type UserOrderByWithRelationInput = {
     image?: Prisma.SortOrderInput | Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
+    coinBalance?: Prisma.SortOrder
     sessions?: Prisma.SessionOrderByRelationAggregateInput
     accounts?: Prisma.AccountOrderByRelationAggregateInput
     fantasyTeams?: Prisma.FantasyTeamOrderByRelationAggregateInput
+    coinTransactions?: Prisma.CoinTransactionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<
@@ -224,9 +269,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
         image?: Prisma.StringNullableFilter<'User'> | string | null
         createdAt?: Prisma.DateTimeFilter<'User'> | Date | string
         updatedAt?: Prisma.DateTimeFilter<'User'> | Date | string
+        coinBalance?: Prisma.IntFilter<'User'> | number
         sessions?: Prisma.SessionListRelationFilter
         accounts?: Prisma.AccountListRelationFilter
         fantasyTeams?: Prisma.FantasyTeamListRelationFilter
+        coinTransactions?: Prisma.CoinTransactionListRelationFilter
     },
     'id' | 'email'
 >
@@ -239,9 +286,12 @@ export type UserOrderByWithAggregationInput = {
     image?: Prisma.SortOrderInput | Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
+    coinBalance?: Prisma.SortOrder
     _count?: Prisma.UserCountOrderByAggregateInput
+    _avg?: Prisma.UserAvgOrderByAggregateInput
     _max?: Prisma.UserMaxOrderByAggregateInput
     _min?: Prisma.UserMinOrderByAggregateInput
+    _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -255,6 +305,7 @@ export type UserScalarWhereWithAggregatesInput = {
     image?: Prisma.StringNullableWithAggregatesFilter<'User'> | string | null
     createdAt?: Prisma.DateTimeWithAggregatesFilter<'User'> | Date | string
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<'User'> | Date | string
+    coinBalance?: Prisma.IntWithAggregatesFilter<'User'> | number
 }
 
 export type UserCreateInput = {
@@ -265,9 +316,11 @@ export type UserCreateInput = {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    coinBalance?: number
     sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
     accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
     fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -278,9 +331,11 @@ export type UserUncheckedCreateInput = {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    coinBalance?: number
     sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
     fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -291,9 +346,11 @@ export type UserUpdateInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
     sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
     accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
     fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -304,9 +361,11 @@ export type UserUncheckedUpdateInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
     sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
     fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -317,6 +376,7 @@ export type UserCreateManyInput = {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    coinBalance?: number
 }
 
 export type UserUpdateManyMutationInput = {
@@ -327,6 +387,7 @@ export type UserUpdateManyMutationInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -337,6 +398,7 @@ export type UserUncheckedUpdateManyInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type UserScalarRelationFilter = {
@@ -352,6 +414,11 @@ export type UserCountOrderByAggregateInput = {
     image?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
+    coinBalance?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+    coinBalance?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -362,6 +429,7 @@ export type UserMaxOrderByAggregateInput = {
     image?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
+    coinBalance?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -372,6 +440,11 @@ export type UserMinOrderByAggregateInput = {
     image?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
+    coinBalance?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+    coinBalance?: Prisma.SortOrder
 }
 
 export type UserCreateNestedOneWithoutFantasyTeamsInput = {
@@ -440,6 +513,32 @@ export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
     >
 }
 
+export type UserCreateNestedOneWithoutCoinTransactionsInput = {
+    create?: Prisma.XOR<
+        Prisma.UserCreateWithoutCoinTransactionsInput,
+        Prisma.UserUncheckedCreateWithoutCoinTransactionsInput
+    >
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutCoinTransactionsInput
+    connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCoinTransactionsNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.UserCreateWithoutCoinTransactionsInput,
+        Prisma.UserUncheckedCreateWithoutCoinTransactionsInput
+    >
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutCoinTransactionsInput
+    upsert?: Prisma.UserUpsertWithoutCoinTransactionsInput
+    connect?: Prisma.UserWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.UserUpdateToOneWithWhereWithoutCoinTransactionsInput,
+            Prisma.UserUpdateWithoutCoinTransactionsInput
+        >,
+        Prisma.UserUncheckedUpdateWithoutCoinTransactionsInput
+    >
+}
+
 export type UserCreateWithoutFantasyTeamsInput = {
     id?: string
     name: string
@@ -448,8 +547,10 @@ export type UserCreateWithoutFantasyTeamsInput = {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    coinBalance?: number
     sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
     accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFantasyTeamsInput = {
@@ -460,8 +561,10 @@ export type UserUncheckedCreateWithoutFantasyTeamsInput = {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    coinBalance?: number
     sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFantasyTeamsInput = {
@@ -500,8 +603,10 @@ export type UserUpdateWithoutFantasyTeamsInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
     sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
     accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFantasyTeamsInput = {
@@ -512,8 +617,10 @@ export type UserUncheckedUpdateWithoutFantasyTeamsInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
     sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -524,8 +631,10 @@ export type UserCreateWithoutSessionsInput = {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    coinBalance?: number
     accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
     fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -536,8 +645,10 @@ export type UserUncheckedCreateWithoutSessionsInput = {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    coinBalance?: number
     accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
     fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -564,8 +675,10 @@ export type UserUpdateWithoutSessionsInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
     accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
     fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -576,8 +689,10 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
     accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
     fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -588,8 +703,10 @@ export type UserCreateWithoutAccountsInput = {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    coinBalance?: number
     sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
     fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -600,8 +717,10 @@ export type UserUncheckedCreateWithoutAccountsInput = {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    coinBalance?: number
     sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
     fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -628,8 +747,10 @@ export type UserUpdateWithoutAccountsInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
     sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
     fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -640,7 +761,93 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
     image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
     sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+    fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCoinTransactionsInput = {
+    id?: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    coinBalance?: number
+    sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+    accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+    fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCoinTransactionsInput = {
+    id?: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    coinBalance?: number
+    sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+    fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCoinTransactionsInput = {
+    where: Prisma.UserWhereUniqueInput
+    create: Prisma.XOR<
+        Prisma.UserCreateWithoutCoinTransactionsInput,
+        Prisma.UserUncheckedCreateWithoutCoinTransactionsInput
+    >
+}
+
+export type UserUpsertWithoutCoinTransactionsInput = {
+    update: Prisma.XOR<
+        Prisma.UserUpdateWithoutCoinTransactionsInput,
+        Prisma.UserUncheckedUpdateWithoutCoinTransactionsInput
+    >
+    create: Prisma.XOR<
+        Prisma.UserCreateWithoutCoinTransactionsInput,
+        Prisma.UserUncheckedCreateWithoutCoinTransactionsInput
+    >
+    where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCoinTransactionsInput = {
+    where?: Prisma.UserWhereInput
+    data: Prisma.XOR<
+        Prisma.UserUpdateWithoutCoinTransactionsInput,
+        Prisma.UserUncheckedUpdateWithoutCoinTransactionsInput
+    >
+}
+
+export type UserUpdateWithoutCoinTransactionsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    email?: Prisma.StringFieldUpdateOperationsInput | string
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
+    sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+    accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+    fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCoinTransactionsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    email?: Prisma.StringFieldUpdateOperationsInput | string
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
+    sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
     fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -652,6 +859,7 @@ export type UserCountOutputType = {
     sessions: number
     accounts: number
     fantasyTeams: number
+    coinTransactions: number
 }
 
 export type UserCountOutputTypeSelect<
@@ -660,6 +868,7 @@ export type UserCountOutputTypeSelect<
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
     fantasyTeams?: boolean | UserCountOutputTypeCountFantasyTeamsArgs
+    coinTransactions?: boolean | UserCountOutputTypeCountCoinTransactionsArgs
 }
 
 /**
@@ -701,6 +910,15 @@ export type UserCountOutputTypeCountFantasyTeamsArgs<
     where?: Prisma.FantasyTeamWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCoinTransactionsArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    where?: Prisma.CoinTransactionWhereInput
+}
+
 export type UserSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
@@ -712,9 +930,11 @@ export type UserSelect<
         image?: boolean
         createdAt?: boolean
         updatedAt?: boolean
+        coinBalance?: boolean
         sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
         accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
         fantasyTeams?: boolean | Prisma.User$fantasyTeamsArgs<ExtArgs>
+        coinTransactions?: boolean | Prisma.User$coinTransactionsArgs<ExtArgs>
         _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
     },
     ExtArgs['result']['user']
@@ -731,6 +951,7 @@ export type UserSelectCreateManyAndReturn<
         image?: boolean
         createdAt?: boolean
         updatedAt?: boolean
+        coinBalance?: boolean
     },
     ExtArgs['result']['user']
 >
@@ -746,6 +967,7 @@ export type UserSelectUpdateManyAndReturn<
         image?: boolean
         createdAt?: boolean
         updatedAt?: boolean
+        coinBalance?: boolean
     },
     ExtArgs['result']['user']
 >
@@ -758,12 +980,13 @@ export type UserSelectScalar = {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    coinBalance?: boolean
 }
 
 export type UserOmit<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-    'id' | 'name' | 'email' | 'emailVerified' | 'image' | 'createdAt' | 'updatedAt',
+    'id' | 'name' | 'email' | 'emailVerified' | 'image' | 'createdAt' | 'updatedAt' | 'coinBalance',
     ExtArgs['result']['user']
 >
 export type UserInclude<
@@ -772,6 +995,7 @@ export type UserInclude<
     sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
     accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
     fantasyTeams?: boolean | Prisma.User$fantasyTeamsArgs<ExtArgs>
+    coinTransactions?: boolean | Prisma.User$coinTransactionsArgs<ExtArgs>
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<
@@ -789,6 +1013,7 @@ export type $UserPayload<
         sessions: Prisma.$SessionPayload<ExtArgs>[]
         accounts: Prisma.$AccountPayload<ExtArgs>[]
         fantasyTeams: Prisma.$FantasyTeamPayload<ExtArgs>[]
+        coinTransactions: Prisma.$CoinTransactionPayload<ExtArgs>[]
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -799,6 +1024,7 @@ export type $UserPayload<
             image: string | null
             createdAt: Date
             updatedAt: Date
+            coinBalance: number
         },
         ExtArgs['result']['user']
     >
@@ -1330,6 +1556,17 @@ export interface Prisma__UserClient<
           >
         | Null
     >
+    coinTransactions<T extends Prisma.User$coinTransactionsArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.User$coinTransactionsArgs<ExtArgs>>,
+    ): Prisma.PrismaPromise<
+        | runtime.Types.Result.GetResult<
+              Prisma.$CoinTransactionPayload<ExtArgs>,
+              T,
+              'findMany',
+              GlobalOmitOptions
+          >
+        | Null
+    >
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1368,6 +1605,7 @@ export interface UserFieldRefs {
     readonly image: Prisma.FieldRef<'User', 'String'>
     readonly createdAt: Prisma.FieldRef<'User', 'DateTime'>
     readonly updatedAt: Prisma.FieldRef<'User', 'DateTime'>
+    readonly coinBalance: Prisma.FieldRef<'User', 'Int'>
 }
 
 // Custom InputTypes
@@ -1863,6 +2101,34 @@ export type User$fantasyTeamsArgs<
     take?: number
     skip?: number
     distinct?: Prisma.FantasyTeamScalarFieldEnum | Prisma.FantasyTeamScalarFieldEnum[]
+}
+
+/**
+ * User.coinTransactions
+ */
+export type User$coinTransactionsArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the CoinTransaction
+     */
+    select?: Prisma.CoinTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CoinTransaction
+     */
+    omit?: Prisma.CoinTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.CoinTransactionInclude<ExtArgs> | null
+    where?: Prisma.CoinTransactionWhereInput
+    orderBy?:
+        | Prisma.CoinTransactionOrderByWithRelationInput
+        | Prisma.CoinTransactionOrderByWithRelationInput[]
+    cursor?: Prisma.CoinTransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Prisma.CoinTransactionScalarFieldEnum | Prisma.CoinTransactionScalarFieldEnum[]
 }
 
 /**

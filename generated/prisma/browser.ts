@@ -81,3 +81,8 @@ export type Account = Prisma.AccountModel
  *
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model CoinTransaction
+ *
+ */
+export type CoinTransaction = Prisma.CoinTransactionModel

@@ -1,0 +1,19 @@
+enum TransactionType {
+    COMPETITION_REWARD
+    PURCHASE
+    AI_FEATURE_SPEND
+}
+
+model CoinTransaction {
+    id          String          @id @default(cuid())
+    amount      Int
+    type        TransactionType
+    description String
+    createdAt   DateTime        @default(now()) @map("created_at")
+
+    userId String @map("user_id")
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+    @@map("coin_transactions")
+}

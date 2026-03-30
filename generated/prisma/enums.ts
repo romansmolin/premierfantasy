@@ -16,3 +16,11 @@ export const PlayerPosition = {
 } as const
 
 export type PlayerPosition = (typeof PlayerPosition)[keyof typeof PlayerPosition]
+
+export const TransactionType = {
+    COMPETITION_REWARD: 'COMPETITION_REWARD',
+    PURCHASE: 'PURCHASE',
+    AI_FEATURE_SPEND: 'AI_FEATURE_SPEND',
+} as const
+
+export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType]

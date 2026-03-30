@@ -5,11 +5,11 @@ import type {
     ILeaderboard,
 } from '@/entities/competition/model/competition.types'
 
-import type { IFantasyTeamRepository } from '@/server/fantasy-team/repository/fantasy-team.repository.interface'
-import type { IGameweekRepository } from '@/server/gameweek/repository/gameweek.repository.interface'
-
 import type { ICompetitionService } from './competition.service.interface'
 import type { ICompetitionRepository } from '../repository/competition.repository.interface'
+import type { IFantasyTeamRepository } from '@/server/fantasy-team/repository/fantasy-team.repository.interface'
+import type { IGameweekRepository } from '@/server/gameweek/repository/gameweek.repository.interface'
+import type { IWalletService } from '@/server/wallet/service/wallet.service.interface'
 
 const ROLLING_WINDOW = 5
 
@@ -17,15 +17,18 @@ export class CompetitionService implements ICompetitionService {
     private readonly competitionRepository
     private readonly fantasyTeamRepository
     private readonly gameweekRepository
+    private readonly walletService
 
     constructor(
         competitionRepository: ICompetitionRepository,
         fantasyTeamRepository?: IFantasyTeamRepository,
         gameweekRepository?: IGameweekRepository,
+        walletService?: IWalletService,
     ) {
         this.competitionRepository = competitionRepository
         this.fantasyTeamRepository = fantasyTeamRepository ?? null
         this.gameweekRepository = gameweekRepository ?? null
+        this.walletService = walletService ?? null
     }
 
     async getCompetition(id: string): Promise<ICompetition | null> {
@@ -178,6 +181,15 @@ export class CompetitionService implements ICompetitionService {
 
             if (endGw?.isFinished) {
                 await this.competitionRepository.updateStatus(active.id, 'completed')
+
+                if (this.walletService) {
+                    const entries = await this.competitionRepository.getLeaderboard(active.id)
+                    const top3 = entries.filter((e) => e.rank <= 3)
+
+                    for (const entry of top3) {
+                        await this.walletService.awardCompetitionReward(entry.userId, active.id, entry.rank)
+                    }
+                }
             } else {
                 return
             }

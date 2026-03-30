@@ -61,6 +61,7 @@ export const ModelName = {
     Session: 'Session',
     Account: 'Account',
     Verification: 'Verification',
+    CoinTransaction: 'CoinTransaction',
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -206,6 +207,7 @@ export const UserScalarFieldEnum = {
     image: 'image',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    coinBalance: 'coinBalance',
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -252,6 +254,18 @@ export const VerificationScalarFieldEnum = {
 
 export type VerificationScalarFieldEnum =
     (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+export const CoinTransactionScalarFieldEnum = {
+    id: 'id',
+    amount: 'amount',
+    type: 'type',
+    description: 'description',
+    createdAt: 'createdAt',
+    userId: 'userId',
+} as const
+
+export type CoinTransactionScalarFieldEnum =
+    (typeof CoinTransactionScalarFieldEnum)[keyof typeof CoinTransactionScalarFieldEnum]
 
 export const SortOrder = {
     asc: 'asc',
