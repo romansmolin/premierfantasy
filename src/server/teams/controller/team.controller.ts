@@ -50,4 +50,18 @@ export class TeamController {
 
         return NextResponse.json(statistics)
     }
+
+    async getPlayerDetails(playerId: number, season: number) {
+        try {
+            const player = await this.teamService.getPlayerDetails(playerId, season)
+
+            if (!player) return NextResponse.json({ error: 'Player not found' }, { status: 404 })
+
+            return NextResponse.json(player)
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Failed to fetch player details'
+
+            return NextResponse.json({ error: message }, { status: 500 })
+        }
+    }
 }

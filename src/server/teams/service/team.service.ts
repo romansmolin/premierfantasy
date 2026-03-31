@@ -1,3 +1,4 @@
+import type { IPlayerDetails } from '@/entities/players/model/player-details.types'
 import type { ITeamResponse, ISquadPlayer, ITeamStatistics } from '@/entities/team'
 
 import type { ITeamsService } from './team.service.interface'
@@ -36,5 +37,21 @@ export class TeamService implements ITeamsService {
         const result = await this.teamRepository.getTeamStatistics(teamId, leagueId, season)
 
         return result.response ?? null
+    }
+
+    async getPlayerDetails(playerId: number, season: number): Promise<IPlayerDetails | null> {
+        const seasons = [season, season - 1]
+
+        const results = await Promise.all(
+            seasons.map((s) => this.teamRepository.getPlayerDetails(playerId, s)),
+        )
+
+        const primary = results[0].response?.[0]
+
+        if (!primary) return null
+
+        const allStats = results.flatMap((r) => r.response?.[0]?.statistics ?? [])
+
+        return { player: primary.player, statistics: allStats }
     }
 }

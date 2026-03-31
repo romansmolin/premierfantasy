@@ -19,3 +19,7 @@ export {
 export { saveSquadSchema } from './model/player.schema'
 
 export type { SelectedPlayer, PlayerPosition, ValidationResult } from './model/player.types'
+
+export { playerService } from './api/player.service'
+export type { IPlayerDetails, IPlayerSeasonStats } from './model/player-details.types'
+export { PlayerDetailsModal } from './ui/player-details-modal'

@@ -1,8 +1,9 @@
 'use client'
 
 import Image from 'next/image'
+import { useState } from 'react'
 
-import { generatePlayerPrice, mapApiPosition } from '@/entities/players'
+import { generatePlayerPrice, mapApiPosition, PlayerDetailsModal } from '@/entities/players'
 import { useTeamPlayers } from '@/entities/team'
 
 import { cn } from '@/shared/lib/utils'
@@ -22,6 +23,7 @@ import {
 
 import { SelectPlayerCheckbox } from '../../select-player/ui/select-player-checkbox'
 import { getPositionBadgeClass } from '../lib/position-badge-variant'
+import { usePlayerDetails } from '../model/use-player-details'
 import { usePlayersExplorer } from '../model/use-players-explorer'
 
 const POSITIONS = [
@@ -32,7 +34,10 @@ const POSITIONS = [
 ] as const
 
 export const PlayersExplorer = () => {
+    const [selectedPlayerId, setSelectedPlayerId] = useState<number | null>(null)
+
     const { playersByTeam } = useTeamPlayers()
+
     const {
         teams,
         playersFilter,
@@ -45,6 +50,8 @@ export const PlayersExplorer = () => {
         selectedTeamsIds,
         teamLookup,
     } = usePlayersExplorer(playersByTeam)
+
+    const { player, isLoading, error } = usePlayerDetails(selectedPlayerId)
 
     return (
         <div className="flex flex-col gap-3 ">
@@ -73,7 +80,6 @@ export const PlayersExplorer = () => {
                 </div>
                 <ScrollBar orientation="horizontal" className={'hidden!'} />
             </ScrollArea>
-
             <div className="flex flex-col gap-3">
                 <Input
                     value={playersFilter.playerName}
@@ -151,7 +157,6 @@ export const PlayersExplorer = () => {
                     )}
                 </div>
             </div>
-
             <div className="max-h-[80vh] overflow-auto">
                 <Table>
                     <TableCaption>
@@ -171,7 +176,11 @@ export const PlayersExplorer = () => {
                     <TableBody>
                         {Object.entries(filteredPlayers).map(([teamId, teamPlayers]) =>
                             teamPlayers.map((player) => (
-                                <TableRow key={player.id}>
+                                <TableRow
+                                    key={player.id}
+                                    className="cursor-pointer"
+                                    onClick={() => setSelectedPlayerId(player.id)}
+                                >
                                     <TableCell>
                                         <div className="flex items-center gap-3">
                                             <Image
@@ -206,6 +215,13 @@ export const PlayersExplorer = () => {
                     </TableBody>
                 </Table>
             </div>
+            <PlayerDetailsModal
+                open={selectedPlayerId !== null}
+                onClose={() => setSelectedPlayerId(null)}
+                player={player}
+                isLoading={isLoading}
+                error={error}
+            />{' '}
         </div>
     )
 }

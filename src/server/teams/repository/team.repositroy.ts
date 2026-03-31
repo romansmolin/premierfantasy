@@ -1,3 +1,4 @@
+import type { IPlayerDetails } from '@/entities/players/model/player-details.types'
 import type { IApiFootballResponse, ITeamResponse, ISquadResponse, ITeamStatistics } from '@/entities/team'
 
 import { HttpClient } from '@/shared/api/http-client'
@@ -43,6 +44,16 @@ export class TeamRepository implements ITeamsRepository {
         return this.httpClient.get<IApiFootballResponse<ITeamStatistics>>('/teams/statistics', {
             headers: { 'x-apisports-key': this.footballApiKey },
             params: { team: teamId, league: leagueId, season },
+        })
+    }
+
+    async getPlayerDetails(
+        playerId: number,
+        season: number,
+    ): Promise<IApiFootballResponse<IPlayerDetails[]>> {
+        return this.httpClient.get<IApiFootballResponse<IPlayerDetails[]>>('/players', {
+            headers: { 'x-apisports-key': this.footballApiKey },
+            params: { id: playerId, season },
         })
     }
 }
