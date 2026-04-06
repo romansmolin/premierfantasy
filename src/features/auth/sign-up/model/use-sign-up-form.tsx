@@ -32,17 +32,15 @@ export const useSignUpForm = () => {
             name: username,
             email,
             password,
-            callbackURL: '/dashboard',
-            fetchOptions: {
-                onSuccess: () => {
-                    router.push('/dashboard')
-                },
-            },
         })
 
         if (error) {
             toast.error(error.message || 'Something went wrong! Please try again.')
+
+            return
         }
+
+        router.push('/dashboard')
     }
 
     return {

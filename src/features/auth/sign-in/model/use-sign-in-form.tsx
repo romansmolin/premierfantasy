@@ -26,17 +26,15 @@ export const useSignInForm = () => {
         const { error } = await authClient.signIn.email({
             email,
             password,
-            callbackURL: '/dashboard',
-            fetchOptions: {
-                onSuccess: () => {
-                    router.push('/dashboard')
-                },
-            },
         })
 
         if (error) {
             toast.error(error.message || 'Invalid email or password. Please try again.')
+
+            return
         }
+
+        router.push('/dashboard')
     }
 
     return {
