@@ -31,6 +31,10 @@ export const auth = betterAuth({
     secret: getEnv('BETTER_AUTH_SECRET'),
     baseURL: appUrl,
     trustedOrigins: [appUrl],
+    advanced: {
+        cookiePrefix: 'premier-fantasy',
+        useSecureCookies: false,
+    },
 })
 
 export type Session = typeof auth.$Infer.Session
