@@ -5,9 +5,8 @@ import { useEffect, useRef } from 'react'
 import useSWR from 'swr'
 
 import { fantasyTeamService, useFantasyTeams } from '@/entities/fantasy-team'
-import { usePlayersStorage } from '@/entities/players'
-
 import type { ISquadPlayer } from '@/entities/fantasy-team'
+import { usePlayersStorage } from '@/entities/players'
 import type { SelectedPlayer } from '@/entities/players'
 
 function mapSquadPlayer(player: ISquadPlayer): SelectedPlayer {

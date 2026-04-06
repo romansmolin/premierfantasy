@@ -1,6 +1,6 @@
-import { prisma } from '@/shared/lib/prisma'
-
 import type { ICoinTransaction } from '@/entities/wallet/model/wallet.types'
+
+import { prisma } from '@/shared/lib/prisma'
 
 import type { CreateTransactionData, IWalletRepository } from './wallet.repository.interface'
 

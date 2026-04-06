@@ -1,8 +1,7 @@
 import type { IUser } from '@/entities/user/model/user.types'
 
-import type { IUserRepository } from '../repository/user.repository.interface'
-
 import type { IUserService } from './user.service.interface'
+import type { IUserRepository } from '../repository/user.repository.interface'
 
 export class UserService implements IUserService {
     private readonly userRepository

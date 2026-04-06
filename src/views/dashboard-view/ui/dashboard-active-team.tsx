@@ -1,15 +1,8 @@
 'use client'
 
-import {
-    ChartLineData02Icon,
-    Award01Icon,
-    StarCircleIcon,
-    GlobalIcon,
-    UserSwitchIcon,
-} from '@hugeicons/core-free-icons'
+import { ChartLineData02Icon, Award01Icon, StarCircleIcon, GlobalIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
-
 import useSWR from 'swr'
 
 import { LeaderboardTable } from '@/features/competition'
@@ -17,12 +10,11 @@ import { LeaderboardTable } from '@/features/competition'
 import type { ICompetition } from '@/entities/competition/model/competition.types'
 import { gameweekService } from '@/entities/gameweek'
 
-import { CountdownTimer } from './countdown-timer'
-
 import { Badge } from '@/shared/ui/badge'
 import { buttonVariants } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 
+import { CountdownTimer } from './countdown-timer'
 import { UpcomingFixtures } from './upcoming-fixtures'
 
 interface DashboardActiveTeamProps {

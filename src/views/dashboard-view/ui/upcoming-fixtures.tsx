@@ -5,9 +5,9 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import Image from 'next/image'
 import useSWR from 'swr'
 
-import { fixtureService } from '@/entities/fixtures'
 import { useMatchPrediction, MatchPredictionModal } from '@/features/ai'
 
+import { fixtureService } from '@/entities/fixtures'
 import type { IFixture } from '@/entities/fixtures'
 
 import { Button } from '@/shared/ui/button'

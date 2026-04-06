@@ -161,6 +161,12 @@ export const ProfileView = () => {
                         <p className="text-sm font-semibold">{user.name}</p>
                         <p className="text-xs text-muted-foreground">{user.email}</p>
 
+                        {!user.image && (
+                            <p className="text-xs text-muted-foreground mt-2">
+                                Add a profile picture to personalize your account
+                            </p>
+                        )}
+
                         <div className="mt-1 flex items-center gap-2">
                             <Badge variant="secondary">
                                 Member since{' '}

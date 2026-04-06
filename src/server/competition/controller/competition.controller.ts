@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { createCompetitionSchema } from '@/entities/competition/model/competition.schema'
+
 import { auth } from '@/shared/lib/auth'
 
 import type { ICompetitionService } from '../service/competition.service.interface'

@@ -39,6 +39,7 @@ export const usePlayersExplorer = (playersByTeam: PlayersByTeam) => {
 
             const matched = players.filter((p) => {
                 if (nameQuery && !p.name.toLowerCase().includes(nameQuery)) return false
+
                 if (positionFilter && p.position !== positionFilter) return false
 
                 return true

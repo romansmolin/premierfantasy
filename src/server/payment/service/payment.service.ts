@@ -1,5 +1,6 @@
-import { secureProcessorClient } from '@/shared/api/secure-processor-client'
 import { getCoinPack } from '@/server/wallet/lib/coin-pricing'
+
+import { secureProcessorClient } from '@/shared/api/secure-processor-client'
 
 import type { IPaymentService } from './payment.service.interface'
 import type { IPaymentRepository } from '../repository/payment.repository.interface'
@@ -34,7 +35,7 @@ export class PaymentService implements IPaymentService {
             const checkout = await secureProcessorClient.createCheckout({
                 amountCents: pack.priceCents,
                 currency: pack.currency,
-                description: `Purchase ${pack.coins} Fantasy Football coins`,
+                description: `Purchase ${pack.coins} Premier Fantasy coins`,
                 trackingId: payment.id,
                 userId,
             })

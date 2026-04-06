@@ -50,7 +50,9 @@ export function DashboardView() {
                     <HugeiconsIcon icon={DashboardSquare01Icon} size={20} className="text-primary" />
                 </div>
                 <div>
-                    <h2 className="text-lg font-bold">Welcome back, {userName}</h2>
+                    <h2 className="text-lg font-bold">
+                        {state.hasTeamInActive ? `Welcome back, ${userName}` : `Welcome, ${userName}`}
+                    </h2>
                     <p className="text-sm text-muted-foreground">Your competition overview</p>
                 </div>
             </div>

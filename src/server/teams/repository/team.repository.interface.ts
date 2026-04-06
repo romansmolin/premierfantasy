@@ -1,6 +1,5 @@
-import type { IApiFootballResponse, ITeamResponse, ISquadResponse, ITeamStatistics } from '@/entities/team'
-
 import type { IPlayerDetails } from '@/entities/players/model/player-details.types'
+import type { IApiFootballResponse, ITeamResponse, ISquadResponse, ITeamStatistics } from '@/entities/team'
 
 export interface ITeamsRepository {
     getAllTeams(leagueId: number, season: number): Promise<IApiFootballResponse<ITeamResponse[]>>

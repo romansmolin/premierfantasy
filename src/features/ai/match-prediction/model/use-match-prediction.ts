@@ -5,9 +5,8 @@ import { toast } from 'sonner'
 import useSWRMutation from 'swr/mutation'
 
 import { aiService } from '@/entities/ai'
-import { walletService, useWallet } from '@/entities/wallet'
-
 import type { MatchPrediction } from '@/entities/ai'
+import { walletService, useWallet } from '@/entities/wallet'
 
 const AI_FEATURE_COST = 300
 
@@ -30,6 +29,7 @@ export const useMatchPrediction = () => {
     const requestPrediction = async (fixtureId: number) => {
         if (balance < AI_FEATURE_COST) {
             toast.error(`Not enough coins. You need ${AI_FEATURE_COST} coins.`)
+
             return
         }
 

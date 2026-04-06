@@ -152,6 +152,17 @@ export const FantasyTeamBuilderView = () => {
                         </div>
                     )}
 
+                    {!transferMode.isTransferMode && selectedPlayers.length === 0 && (
+                        <div className="flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950/20 px-4 py-3">
+                            <span className="text-2xl">👆</span>
+                            <p className="text-sm text-blue-700 dark:text-blue-400">
+                                <span className="font-medium">Getting started:</span> Select a team badge
+                                above to browse players, then check the box next to a player to add them to
+                                your squad.
+                            </p>
+                        </div>
+                    )}
+
                     <div className="flex w-full gap-3">
                         <Card className="flex-2 min-w-0 overflow-hidden">
                             <CardHeader>

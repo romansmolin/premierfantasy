@@ -1,7 +1,13 @@
+import { Suspense } from 'react'
+
 import { FantasyTeamBuilderView } from '@/views/fantasy-team-builder-view'
 
-const FantasyTeamBuilder = () => {
-    return <FantasyTeamBuilderView />
-}
+import { Skeleton } from '@/shared/ui/skeleton'
 
-export default FantasyTeamBuilder
+export default function FantasyTeamBuilder() {
+    return (
+        <Suspense fallback={<Skeleton className="h-96" />}>
+            <FantasyTeamBuilderView />
+        </Suspense>
+    )
+}

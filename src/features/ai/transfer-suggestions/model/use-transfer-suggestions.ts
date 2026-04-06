@@ -5,9 +5,8 @@ import { toast } from 'sonner'
 import useSWRMutation from 'swr/mutation'
 
 import { aiService } from '@/entities/ai'
-import { walletService, useWallet } from '@/entities/wallet'
-
 import type { AITransferAnalysis } from '@/entities/ai'
+import { walletService, useWallet } from '@/entities/wallet'
 
 const AI_FEATURE_COST = 500
 

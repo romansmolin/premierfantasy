@@ -10,9 +10,8 @@ import {
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useRouter } from 'next/navigation'
 
-import { useCompetitionState } from '@/entities/competition'
-
 import type { AITransferAnalysis } from '@/entities/ai'
+import { useCompetitionState } from '@/entities/competition'
 
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'

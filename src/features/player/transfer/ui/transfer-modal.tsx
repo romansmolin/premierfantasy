@@ -10,9 +10,8 @@ import { useOptionalTransferMode } from '@/features/player/transfer'
 
 import { useFantasyTeams } from '@/entities/fantasy-team'
 import { generatePlayerPrice, mapApiPosition } from '@/entities/players'
-import { useTeamPlayers } from '@/entities/team'
-
 import type { SelectedPlayer } from '@/entities/players'
+import { useTeamPlayers } from '@/entities/team'
 import type { ISquadPlayer } from '@/entities/team/model/team.types'
 
 import { cn } from '@/shared/lib/utils'
@@ -60,13 +59,9 @@ export const TransferModal = ({ open, onClose, squad }: TransferModalProps) => {
         undoTransfer,
         confirmTransfers,
         isConfirming,
-        freeRemaining,
         pointsCost,
         transferInfo,
     } = transferCtx
-
-    // Current squad accounting for staged transfers
-    const currentSquad = squad.filter((p) => !stagedTransfers.some((t) => t.playerOut.id === p.id))
 
     const stagedInIds = new Set(stagedTransfers.map((t) => t.playerIn.id))
     const stagedOutIds = new Set(stagedTransfers.map((t) => t.playerOut.id))

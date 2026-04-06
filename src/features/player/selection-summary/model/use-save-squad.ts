@@ -4,9 +4,9 @@ import useSWRMutation from 'swr/mutation'
 
 import { fantasyTeamService, useFantasyTeams } from '@/entities/fantasy-team'
 import { usePlayersStorage } from '@/entities/players'
-import { useSession } from '@/shared/lib/auth-client'
-
 import type { SelectedPlayer } from '@/entities/players'
+
+import { useSession } from '@/shared/lib/auth-client'
 
 const mapPlayersToSquad = (players: SelectedPlayer[]) =>
     players.map((p) => ({ id: p.id, name: p.name, position: p.position, price: p.price, teamId: p.teamId }))

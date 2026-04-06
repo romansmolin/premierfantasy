@@ -7,9 +7,8 @@ import { usePlayerAnalytics, PlayerAnalyticsModal } from '@/features/ai'
 import { usePlayerDetails } from '@/features/player/explore-players/model/use-player-details'
 import { useOptionalTransferMode } from '@/features/player/transfer'
 
-import { PlayerDetailsModal } from '@/entities/players/ui/player-details-modal'
-
 import type { PlayerPosition, SelectedPlayer } from '@/entities/players'
+import { PlayerDetailsModal } from '@/entities/players/ui/player-details-modal'
 
 import { FantasyTeamFormationSelect, useFormation } from '../../fantasy-team-formation-select'
 import { useFantasyTeamField } from '../model/use-fantasy-team-field'

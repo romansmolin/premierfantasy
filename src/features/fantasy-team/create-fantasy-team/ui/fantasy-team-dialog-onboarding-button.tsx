@@ -28,7 +28,7 @@ export function FantasyTeamDialogOnboardingButton() {
 
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Welcome to Fantasy Football!</DialogTitle>
+                    <DialogTitle>Welcome to Premier Fantasy!</DialogTitle>
 
                     <DialogDescription>
                         You don&apos;t have a fantasy team yet. Create your first team to start competing.

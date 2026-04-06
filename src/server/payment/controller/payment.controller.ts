@@ -3,8 +3,8 @@ import { z } from 'zod'
 
 import { auth } from '@/shared/lib/auth'
 
-import type { NextRequest } from 'next/server'
 import type { IPaymentService } from '../service/payment.service.interface'
+import type { NextRequest } from 'next/server'
 
 const checkoutSchema = z.object({
     coinAmount: z.number().int().positive(),

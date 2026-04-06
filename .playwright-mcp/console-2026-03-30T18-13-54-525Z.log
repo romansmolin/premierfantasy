@@ -1,2 +1,0 @@
-[     407ms] [WARNING] Image with src "/assets/image.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading @ http://localhost:3001/_next/static/chunks/e7e96_next_dist_754e1578._.js:2297

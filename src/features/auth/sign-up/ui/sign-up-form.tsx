@@ -33,7 +33,7 @@ export const SignUpForm = () => {
             <FieldGroup className="h-full">
                 <FieldSet>
                     <FieldLegend className="font-audiowide text-2xl!">
-                        Welcome To Fantasy Football 🚀
+                        Welcome To Premier Fantasy 🚀
                     </FieldLegend>
 
                     <FieldDescription>Create you team, follow matches, analyze, and win.</FieldDescription>

@@ -1,6 +1,6 @@
 'use client'
 
-import { AiBrain01FreeIcons, Brain01FreeIcons, Dollar, GoldBuyFreeIcons } from '@hugeicons/core-free-icons'
+import { AiBrain01Icon, Coins01Icon, GoldBuyIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -116,6 +116,28 @@ export const WalletView = () => {
                 </CardContent>
             </Card>
 
+            {balance === 0 && transactions.length === 0 && (
+                <Card className="border-dashed">
+                    <CardContent className="flex items-center gap-4 p-5">
+                        <div className="flex items-center justify-center size-12 rounded-full bg-amber-100 dark:bg-amber-900/30 shrink-0">
+                            <HugeiconsIcon
+                                icon={Coins01Icon}
+                                size={20}
+                                className="text-amber-600 dark:text-amber-400"
+                            />
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium mb-1">Start earning coins</p>
+                            <p className="text-xs text-muted-foreground">
+                                Place in the top 3 of any competition to earn coins (1st: 500, 2nd: 300, 3rd:
+                                100). You can also purchase coins to unlock AI-powered features like transfer
+                                suggestions and match predictions.
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
             <div className="grid gap-4 sm:grid-cols-2">
                 <Card>
                     <CardHeader>
@@ -139,7 +161,7 @@ export const WalletView = () => {
                                         onClick={() => handleBuyCoins(pack.coins)}
                                         className={'flex gap-1'}
                                     >
-                                        <HugeiconsIcon icon={GoldBuyFreeIcons} />
+                                        <HugeiconsIcon icon={GoldBuyIcon} />
                                         {loadingAction === `buy-${pack.coins}` ? 'Processing...' : 'Buy'}
                                     </Button>
                                 </div>
@@ -166,7 +188,7 @@ export const WalletView = () => {
                                 disabled={!transferSuggestions.canAfford || transferSuggestions.isLoading}
                                 onClick={transferSuggestions.requestAnalysis}
                             >
-                                <HugeiconsIcon icon={AiBrain01FreeIcons} />
+                                <HugeiconsIcon icon={AiBrain01Icon} />
                                 {transferSuggestions.isLoading ? 'Analyzing...' : 'Use'}
                             </Button>
                         </div>
@@ -185,7 +207,7 @@ export const WalletView = () => {
                                     }
                                     onClick={() => handleSpend(feature.name, feature.cost)}
                                 >
-                                    <HugeiconsIcon icon={AiBrain01FreeIcons} />
+                                    <HugeiconsIcon icon={AiBrain01Icon} />
 
                                     {loadingAction === `spend-${feature.name}` ? 'Using...' : 'Use'}
                                 </Button>

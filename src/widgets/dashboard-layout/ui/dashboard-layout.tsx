@@ -2,8 +2,8 @@
 
 import { Moon01Icon, Sun01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { useTheme } from 'next-themes'
 import { usePathname } from 'next/navigation'
+import { useTheme } from 'next-themes'
 
 import { AppSidebar } from '@/widgets/sidebar'
 
@@ -25,7 +25,7 @@ function getPageTitle(pathname: string): string {
 
     if (pathname.startsWith('/competitions/')) return 'Competition'
 
-    return 'Fantasy Football'
+    return 'Premier Fantasy'
 }
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
