@@ -28,22 +28,21 @@ export const useSignUpForm = () => {
     const onSubmit = async (formData: SignUpFormValues) => {
         const { username, email, password } = formData
 
-        await authClient.signUp.email(
-            {
-                name: username,
-                email,
-                password,
-                callbackURL: '/dashboard',
-            },
-            {
+        const { error } = await authClient.signUp.email({
+            name: username,
+            email,
+            password,
+            callbackURL: '/dashboard',
+            fetchOptions: {
                 onSuccess: () => {
                     router.push('/dashboard')
                 },
-                onError: (ctx) => {
-                    toast.error(ctx.error.message || 'Something went wrong! Please try again.')
-                },
             },
-        )
+        })
+
+        if (error) {
+            toast.error(error.message || 'Something went wrong! Please try again.')
+        }
     }
 
     return {
