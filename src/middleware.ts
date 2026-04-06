@@ -2,14 +2,17 @@ import { NextResponse } from 'next/server'
 
 import type { NextRequest } from 'next/server'
 
-const protectedRoutes = ['/dashboard', '/fantasy-team-builder', '/wallet', '/profile', '/competitions']
-const authRoutes = ['/sign-up', '/sign-in']
+const PUBLIC_PATHS = [
+    '/',
+    '/sign-in',
+    '/sign-up',
+    '/terms-of-service',
+    '/private-policy',
+    '/cookies-policy',
+    '/return-policy',
+]
 
 function hasSessionCookie(request: NextRequest): boolean {
-    // Better Auth cookie names vary by environment:
-    // HTTP (localhost): better-auth.session_token
-    // HTTPS (production): __Secure-better-auth.session_token
-    // Some configurations also use: better-auth.session_token without prefix
     const cookieNames = [
         'better-auth.session_token',
         '__Secure-better-auth.session_token',
@@ -17,9 +20,7 @@ function hasSessionCookie(request: NextRequest): boolean {
     ]
 
     for (const name of cookieNames) {
-        const cookie = request.cookies.get(name)
-
-        if (cookie?.value) return true
+        if (request.cookies.get(name)?.value) return true
     }
 
     // Fallback: check if ANY cookie contains "session_token"
@@ -35,16 +36,17 @@ export function middleware(request: NextRequest) {
 
     const hasSession = hasSessionCookie(request)
 
-    const isProtectedRoute = protectedRoutes.some(
-        (route) => pathname === route || pathname.startsWith(route + '/'),
+    const isPublicRoute = PUBLIC_PATHS.some(
+        (path) => pathname === path || (path !== '/' && pathname.startsWith(path + '/')),
     )
-    const isAuthRoute = authRoutes.some((route) => pathname === route || pathname.startsWith(route + '/'))
 
-    if (isProtectedRoute && !hasSession) {
+    // Unauthenticated user on protected route → send to sign-in
+    if (!isPublicRoute && !hasSession) {
         return NextResponse.redirect(new URL('/sign-in', request.url))
     }
 
-    if (isAuthRoute && hasSession) {
+    // Authenticated user on auth pages → send to dashboard
+    if ((pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up')) && hasSession) {
         return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 
@@ -52,5 +54,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/((?!_next/static|_next/image|favicon.ico|public|api|assets).*)'],
+    matcher: ['/((?!_next/static|_next/image|favicon.ico|public|assets|api).*)'],
 }

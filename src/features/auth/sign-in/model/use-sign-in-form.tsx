@@ -23,17 +23,21 @@ export const useSignInForm = () => {
     const onSubmit = async (formData: SignInFormValues) => {
         const { email, password } = formData
 
-        const { data, error } = await authClient.signIn.email({
-            email,
-            password,
-        })
-
-        if (error) {
-            toast.error('Invalid email or password. Please try again.')
-            console.error('Error while signing in: ', error)
-        }
-
-        router.push('/dashboard')
+        await authClient.signIn.email(
+            {
+                email,
+                password,
+                callbackURL: '/dashboard',
+            },
+            {
+                onSuccess: () => {
+                    router.push('/dashboard')
+                },
+                onError: (ctx) => {
+                    toast.error(ctx.error.message || 'Invalid email or password. Please try again.')
+                },
+            },
+        )
     }
 
     return {
