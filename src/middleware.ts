@@ -13,9 +13,22 @@ const PUBLIC_PATHS = [
 ]
 
 function hasSessionCookie(request: NextRequest): boolean {
-    for (const [name] of request.cookies) {
-        if (name.includes('session_token')) return true
+    // Try exact cookie names
+    const names = [
+        'better-auth.session_token',
+        '__Secure-better-auth.session_token',
+        'premier-fantasy.session_token',
+        '__Secure-premier-fantasy.session_token',
+    ]
+
+    for (const name of names) {
+        if (request.cookies.get(name)?.value) return true
     }
+
+    // Fallback: check cookie header directly (edge runtime may not parse __Secure- cookies)
+    const cookieHeader = request.headers.get('cookie') ?? ''
+
+    if (cookieHeader.includes('session_token=')) return true
 
     return false
 }
