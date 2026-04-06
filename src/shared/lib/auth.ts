@@ -5,6 +5,8 @@ import { getEnv } from '../utils/get-env'
 
 import { prisma } from './prisma'
 
+const appUrl = getEnv('BETTER_AUTH_URL')
+
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: 'postgresql',
@@ -27,7 +29,8 @@ export const auth = betterAuth({
         updateAge: 60 * 60 * 24, // 1 day
     },
     secret: getEnv('BETTER_AUTH_SECRET'),
-    baseURL: getEnv('BETTER_AUTH_URL'),
+    baseURL: appUrl,
+    trustedOrigins: [appUrl],
 })
 
 export type Session = typeof auth.$Infer.Session
