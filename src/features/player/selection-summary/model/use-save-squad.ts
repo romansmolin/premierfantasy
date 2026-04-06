@@ -20,7 +20,7 @@ export const useSaveSquad = () => {
     const competitionId = searchParams.get('competitionId')
 
     const { fantasyTeams, mutate } = useFantasyTeams()
-    const fantasyTeamId = fantasyTeams?.[0]?.id
+    const fantasyTeamId = fantasyTeams?.find((t) => t.competitionId === competitionId)?.id
     const selectedPlayers = usePlayersStorage((s) => s.selectedPlayers)
 
     const { trigger: createTeamAndSaveSquad, isMutating: isCreating } = useSWRMutation(

@@ -6,6 +6,7 @@ import type {
     IFantasyTeamRepository,
     SquadPlayerRow,
     SquadPlayerWithStats,
+    TransferRow,
 } from './fantasy-team.repository.interface'
 
 export class FantasyTeamRepository implements IFantasyTeamRepository {
@@ -179,5 +180,89 @@ export class FantasyTeamRepository implements IFantasyTeamRepository {
                 players: { select: { playerId: true } },
             },
         })
+    }
+
+    async getTransfersForGameweek(fantasyTeamId: string, gameweekId: string): Promise<TransferRow[]> {
+        return prisma.transfer.findMany({
+            where: { fantasyTeamId, gameweekId },
+            select: { id: true, playerInId: true, playerOutId: true, isFree: true, createdAt: true },
+        })
+    }
+
+    async createTransfer(data: {
+        fantasyTeamId: string
+        gameweekId: string
+        playerInId: string
+        playerOutId: string
+        isFree: boolean
+    }): Promise<void> {
+        await prisma.transfer.create({ data })
+    }
+
+    async swapSquadPlayer(
+        fantasyTeamId: string,
+        playerOutInternalId: string,
+        playerIn: {
+            externalId: number
+            name: string
+            position: 'GK' | 'DEF' | 'MID' | 'FWD'
+            purchasePrice: number
+            teamExternalId: number
+        },
+    ): Promise<void> {
+        const outPlayer = await prisma.fantasyTeamPlayer.findFirst({
+            where: { fantasyTeamId, playerId: playerOutInternalId },
+        })
+
+        if (!outPlayer) throw new Error('Player not in squad')
+
+        const priceRecovered = outPlayer.purchasePrice
+
+        await prisma.team.upsert({
+            where: { externalId: playerIn.teamExternalId },
+            create: {
+                externalId: playerIn.teamExternalId,
+                name: `Team ${playerIn.teamExternalId}`,
+                shortName: `T${playerIn.teamExternalId}`,
+            },
+            update: {},
+        })
+
+        await prisma.player.upsert({
+            where: { externalId: playerIn.externalId },
+            create: {
+                externalId: playerIn.externalId,
+                name: playerIn.name,
+                position: playerIn.position,
+                team: { connect: { externalId: playerIn.teamExternalId } },
+            },
+            update: { name: playerIn.name, position: playerIn.position },
+        })
+
+        const inPlayerRecord = await prisma.player.findUniqueOrThrow({
+            where: { externalId: playerIn.externalId },
+        })
+
+        await prisma.$transaction([
+            prisma.fantasyTeamPlayer.delete({ where: { id: outPlayer.id } }),
+            prisma.fantasyTeamPlayer.create({
+                data: {
+                    fantasyTeamId,
+                    playerId: inPlayerRecord.id,
+                    position: playerIn.position,
+                    purchasePrice: playerIn.purchasePrice,
+                },
+            }),
+            prisma.fantasyTeam.update({
+                where: { id: fantasyTeamId },
+                data: { budgetLeft: { increment: priceRecovered - playerIn.purchasePrice } },
+            }),
+        ])
+    }
+
+    async findPlayerInternalIdByExternalId(externalId: number): Promise<string | null> {
+        const player = await prisma.player.findUnique({ where: { externalId }, select: { id: true } })
+
+        return player?.id ?? null
     }
 }

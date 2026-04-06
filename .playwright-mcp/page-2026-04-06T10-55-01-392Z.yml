@@ -1,0 +1,66 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - button "Analytics Fantasy Football" [ref=e9]:
+            - img [ref=e11]
+            - generic [ref=e14]:
+              - generic [ref=e15]: Analytics
+              - generic [ref=e16]: Fantasy Football
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Overview
+          - list [ref=e21]:
+            - listitem [ref=e22]:
+              - link "Dashboard" [ref=e23] [cursor=pointer]:
+                - /url: /dashboard
+                - button "Dashboard" [ref=e24]:
+                  - img [ref=e25]
+                  - generic [ref=e30]: Dashboard
+        - generic [ref=e31]:
+          - generic [ref=e32]: Fantasy
+          - list [ref=e34]:
+            - listitem [ref=e35]:
+              - link "Competitions" [ref=e36] [cursor=pointer]:
+                - /url: /competitions
+                - button "Competitions" [ref=e37]:
+                  - img [ref=e38]
+                  - generic [ref=e43]: Competitions
+            - listitem [ref=e44]:
+              - link "Team Builder" [ref=e45] [cursor=pointer]:
+                - /url: /fantasy-team-builder
+                - button "Team Builder" [ref=e46]:
+                  - img [ref=e47]
+                  - generic [ref=e52]: Team Builder
+        - generic [ref=e53]:
+          - generic [ref=e54]: Account
+          - list [ref=e56]:
+            - listitem [ref=e57]:
+              - link "Profile" [ref=e58] [cursor=pointer]:
+                - /url: /profile
+                - button "Profile" [ref=e59]:
+                  - img [ref=e60]
+                  - generic [ref=e63]: Profile
+            - listitem [ref=e64]:
+              - link "Wallet" [ref=e65] [cursor=pointer]:
+                - /url: /wallet
+                - button "Wallet" [ref=e66]:
+                  - img [ref=e67]
+                  - generic [ref=e74]: Wallet
+      - button "Toggle Sidebar" [ref=e82]
+    - main [ref=e83]:
+      - generic [ref=e84]:
+        - button "Toggle Sidebar" [ref=e85]:
+          - img
+          - generic [ref=e86]: Toggle Sidebar
+        - separator [ref=e87]
+        - heading "Team Builder" [level=1] [ref=e88]
+        - button [ref=e90]:
+          - img
+      - generic [ref=e92]:
+        - heading "Fantasy Team Builder" [level=2] [ref=e93]
+        - paragraph [ref=e94]: No active competition to join. Check back later.
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e100] [cursor=pointer]:
+    - img [ref=e101]

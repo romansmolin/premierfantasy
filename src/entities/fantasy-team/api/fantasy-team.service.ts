@@ -101,7 +101,7 @@ export const fantasyTeamService = {
         }
     },
 
-    async makeTransfer(teamId: string, data: ICreateTransfer): Promise<void> {
+    async makeTransfer(teamId: string, data: ICreateTransfer[]): Promise<void> {
         try {
             await httpClient.post(`${BASE_URL}/${teamId}/transfers`, data)
         } catch (error) {

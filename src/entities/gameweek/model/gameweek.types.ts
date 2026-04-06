@@ -5,6 +5,7 @@ export interface IGameweek {
     endDate: Date
     isActive: boolean
     isFinished: boolean
+    deadline: Date | null
     createdAt: Date
 }
 

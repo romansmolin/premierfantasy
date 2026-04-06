@@ -45,4 +45,20 @@ export const userService = {
             throw ApiError.isApiError(error) ? error : new ApiError(500, `Failed to delete user ${id}`)
         }
     },
+
+    async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
+        try {
+            await httpClient.post(`${BASE_URL}/${userId}/password`, { currentPassword, newPassword })
+        } catch (error) {
+            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to change password')
+        }
+    },
+
+    async updateAvatar(userId: string, image: string | null): Promise<{ image: string | null }> {
+        try {
+            return await httpClient.patch<{ image: string | null }>(`${BASE_URL}/${userId}/avatar`, { image })
+        } catch (error) {
+            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to update avatar')
+        }
+    },
 }

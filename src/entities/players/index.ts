@@ -5,6 +5,7 @@ export {
     selectPositionCounts,
     selectTeamCounts,
 } from './model/use-players-storage'
+export type { FormationSlots } from './model/use-players-storage'
 
 export { mapApiPosition } from './model/player-position.map'
 export { generatePlayerPrice } from './model/player-price'

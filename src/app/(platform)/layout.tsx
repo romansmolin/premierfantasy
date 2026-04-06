@@ -1,4 +1,5 @@
 import { Audiowide, Montserrat } from 'next/font/google'
+import { ThemeProvider } from 'next-themes'
 import { Toaster } from 'sonner'
 
 import { DashboardLayout } from '@/widgets/dashboard-layout'
@@ -30,8 +31,10 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${audiowide.variable} ${montserrat.variable} antialiased`}>
-                <DashboardLayout>{children}</DashboardLayout>
-                <Toaster richColors position="top-right" />
+                <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                    <DashboardLayout>{children}</DashboardLayout>
+                    <Toaster richColors position="top-right" />
+                </ThemeProvider>
             </body>
         </html>
     )

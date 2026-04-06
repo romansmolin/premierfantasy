@@ -104,4 +104,12 @@ export class GameweekService implements IGameweekService {
 
         return this.gameweekRepository.setFinished(gameweekId)
     }
+
+    async getCurrentGameweek(): Promise<IGameweek | null> {
+        return this.gameweekRepository.findCurrentByDate(new Date())
+    }
+
+    async getUnfinishedPastGameweeks(): Promise<IGameweek[]> {
+        return this.gameweekRepository.findUnfinishedBefore(new Date())
+    }
 }

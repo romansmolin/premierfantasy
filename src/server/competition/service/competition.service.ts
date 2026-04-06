@@ -136,7 +136,17 @@ export class CompetitionService implements ICompetitionService {
         }
 
         const activeGw = await this.gameweekRepository.findActive()
-        const currentGwNumber = activeGw?.number ?? 1
+        let currentGwNumber = activeGw?.number ?? 0
+
+        if (!currentGwNumber) {
+            // No active GW — find the next unfinished one
+            const allGws = await this.gameweekRepository.findAll()
+            const nextUnfinished = allGws
+                .filter((gw) => !gw.isFinished)
+                .sort((a, b) => a.number - b.number)[0]
+
+            currentGwNumber = nextUnfinished?.number ?? 1
+        }
 
         for (const chunk of chunks) {
             const existing = await this.competitionRepository.findByGameweekRange(chunk.start, chunk.end)
@@ -165,6 +175,34 @@ export class CompetitionService implements ICompetitionService {
 
             if (created && status !== 'upcoming') {
                 await this.competitionRepository.updateStatus(created.id, status)
+            }
+        }
+
+        // Sync statuses of all existing competitions
+        const allCompetitions = await this.competitionRepository.findAll()
+
+        for (const comp of allCompetitions) {
+            const endGw = this.gameweekRepository
+                ? await this.gameweekRepository.findByNumber(comp.endGameweek)
+                : null
+            const startGw = this.gameweekRepository
+                ? await this.gameweekRepository.findByNumber(comp.startGameweek)
+                : null
+
+            let expectedStatus = 'upcoming'
+
+            if (endGw?.isFinished) {
+                expectedStatus = 'completed'
+            } else if (
+                startGw &&
+                currentGwNumber >= comp.startGameweek &&
+                currentGwNumber <= comp.endGameweek
+            ) {
+                expectedStatus = 'active'
+            }
+
+            if (comp.status !== expectedStatus) {
+                await this.competitionRepository.updateStatus(comp.id, expectedStatus)
             }
         }
     }

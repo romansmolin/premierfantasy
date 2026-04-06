@@ -15,6 +15,7 @@ export function validateAddPlayer(
     current: SelectedPlayer[],
     candidate: SelectedPlayer,
     budgetLeft: number,
+    formationSlots?: Record<PlayerPosition, number>,
 ): ValidationResult {
     if (current.length >= MAX_SQUAD_SIZE) {
         return { valid: false, reason: 'Squad is full (11 players maximum)' }
@@ -31,10 +32,23 @@ export function validateAddPlayer(
     }
 
     const positionCount = current.filter((p) => p.position === candidate.position).length
-    const limit = POSITION_LIMITS[candidate.position]
 
-    if (positionCount >= limit.max) {
-        return { valid: false, reason: `Maximum ${limit.max} ${candidate.position} player(s) allowed` }
+    // Use formation slots if provided, otherwise fall back to position limits
+    if (formationSlots) {
+        const maxForPosition = formationSlots[candidate.position] ?? 0
+
+        if (positionCount >= maxForPosition) {
+            return {
+                valid: false,
+                reason: `Formation allows ${maxForPosition} ${candidate.position} player(s) — already have ${positionCount}`,
+            }
+        }
+    } else {
+        const limit = POSITION_LIMITS[candidate.position]
+
+        if (positionCount >= limit.max) {
+            return { valid: false, reason: `Maximum ${limit.max} ${candidate.position} player(s) allowed` }
+        }
     }
 
     return { valid: true }

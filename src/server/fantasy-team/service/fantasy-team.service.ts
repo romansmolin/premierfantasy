@@ -103,24 +103,81 @@ export class FantasyTeamService implements IFantasyTeamService {
 
         const activeGameweek = this.gameweekRepository ? await this.gameweekRepository.findActive() : null
 
-        const transfersMade = 0 // TODO: count from transfers table
+        const transfers = activeGameweek
+            ? await this.fantasyTeamRepository.getTransfersForGameweek(fantasyTeamId, activeGameweek.id)
+            : []
+
+        const transfersMade = transfers.length
         const freeTransfers = team.freeTransfers ?? 1
         const pointsCost = Math.max(0, transfersMade - freeTransfers) * 4
 
         return {
             freeTransfers,
-            deadline: activeGameweek?.endDate ?? null,
+            deadline: activeGameweek?.startDate ?? null,
             transfersMade,
             pointsCost,
         }
     }
 
-    async makeTransfer(fantasyTeamId: string, _data: ICreateTransfer): Promise<void> {
+    async makeTransfer(fantasyTeamId: string, transfers: ICreateTransfer[]): Promise<void> {
         const team = await this.fantasyTeamRepository.findById(fantasyTeamId)
 
         if (!team) throw new Error('Team not found')
 
-        // TODO: Implement full transfer logic
-        throw new Error('Transfer system not yet fully implemented')
+        if (!this.gameweekRepository) throw new Error('Gameweek repository not provided')
+
+        const activeGameweek = await this.gameweekRepository.findActive()
+
+        if (!activeGameweek) throw new Error('No active gameweek')
+
+        const deadline = new Date(activeGameweek.startDate)
+
+        if (new Date() > deadline) throw new Error('Transfer deadline has passed')
+
+        const existingTransfers = await this.fantasyTeamRepository.getTransfersForGameweek(
+            fantasyTeamId,
+            activeGameweek.id,
+        )
+
+        let freeRemaining = Math.max(0, (team.freeTransfers ?? 1) - existingTransfers.length)
+
+        for (const transfer of transfers) {
+            const currentSquad = await this.fantasyTeamRepository.getSquadPlayers(fantasyTeamId)
+            const playerOut = currentSquad.find((p) => p.externalId === transfer.playerOutId)
+
+            if (!playerOut) throw new Error(`Player ${transfer.playerOutId} not in squad`)
+
+            const isFree = freeRemaining > 0
+
+            if (isFree) freeRemaining--
+
+            const outPlayerInternalId = await this.fantasyTeamRepository.findPlayerInternalIdByExternalId(
+                transfer.playerOutId,
+            )
+
+            if (!outPlayerInternalId) throw new Error(`Player record not found for ${transfer.playerOutId}`)
+
+            await this.fantasyTeamRepository.swapSquadPlayer(fantasyTeamId, outPlayerInternalId, {
+                externalId: transfer.playerInId,
+                name: transfer.playerInName,
+                position: transfer.playerInPosition,
+                purchasePrice: transfer.playerInPrice,
+                teamExternalId: transfer.playerInTeamId,
+            })
+
+            const inPlayerInternalId = await this.fantasyTeamRepository.findPlayerInternalIdByExternalId(
+                transfer.playerInId,
+            )
+
+            if (!inPlayerInternalId) throw new Error(`Player record not found for ${transfer.playerInId}`)
+
+            await this.fantasyTeamRepository.createTransfer({
+                fantasyTeamId,
+                gameweekId: activeGameweek.id,
+                playerInId: inPlayerInternalId,
+                playerOutId: outPlayerInternalId,
+                isFree,
+            })
+        }
     }
 }

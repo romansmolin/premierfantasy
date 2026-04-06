@@ -71,7 +71,8 @@ export class CompetitionRepository implements ICompetitionRepository {
 
         const entries = teams.map((team) => {
             const totalPoints = team.points.reduce((sum, p) => sum + p.points, 0)
-            const latestGw = team.points.sort((a, b) => b.gameweek.number - a.gameweek.number)[0]
+            const sortedGws = [...team.points].sort((a, b) => b.gameweek.number - a.gameweek.number)
+            const latestWithPoints = sortedGws.find((p) => p.points > 0)
 
             return {
                 rank: 0,
@@ -79,7 +80,7 @@ export class CompetitionRepository implements ICompetitionRepository {
                 fantasyTeamName: team.name,
                 userId: team.user.id,
                 userName: team.user.name,
-                gameweekPoints: latestGw?.points ?? 0,
+                gameweekPoints: latestWithPoints?.points ?? sortedGws[0]?.points ?? 0,
                 totalPoints,
             }
         })

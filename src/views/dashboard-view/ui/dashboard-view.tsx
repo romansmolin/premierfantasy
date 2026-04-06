@@ -1,5 +1,8 @@
 'use client'
 
+import { DashboardSquare01Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+
 import { useCompetitionState } from '@/entities/competition'
 
 import { useSession } from '@/shared/lib/auth-client'
@@ -17,8 +20,13 @@ export function DashboardView() {
     if (isLoading) {
         return (
             <div className="space-y-4">
-                <Skeleton className="h-8 w-48" />
-                <Skeleton className="h-48" />
+                <Skeleton className="h-10 w-56" />
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                        <Skeleton key={i} className="h-24 rounded-xl" />
+                    ))}
+                </div>
+                <Skeleton className="h-64 rounded-xl" />
             </div>
         )
     }
@@ -33,12 +41,18 @@ export function DashboardView() {
     }
 
     const userId = session?.user?.id ?? ''
+    const userName = session?.user?.name ?? 'Manager'
 
     return (
-        <div className="space-y-4">
-            <div>
-                <h2 className="text-lg font-semibold tracking-wide">Dashboard</h2>
-                <p className="text-md text-muted-foreground">Your competition overview</p>
+        <div className="space-y-6">
+            <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center size-10 rounded-xl bg-primary/10">
+                    <HugeiconsIcon icon={DashboardSquare01Icon} size={20} className="text-primary" />
+                </div>
+                <div>
+                    <h2 className="text-lg font-bold">Welcome back, {userName}</h2>
+                    <p className="text-sm text-muted-foreground">Your competition overview</p>
+                </div>
             </div>
 
             {state.canJoinActive && state.activeCompetition && (

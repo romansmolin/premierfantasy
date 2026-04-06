@@ -1,6 +1,7 @@
 'use client'
 
 import {
+    AccountSetting01Icon,
     AnalyticsUpIcon,
     Coins01Icon,
     DashboardSquare01Icon,
@@ -40,7 +41,10 @@ const navGroups = [
     },
     {
         label: 'Account',
-        items: [{ title: 'Wallet', icon: Coins01Icon, href: '/wallet' }],
+        items: [
+            { title: 'Profile', icon: AccountSetting01Icon, href: '/profile' },
+            { title: 'Wallet', icon: Coins01Icon, href: '/wallet' },
+        ],
     },
 ]
 

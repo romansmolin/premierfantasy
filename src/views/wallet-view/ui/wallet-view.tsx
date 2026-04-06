@@ -1,11 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { AiBrain01FreeIcons, Brain01FreeIcons, Dollar, GoldBuyFreeIcons } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 
+import { useTransferSuggestions, TransferSuggestionsModal } from '@/features/ai'
+
+import { useFantasyTeams } from '@/entities/fantasy-team'
 import { useWallet, walletService } from '@/entities/wallet'
+import type { ICoinPack, TransactionType } from '@/entities/wallet'
 
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
@@ -13,10 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 
-import type { ICoinPack, TransactionType } from '@/entities/wallet'
-
 const AI_FEATURES = [
-    { name: 'AI Transfer Suggestions', cost: 50 },
     { name: 'Advanced Player Analytics', cost: 100 },
     { name: 'Match Prediction Insights', cost: 75 },
 ] as const
@@ -35,8 +38,12 @@ const typeLabel: Record<TransactionType, string> = {
 
 export const WalletView = () => {
     const { balance, transactions, isLoading, mutate } = useWallet()
+    const { fantasyTeams } = useFantasyTeams()
     const [loadingAction, setLoadingAction] = useState<string | null>(null)
     const searchParams = useSearchParams()
+
+    const fantasyTeamId = fantasyTeams?.[0]?.id
+    const transferSuggestions = useTransferSuggestions(fantasyTeamId)
 
     const { data: coinPacks, isLoading: isPacksLoading } = useSWR<ICoinPack[]>('/api/wallet/packs', () =>
         walletService.getCoinPacks(),
@@ -97,7 +104,6 @@ export const WalletView = () => {
     return (
         <div className="space-y-6">
             <div>
-                <h2 className="text-lg font-semibold">Wallet</h2>
                 <p className="text-sm text-muted-foreground">Manage your coins</p>
             </div>
 
@@ -131,7 +137,9 @@ export const WalletView = () => {
                                         size="sm"
                                         disabled={loadingAction === `buy-${pack.coins}`}
                                         onClick={() => handleBuyCoins(pack.coins)}
+                                        className={'flex gap-1'}
                                     >
+                                        <HugeiconsIcon icon={GoldBuyFreeIcons} />
                                         {loadingAction === `buy-${pack.coins}` ? 'Processing...' : 'Buy'}
                                     </Button>
                                 </div>
@@ -145,6 +153,24 @@ export const WalletView = () => {
                         <CardTitle>AI Features</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium">AI Transfer Suggestions</p>
+                                <p className="text-xs text-muted-foreground">
+                                    {transferSuggestions.cost} coins
+                                </p>
+                            </div>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                disabled={!transferSuggestions.canAfford || transferSuggestions.isLoading}
+                                onClick={transferSuggestions.requestAnalysis}
+                            >
+                                <HugeiconsIcon icon={AiBrain01FreeIcons} />
+                                {transferSuggestions.isLoading ? 'Analyzing...' : 'Use'}
+                            </Button>
+                        </div>
+
                         {AI_FEATURES.map((feature) => (
                             <div key={feature.name} className="flex items-center justify-between">
                                 <div>
@@ -159,6 +185,8 @@ export const WalletView = () => {
                                     }
                                     onClick={() => handleSpend(feature.name, feature.cost)}
                                 >
+                                    <HugeiconsIcon icon={AiBrain01FreeIcons} />
+
                                     {loadingAction === `spend-${feature.name}` ? 'Using...' : 'Use'}
                                 </Button>
                             </div>
@@ -215,6 +243,13 @@ export const WalletView = () => {
                     )}
                 </CardContent>
             </Card>
+
+            <TransferSuggestionsModal
+                open={transferSuggestions.isOpen}
+                onClose={transferSuggestions.closeModal}
+                analysis={transferSuggestions.analysis}
+                isLoading={transferSuggestions.isLoading}
+            />
         </div>
     )
 }

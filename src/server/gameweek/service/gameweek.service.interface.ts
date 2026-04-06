@@ -7,4 +7,6 @@ export interface IGameweekService {
     syncFromApi(season: number, leagueId: number): Promise<IGameweek[]>
     activateGameweek(gameweekNumber: number): Promise<IGameweek>
     finalizeGameweek(gameweekId: string): Promise<IGameweek>
+    getCurrentGameweek(): Promise<IGameweek | null>
+    getUnfinishedPastGameweeks(): Promise<IGameweek[]>
 }

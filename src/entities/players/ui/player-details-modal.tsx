@@ -1,8 +1,11 @@
 'use client'
 
+import { AiBrain01Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 import Image from 'next/image'
 
 import { Badge } from '@/shared/ui/badge'
+import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader } from '@/shared/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
 import { Separator } from '@/shared/ui/separator'
@@ -16,6 +19,10 @@ interface PlayerDetailsModalProps {
     player: IPlayerDetails | null
     isLoading: boolean
     error: Error | null | undefined
+    onRequestAnalysis?: () => void
+    isAnalysisLoading?: boolean
+    canAffordAnalysis?: boolean
+    analysisCost?: number
 }
 
 const StatItem = ({
@@ -99,7 +106,17 @@ const SeasonCard = ({ stats }: { stats: IPlayerSeasonStats }) => (
     </Card>
 )
 
-export const PlayerDetailsModal = ({ open, onClose, player, isLoading, error }: PlayerDetailsModalProps) => {
+export const PlayerDetailsModal = ({
+    open,
+    onClose,
+    player,
+    isLoading,
+    error,
+    onRequestAnalysis,
+    isAnalysisLoading,
+    canAffordAnalysis,
+    analysisCost,
+}: PlayerDetailsModalProps) => {
     return (
         <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
             <DialogContent className="p-0 max-w-3xl! max-h-[85vh] overflow-y-scroll">
@@ -137,7 +154,7 @@ export const PlayerDetailsModal = ({ open, onClose, player, isLoading, error }: 
 
                 {player && !isLoading && (
                     <div className="flex flex-col overflow-hidden">
-                        <div className="relative bg-linear-to-br from-primary/10 via-background to-primary/5 px-6 py-5">
+                        <div className="relative bg-linear-to-br from-primary/10 via-background to-primary/5 px-6 py-5 flex justify-between">
                             <div className="flex items-center gap-5">
                                 <div className="relative">
                                     <Image
@@ -169,13 +186,30 @@ export const PlayerDetailsModal = ({ open, onClose, player, isLoading, error }: 
                                     </div>
                                 </div>
                             </div>
+
+                            {onRequestAnalysis && (
+                                <div className="mt-4">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="gap-1.5"
+                                        disabled={isAnalysisLoading || !canAffordAnalysis}
+                                        onClick={onRequestAnalysis}
+                                    >
+                                        <HugeiconsIcon icon={AiBrain01Icon} size={14} />
+                                        {isAnalysisLoading
+                                            ? 'Analyzing...'
+                                            : `AI Analysis (${analysisCost ?? 100} coins)`}
+                                    </Button>
+                                </div>
+                            )}
                         </div>
 
                         <div className="overflow-y-auto flex-1 px-6 py-4 space-y-4">
                             {player.statistics.length > 0 ? (
-                                player.statistics.map((stats) => (
+                                player.statistics.map((stats, idx) => (
                                     <SeasonCard
-                                        key={`${stats.league?.season}-${stats.team?.id}`}
+                                        key={`${stats.league?.season}-${stats.team?.id}-${idx}`}
                                         stats={stats}
                                     />
                                 ))

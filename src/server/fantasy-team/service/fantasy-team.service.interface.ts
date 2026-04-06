@@ -27,5 +27,5 @@ export interface IFantasyTeamService {
     getSquad(fantasyTeamId: string): Promise<SquadPlayerRow[]>
     getSquadWithGameweekStats(fantasyTeamId: string, gameweekNumber: number): Promise<SquadPlayerWithStats[]>
     getTransferInfo(fantasyTeamId: string): Promise<ITransferInfo>
-    makeTransfer(fantasyTeamId: string, data: ICreateTransfer): Promise<void>
+    makeTransfer(fantasyTeamId: string, transfers: ICreateTransfer[]): Promise<void>
 }

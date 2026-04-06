@@ -3,6 +3,8 @@
 import Image from 'next/image'
 import { useState } from 'react'
 
+import { usePlayerAnalytics, PlayerAnalyticsModal } from '@/features/ai'
+
 import { generatePlayerPrice, mapApiPosition, PlayerDetailsModal } from '@/entities/players'
 import { useTeamPlayers } from '@/entities/team'
 
@@ -52,6 +54,7 @@ export const PlayersExplorer = () => {
     } = usePlayersExplorer(playersByTeam)
 
     const { player, isLoading, error } = usePlayerDetails(selectedPlayerId)
+    const analytics = usePlayerAnalytics(selectedPlayerId)
 
     return (
         <div className="flex flex-col gap-3 ">
@@ -206,7 +209,12 @@ export const PlayersExplorer = () => {
                                     </TableCell>
                                     <TableCell>{player.age ?? '—'}</TableCell>
                                     <TableCell className="text-right">{player.number ?? '—'}</TableCell>
-                                    <TableCell className="pl-10">
+                                    <TableCell
+                                        className="pl-10"
+                                        onClick={(e) => e.stopPropagation()}
+                                        onPointerDown={(e) => e.stopPropagation()}
+                                        onMouseDown={(e) => e.stopPropagation()}
+                                    >
                                         <SelectPlayerCheckbox player={player} teamId={Number(teamId)} />
                                     </TableCell>
                                 </TableRow>
@@ -221,7 +229,17 @@ export const PlayersExplorer = () => {
                 player={player}
                 isLoading={isLoading}
                 error={error}
-            />{' '}
+                onRequestAnalysis={analytics.requestAnalysis}
+                isAnalysisLoading={analytics.isLoading}
+                canAffordAnalysis={analytics.canAfford}
+                analysisCost={analytics.cost}
+            />
+            <PlayerAnalyticsModal
+                open={analytics.isOpen}
+                onClose={analytics.closeModal}
+                analysis={analytics.analysis}
+                isLoading={analytics.isLoading}
+            />
         </div>
     )
 }

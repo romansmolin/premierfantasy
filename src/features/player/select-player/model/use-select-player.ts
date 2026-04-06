@@ -12,11 +12,12 @@ import {
 import type { ISquadPlayer } from '@/entities/team/model/team.types'
 
 export const useSelectPlayer = () => {
-    const { addPlayer, removePlayer, selectedPlayers } = usePlayersStorage(
+    const { addPlayer, removePlayer, selectedPlayers, formation } = usePlayersStorage(
         useShallow((state) => ({
             addPlayer: state.addPlayer,
             removePlayer: state.removePlayer,
             selectedPlayers: state.selectedPlayers,
+            formation: state.formation,
         })),
     )
     const selectedPlayerIds = usePlayersStorage(useShallow(selectSelectedPlayerIds))
@@ -41,7 +42,7 @@ export const useSelectPlayer = () => {
             photo: squadPlayer.photo,
         }
 
-        const result = validateAddPlayer(selectedPlayers, candidate, budgetLeft)
+        const result = validateAddPlayer(selectedPlayers, candidate, budgetLeft, formation)
 
         if (!result.valid) {
             toast.error(result.reason)

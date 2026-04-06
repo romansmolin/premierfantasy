@@ -57,8 +57,17 @@ export interface ITransfer {
 }
 
 export interface ICreateTransfer {
-    playerInId: number
     playerOutId: number
+    playerInId: number
+    playerInName: string
+    playerInPosition: 'GK' | 'DEF' | 'MID' | 'FWD'
+    playerInPrice: number
+    playerInTeamId: number
+}
+
+export interface IStagedTransfer {
+    playerOut: { id: number; name: string; position: string; price: number }
+    playerIn: { id: number; name: string; position: string; price: number; teamId: number }
 }
 
 export interface ITransferInfo {

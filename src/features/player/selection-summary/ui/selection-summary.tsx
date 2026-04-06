@@ -1,6 +1,6 @@
 'use client'
 
-import { SaveIcon } from '@hugeicons/core-free-icons'
+import { MinusSignIcon, SaveIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Image from 'next/image'
 
@@ -22,6 +22,7 @@ export const SelectionSummary = () => {
         squadComplete,
         handleSave,
         isSaving,
+        isNewTeam,
     } = useSelectionSummary()
 
     return (
@@ -79,7 +80,13 @@ export const SelectionSummary = () => {
                                     <Badge variant="secondary">{player.position}</Badge>
                                     <span className="text-muted-foreground">{player.price}m</span>
                                 </div>
-                                <Button variant="ghost" size="sm" onClick={() => removePlayer(player.id)}>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="gap-1"
+                                    onClick={() => removePlayer(player.id)}
+                                >
+                                    <HugeiconsIcon icon={MinusSignIcon} size={14} />
                                     Remove
                                 </Button>
                             </div>

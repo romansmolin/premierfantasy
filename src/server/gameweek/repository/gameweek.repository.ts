@@ -63,4 +63,23 @@ export class GameweekRepository implements IGameweekRepository {
             data: { isFinished: true, isActive: false },
         })
     }
+
+    async findCurrentByDate(now: Date): Promise<IGameweek | null> {
+        return prisma.gameweek.findFirst({
+            where: {
+                startDate: { lte: now },
+                endDate: { gte: now },
+            },
+        })
+    }
+
+    async findUnfinishedBefore(date: Date): Promise<IGameweek[]> {
+        return prisma.gameweek.findMany({
+            where: {
+                endDate: { lt: date },
+                isFinished: false,
+            },
+            orderBy: { number: 'asc' },
+        }) as Promise<IGameweek[]>
+    }
 }

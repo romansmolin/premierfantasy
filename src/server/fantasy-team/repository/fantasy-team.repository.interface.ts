@@ -30,6 +30,14 @@ export interface SquadPlayerRow {
     purchasePrice: number
 }
 
+export interface TransferRow {
+    id: string
+    playerInId: string
+    playerOutId: string
+    isFree: boolean
+    createdAt: Date
+}
+
 export interface IFantasyTeamRepository {
     getSquadPlayers(fantasyTeamId: string): Promise<SquadPlayerRow[]>
     findById(id: string): Promise<IFantasyTeam | null>
@@ -51,4 +59,24 @@ export interface IFantasyTeamRepository {
     ): Promise<void>
     getTeamsByCompetition(competitionId: string): Promise<{ id: string; players: { playerId: string }[] }[]>
     getSquadWithGameweekStats(fantasyTeamId: string, gameweekId: string): Promise<SquadPlayerWithStats[]>
+    getTransfersForGameweek(fantasyTeamId: string, gameweekId: string): Promise<TransferRow[]>
+    createTransfer(data: {
+        fantasyTeamId: string
+        gameweekId: string
+        playerInId: string
+        playerOutId: string
+        isFree: boolean
+    }): Promise<void>
+    swapSquadPlayer(
+        fantasyTeamId: string,
+        playerOutInternalId: string,
+        playerIn: {
+            externalId: number
+            name: string
+            position: 'GK' | 'DEF' | 'MID' | 'FWD'
+            purchasePrice: number
+            teamExternalId: number
+        },
+    ): Promise<void>
+    findPlayerInternalIdByExternalId(externalId: number): Promise<string | null>
 }

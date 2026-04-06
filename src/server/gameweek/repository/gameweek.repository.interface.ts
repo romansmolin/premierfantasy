@@ -9,4 +9,6 @@ export interface IGameweekRepository {
     upsertByNumber(data: ICreateGameweek & { deadline?: Date }): Promise<IGameweek>
     setActive(gameweekId: string): Promise<IGameweek>
     setFinished(gameweekId: string): Promise<IGameweek>
+    findCurrentByDate(now: Date): Promise<IGameweek | null>
+    findUnfinishedBefore(date: Date): Promise<IGameweek[]>
 }

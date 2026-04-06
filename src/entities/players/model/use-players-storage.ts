@@ -4,8 +4,13 @@ import { BUDGET_TOTAL } from './player-selection.validation'
 
 import type { PlayerPosition, SelectedPlayer } from './player.types'
 
+export type FormationSlots = Record<PlayerPosition, number>
+
+const DEFAULT_FORMATION: FormationSlots = { GK: 1, DEF: 4, MID: 3, FWD: 3 }
+
 interface PlayersStorageState {
     selectedPlayers: SelectedPlayer[]
+    formation: FormationSlots
 }
 
 interface PlayersStorageActions {
@@ -13,12 +18,14 @@ interface PlayersStorageActions {
     removePlayer: (playerId: number) => void
     clearPlayers: () => void
     initPlayers: (players: SelectedPlayer[]) => void
+    setFormation: (formation: FormationSlots) => void
 }
 
 type PlayersStorage = PlayersStorageState & PlayersStorageActions
 
 const initialState: PlayersStorageState = {
     selectedPlayers: [],
+    formation: DEFAULT_FORMATION,
 }
 
 export const usePlayersStorage = create<PlayersStorage>()((set) => ({
@@ -33,6 +40,7 @@ export const usePlayersStorage = create<PlayersStorage>()((set) => ({
         })),
     clearPlayers: () => set(initialState),
     initPlayers: (players) => set({ selectedPlayers: players }),
+    setFormation: (formation) => set({ formation }),
 }))
 
 export const selectSelectedPlayerIds = (state: PlayersStorage) => state.selectedPlayers.map((p) => p.id)
