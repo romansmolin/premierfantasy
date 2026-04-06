@@ -5,14 +5,35 @@ import type { NextRequest } from 'next/server'
 const protectedRoutes = ['/dashboard', '/fantasy-team-builder', '/wallet', '/profile', '/competitions']
 const authRoutes = ['/sign-up', '/sign-in']
 
+function hasSessionCookie(request: NextRequest): boolean {
+    // Better Auth cookie names vary by environment:
+    // HTTP (localhost): better-auth.session_token
+    // HTTPS (production): __Secure-better-auth.session_token
+    // Some configurations also use: better-auth.session_token without prefix
+    const cookieNames = [
+        'better-auth.session_token',
+        '__Secure-better-auth.session_token',
+        '__Host-better-auth.session_token',
+    ]
+
+    for (const name of cookieNames) {
+        const cookie = request.cookies.get(name)
+
+        if (cookie?.value) return true
+    }
+
+    // Fallback: check if ANY cookie contains "session_token"
+    for (const [name] of request.cookies) {
+        if (name.includes('session_token')) return true
+    }
+
+    return false
+}
+
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
 
-    // Better Auth uses __Secure- prefix on HTTPS (production)
-    const sessionCookie =
-        request.cookies.get('better-auth.session_token') ??
-        request.cookies.get('__Secure-better-auth.session_token')
-    const hasSession = !!sessionCookie?.value
+    const hasSession = hasSessionCookie(request)
 
     const isProtectedRoute = protectedRoutes.some(
         (route) => pathname === route || pathname.startsWith(route + '/'),
