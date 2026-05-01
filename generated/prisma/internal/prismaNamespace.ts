@@ -1706,11 +1706,13 @@ export const PaymentTokenScalarFieldEnum = {
     userId: 'userId',
     token: 'token',
     gatewayUid: 'gatewayUid',
+    trackingId: 'trackingId',
     status: 'status',
     amountCents: 'amountCents',
     currency: 'currency',
     coinAmount: 'coinAmount',
     description: 'description',
+    errorMessage: 'errorMessage',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
 } as const
@@ -1781,6 +1783,7 @@ export const CoinTransactionScalarFieldEnum = {
     description: 'description',
     createdAt: 'createdAt',
     userId: 'userId',
+    paymentTokenId: 'paymentTokenId',
 } as const
 
 export type CoinTransactionScalarFieldEnum =

@@ -45,21 +45,44 @@ export class PaymentController {
     async handleWebhook(req: NextRequest) {
         try {
             const rawBody = await req.text()
-            const signature = req.headers.get('content-signature') ?? ''
+            const authorization = req.headers.get('Authorization') ?? req.headers.get('authorization')
+            const signature = req.headers.get('Content-Signature') ?? req.headers.get('content-signature')
 
-            if (!signature) {
-                return NextResponse.json({ error: 'Missing signature' }, { status: 400 })
-            }
+            await this.paymentService.handleWebhook(rawBody, { authorization, signature })
 
-            await this.paymentService.handleWebhook(rawBody, signature)
-
-            return NextResponse.json({ success: true })
+            return NextResponse.json({ received: true })
         } catch (error) {
             console.error('Webhook error:', error)
 
-            const message = error instanceof Error ? error.message : 'Webhook processing failed'
+            return NextResponse.json({ error: 'Webhook processing failed' }, { status: 401 })
+        }
+    }
 
-            return NextResponse.json({ error: message }, { status: 400 })
+    async handleReturn(req: NextRequest) {
+        const token = req.nextUrl.searchParams.get('token')
+        const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000').replace(/\/$/, '')
+        const redirectTo = (destination: 'success' | 'pending' | 'failed', t?: string | null) => {
+            const params = new URLSearchParams({ status: destination })
+            if (t) params.set('token', t)
+            return NextResponse.redirect(
+                `${appUrl}/payments/secure-processor/${destination}?${params.toString()}`,
+            )
+        }
+
+        if (!token) return redirectTo('failed', null)
+
+        try {
+            const result = await this.paymentService.reconcileReturn(token)
+            const destination =
+                result.status === 'SUCCESSFUL'
+                    ? 'success'
+                    : result.status === 'PENDING'
+                      ? 'pending'
+                      : 'failed'
+            return redirectTo(destination, token)
+        } catch (error) {
+            console.error('Return reconciliation error:', error)
+            return redirectTo('failed', token)
         }
     }
 }

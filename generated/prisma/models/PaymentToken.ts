@@ -40,11 +40,13 @@ export type PaymentTokenMinAggregateOutputType = {
     userId: string | null
     token: string | null
     gatewayUid: string | null
+    trackingId: string | null
     status: $Enums.PaymentStatus | null
     amountCents: number | null
     currency: string | null
     coinAmount: number | null
     description: string | null
+    errorMessage: string | null
     createdAt: Date | null
     updatedAt: Date | null
 }
@@ -54,11 +56,13 @@ export type PaymentTokenMaxAggregateOutputType = {
     userId: string | null
     token: string | null
     gatewayUid: string | null
+    trackingId: string | null
     status: $Enums.PaymentStatus | null
     amountCents: number | null
     currency: string | null
     coinAmount: number | null
     description: string | null
+    errorMessage: string | null
     createdAt: Date | null
     updatedAt: Date | null
 }
@@ -68,11 +72,13 @@ export type PaymentTokenCountAggregateOutputType = {
     userId: number
     token: number
     gatewayUid: number
+    trackingId: number
     status: number
     amountCents: number
     currency: number
     coinAmount: number
     description: number
+    errorMessage: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -93,11 +99,13 @@ export type PaymentTokenMinAggregateInputType = {
     userId?: true
     token?: true
     gatewayUid?: true
+    trackingId?: true
     status?: true
     amountCents?: true
     currency?: true
     coinAmount?: true
     description?: true
+    errorMessage?: true
     createdAt?: true
     updatedAt?: true
 }
@@ -107,11 +115,13 @@ export type PaymentTokenMaxAggregateInputType = {
     userId?: true
     token?: true
     gatewayUid?: true
+    trackingId?: true
     status?: true
     amountCents?: true
     currency?: true
     coinAmount?: true
     description?: true
+    errorMessage?: true
     createdAt?: true
     updatedAt?: true
 }
@@ -121,11 +131,13 @@ export type PaymentTokenCountAggregateInputType = {
     userId?: true
     token?: true
     gatewayUid?: true
+    trackingId?: true
     status?: true
     amountCents?: true
     currency?: true
     coinAmount?: true
     description?: true
+    errorMessage?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -225,11 +237,13 @@ export type PaymentTokenGroupByOutputType = {
     userId: string
     token: string
     gatewayUid: string | null
+    trackingId: string | null
     status: $Enums.PaymentStatus
     amountCents: number
     currency: string
     coinAmount: number
     description: string
+    errorMessage: string | null
     createdAt: Date
     updatedAt: Date
     _count: PaymentTokenCountAggregateOutputType | null
@@ -259,14 +273,20 @@ export type PaymentTokenWhereInput = {
     userId?: Prisma.StringFilter<'PaymentToken'> | string
     token?: Prisma.StringFilter<'PaymentToken'> | string
     gatewayUid?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
+    trackingId?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
     status?: Prisma.EnumPaymentStatusFilter<'PaymentToken'> | $Enums.PaymentStatus
     amountCents?: Prisma.IntFilter<'PaymentToken'> | number
     currency?: Prisma.StringFilter<'PaymentToken'> | string
     coinAmount?: Prisma.IntFilter<'PaymentToken'> | number
     description?: Prisma.StringFilter<'PaymentToken'> | string
+    errorMessage?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
     createdAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
     updatedAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+    transaction?: Prisma.XOR<
+        Prisma.CoinTransactionNullableScalarRelationFilter,
+        Prisma.CoinTransactionWhereInput
+    > | null
 }
 
 export type PaymentTokenOrderByWithRelationInput = {
@@ -274,35 +294,44 @@ export type PaymentTokenOrderByWithRelationInput = {
     userId?: Prisma.SortOrder
     token?: Prisma.SortOrder
     gatewayUid?: Prisma.SortOrderInput | Prisma.SortOrder
+    trackingId?: Prisma.SortOrderInput | Prisma.SortOrder
     status?: Prisma.SortOrder
     amountCents?: Prisma.SortOrder
     currency?: Prisma.SortOrder
     coinAmount?: Prisma.SortOrder
     description?: Prisma.SortOrder
+    errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
     user?: Prisma.UserOrderByWithRelationInput
+    transaction?: Prisma.CoinTransactionOrderByWithRelationInput
 }
 
 export type PaymentTokenWhereUniqueInput = Prisma.AtLeast<
     {
         id?: string
         token?: string
+        gatewayUid?: string
+        trackingId?: string
         AND?: Prisma.PaymentTokenWhereInput | Prisma.PaymentTokenWhereInput[]
         OR?: Prisma.PaymentTokenWhereInput[]
         NOT?: Prisma.PaymentTokenWhereInput | Prisma.PaymentTokenWhereInput[]
         userId?: Prisma.StringFilter<'PaymentToken'> | string
-        gatewayUid?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
         status?: Prisma.EnumPaymentStatusFilter<'PaymentToken'> | $Enums.PaymentStatus
         amountCents?: Prisma.IntFilter<'PaymentToken'> | number
         currency?: Prisma.StringFilter<'PaymentToken'> | string
         coinAmount?: Prisma.IntFilter<'PaymentToken'> | number
         description?: Prisma.StringFilter<'PaymentToken'> | string
+        errorMessage?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
         createdAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
         updatedAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
         user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+        transaction?: Prisma.XOR<
+            Prisma.CoinTransactionNullableScalarRelationFilter,
+            Prisma.CoinTransactionWhereInput
+        > | null
     },
-    'id' | 'token'
+    'id' | 'token' | 'gatewayUid' | 'trackingId'
 >
 
 export type PaymentTokenOrderByWithAggregationInput = {
@@ -310,11 +339,13 @@ export type PaymentTokenOrderByWithAggregationInput = {
     userId?: Prisma.SortOrder
     token?: Prisma.SortOrder
     gatewayUid?: Prisma.SortOrderInput | Prisma.SortOrder
+    trackingId?: Prisma.SortOrderInput | Prisma.SortOrder
     status?: Prisma.SortOrder
     amountCents?: Prisma.SortOrder
     currency?: Prisma.SortOrder
     coinAmount?: Prisma.SortOrder
     description?: Prisma.SortOrder
+    errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
     _count?: Prisma.PaymentTokenCountOrderByAggregateInput
@@ -336,11 +367,13 @@ export type PaymentTokenScalarWhereWithAggregatesInput = {
     userId?: Prisma.StringWithAggregatesFilter<'PaymentToken'> | string
     token?: Prisma.StringWithAggregatesFilter<'PaymentToken'> | string
     gatewayUid?: Prisma.StringNullableWithAggregatesFilter<'PaymentToken'> | string | null
+    trackingId?: Prisma.StringNullableWithAggregatesFilter<'PaymentToken'> | string | null
     status?: Prisma.EnumPaymentStatusWithAggregatesFilter<'PaymentToken'> | $Enums.PaymentStatus
     amountCents?: Prisma.IntWithAggregatesFilter<'PaymentToken'> | number
     currency?: Prisma.StringWithAggregatesFilter<'PaymentToken'> | string
     coinAmount?: Prisma.IntWithAggregatesFilter<'PaymentToken'> | number
     description?: Prisma.StringWithAggregatesFilter<'PaymentToken'> | string
+    errorMessage?: Prisma.StringNullableWithAggregatesFilter<'PaymentToken'> | string | null
     createdAt?: Prisma.DateTimeWithAggregatesFilter<'PaymentToken'> | Date | string
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<'PaymentToken'> | Date | string
 }
@@ -349,14 +382,17 @@ export type PaymentTokenCreateInput = {
     id?: string
     token: string
     gatewayUid?: string | null
+    trackingId?: string | null
     status?: $Enums.PaymentStatus
     amountCents: number
     currency?: string
     coinAmount: number
     description: string
+    errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user: Prisma.UserCreateNestedOneWithoutPaymentTokensInput
+    transaction?: Prisma.CoinTransactionCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentTokenUncheckedCreateInput = {
@@ -364,27 +400,33 @@ export type PaymentTokenUncheckedCreateInput = {
     userId: string
     token: string
     gatewayUid?: string | null
+    trackingId?: string | null
     status?: $Enums.PaymentStatus
     amountCents: number
     currency?: string
     coinAmount: number
     description: string
+    errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    transaction?: Prisma.CoinTransactionUncheckedCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentTokenUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string
     token?: Prisma.StringFieldUpdateOperationsInput | string
     gatewayUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    trackingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     amountCents?: Prisma.IntFieldUpdateOperationsInput | number
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     user?: Prisma.UserUpdateOneRequiredWithoutPaymentTokensNestedInput
+    transaction?: Prisma.CoinTransactionUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentTokenUncheckedUpdateInput = {
@@ -392,13 +434,16 @@ export type PaymentTokenUncheckedUpdateInput = {
     userId?: Prisma.StringFieldUpdateOperationsInput | string
     token?: Prisma.StringFieldUpdateOperationsInput | string
     gatewayUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    trackingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     amountCents?: Prisma.IntFieldUpdateOperationsInput | number
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    transaction?: Prisma.CoinTransactionUncheckedUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentTokenCreateManyInput = {
@@ -406,11 +451,13 @@ export type PaymentTokenCreateManyInput = {
     userId: string
     token: string
     gatewayUid?: string | null
+    trackingId?: string | null
     status?: $Enums.PaymentStatus
     amountCents: number
     currency?: string
     coinAmount: number
     description: string
+    errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
 }
@@ -419,11 +466,13 @@ export type PaymentTokenUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string
     token?: Prisma.StringFieldUpdateOperationsInput | string
     gatewayUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    trackingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     amountCents?: Prisma.IntFieldUpdateOperationsInput | number
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -433,11 +482,13 @@ export type PaymentTokenUncheckedUpdateManyInput = {
     userId?: Prisma.StringFieldUpdateOperationsInput | string
     token?: Prisma.StringFieldUpdateOperationsInput | string
     gatewayUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    trackingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     amountCents?: Prisma.IntFieldUpdateOperationsInput | number
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -447,11 +498,13 @@ export type PaymentTokenCountOrderByAggregateInput = {
     userId?: Prisma.SortOrder
     token?: Prisma.SortOrder
     gatewayUid?: Prisma.SortOrder
+    trackingId?: Prisma.SortOrder
     status?: Prisma.SortOrder
     amountCents?: Prisma.SortOrder
     currency?: Prisma.SortOrder
     coinAmount?: Prisma.SortOrder
     description?: Prisma.SortOrder
+    errorMessage?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
 }
@@ -466,11 +519,13 @@ export type PaymentTokenMaxOrderByAggregateInput = {
     userId?: Prisma.SortOrder
     token?: Prisma.SortOrder
     gatewayUid?: Prisma.SortOrder
+    trackingId?: Prisma.SortOrder
     status?: Prisma.SortOrder
     amountCents?: Prisma.SortOrder
     currency?: Prisma.SortOrder
     coinAmount?: Prisma.SortOrder
     description?: Prisma.SortOrder
+    errorMessage?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
 }
@@ -480,11 +535,13 @@ export type PaymentTokenMinOrderByAggregateInput = {
     userId?: Prisma.SortOrder
     token?: Prisma.SortOrder
     gatewayUid?: Prisma.SortOrder
+    trackingId?: Prisma.SortOrder
     status?: Prisma.SortOrder
     amountCents?: Prisma.SortOrder
     currency?: Prisma.SortOrder
     coinAmount?: Prisma.SortOrder
     description?: Prisma.SortOrder
+    errorMessage?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
 }
@@ -502,6 +559,11 @@ export type PaymentTokenListRelationFilter = {
 
 export type PaymentTokenOrderByRelationAggregateInput = {
     _count?: Prisma.SortOrder
+}
+
+export type PaymentTokenNullableScalarRelationFilter = {
+    is?: Prisma.PaymentTokenWhereInput | null
+    isNot?: Prisma.PaymentTokenWhereInput | null
 }
 
 export type EnumPaymentStatusFieldUpdateOperationsInput = {
@@ -594,30 +656,64 @@ export type PaymentTokenUncheckedUpdateManyWithoutUserNestedInput = {
     deleteMany?: Prisma.PaymentTokenScalarWhereInput | Prisma.PaymentTokenScalarWhereInput[]
 }
 
+export type PaymentTokenCreateNestedOneWithoutTransactionInput = {
+    create?: Prisma.XOR<
+        Prisma.PaymentTokenCreateWithoutTransactionInput,
+        Prisma.PaymentTokenUncheckedCreateWithoutTransactionInput
+    >
+    connectOrCreate?: Prisma.PaymentTokenCreateOrConnectWithoutTransactionInput
+    connect?: Prisma.PaymentTokenWhereUniqueInput
+}
+
+export type PaymentTokenUpdateOneWithoutTransactionNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.PaymentTokenCreateWithoutTransactionInput,
+        Prisma.PaymentTokenUncheckedCreateWithoutTransactionInput
+    >
+    connectOrCreate?: Prisma.PaymentTokenCreateOrConnectWithoutTransactionInput
+    upsert?: Prisma.PaymentTokenUpsertWithoutTransactionInput
+    disconnect?: Prisma.PaymentTokenWhereInput | boolean
+    delete?: Prisma.PaymentTokenWhereInput | boolean
+    connect?: Prisma.PaymentTokenWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.PaymentTokenUpdateToOneWithWhereWithoutTransactionInput,
+            Prisma.PaymentTokenUpdateWithoutTransactionInput
+        >,
+        Prisma.PaymentTokenUncheckedUpdateWithoutTransactionInput
+    >
+}
+
 export type PaymentTokenCreateWithoutUserInput = {
     id?: string
     token: string
     gatewayUid?: string | null
+    trackingId?: string | null
     status?: $Enums.PaymentStatus
     amountCents: number
     currency?: string
     coinAmount: number
     description: string
+    errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    transaction?: Prisma.CoinTransactionCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentTokenUncheckedCreateWithoutUserInput = {
     id?: string
     token: string
     gatewayUid?: string | null
+    trackingId?: string | null
     status?: $Enums.PaymentStatus
     amountCents: number
     currency?: string
     coinAmount: number
     description: string
+    errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    transaction?: Prisma.CoinTransactionUncheckedCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentTokenCreateOrConnectWithoutUserInput = {
@@ -669,24 +765,120 @@ export type PaymentTokenScalarWhereInput = {
     userId?: Prisma.StringFilter<'PaymentToken'> | string
     token?: Prisma.StringFilter<'PaymentToken'> | string
     gatewayUid?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
+    trackingId?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
     status?: Prisma.EnumPaymentStatusFilter<'PaymentToken'> | $Enums.PaymentStatus
     amountCents?: Prisma.IntFilter<'PaymentToken'> | number
     currency?: Prisma.StringFilter<'PaymentToken'> | string
     coinAmount?: Prisma.IntFilter<'PaymentToken'> | number
     description?: Prisma.StringFilter<'PaymentToken'> | string
+    errorMessage?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
     createdAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
     updatedAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
+}
+
+export type PaymentTokenCreateWithoutTransactionInput = {
+    id?: string
+    token: string
+    gatewayUid?: string | null
+    trackingId?: string | null
+    status?: $Enums.PaymentStatus
+    amountCents: number
+    currency?: string
+    coinAmount: number
+    description: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: Prisma.UserCreateNestedOneWithoutPaymentTokensInput
+}
+
+export type PaymentTokenUncheckedCreateWithoutTransactionInput = {
+    id?: string
+    userId: string
+    token: string
+    gatewayUid?: string | null
+    trackingId?: string | null
+    status?: $Enums.PaymentStatus
+    amountCents: number
+    currency?: string
+    coinAmount: number
+    description: string
+    errorMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+}
+
+export type PaymentTokenCreateOrConnectWithoutTransactionInput = {
+    where: Prisma.PaymentTokenWhereUniqueInput
+    create: Prisma.XOR<
+        Prisma.PaymentTokenCreateWithoutTransactionInput,
+        Prisma.PaymentTokenUncheckedCreateWithoutTransactionInput
+    >
+}
+
+export type PaymentTokenUpsertWithoutTransactionInput = {
+    update: Prisma.XOR<
+        Prisma.PaymentTokenUpdateWithoutTransactionInput,
+        Prisma.PaymentTokenUncheckedUpdateWithoutTransactionInput
+    >
+    create: Prisma.XOR<
+        Prisma.PaymentTokenCreateWithoutTransactionInput,
+        Prisma.PaymentTokenUncheckedCreateWithoutTransactionInput
+    >
+    where?: Prisma.PaymentTokenWhereInput
+}
+
+export type PaymentTokenUpdateToOneWithWhereWithoutTransactionInput = {
+    where?: Prisma.PaymentTokenWhereInput
+    data: Prisma.XOR<
+        Prisma.PaymentTokenUpdateWithoutTransactionInput,
+        Prisma.PaymentTokenUncheckedUpdateWithoutTransactionInput
+    >
+}
+
+export type PaymentTokenUpdateWithoutTransactionInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    token?: Prisma.StringFieldUpdateOperationsInput | string
+    gatewayUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    trackingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    amountCents?: Prisma.IntFieldUpdateOperationsInput | number
+    currency?: Prisma.StringFieldUpdateOperationsInput | string
+    coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
+    description?: Prisma.StringFieldUpdateOperationsInput | string
+    errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    user?: Prisma.UserUpdateOneRequiredWithoutPaymentTokensNestedInput
+}
+
+export type PaymentTokenUncheckedUpdateWithoutTransactionInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    userId?: Prisma.StringFieldUpdateOperationsInput | string
+    token?: Prisma.StringFieldUpdateOperationsInput | string
+    gatewayUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    trackingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    amountCents?: Prisma.IntFieldUpdateOperationsInput | number
+    currency?: Prisma.StringFieldUpdateOperationsInput | string
+    coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
+    description?: Prisma.StringFieldUpdateOperationsInput | string
+    errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PaymentTokenCreateManyUserInput = {
     id?: string
     token: string
     gatewayUid?: string | null
+    trackingId?: string | null
     status?: $Enums.PaymentStatus
     amountCents: number
     currency?: string
     coinAmount: number
     description: string
+    errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
 }
@@ -695,37 +887,45 @@ export type PaymentTokenUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string
     token?: Prisma.StringFieldUpdateOperationsInput | string
     gatewayUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    trackingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     amountCents?: Prisma.IntFieldUpdateOperationsInput | number
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    transaction?: Prisma.CoinTransactionUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentTokenUncheckedUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string
     token?: Prisma.StringFieldUpdateOperationsInput | string
     gatewayUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    trackingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     amountCents?: Prisma.IntFieldUpdateOperationsInput | number
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    transaction?: Prisma.CoinTransactionUncheckedUpdateOneWithoutPaymentNestedInput
 }
 
 export type PaymentTokenUncheckedUpdateManyWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string
     token?: Prisma.StringFieldUpdateOperationsInput | string
     gatewayUid?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    trackingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     amountCents?: Prisma.IntFieldUpdateOperationsInput | number
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -738,14 +938,17 @@ export type PaymentTokenSelect<
         userId?: boolean
         token?: boolean
         gatewayUid?: boolean
+        trackingId?: boolean
         status?: boolean
         amountCents?: boolean
         currency?: boolean
         coinAmount?: boolean
         description?: boolean
+        errorMessage?: boolean
         createdAt?: boolean
         updatedAt?: boolean
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+        transaction?: boolean | Prisma.PaymentToken$transactionArgs<ExtArgs>
     },
     ExtArgs['result']['paymentToken']
 >
@@ -758,11 +961,13 @@ export type PaymentTokenSelectCreateManyAndReturn<
         userId?: boolean
         token?: boolean
         gatewayUid?: boolean
+        trackingId?: boolean
         status?: boolean
         amountCents?: boolean
         currency?: boolean
         coinAmount?: boolean
         description?: boolean
+        errorMessage?: boolean
         createdAt?: boolean
         updatedAt?: boolean
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -778,11 +983,13 @@ export type PaymentTokenSelectUpdateManyAndReturn<
         userId?: boolean
         token?: boolean
         gatewayUid?: boolean
+        trackingId?: boolean
         status?: boolean
         amountCents?: boolean
         currency?: boolean
         coinAmount?: boolean
         description?: boolean
+        errorMessage?: boolean
         createdAt?: boolean
         updatedAt?: boolean
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -795,11 +1002,13 @@ export type PaymentTokenSelectScalar = {
     userId?: boolean
     token?: boolean
     gatewayUid?: boolean
+    trackingId?: boolean
     status?: boolean
     amountCents?: boolean
     currency?: boolean
     coinAmount?: boolean
     description?: boolean
+    errorMessage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
 }
@@ -811,11 +1020,13 @@ export type PaymentTokenOmit<
     | 'userId'
     | 'token'
     | 'gatewayUid'
+    | 'trackingId'
     | 'status'
     | 'amountCents'
     | 'currency'
     | 'coinAmount'
     | 'description'
+    | 'errorMessage'
     | 'createdAt'
     | 'updatedAt',
     ExtArgs['result']['paymentToken']
@@ -824,6 +1035,7 @@ export type PaymentTokenInclude<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+    transaction?: boolean | Prisma.PaymentToken$transactionArgs<ExtArgs>
 }
 export type PaymentTokenIncludeCreateManyAndReturn<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
@@ -842,6 +1054,7 @@ export type $PaymentTokenPayload<
     name: 'PaymentToken'
     objects: {
         user: Prisma.$UserPayload<ExtArgs>
+        transaction: Prisma.$CoinTransactionPayload<ExtArgs> | null
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -849,11 +1062,13 @@ export type $PaymentTokenPayload<
             userId: string
             token: string
             gatewayUid: string | null
+            trackingId: string | null
             status: $Enums.PaymentStatus
             amountCents: number
             currency: string
             coinAmount: number
             description: string
+            errorMessage: string | null
             createdAt: Date
             updatedAt: Date
         },
@@ -1378,6 +1593,19 @@ export interface Prisma__PaymentTokenClient<
         ExtArgs,
         GlobalOmitOptions
     >
+    transaction<T extends Prisma.PaymentToken$transactionArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.PaymentToken$transactionArgs<ExtArgs>>,
+    ): Prisma.Prisma__CoinTransactionClient<
+        runtime.Types.Result.GetResult<
+            Prisma.$CoinTransactionPayload<ExtArgs>,
+            T,
+            'findUniqueOrThrow',
+            GlobalOmitOptions
+        > | null,
+        null,
+        ExtArgs,
+        GlobalOmitOptions
+    >
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1413,11 +1641,13 @@ export interface PaymentTokenFieldRefs {
     readonly userId: Prisma.FieldRef<'PaymentToken', 'String'>
     readonly token: Prisma.FieldRef<'PaymentToken', 'String'>
     readonly gatewayUid: Prisma.FieldRef<'PaymentToken', 'String'>
+    readonly trackingId: Prisma.FieldRef<'PaymentToken', 'String'>
     readonly status: Prisma.FieldRef<'PaymentToken', 'PaymentStatus'>
     readonly amountCents: Prisma.FieldRef<'PaymentToken', 'Int'>
     readonly currency: Prisma.FieldRef<'PaymentToken', 'String'>
     readonly coinAmount: Prisma.FieldRef<'PaymentToken', 'Int'>
     readonly description: Prisma.FieldRef<'PaymentToken', 'String'>
+    readonly errorMessage: Prisma.FieldRef<'PaymentToken', 'String'>
     readonly createdAt: Prisma.FieldRef<'PaymentToken', 'DateTime'>
     readonly updatedAt: Prisma.FieldRef<'PaymentToken', 'DateTime'>
 }
@@ -1845,6 +2075,27 @@ export type PaymentTokenDeleteManyArgs<
      * Limit how many PaymentTokens to delete.
      */
     limit?: number
+}
+
+/**
+ * PaymentToken.transaction
+ */
+export type PaymentToken$transactionArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the CoinTransaction
+     */
+    select?: Prisma.CoinTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CoinTransaction
+     */
+    omit?: Prisma.CoinTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.CoinTransactionInclude<ExtArgs> | null
+    where?: Prisma.CoinTransactionWhereInput
 }
 
 /**

@@ -40,6 +40,7 @@ export type CoinTransactionMinAggregateOutputType = {
     description: string | null
     createdAt: Date | null
     userId: string | null
+    paymentTokenId: string | null
 }
 
 export type CoinTransactionMaxAggregateOutputType = {
@@ -49,6 +50,7 @@ export type CoinTransactionMaxAggregateOutputType = {
     description: string | null
     createdAt: Date | null
     userId: string | null
+    paymentTokenId: string | null
 }
 
 export type CoinTransactionCountAggregateOutputType = {
@@ -58,6 +60,7 @@ export type CoinTransactionCountAggregateOutputType = {
     description: number
     createdAt: number
     userId: number
+    paymentTokenId: number
     _all: number
 }
 
@@ -76,6 +79,7 @@ export type CoinTransactionMinAggregateInputType = {
     description?: true
     createdAt?: true
     userId?: true
+    paymentTokenId?: true
 }
 
 export type CoinTransactionMaxAggregateInputType = {
@@ -85,6 +89,7 @@ export type CoinTransactionMaxAggregateInputType = {
     description?: true
     createdAt?: true
     userId?: true
+    paymentTokenId?: true
 }
 
 export type CoinTransactionCountAggregateInputType = {
@@ -94,6 +99,7 @@ export type CoinTransactionCountAggregateInputType = {
     description?: true
     createdAt?: true
     userId?: true
+    paymentTokenId?: true
     _all?: true
 }
 
@@ -195,6 +201,7 @@ export type CoinTransactionGroupByOutputType = {
     description: string
     createdAt: Date
     userId: string
+    paymentTokenId: string | null
     _count: CoinTransactionCountAggregateOutputType | null
     _avg: CoinTransactionAvgAggregateOutputType | null
     _sum: CoinTransactionSumAggregateOutputType | null
@@ -224,7 +231,12 @@ export type CoinTransactionWhereInput = {
     description?: Prisma.StringFilter<'CoinTransaction'> | string
     createdAt?: Prisma.DateTimeFilter<'CoinTransaction'> | Date | string
     userId?: Prisma.StringFilter<'CoinTransaction'> | string
+    paymentTokenId?: Prisma.StringNullableFilter<'CoinTransaction'> | string | null
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+    payment?: Prisma.XOR<
+        Prisma.PaymentTokenNullableScalarRelationFilter,
+        Prisma.PaymentTokenWhereInput
+    > | null
 }
 
 export type CoinTransactionOrderByWithRelationInput = {
@@ -234,12 +246,15 @@ export type CoinTransactionOrderByWithRelationInput = {
     description?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     userId?: Prisma.SortOrder
+    paymentTokenId?: Prisma.SortOrderInput | Prisma.SortOrder
     user?: Prisma.UserOrderByWithRelationInput
+    payment?: Prisma.PaymentTokenOrderByWithRelationInput
 }
 
 export type CoinTransactionWhereUniqueInput = Prisma.AtLeast<
     {
         id?: string
+        paymentTokenId?: string
         AND?: Prisma.CoinTransactionWhereInput | Prisma.CoinTransactionWhereInput[]
         OR?: Prisma.CoinTransactionWhereInput[]
         NOT?: Prisma.CoinTransactionWhereInput | Prisma.CoinTransactionWhereInput[]
@@ -249,8 +264,12 @@ export type CoinTransactionWhereUniqueInput = Prisma.AtLeast<
         createdAt?: Prisma.DateTimeFilter<'CoinTransaction'> | Date | string
         userId?: Prisma.StringFilter<'CoinTransaction'> | string
         user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+        payment?: Prisma.XOR<
+            Prisma.PaymentTokenNullableScalarRelationFilter,
+            Prisma.PaymentTokenWhereInput
+        > | null
     },
-    'id'
+    'id' | 'paymentTokenId'
 >
 
 export type CoinTransactionOrderByWithAggregationInput = {
@@ -260,6 +279,7 @@ export type CoinTransactionOrderByWithAggregationInput = {
     description?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     userId?: Prisma.SortOrder
+    paymentTokenId?: Prisma.SortOrderInput | Prisma.SortOrder
     _count?: Prisma.CoinTransactionCountOrderByAggregateInput
     _avg?: Prisma.CoinTransactionAvgOrderByAggregateInput
     _max?: Prisma.CoinTransactionMaxOrderByAggregateInput
@@ -281,6 +301,7 @@ export type CoinTransactionScalarWhereWithAggregatesInput = {
     description?: Prisma.StringWithAggregatesFilter<'CoinTransaction'> | string
     createdAt?: Prisma.DateTimeWithAggregatesFilter<'CoinTransaction'> | Date | string
     userId?: Prisma.StringWithAggregatesFilter<'CoinTransaction'> | string
+    paymentTokenId?: Prisma.StringNullableWithAggregatesFilter<'CoinTransaction'> | string | null
 }
 
 export type CoinTransactionCreateInput = {
@@ -290,6 +311,7 @@ export type CoinTransactionCreateInput = {
     description: string
     createdAt?: Date | string
     user: Prisma.UserCreateNestedOneWithoutCoinTransactionsInput
+    payment?: Prisma.PaymentTokenCreateNestedOneWithoutTransactionInput
 }
 
 export type CoinTransactionUncheckedCreateInput = {
@@ -299,6 +321,7 @@ export type CoinTransactionUncheckedCreateInput = {
     description: string
     createdAt?: Date | string
     userId: string
+    paymentTokenId?: string | null
 }
 
 export type CoinTransactionUpdateInput = {
@@ -308,6 +331,7 @@ export type CoinTransactionUpdateInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     user?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsNestedInput
+    payment?: Prisma.PaymentTokenUpdateOneWithoutTransactionNestedInput
 }
 
 export type CoinTransactionUncheckedUpdateInput = {
@@ -317,6 +341,7 @@ export type CoinTransactionUncheckedUpdateInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     userId?: Prisma.StringFieldUpdateOperationsInput | string
+    paymentTokenId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CoinTransactionCreateManyInput = {
@@ -326,6 +351,7 @@ export type CoinTransactionCreateManyInput = {
     description: string
     createdAt?: Date | string
     userId: string
+    paymentTokenId?: string | null
 }
 
 export type CoinTransactionUpdateManyMutationInput = {
@@ -343,6 +369,12 @@ export type CoinTransactionUncheckedUpdateManyInput = {
     description?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     userId?: Prisma.StringFieldUpdateOperationsInput | string
+    paymentTokenId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type CoinTransactionNullableScalarRelationFilter = {
+    is?: Prisma.CoinTransactionWhereInput | null
+    isNot?: Prisma.CoinTransactionWhereInput | null
 }
 
 export type CoinTransactionListRelationFilter = {
@@ -362,6 +394,7 @@ export type CoinTransactionCountOrderByAggregateInput = {
     description?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     userId?: Prisma.SortOrder
+    paymentTokenId?: Prisma.SortOrder
 }
 
 export type CoinTransactionAvgOrderByAggregateInput = {
@@ -375,6 +408,7 @@ export type CoinTransactionMaxOrderByAggregateInput = {
     description?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     userId?: Prisma.SortOrder
+    paymentTokenId?: Prisma.SortOrder
 }
 
 export type CoinTransactionMinOrderByAggregateInput = {
@@ -384,10 +418,67 @@ export type CoinTransactionMinOrderByAggregateInput = {
     description?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     userId?: Prisma.SortOrder
+    paymentTokenId?: Prisma.SortOrder
 }
 
 export type CoinTransactionSumOrderByAggregateInput = {
     amount?: Prisma.SortOrder
+}
+
+export type CoinTransactionCreateNestedOneWithoutPaymentInput = {
+    create?: Prisma.XOR<
+        Prisma.CoinTransactionCreateWithoutPaymentInput,
+        Prisma.CoinTransactionUncheckedCreateWithoutPaymentInput
+    >
+    connectOrCreate?: Prisma.CoinTransactionCreateOrConnectWithoutPaymentInput
+    connect?: Prisma.CoinTransactionWhereUniqueInput
+}
+
+export type CoinTransactionUncheckedCreateNestedOneWithoutPaymentInput = {
+    create?: Prisma.XOR<
+        Prisma.CoinTransactionCreateWithoutPaymentInput,
+        Prisma.CoinTransactionUncheckedCreateWithoutPaymentInput
+    >
+    connectOrCreate?: Prisma.CoinTransactionCreateOrConnectWithoutPaymentInput
+    connect?: Prisma.CoinTransactionWhereUniqueInput
+}
+
+export type CoinTransactionUpdateOneWithoutPaymentNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.CoinTransactionCreateWithoutPaymentInput,
+        Prisma.CoinTransactionUncheckedCreateWithoutPaymentInput
+    >
+    connectOrCreate?: Prisma.CoinTransactionCreateOrConnectWithoutPaymentInput
+    upsert?: Prisma.CoinTransactionUpsertWithoutPaymentInput
+    disconnect?: Prisma.CoinTransactionWhereInput | boolean
+    delete?: Prisma.CoinTransactionWhereInput | boolean
+    connect?: Prisma.CoinTransactionWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.CoinTransactionUpdateToOneWithWhereWithoutPaymentInput,
+            Prisma.CoinTransactionUpdateWithoutPaymentInput
+        >,
+        Prisma.CoinTransactionUncheckedUpdateWithoutPaymentInput
+    >
+}
+
+export type CoinTransactionUncheckedUpdateOneWithoutPaymentNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.CoinTransactionCreateWithoutPaymentInput,
+        Prisma.CoinTransactionUncheckedCreateWithoutPaymentInput
+    >
+    connectOrCreate?: Prisma.CoinTransactionCreateOrConnectWithoutPaymentInput
+    upsert?: Prisma.CoinTransactionUpsertWithoutPaymentInput
+    disconnect?: Prisma.CoinTransactionWhereInput | boolean
+    delete?: Prisma.CoinTransactionWhereInput | boolean
+    connect?: Prisma.CoinTransactionWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.CoinTransactionUpdateToOneWithWhereWithoutPaymentInput,
+            Prisma.CoinTransactionUpdateWithoutPaymentInput
+        >,
+        Prisma.CoinTransactionUncheckedUpdateWithoutPaymentInput
+    >
 }
 
 export type CoinTransactionCreateNestedManyWithoutUserInput = {
@@ -480,12 +571,77 @@ export type EnumTransactionTypeFieldUpdateOperationsInput = {
     set?: $Enums.TransactionType
 }
 
+export type CoinTransactionCreateWithoutPaymentInput = {
+    id?: string
+    amount: number
+    type: $Enums.TransactionType
+    description: string
+    createdAt?: Date | string
+    user: Prisma.UserCreateNestedOneWithoutCoinTransactionsInput
+}
+
+export type CoinTransactionUncheckedCreateWithoutPaymentInput = {
+    id?: string
+    amount: number
+    type: $Enums.TransactionType
+    description: string
+    createdAt?: Date | string
+    userId: string
+}
+
+export type CoinTransactionCreateOrConnectWithoutPaymentInput = {
+    where: Prisma.CoinTransactionWhereUniqueInput
+    create: Prisma.XOR<
+        Prisma.CoinTransactionCreateWithoutPaymentInput,
+        Prisma.CoinTransactionUncheckedCreateWithoutPaymentInput
+    >
+}
+
+export type CoinTransactionUpsertWithoutPaymentInput = {
+    update: Prisma.XOR<
+        Prisma.CoinTransactionUpdateWithoutPaymentInput,
+        Prisma.CoinTransactionUncheckedUpdateWithoutPaymentInput
+    >
+    create: Prisma.XOR<
+        Prisma.CoinTransactionCreateWithoutPaymentInput,
+        Prisma.CoinTransactionUncheckedCreateWithoutPaymentInput
+    >
+    where?: Prisma.CoinTransactionWhereInput
+}
+
+export type CoinTransactionUpdateToOneWithWhereWithoutPaymentInput = {
+    where?: Prisma.CoinTransactionWhereInput
+    data: Prisma.XOR<
+        Prisma.CoinTransactionUpdateWithoutPaymentInput,
+        Prisma.CoinTransactionUncheckedUpdateWithoutPaymentInput
+    >
+}
+
+export type CoinTransactionUpdateWithoutPaymentInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    amount?: Prisma.IntFieldUpdateOperationsInput | number
+    type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    description?: Prisma.StringFieldUpdateOperationsInput | string
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    user?: Prisma.UserUpdateOneRequiredWithoutCoinTransactionsNestedInput
+}
+
+export type CoinTransactionUncheckedUpdateWithoutPaymentInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    amount?: Prisma.IntFieldUpdateOperationsInput | number
+    type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    description?: Prisma.StringFieldUpdateOperationsInput | string
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
 export type CoinTransactionCreateWithoutUserInput = {
     id?: string
     amount: number
     type: $Enums.TransactionType
     description: string
     createdAt?: Date | string
+    payment?: Prisma.PaymentTokenCreateNestedOneWithoutTransactionInput
 }
 
 export type CoinTransactionUncheckedCreateWithoutUserInput = {
@@ -494,6 +650,7 @@ export type CoinTransactionUncheckedCreateWithoutUserInput = {
     type: $Enums.TransactionType
     description: string
     createdAt?: Date | string
+    paymentTokenId?: string | null
 }
 
 export type CoinTransactionCreateOrConnectWithoutUserInput = {
@@ -547,6 +704,7 @@ export type CoinTransactionScalarWhereInput = {
     description?: Prisma.StringFilter<'CoinTransaction'> | string
     createdAt?: Prisma.DateTimeFilter<'CoinTransaction'> | Date | string
     userId?: Prisma.StringFilter<'CoinTransaction'> | string
+    paymentTokenId?: Prisma.StringNullableFilter<'CoinTransaction'> | string | null
 }
 
 export type CoinTransactionCreateManyUserInput = {
@@ -555,6 +713,7 @@ export type CoinTransactionCreateManyUserInput = {
     type: $Enums.TransactionType
     description: string
     createdAt?: Date | string
+    paymentTokenId?: string | null
 }
 
 export type CoinTransactionUpdateWithoutUserInput = {
@@ -563,6 +722,7 @@ export type CoinTransactionUpdateWithoutUserInput = {
     type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
     description?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    payment?: Prisma.PaymentTokenUpdateOneWithoutTransactionNestedInput
 }
 
 export type CoinTransactionUncheckedUpdateWithoutUserInput = {
@@ -571,6 +731,7 @@ export type CoinTransactionUncheckedUpdateWithoutUserInput = {
     type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
     description?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    paymentTokenId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CoinTransactionUncheckedUpdateManyWithoutUserInput = {
@@ -579,6 +740,7 @@ export type CoinTransactionUncheckedUpdateManyWithoutUserInput = {
     type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
     description?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    paymentTokenId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CoinTransactionSelect<
@@ -591,7 +753,9 @@ export type CoinTransactionSelect<
         description?: boolean
         createdAt?: boolean
         userId?: boolean
+        paymentTokenId?: boolean
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+        payment?: boolean | Prisma.CoinTransaction$paymentArgs<ExtArgs>
     },
     ExtArgs['result']['coinTransaction']
 >
@@ -606,7 +770,9 @@ export type CoinTransactionSelectCreateManyAndReturn<
         description?: boolean
         createdAt?: boolean
         userId?: boolean
+        paymentTokenId?: boolean
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+        payment?: boolean | Prisma.CoinTransaction$paymentArgs<ExtArgs>
     },
     ExtArgs['result']['coinTransaction']
 >
@@ -621,7 +787,9 @@ export type CoinTransactionSelectUpdateManyAndReturn<
         description?: boolean
         createdAt?: boolean
         userId?: boolean
+        paymentTokenId?: boolean
         user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+        payment?: boolean | Prisma.CoinTransaction$paymentArgs<ExtArgs>
     },
     ExtArgs['result']['coinTransaction']
 >
@@ -633,28 +801,32 @@ export type CoinTransactionSelectScalar = {
     description?: boolean
     createdAt?: boolean
     userId?: boolean
+    paymentTokenId?: boolean
 }
 
 export type CoinTransactionOmit<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-    'id' | 'amount' | 'type' | 'description' | 'createdAt' | 'userId',
+    'id' | 'amount' | 'type' | 'description' | 'createdAt' | 'userId' | 'paymentTokenId',
     ExtArgs['result']['coinTransaction']
 >
 export type CoinTransactionInclude<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+    payment?: boolean | Prisma.CoinTransaction$paymentArgs<ExtArgs>
 }
 export type CoinTransactionIncludeCreateManyAndReturn<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+    payment?: boolean | Prisma.CoinTransaction$paymentArgs<ExtArgs>
 }
 export type CoinTransactionIncludeUpdateManyAndReturn<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+    payment?: boolean | Prisma.CoinTransaction$paymentArgs<ExtArgs>
 }
 
 export type $CoinTransactionPayload<
@@ -663,6 +835,7 @@ export type $CoinTransactionPayload<
     name: 'CoinTransaction'
     objects: {
         user: Prisma.$UserPayload<ExtArgs>
+        payment: Prisma.$PaymentTokenPayload<ExtArgs> | null
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -672,6 +845,7 @@ export type $CoinTransactionPayload<
             description: string
             createdAt: Date
             userId: string
+            paymentTokenId: string | null
         },
         ExtArgs['result']['coinTransaction']
     >
@@ -1222,6 +1396,19 @@ export interface Prisma__CoinTransactionClient<
         ExtArgs,
         GlobalOmitOptions
     >
+    payment<T extends Prisma.CoinTransaction$paymentArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.CoinTransaction$paymentArgs<ExtArgs>>,
+    ): Prisma.Prisma__PaymentTokenClient<
+        runtime.Types.Result.GetResult<
+            Prisma.$PaymentTokenPayload<ExtArgs>,
+            T,
+            'findUniqueOrThrow',
+            GlobalOmitOptions
+        > | null,
+        null,
+        ExtArgs,
+        GlobalOmitOptions
+    >
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1259,6 +1446,7 @@ export interface CoinTransactionFieldRefs {
     readonly description: Prisma.FieldRef<'CoinTransaction', 'String'>
     readonly createdAt: Prisma.FieldRef<'CoinTransaction', 'DateTime'>
     readonly userId: Prisma.FieldRef<'CoinTransaction', 'String'>
+    readonly paymentTokenId: Prisma.FieldRef<'CoinTransaction', 'String'>
 }
 
 // Custom InputTypes
@@ -1696,6 +1884,27 @@ export type CoinTransactionDeleteManyArgs<
      * Limit how many CoinTransactions to delete.
      */
     limit?: number
+}
+
+/**
+ * CoinTransaction.payment
+ */
+export type CoinTransaction$paymentArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the PaymentToken
+     */
+    select?: Prisma.PaymentTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentToken
+     */
+    omit?: Prisma.PaymentTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.PaymentTokenInclude<ExtArgs> | null
+    where?: Prisma.PaymentTokenWhereInput
 }
 
 /**

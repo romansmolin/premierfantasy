@@ -3,6 +3,9 @@ enum PaymentStatus {
     PENDING
     SUCCESSFUL
     FAILED
+    DECLINED
+    EXPIRED
+    ERROR
     CANCELLED
 }
 
@@ -10,16 +13,19 @@ model PaymentToken {
     id          String        @id @default(cuid())
     userId      String        @map("user_id")
     token       String        @unique
-    gatewayUid  String?       @map("gateway_uid")
+    gatewayUid  String?       @unique @map("gateway_uid")
+    trackingId  String?       @unique @map("tracking_id")
     status      PaymentStatus @default(CREATED)
     amountCents Int           @map("amount_cents")
     currency    String        @default("USD")
     coinAmount  Int           @map("coin_amount")
     description String
+    errorMessage String?      @map("error_message")
     createdAt   DateTime      @default(now()) @map("created_at")
     updatedAt   DateTime      @updatedAt @map("updated_at")
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    transaction CoinTransaction?
 
     @@index([userId])
     @@index([token])

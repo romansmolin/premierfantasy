@@ -5,6 +5,7 @@ export interface CreateTransactionData {
     amount: number
     type: TransactionType
     description: string
+    paymentTokenId?: string | null
 }
 
 export interface IWalletRepository {

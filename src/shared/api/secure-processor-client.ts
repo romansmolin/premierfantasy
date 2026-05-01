@@ -13,26 +13,59 @@ interface CheckoutResponse {
     redirectUrl: string
 }
 
+export interface RemoteCheckoutState {
+    status: string | null
+    uid: string | null
+    amountCents: number | null
+    currency: string | null
+    rawPayload: unknown
+}
+
+const readRequired = (name: string): string => {
+    const value = process.env[name]
+    if (!value || value.trim().length === 0) {
+        throw new Error(`Missing required env var: ${name}`)
+    }
+    return value
+}
+
+const formatPublicKey = (raw: string): string => {
+    const normalized = raw
+        .replace(/-----BEGIN PUBLIC KEY-----/g, '')
+        .replace(/-----END PUBLIC KEY-----/g, '')
+        .replace(/\r?\n/g, '')
+        .replace(/\\n/g, '')
+        .trim()
+    const wrapped = normalized.match(/.{1,64}/g)?.join('\n') ?? normalized
+    return `-----BEGIN PUBLIC KEY-----\n${wrapped}\n-----END PUBLIC KEY-----`
+}
+
 class SecureProcessorClient {
     private readonly baseUrl: string
     private readonly shopId: string
     private readonly secretKey: string
+    private readonly publicKey: string
     private readonly testMode: boolean
+    private readonly appUrl: string
 
     constructor() {
-        this.baseUrl = process.env.SECURE_PROCESSOR_API_BASE_URL ?? ''
-        this.shopId = process.env.SECURE_PROCESSOR_SHOP_ID ?? ''
-        this.secretKey = process.env.SECURE_PROCESSOR_SECRET_KEY ?? ''
+        this.baseUrl = readRequired('SECURE_PROCESSOR_API_BASE_URL').replace(/\/$/, '')
+        this.shopId = readRequired('SECURE_PROCESSOR_SHOP_ID')
+        this.secretKey = readRequired('SECURE_PROCESSOR_SECRET_KEY')
+        this.publicKey = formatPublicKey(readRequired('SECURE_PROCESSOR_PUBLIC_KEY'))
         this.testMode = process.env.SECURE_PROCESSOR_TEST_MODE === 'true'
+        this.appUrl = readRequired('NEXT_PUBLIC_APP_URL').replace(/\/$/, '')
     }
 
-    private get authHeader(): string {
+    get authHeader(): string {
         return `Basic ${Buffer.from(`${this.shopId}:${this.secretKey}`).toString('base64')}`
     }
 
-    async createCheckout(data: CheckoutRequest): Promise<CheckoutResponse> {
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+    get publicKeyPem(): string {
+        return this.publicKey
+    }
 
+    async createCheckout(data: CheckoutRequest): Promise<CheckoutResponse> {
         const body = {
             checkout: {
                 version: 2.1,
@@ -42,14 +75,15 @@ class SecureProcessorClient {
                     types: ['credit_card'],
                 },
                 settings: {
-                    return_url: `${appUrl}/api/payments/return?token=${data.trackingId}`,
-                    notification_url: `${appUrl}/api/payments/webhook`,
+                    return_url: `${this.appUrl}/api/payments/return?token=${data.trackingId}`,
+                    notification_url: `${this.appUrl}/api/payments/webhook`,
                     language: 'en',
                 },
                 order: {
                     amount: data.amountCents,
                     currency: data.currency,
                     description: data.description,
+                    tracking_id: data.trackingId,
                 },
                 customer: {
                     id: data.userId,
@@ -82,27 +116,68 @@ class SecureProcessorClient {
 
         const json = await res.json()
 
-        console.warn('Checkout response:', JSON.stringify(json, null, 2))
-
         return {
             token: json.checkout.token,
             redirectUrl: json.checkout.redirect_url,
         }
     }
-}
 
-export function verifyWebhookSignature(rawBody: string, signature: string): boolean {
-    const publicKey = process.env.SECURE_PROCESSOR_PUBLIC_KEY
+    async queryCheckout(gatewayToken: string): Promise<RemoteCheckoutState> {
+        const url = `${this.baseUrl}/ctp/api/checkouts/${encodeURIComponent(gatewayToken)}`
+        const res = await fetch(url, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                Authorization: this.authHeader,
+            },
+        })
 
-    if (!publicKey) throw new Error('SECURE_PROCESSOR_PUBLIC_KEY not configured')
+        if (!res.ok) {
+            throw new Error(`Secure Processor reconciliation failed: ${res.status}`)
+        }
 
-    const keyLines = publicKey.match(/.{1,64}/g)
+        const json = await res.json().catch(() => ({}))
+        const checkout = json?.checkout ?? json ?? {}
+        const order = checkout.order ?? {}
+        const gatewayResponse = checkout.gateway_response ?? {}
+        const payment = gatewayResponse.payment ?? checkout.payment ?? {}
 
-    if (!keyLines) throw new Error('Invalid public key format')
-
-    const publicKeyPem = `-----BEGIN PUBLIC KEY-----\n${keyLines.join('\n')}\n-----END PUBLIC KEY-----`
-
-    return crypto.verify('sha256', Buffer.from(rawBody), publicKeyPem, Buffer.from(signature, 'base64'))
+        return {
+            status: payment.status ?? checkout.status ?? checkout.state ?? gatewayResponse.status ?? null,
+            uid: payment.uid ?? checkout.uid ?? gatewayResponse.uid ?? null,
+            amountCents:
+                typeof order.amount === 'number'
+                    ? order.amount
+                    : typeof checkout.amount === 'number'
+                      ? checkout.amount
+                      : null,
+            currency: order.currency ?? checkout.currency ?? null,
+            rawPayload: json,
+        }
+    }
 }
 
 export const secureProcessorClient = new SecureProcessorClient()
+
+export function verifyWebhookSignature(rawBody: string, signature: string): boolean {
+    const trimmed = signature.trim()
+    const signatureValue = trimmed.includes('=') ? trimmed.split('=').slice(-1)[0] : trimmed
+    try {
+        return crypto.verify(
+            'RSA-SHA256',
+            Buffer.from(rawBody),
+            secureProcessorClient.publicKeyPem,
+            Buffer.from(signatureValue, 'base64'),
+        )
+    } catch {
+        return false
+    }
+}
+
+export function verifyWebhookBasicAuth(authorization: string | null): boolean {
+    if (!authorization?.startsWith('Basic ')) return false
+    const provided = Buffer.from(authorization.slice('Basic '.length).trim())
+    const expected = Buffer.from(secureProcessorClient.authHeader.slice('Basic '.length))
+    if (provided.length !== expected.length) return false
+    return crypto.timingSafeEqual(provided, expected)
+}

@@ -14,6 +14,9 @@ model CoinTransaction {
     userId String @map("user_id")
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+    paymentTokenId String? @unique @map("payment_token_id")
+    payment        PaymentToken? @relation(fields: [paymentTokenId], references: [id], onDelete: SetNull)
+
     @@index([userId])
     @@map("coin_transactions")
 }
