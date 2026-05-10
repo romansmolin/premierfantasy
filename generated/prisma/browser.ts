@@ -22,6 +22,16 @@ export * from './enums'
  */
 export type Competition = Prisma.CompetitionModel
 /**
+ * Model League
+ *
+ */
+export type League = Prisma.LeagueModel
+/**
+ * Model LeagueSeason
+ *
+ */
+export type LeagueSeason = Prisma.LeagueSeasonModel
+/**
  * Model FantasyTeam
  *
  */
@@ -51,6 +61,11 @@ export type Team = Prisma.TeamModel
  *
  */
 export type Player = Prisma.PlayerModel
+/**
+ * Model PlayerSeasonPrice
+ *
+ */
+export type PlayerSeasonPrice = Prisma.PlayerSeasonPriceModel
 /**
  * Model Gameweek
  *

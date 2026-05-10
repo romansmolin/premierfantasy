@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
-import { auth } from '@/shared/lib/auth'
+import { isAuthError, requireUserId } from '@/shared/lib/auth-helpers'
+import { AppError, parseJson, withController } from '@/shared/lib/http'
 
 import type { IPaymentService } from '../service/payment.service.interface'
-import type { NextRequest } from 'next/server'
 
 const checkoutSchema = z.object({
     coinAmount: z.number().int().positive(),
@@ -17,32 +17,17 @@ export class PaymentController {
         this.paymentService = paymentService
     }
 
-    async createCheckout(req: NextRequest) {
-        const session = await auth.api.getSession({ headers: req.headers })
+    createCheckout = withController(async (req) => {
+        const userId = await requireUserId(req)
 
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-        }
+        if (isAuthError(userId)) return userId
 
-        const body = await req.json()
-        const parsed = checkoutSchema.safeParse(body)
+        const { coinAmount } = await parseJson(req, checkoutSchema)
 
-        if (!parsed.success) {
-            return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-        }
+        return this.paymentService.createCheckout(userId, coinAmount)
+    })
 
-        try {
-            const result = await this.paymentService.createCheckout(session.user.id, parsed.data.coinAmount)
-
-            return NextResponse.json(result)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to create checkout'
-
-            return NextResponse.json({ error: message }, { status: 400 })
-        }
-    }
-
-    async handleWebhook(req: NextRequest) {
+    handleWebhook = async (req: Request): Promise<NextResponse> => {
         try {
             const rawBody = await req.text()
             const authorization = req.headers.get('Authorization') ?? req.headers.get('authorization')
@@ -52,18 +37,25 @@ export class PaymentController {
 
             return NextResponse.json({ received: true })
         } catch (error) {
-            console.error('Webhook error:', error)
+            if (error instanceof AppError) {
+                return NextResponse.json({ error: error.message }, { status: error.statusCode })
+            }
 
-            return NextResponse.json({ error: 'Webhook processing failed' }, { status: 401 })
+            console.error('Webhook processing error:', error)
+
+            return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 })
         }
     }
 
-    async handleReturn(req: NextRequest) {
+    handleReturn = async (req: Request & { nextUrl: URL }): Promise<NextResponse> => {
         const token = req.nextUrl.searchParams.get('token')
         const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000').replace(/\/$/, '')
+
         const redirectTo = (destination: 'success' | 'pending' | 'failed', t?: string | null) => {
             const params = new URLSearchParams({ status: destination })
+
             if (t) params.set('token', t)
+
             return NextResponse.redirect(
                 `${appUrl}/payments/secure-processor/${destination}?${params.toString()}`,
             )
@@ -79,9 +71,11 @@ export class PaymentController {
                     : result.status === 'PENDING'
                       ? 'pending'
                       : 'failed'
+
             return redirectTo(destination, token)
         } catch (error) {
             console.error('Return reconciliation error:', error)
+
             return redirectTo('failed', token)
         }
     }

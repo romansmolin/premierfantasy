@@ -1,13 +1,50 @@
 model Competition {
-    id            String    @id @default(uuid())
-    name          String
-    startGameweek Int       @map("start_gameweek")
-    endGameweek   Int       @map("end_gameweek")
-    status        String    @default("upcoming")
-    joinDeadline  DateTime? @map("join_deadline")
-    createdAt     DateTime  @default(now()) @map("created_at")
+  id             String    @id @default(uuid())
+  name           String
+  startGameweek  Int       @map("start_gameweek")
+  endGameweek    Int       @map("end_gameweek")
+  status         String    @default("upcoming")
+  joinDeadline   DateTime? @map("join_deadline")
+  leagueSeasonId String?   @map("league_season_id")
+  visibility     String    @default("PUBLIC")
+  createdAt      DateTime  @default(now()) @map("created_at")
 
-    teams FantasyTeam[]
+  teams        FantasyTeam[]
+  leagueSeason LeagueSeason? @relation(fields: [leagueSeasonId], references: [id])
 
-    @@map("competitions")
+  @@index([status, leagueSeasonId])
+  @@map("competitions")
+}
+
+model League {
+  id               String   @id @default(uuid())
+  externalId       Int      @unique @map("external_id")
+  name             String
+  country          String
+  logo             String?
+  type             String // "League" | "Cup" | "Tournament"
+  seasonStartMonth Int      @map("season_start_month")
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  seasons LeagueSeason[]
+
+  @@map("leagues")
+}
+
+model LeagueSeason {
+  id        String   @id @default(uuid())
+  leagueId  String   @map("league_id")
+  year      Int
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  isCurrent Boolean  @default(false) @map("is_current")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  league       League        @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  competitions Competition[]
+
+  @@unique([leagueId, year])
+  @@index([leagueId])
+  @@map("league_seasons")
 }

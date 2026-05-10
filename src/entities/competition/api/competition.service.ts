@@ -1,7 +1,12 @@
 import { ApiError } from '@/shared/api/api-error'
 import { httpClient } from '@/shared/api/http-client'
 
-import type { ICompetition, ICompetitionState, ILeaderboard } from '../model/competition.types'
+import type {
+    ICompetition,
+    ICompetitionBrowserRow,
+    ICompetitionState,
+    ILeaderboard,
+} from '../model/competition.types'
 
 const BASE_URL = '/api/competitions'
 
@@ -9,6 +14,14 @@ export const competitionService = {
     async getAll(): Promise<ICompetition[]> {
         try {
             return await httpClient.get<ICompetition[]>(BASE_URL)
+        } catch (error) {
+            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to fetch competitions')
+        }
+    },
+
+    async getBrowser(): Promise<ICompetitionBrowserRow[]> {
+        try {
+            return await httpClient.get<ICompetitionBrowserRow[]>(`${BASE_URL}/browser`)
         } catch (error) {
             throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to fetch competitions')
         }

@@ -382,10 +382,6 @@ export type TeamScalarRelationFilter = {
     isNot?: Prisma.TeamWhereInput
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-}
-
 export type TeamCreateNestedOneWithoutPlayersInput = {
     create?: Prisma.XOR<Prisma.TeamCreateWithoutPlayersInput, Prisma.TeamUncheckedCreateWithoutPlayersInput>
     connectOrCreate?: Prisma.TeamCreateOrConnectWithoutPlayersInput

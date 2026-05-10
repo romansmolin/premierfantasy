@@ -42,6 +42,8 @@ export type CompetitionMinAggregateOutputType = {
     endGameweek: number | null
     status: string | null
     joinDeadline: Date | null
+    leagueSeasonId: string | null
+    visibility: string | null
     createdAt: Date | null
 }
 
@@ -52,6 +54,8 @@ export type CompetitionMaxAggregateOutputType = {
     endGameweek: number | null
     status: string | null
     joinDeadline: Date | null
+    leagueSeasonId: string | null
+    visibility: string | null
     createdAt: Date | null
 }
 
@@ -62,6 +66,8 @@ export type CompetitionCountAggregateOutputType = {
     endGameweek: number
     status: number
     joinDeadline: number
+    leagueSeasonId: number
+    visibility: number
     createdAt: number
     _all: number
 }
@@ -83,6 +89,8 @@ export type CompetitionMinAggregateInputType = {
     endGameweek?: true
     status?: true
     joinDeadline?: true
+    leagueSeasonId?: true
+    visibility?: true
     createdAt?: true
 }
 
@@ -93,6 +101,8 @@ export type CompetitionMaxAggregateInputType = {
     endGameweek?: true
     status?: true
     joinDeadline?: true
+    leagueSeasonId?: true
+    visibility?: true
     createdAt?: true
 }
 
@@ -103,6 +113,8 @@ export type CompetitionCountAggregateInputType = {
     endGameweek?: true
     status?: true
     joinDeadline?: true
+    leagueSeasonId?: true
+    visibility?: true
     createdAt?: true
     _all?: true
 }
@@ -201,6 +213,8 @@ export type CompetitionGroupByOutputType = {
     endGameweek: number
     status: string
     joinDeadline: Date | null
+    leagueSeasonId: string | null
+    visibility: string
     createdAt: Date
     _count: CompetitionCountAggregateOutputType | null
     _avg: CompetitionAvgAggregateOutputType | null
@@ -231,8 +245,14 @@ export type CompetitionWhereInput = {
     endGameweek?: Prisma.IntFilter<'Competition'> | number
     status?: Prisma.StringFilter<'Competition'> | string
     joinDeadline?: Prisma.DateTimeNullableFilter<'Competition'> | Date | string | null
+    leagueSeasonId?: Prisma.StringNullableFilter<'Competition'> | string | null
+    visibility?: Prisma.StringFilter<'Competition'> | string
     createdAt?: Prisma.DateTimeFilter<'Competition'> | Date | string
     teams?: Prisma.FantasyTeamListRelationFilter
+    leagueSeason?: Prisma.XOR<
+        Prisma.LeagueSeasonNullableScalarRelationFilter,
+        Prisma.LeagueSeasonWhereInput
+    > | null
 }
 
 export type CompetitionOrderByWithRelationInput = {
@@ -242,8 +262,11 @@ export type CompetitionOrderByWithRelationInput = {
     endGameweek?: Prisma.SortOrder
     status?: Prisma.SortOrder
     joinDeadline?: Prisma.SortOrderInput | Prisma.SortOrder
+    leagueSeasonId?: Prisma.SortOrderInput | Prisma.SortOrder
+    visibility?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     teams?: Prisma.FantasyTeamOrderByRelationAggregateInput
+    leagueSeason?: Prisma.LeagueSeasonOrderByWithRelationInput
 }
 
 export type CompetitionWhereUniqueInput = Prisma.AtLeast<
@@ -257,8 +280,14 @@ export type CompetitionWhereUniqueInput = Prisma.AtLeast<
         endGameweek?: Prisma.IntFilter<'Competition'> | number
         status?: Prisma.StringFilter<'Competition'> | string
         joinDeadline?: Prisma.DateTimeNullableFilter<'Competition'> | Date | string | null
+        leagueSeasonId?: Prisma.StringNullableFilter<'Competition'> | string | null
+        visibility?: Prisma.StringFilter<'Competition'> | string
         createdAt?: Prisma.DateTimeFilter<'Competition'> | Date | string
         teams?: Prisma.FantasyTeamListRelationFilter
+        leagueSeason?: Prisma.XOR<
+            Prisma.LeagueSeasonNullableScalarRelationFilter,
+            Prisma.LeagueSeasonWhereInput
+        > | null
     },
     'id'
 >
@@ -270,6 +299,8 @@ export type CompetitionOrderByWithAggregationInput = {
     endGameweek?: Prisma.SortOrder
     status?: Prisma.SortOrder
     joinDeadline?: Prisma.SortOrderInput | Prisma.SortOrder
+    leagueSeasonId?: Prisma.SortOrderInput | Prisma.SortOrder
+    visibility?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     _count?: Prisma.CompetitionCountOrderByAggregateInput
     _avg?: Prisma.CompetitionAvgOrderByAggregateInput
@@ -292,6 +323,8 @@ export type CompetitionScalarWhereWithAggregatesInput = {
     endGameweek?: Prisma.IntWithAggregatesFilter<'Competition'> | number
     status?: Prisma.StringWithAggregatesFilter<'Competition'> | string
     joinDeadline?: Prisma.DateTimeNullableWithAggregatesFilter<'Competition'> | Date | string | null
+    leagueSeasonId?: Prisma.StringNullableWithAggregatesFilter<'Competition'> | string | null
+    visibility?: Prisma.StringWithAggregatesFilter<'Competition'> | string
     createdAt?: Prisma.DateTimeWithAggregatesFilter<'Competition'> | Date | string
 }
 
@@ -302,8 +335,10 @@ export type CompetitionCreateInput = {
     endGameweek: number
     status?: string
     joinDeadline?: Date | string | null
+    visibility?: string
     createdAt?: Date | string
     teams?: Prisma.FantasyTeamCreateNestedManyWithoutCompetitionInput
+    leagueSeason?: Prisma.LeagueSeasonCreateNestedOneWithoutCompetitionsInput
 }
 
 export type CompetitionUncheckedCreateInput = {
@@ -313,6 +348,8 @@ export type CompetitionUncheckedCreateInput = {
     endGameweek: number
     status?: string
     joinDeadline?: Date | string | null
+    leagueSeasonId?: string | null
+    visibility?: string
     createdAt?: Date | string
     teams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutCompetitionInput
 }
@@ -324,8 +361,10 @@ export type CompetitionUpdateInput = {
     endGameweek?: Prisma.IntFieldUpdateOperationsInput | number
     status?: Prisma.StringFieldUpdateOperationsInput | string
     joinDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    visibility?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     teams?: Prisma.FantasyTeamUpdateManyWithoutCompetitionNestedInput
+    leagueSeason?: Prisma.LeagueSeasonUpdateOneWithoutCompetitionsNestedInput
 }
 
 export type CompetitionUncheckedUpdateInput = {
@@ -335,6 +374,8 @@ export type CompetitionUncheckedUpdateInput = {
     endGameweek?: Prisma.IntFieldUpdateOperationsInput | number
     status?: Prisma.StringFieldUpdateOperationsInput | string
     joinDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leagueSeasonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    visibility?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     teams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutCompetitionNestedInput
 }
@@ -346,6 +387,8 @@ export type CompetitionCreateManyInput = {
     endGameweek: number
     status?: string
     joinDeadline?: Date | string | null
+    leagueSeasonId?: string | null
+    visibility?: string
     createdAt?: Date | string
 }
 
@@ -356,6 +399,7 @@ export type CompetitionUpdateManyMutationInput = {
     endGameweek?: Prisma.IntFieldUpdateOperationsInput | number
     status?: Prisma.StringFieldUpdateOperationsInput | string
     joinDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    visibility?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -366,6 +410,8 @@ export type CompetitionUncheckedUpdateManyInput = {
     endGameweek?: Prisma.IntFieldUpdateOperationsInput | number
     status?: Prisma.StringFieldUpdateOperationsInput | string
     joinDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leagueSeasonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    visibility?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -376,6 +422,8 @@ export type CompetitionCountOrderByAggregateInput = {
     endGameweek?: Prisma.SortOrder
     status?: Prisma.SortOrder
     joinDeadline?: Prisma.SortOrder
+    leagueSeasonId?: Prisma.SortOrder
+    visibility?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
 }
 
@@ -391,6 +439,8 @@ export type CompetitionMaxOrderByAggregateInput = {
     endGameweek?: Prisma.SortOrder
     status?: Prisma.SortOrder
     joinDeadline?: Prisma.SortOrder
+    leagueSeasonId?: Prisma.SortOrder
+    visibility?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
 }
 
@@ -401,12 +451,24 @@ export type CompetitionMinOrderByAggregateInput = {
     endGameweek?: Prisma.SortOrder
     status?: Prisma.SortOrder
     joinDeadline?: Prisma.SortOrder
+    leagueSeasonId?: Prisma.SortOrder
+    visibility?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
 }
 
 export type CompetitionSumOrderByAggregateInput = {
     startGameweek?: Prisma.SortOrder
     endGameweek?: Prisma.SortOrder
+}
+
+export type CompetitionListRelationFilter = {
+    every?: Prisma.CompetitionWhereInput
+    some?: Prisma.CompetitionWhereInput
+    none?: Prisma.CompetitionWhereInput
+}
+
+export type CompetitionOrderByRelationAggregateInput = {
+    _count?: Prisma.SortOrder
 }
 
 export type CompetitionScalarRelationFilter = {
@@ -432,6 +494,96 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+}
+
+export type CompetitionCreateNestedManyWithoutLeagueSeasonInput = {
+    create?:
+        | Prisma.XOR<
+              Prisma.CompetitionCreateWithoutLeagueSeasonInput,
+              Prisma.CompetitionUncheckedCreateWithoutLeagueSeasonInput
+          >
+        | Prisma.CompetitionCreateWithoutLeagueSeasonInput[]
+        | Prisma.CompetitionUncheckedCreateWithoutLeagueSeasonInput[]
+    connectOrCreate?:
+        | Prisma.CompetitionCreateOrConnectWithoutLeagueSeasonInput
+        | Prisma.CompetitionCreateOrConnectWithoutLeagueSeasonInput[]
+    createMany?: Prisma.CompetitionCreateManyLeagueSeasonInputEnvelope
+    connect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+}
+
+export type CompetitionUncheckedCreateNestedManyWithoutLeagueSeasonInput = {
+    create?:
+        | Prisma.XOR<
+              Prisma.CompetitionCreateWithoutLeagueSeasonInput,
+              Prisma.CompetitionUncheckedCreateWithoutLeagueSeasonInput
+          >
+        | Prisma.CompetitionCreateWithoutLeagueSeasonInput[]
+        | Prisma.CompetitionUncheckedCreateWithoutLeagueSeasonInput[]
+    connectOrCreate?:
+        | Prisma.CompetitionCreateOrConnectWithoutLeagueSeasonInput
+        | Prisma.CompetitionCreateOrConnectWithoutLeagueSeasonInput[]
+    createMany?: Prisma.CompetitionCreateManyLeagueSeasonInputEnvelope
+    connect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+}
+
+export type CompetitionUpdateManyWithoutLeagueSeasonNestedInput = {
+    create?:
+        | Prisma.XOR<
+              Prisma.CompetitionCreateWithoutLeagueSeasonInput,
+              Prisma.CompetitionUncheckedCreateWithoutLeagueSeasonInput
+          >
+        | Prisma.CompetitionCreateWithoutLeagueSeasonInput[]
+        | Prisma.CompetitionUncheckedCreateWithoutLeagueSeasonInput[]
+    connectOrCreate?:
+        | Prisma.CompetitionCreateOrConnectWithoutLeagueSeasonInput
+        | Prisma.CompetitionCreateOrConnectWithoutLeagueSeasonInput[]
+    upsert?:
+        | Prisma.CompetitionUpsertWithWhereUniqueWithoutLeagueSeasonInput
+        | Prisma.CompetitionUpsertWithWhereUniqueWithoutLeagueSeasonInput[]
+    createMany?: Prisma.CompetitionCreateManyLeagueSeasonInputEnvelope
+    set?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+    disconnect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+    delete?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+    connect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+    update?:
+        | Prisma.CompetitionUpdateWithWhereUniqueWithoutLeagueSeasonInput
+        | Prisma.CompetitionUpdateWithWhereUniqueWithoutLeagueSeasonInput[]
+    updateMany?:
+        | Prisma.CompetitionUpdateManyWithWhereWithoutLeagueSeasonInput
+        | Prisma.CompetitionUpdateManyWithWhereWithoutLeagueSeasonInput[]
+    deleteMany?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
+}
+
+export type CompetitionUncheckedUpdateManyWithoutLeagueSeasonNestedInput = {
+    create?:
+        | Prisma.XOR<
+              Prisma.CompetitionCreateWithoutLeagueSeasonInput,
+              Prisma.CompetitionUncheckedCreateWithoutLeagueSeasonInput
+          >
+        | Prisma.CompetitionCreateWithoutLeagueSeasonInput[]
+        | Prisma.CompetitionUncheckedCreateWithoutLeagueSeasonInput[]
+    connectOrCreate?:
+        | Prisma.CompetitionCreateOrConnectWithoutLeagueSeasonInput
+        | Prisma.CompetitionCreateOrConnectWithoutLeagueSeasonInput[]
+    upsert?:
+        | Prisma.CompetitionUpsertWithWhereUniqueWithoutLeagueSeasonInput
+        | Prisma.CompetitionUpsertWithWhereUniqueWithoutLeagueSeasonInput[]
+    createMany?: Prisma.CompetitionCreateManyLeagueSeasonInputEnvelope
+    set?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+    disconnect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+    delete?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+    connect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+    update?:
+        | Prisma.CompetitionUpdateWithWhereUniqueWithoutLeagueSeasonInput
+        | Prisma.CompetitionUpdateWithWhereUniqueWithoutLeagueSeasonInput[]
+    updateMany?:
+        | Prisma.CompetitionUpdateManyWithWhereWithoutLeagueSeasonInput
+        | Prisma.CompetitionUpdateManyWithWhereWithoutLeagueSeasonInput[]
+    deleteMany?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
 }
 
 export type CompetitionCreateNestedOneWithoutTeamsInput = {
@@ -460,6 +612,86 @@ export type CompetitionUpdateOneRequiredWithoutTeamsNestedInput = {
     >
 }
 
+export type CompetitionCreateWithoutLeagueSeasonInput = {
+    id?: string
+    name: string
+    startGameweek: number
+    endGameweek: number
+    status?: string
+    joinDeadline?: Date | string | null
+    visibility?: string
+    createdAt?: Date | string
+    teams?: Prisma.FantasyTeamCreateNestedManyWithoutCompetitionInput
+}
+
+export type CompetitionUncheckedCreateWithoutLeagueSeasonInput = {
+    id?: string
+    name: string
+    startGameweek: number
+    endGameweek: number
+    status?: string
+    joinDeadline?: Date | string | null
+    visibility?: string
+    createdAt?: Date | string
+    teams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutCompetitionInput
+}
+
+export type CompetitionCreateOrConnectWithoutLeagueSeasonInput = {
+    where: Prisma.CompetitionWhereUniqueInput
+    create: Prisma.XOR<
+        Prisma.CompetitionCreateWithoutLeagueSeasonInput,
+        Prisma.CompetitionUncheckedCreateWithoutLeagueSeasonInput
+    >
+}
+
+export type CompetitionCreateManyLeagueSeasonInputEnvelope = {
+    data: Prisma.CompetitionCreateManyLeagueSeasonInput | Prisma.CompetitionCreateManyLeagueSeasonInput[]
+    skipDuplicates?: boolean
+}
+
+export type CompetitionUpsertWithWhereUniqueWithoutLeagueSeasonInput = {
+    where: Prisma.CompetitionWhereUniqueInput
+    update: Prisma.XOR<
+        Prisma.CompetitionUpdateWithoutLeagueSeasonInput,
+        Prisma.CompetitionUncheckedUpdateWithoutLeagueSeasonInput
+    >
+    create: Prisma.XOR<
+        Prisma.CompetitionCreateWithoutLeagueSeasonInput,
+        Prisma.CompetitionUncheckedCreateWithoutLeagueSeasonInput
+    >
+}
+
+export type CompetitionUpdateWithWhereUniqueWithoutLeagueSeasonInput = {
+    where: Prisma.CompetitionWhereUniqueInput
+    data: Prisma.XOR<
+        Prisma.CompetitionUpdateWithoutLeagueSeasonInput,
+        Prisma.CompetitionUncheckedUpdateWithoutLeagueSeasonInput
+    >
+}
+
+export type CompetitionUpdateManyWithWhereWithoutLeagueSeasonInput = {
+    where: Prisma.CompetitionScalarWhereInput
+    data: Prisma.XOR<
+        Prisma.CompetitionUpdateManyMutationInput,
+        Prisma.CompetitionUncheckedUpdateManyWithoutLeagueSeasonInput
+    >
+}
+
+export type CompetitionScalarWhereInput = {
+    AND?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
+    OR?: Prisma.CompetitionScalarWhereInput[]
+    NOT?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
+    id?: Prisma.StringFilter<'Competition'> | string
+    name?: Prisma.StringFilter<'Competition'> | string
+    startGameweek?: Prisma.IntFilter<'Competition'> | number
+    endGameweek?: Prisma.IntFilter<'Competition'> | number
+    status?: Prisma.StringFilter<'Competition'> | string
+    joinDeadline?: Prisma.DateTimeNullableFilter<'Competition'> | Date | string | null
+    leagueSeasonId?: Prisma.StringNullableFilter<'Competition'> | string | null
+    visibility?: Prisma.StringFilter<'Competition'> | string
+    createdAt?: Prisma.DateTimeFilter<'Competition'> | Date | string
+}
+
 export type CompetitionCreateWithoutTeamsInput = {
     id?: string
     name: string
@@ -467,7 +699,9 @@ export type CompetitionCreateWithoutTeamsInput = {
     endGameweek: number
     status?: string
     joinDeadline?: Date | string | null
+    visibility?: string
     createdAt?: Date | string
+    leagueSeason?: Prisma.LeagueSeasonCreateNestedOneWithoutCompetitionsInput
 }
 
 export type CompetitionUncheckedCreateWithoutTeamsInput = {
@@ -477,6 +711,8 @@ export type CompetitionUncheckedCreateWithoutTeamsInput = {
     endGameweek: number
     status?: string
     joinDeadline?: Date | string | null
+    leagueSeasonId?: string | null
+    visibility?: string
     createdAt?: Date | string
 }
 
@@ -515,7 +751,9 @@ export type CompetitionUpdateWithoutTeamsInput = {
     endGameweek?: Prisma.IntFieldUpdateOperationsInput | number
     status?: Prisma.StringFieldUpdateOperationsInput | string
     joinDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    visibility?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    leagueSeason?: Prisma.LeagueSeasonUpdateOneWithoutCompetitionsNestedInput
 }
 
 export type CompetitionUncheckedUpdateWithoutTeamsInput = {
@@ -525,6 +763,54 @@ export type CompetitionUncheckedUpdateWithoutTeamsInput = {
     endGameweek?: Prisma.IntFieldUpdateOperationsInput | number
     status?: Prisma.StringFieldUpdateOperationsInput | string
     joinDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    leagueSeasonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    visibility?: Prisma.StringFieldUpdateOperationsInput | string
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CompetitionCreateManyLeagueSeasonInput = {
+    id?: string
+    name: string
+    startGameweek: number
+    endGameweek: number
+    status?: string
+    joinDeadline?: Date | string | null
+    visibility?: string
+    createdAt?: Date | string
+}
+
+export type CompetitionUpdateWithoutLeagueSeasonInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    startGameweek?: Prisma.IntFieldUpdateOperationsInput | number
+    endGameweek?: Prisma.IntFieldUpdateOperationsInput | number
+    status?: Prisma.StringFieldUpdateOperationsInput | string
+    joinDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    visibility?: Prisma.StringFieldUpdateOperationsInput | string
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    teams?: Prisma.FantasyTeamUpdateManyWithoutCompetitionNestedInput
+}
+
+export type CompetitionUncheckedUpdateWithoutLeagueSeasonInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    startGameweek?: Prisma.IntFieldUpdateOperationsInput | number
+    endGameweek?: Prisma.IntFieldUpdateOperationsInput | number
+    status?: Prisma.StringFieldUpdateOperationsInput | string
+    joinDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    visibility?: Prisma.StringFieldUpdateOperationsInput | string
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    teams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutCompetitionNestedInput
+}
+
+export type CompetitionUncheckedUpdateManyWithoutLeagueSeasonInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    startGameweek?: Prisma.IntFieldUpdateOperationsInput | number
+    endGameweek?: Prisma.IntFieldUpdateOperationsInput | number
+    status?: Prisma.StringFieldUpdateOperationsInput | string
+    joinDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    visibility?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -573,8 +859,11 @@ export type CompetitionSelect<
         endGameweek?: boolean
         status?: boolean
         joinDeadline?: boolean
+        leagueSeasonId?: boolean
+        visibility?: boolean
         createdAt?: boolean
         teams?: boolean | Prisma.Competition$teamsArgs<ExtArgs>
+        leagueSeason?: boolean | Prisma.Competition$leagueSeasonArgs<ExtArgs>
         _count?: boolean | Prisma.CompetitionCountOutputTypeDefaultArgs<ExtArgs>
     },
     ExtArgs['result']['competition']
@@ -590,7 +879,10 @@ export type CompetitionSelectCreateManyAndReturn<
         endGameweek?: boolean
         status?: boolean
         joinDeadline?: boolean
+        leagueSeasonId?: boolean
+        visibility?: boolean
         createdAt?: boolean
+        leagueSeason?: boolean | Prisma.Competition$leagueSeasonArgs<ExtArgs>
     },
     ExtArgs['result']['competition']
 >
@@ -605,7 +897,10 @@ export type CompetitionSelectUpdateManyAndReturn<
         endGameweek?: boolean
         status?: boolean
         joinDeadline?: boolean
+        leagueSeasonId?: boolean
+        visibility?: boolean
         createdAt?: boolean
+        leagueSeason?: boolean | Prisma.Competition$leagueSeasonArgs<ExtArgs>
     },
     ExtArgs['result']['competition']
 >
@@ -617,27 +912,42 @@ export type CompetitionSelectScalar = {
     endGameweek?: boolean
     status?: boolean
     joinDeadline?: boolean
+    leagueSeasonId?: boolean
+    visibility?: boolean
     createdAt?: boolean
 }
 
 export type CompetitionOmit<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-    'id' | 'name' | 'startGameweek' | 'endGameweek' | 'status' | 'joinDeadline' | 'createdAt',
+    | 'id'
+    | 'name'
+    | 'startGameweek'
+    | 'endGameweek'
+    | 'status'
+    | 'joinDeadline'
+    | 'leagueSeasonId'
+    | 'visibility'
+    | 'createdAt',
     ExtArgs['result']['competition']
 >
 export type CompetitionInclude<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     teams?: boolean | Prisma.Competition$teamsArgs<ExtArgs>
+    leagueSeason?: boolean | Prisma.Competition$leagueSeasonArgs<ExtArgs>
     _count?: boolean | Prisma.CompetitionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CompetitionIncludeCreateManyAndReturn<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-> = {}
+> = {
+    leagueSeason?: boolean | Prisma.Competition$leagueSeasonArgs<ExtArgs>
+}
 export type CompetitionIncludeUpdateManyAndReturn<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-> = {}
+> = {
+    leagueSeason?: boolean | Prisma.Competition$leagueSeasonArgs<ExtArgs>
+}
 
 export type $CompetitionPayload<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
@@ -645,6 +955,7 @@ export type $CompetitionPayload<
     name: 'Competition'
     objects: {
         teams: Prisma.$FantasyTeamPayload<ExtArgs>[]
+        leagueSeason: Prisma.$LeagueSeasonPayload<ExtArgs> | null
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -654,6 +965,8 @@ export type $CompetitionPayload<
             endGameweek: number
             status: string
             joinDeadline: Date | null
+            leagueSeasonId: string | null
+            visibility: string
             createdAt: Date
         },
         ExtArgs['result']['competition']
@@ -1174,6 +1487,19 @@ export interface Prisma__CompetitionClient<
           >
         | Null
     >
+    leagueSeason<T extends Prisma.Competition$leagueSeasonArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.Competition$leagueSeasonArgs<ExtArgs>>,
+    ): Prisma.Prisma__LeagueSeasonClient<
+        runtime.Types.Result.GetResult<
+            Prisma.$LeagueSeasonPayload<ExtArgs>,
+            T,
+            'findUniqueOrThrow',
+            GlobalOmitOptions
+        > | null,
+        null,
+        ExtArgs,
+        GlobalOmitOptions
+    >
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1211,6 +1537,8 @@ export interface CompetitionFieldRefs {
     readonly endGameweek: Prisma.FieldRef<'Competition', 'Int'>
     readonly status: Prisma.FieldRef<'Competition', 'String'>
     readonly joinDeadline: Prisma.FieldRef<'Competition', 'DateTime'>
+    readonly leagueSeasonId: Prisma.FieldRef<'Competition', 'String'>
+    readonly visibility: Prisma.FieldRef<'Competition', 'String'>
     readonly createdAt: Prisma.FieldRef<'Competition', 'DateTime'>
 }
 
@@ -1481,6 +1809,10 @@ export type CompetitionCreateManyAndReturnArgs<
      */
     data: Prisma.CompetitionCreateManyInput | Prisma.CompetitionCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.CompetitionIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1557,6 +1889,10 @@ export type CompetitionUpdateManyAndReturnArgs<
      * Limit how many Competitions to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.CompetitionIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1655,6 +1991,27 @@ export type Competition$teamsArgs<
     take?: number
     skip?: number
     distinct?: Prisma.FantasyTeamScalarFieldEnum | Prisma.FantasyTeamScalarFieldEnum[]
+}
+
+/**
+ * Competition.leagueSeason
+ */
+export type Competition$leagueSeasonArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the LeagueSeason
+     */
+    select?: Prisma.LeagueSeasonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeagueSeason
+     */
+    omit?: Prisma.LeagueSeasonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.LeagueSeasonInclude<ExtArgs> | null
+    where?: Prisma.LeagueSeasonWhereInput
 }
 
 /**

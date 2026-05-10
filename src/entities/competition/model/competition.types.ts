@@ -44,3 +44,20 @@ export interface ILeaderboard {
     currentGameweek: number
     entries: ILeaderboardEntry[]
 }
+
+export interface ICompetitionBrowserRow {
+    id: string
+    name: string
+    startGameweek: number
+    endGameweek: number
+    status: string
+    joinDeadline: string | null
+    createdAt: string
+    league: {
+        id: string
+        name: string
+        country: string
+        logo: string | null
+        type: string
+    } | null
+}

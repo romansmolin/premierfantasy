@@ -1,45 +1,111 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { z } from 'zod'
 
-import { IUserService } from '../service/user.service.interface'
+import { isAuthError, requireUserId } from '@/shared/lib/auth-helpers'
+import { Errors, parseJson, withController } from '@/shared/lib/http'
+
+import type { IUserService } from '../service/user.service.interface'
+
+const updateUserSchema = z
+    .object({
+        name: z.string().min(1).optional(),
+        email: z.string().email().optional(),
+        image: z.string().url().nullable().optional(),
+    })
+    .strict()
+
+const changePasswordSchema = z.object({
+    currentPassword: z.string().min(1),
+    newPassword: z.string().min(8, 'Password must be at least 8 characters'),
+})
+
+const avatarSchema = z.object({
+    image: z.string().url().nullable(),
+})
 
 export class UserController {
-    private readonly userService
+    private readonly userService: IUserService
+
     constructor(userService: IUserService) {
         this.userService = userService
     }
 
-    async getAll() {
-        const users = await this.userService.getAllUsers()
-
-        return NextResponse.json(users)
+    private assertSelf(targetId: string, sessionUserId: string) {
+        if (targetId !== sessionUserId) throw Errors.forbidden()
     }
 
-    async getById(id: string) {
+    getById = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
+
+        if (isAuthError(userId)) return userId
+
+        const { id } = await ctx.params
+
+        this.assertSelf(id, userId)
+
         const user = await this.userService.getUser(id)
 
-        if (!user) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+        if (!user) throw Errors.notFound()
 
-        return NextResponse.json(user)
-    }
+        return user
+    })
 
-    async create(req: NextRequest) {
-        const body = await req.json()
-        // validate with zod here
-        const user = await this.userService.createUser(body)
+    update = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
 
-        return NextResponse.json(user, { status: 201 })
-    }
+        if (isAuthError(userId)) return userId
 
-    async update(req: NextRequest, id: string) {
-        const body = await req.json()
-        const user = await this.userService.updateUser(id, body)
+        const { id } = await ctx.params
 
-        return NextResponse.json(user)
-    }
+        this.assertSelf(id, userId)
 
-    async delete(id: string) {
+        const data = await parseJson(req, updateUserSchema)
+
+        return this.userService.updateUser(id, data)
+    })
+
+    delete = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
+
+        if (isAuthError(userId)) return userId
+
+        const { id } = await ctx.params
+
+        this.assertSelf(id, userId)
+
         await this.userService.deleteUser(id)
 
-        return NextResponse.json(null, { status: 204 })
-    }
+        return new NextResponse(null, { status: 204 })
+    })
+
+    changePassword = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
+
+        if (isAuthError(userId)) return userId
+
+        const { id } = await ctx.params
+
+        this.assertSelf(id, userId)
+
+        const { currentPassword, newPassword } = await parseJson(req, changePasswordSchema)
+
+        await this.userService.changePassword(id, currentPassword, newPassword)
+
+        return { success: true }
+    })
+
+    updateAvatar = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
+
+        if (isAuthError(userId)) return userId
+
+        const { id } = await ctx.params
+
+        this.assertSelf(id, userId)
+
+        const { image } = await parseJson(req, avatarSchema)
+        const user = await this.userService.updateAvatar(id, image)
+
+        return { image: user.image }
+    })
 }

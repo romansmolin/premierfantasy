@@ -9,6 +9,8 @@ export interface PipelineResult {
     scoredGameweeks: number[]
     transitioned: boolean
     generated: boolean
+    multiLeagueCreated: number
+    multiLeagueReactivated: number
     errors: string[]
 }
 
@@ -33,6 +35,8 @@ export class OrchestratorService {
             scoredGameweeks: [],
             transitioned: false,
             generated: false,
+            multiLeagueCreated: 0,
+            multiLeagueReactivated: 0,
             errors: [],
         }
 
@@ -86,12 +90,22 @@ export class OrchestratorService {
             result.errors.push(`Transition: ${error instanceof Error ? error.message : 'Unknown error'}`)
         }
 
-        // 4. Generate missing competitions
+        // 4. Generate missing PL competitions
         try {
             await this.competitionService.generateRollingCompetitions(38)
             result.generated = true
         } catch (error) {
             result.errors.push(`Generation: ${error instanceof Error ? error.message : 'Unknown error'}`)
+        }
+
+        // 5. Auto-create competitions for every other in-season league
+        try {
+            const ensured = await this.competitionService.ensureCompetitionsForActiveSeasons()
+
+            result.multiLeagueCreated = ensured.created
+            result.multiLeagueReactivated = ensured.reactivated
+        } catch (error) {
+            result.errors.push(`Multi-league: ${error instanceof Error ? error.message : 'Unknown error'}`)
         }
 
         return result

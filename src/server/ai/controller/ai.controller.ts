@@ -1,9 +1,21 @@
-import { NextResponse } from 'next/server'
+import { z } from 'zod'
 
-import { auth } from '@/shared/lib/auth'
+import { isAuthError, requireUserId } from '@/shared/lib/auth-helpers'
+import { parseQuery, withController } from '@/shared/lib/http'
 
 import type { AITransferService } from '../service/ai-transfer.service'
-import type { NextRequest } from 'next/server'
+
+const playerAnalysisQuerySchema = z.object({
+    playerId: z.coerce.number().int().positive(),
+})
+
+const matchPredictionQuerySchema = z.object({
+    fixtureId: z.coerce.number().int().positive(),
+})
+
+const transferSuggestionsQuerySchema = z.object({
+    fantasyTeamId: z.string().min(1),
+})
 
 export class AIController {
     private readonly aiTransferService: AITransferService
@@ -12,87 +24,33 @@ export class AIController {
         this.aiTransferService = aiTransferService
     }
 
-    async getPlayerAnalysis(req: NextRequest) {
-        const session = await auth.api.getSession({ headers: req.headers })
+    getPlayerAnalysis = withController(async (req) => {
+        const userId = await requireUserId(req)
 
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-        }
+        if (isAuthError(userId)) return userId
 
-        const playerExternalId = req.nextUrl.searchParams.get('playerId')
+        const { playerId } = parseQuery(req, playerAnalysisQuerySchema)
 
-        if (!playerExternalId) {
-            return NextResponse.json({ error: 'playerId is required' }, { status: 400 })
-        }
+        return this.aiTransferService.analyzePlayer(playerId)
+    })
 
-        const parsedId = Number(playerExternalId)
+    getMatchPrediction = withController(async (req) => {
+        const userId = await requireUserId(req)
 
-        if (Number.isNaN(parsedId)) {
-            return NextResponse.json({ error: 'playerId must be a number' }, { status: 400 })
-        }
+        if (isAuthError(userId)) return userId
 
-        try {
-            const analysis = await this.aiTransferService.analyzePlayer(parsedId)
+        const { fixtureId } = parseQuery(req, matchPredictionQuerySchema)
 
-            return NextResponse.json(analysis)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Player analysis failed'
+        return this.aiTransferService.predictMatch(fixtureId)
+    })
 
-            return NextResponse.json({ error: message }, { status: 500 })
-        }
-    }
+    getTransferSuggestions = withController(async (req) => {
+        const userId = await requireUserId(req)
 
-    async getMatchPrediction(req: NextRequest) {
-        const session = await auth.api.getSession({ headers: req.headers })
+        if (isAuthError(userId)) return userId
 
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-        }
+        const { fantasyTeamId } = parseQuery(req, transferSuggestionsQuerySchema)
 
-        const fixtureId = req.nextUrl.searchParams.get('fixtureId')
-
-        if (!fixtureId) {
-            return NextResponse.json({ error: 'fixtureId is required' }, { status: 400 })
-        }
-
-        const parsedId = Number(fixtureId)
-
-        if (Number.isNaN(parsedId)) {
-            return NextResponse.json({ error: 'fixtureId must be a number' }, { status: 400 })
-        }
-
-        try {
-            const prediction = await this.aiTransferService.predictMatch(parsedId)
-
-            return NextResponse.json(prediction)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Match prediction failed'
-
-            return NextResponse.json({ error: message }, { status: 500 })
-        }
-    }
-
-    async getTransferSuggestions(req: NextRequest) {
-        const session = await auth.api.getSession({ headers: req.headers })
-
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-        }
-
-        const fantasyTeamId = req.nextUrl.searchParams.get('fantasyTeamId')
-
-        if (!fantasyTeamId) {
-            return NextResponse.json({ error: 'fantasyTeamId is required' }, { status: 400 })
-        }
-
-        try {
-            const analysis = await this.aiTransferService.analyzeSquad(fantasyTeamId)
-
-            return NextResponse.json(analysis)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Analysis failed'
-
-            return NextResponse.json({ error: message }, { status: 500 })
-        }
-    }
+        return this.aiTransferService.analyzeSquad(fantasyTeamId)
+    })
 }

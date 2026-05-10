@@ -2,13 +2,13 @@ import { toast } from 'sonner'
 import { useShallow } from 'zustand/react/shallow'
 
 import {
-    generatePlayerPrice,
     mapApiPosition,
     selectBudgetLeft,
     selectSelectedPlayerIds,
     usePlayersStorage,
     validateAddPlayer,
 } from '@/entities/players'
+import { getFallbackPrice, usePrices } from '@/entities/players/model/use-prices'
 import type { ISquadPlayer } from '@/entities/team/model/team.types'
 
 export const useSelectPlayer = () => {
@@ -22,6 +22,7 @@ export const useSelectPlayer = () => {
     )
     const selectedPlayerIds = usePlayersStorage(useShallow(selectSelectedPlayerIds))
     const budgetLeft = usePlayersStorage(selectBudgetLeft)
+    const { priceMap } = usePrices()
 
     const handleSelectPlayer = (squadPlayer: ISquadPlayer, teamId: number) => {
         if (selectedPlayerIds.includes(squadPlayer.id)) {
@@ -31,7 +32,7 @@ export const useSelectPlayer = () => {
         }
 
         const position = mapApiPosition(squadPlayer.position)
-        const price = generatePlayerPrice(squadPlayer.id, position)
+        const price = priceMap.get(squadPlayer.id) ?? getFallbackPrice(position)
 
         const candidate = {
             id: squadPlayer.id,

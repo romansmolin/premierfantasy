@@ -5,7 +5,8 @@ import { useState } from 'react'
 
 import { usePlayerAnalytics, PlayerAnalyticsModal } from '@/features/ai'
 
-import { generatePlayerPrice, mapApiPosition, PlayerDetailsModal } from '@/entities/players'
+import { mapApiPosition, PlayerDetailsModal } from '@/entities/players'
+import { getFallbackPrice, usePrices } from '@/entities/players/model/use-prices'
 import { useTeamPlayers } from '@/entities/team'
 
 import { cn } from '@/shared/lib/utils'
@@ -55,6 +56,7 @@ export const PlayersExplorer = () => {
 
     const { player, isLoading, error } = usePlayerDetails(selectedPlayerId)
     const analytics = usePlayerAnalytics(selectedPlayerId)
+    const { priceMap } = usePrices()
 
     return (
         <div className="flex flex-col gap-3 ">
@@ -205,7 +207,11 @@ export const PlayersExplorer = () => {
                                         </Badge>
                                     </TableCell>
                                     <TableCell>
-                                        {generatePlayerPrice(player.id, mapApiPosition(player.position))}m
+                                        {(
+                                            priceMap.get(player.id) ??
+                                            getFallbackPrice(mapApiPosition(player.position))
+                                        ).toFixed(1)}
+                                        m
                                     </TableCell>
                                     <TableCell>{player.age ?? '—'}</TableCell>
                                     <TableCell className="text-right">{player.number ?? '—'}</TableCell>

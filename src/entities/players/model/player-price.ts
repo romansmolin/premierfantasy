@@ -7,6 +7,7 @@ const PRICE_RANGES: Record<PlayerPosition, { min: number; max: number }> = {
     FWD: { min: 6, max: 10 },
 }
 
+/** @deprecated Use the `usePrices` SWR hook in client code; this exists only for the one-shot backfill script. */
 export function generatePlayerPrice(playerId: number, position: PlayerPosition): number {
     const { min, max } = PRICE_RANGES[position]
     const range = max - min

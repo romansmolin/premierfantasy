@@ -2,6 +2,7 @@
 
 import {
     AccountSetting01Icon,
+    ChampionIcon,
     Coins01Icon,
     DashboardSquare01Icon,
     FootballPitchIcon,
@@ -36,6 +37,7 @@ const navGroups = [
     {
         label: 'Fantasy',
         items: [
+            { title: 'Leagues', icon: ChampionIcon, href: '/leagues' },
             { title: 'Competitions', icon: GlobalIcon, href: '/competitions' },
             { title: 'Team Builder', icon: NoteEditIcon, href: '/fantasy-team-builder' },
         ],

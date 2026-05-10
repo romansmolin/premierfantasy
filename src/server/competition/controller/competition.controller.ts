@@ -1,99 +1,87 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { z } from 'zod'
 
 import { createCompetitionSchema } from '@/entities/competition/model/competition.schema'
 
-import { auth } from '@/shared/lib/auth'
+import { isAuthError, requireUserId } from '@/shared/lib/auth-helpers'
+import { Errors, parseJson, withController } from '@/shared/lib/http'
 
 import type { ICompetitionService } from '../service/competition.service.interface'
 
+const generateCompetitionsSchema = z.object({
+    totalGameweeks: z.number().int().positive().optional(),
+})
+
 export class CompetitionController {
-    private readonly competitionService
+    private readonly competitionService: ICompetitionService
 
     constructor(competitionService: ICompetitionService) {
         this.competitionService = competitionService
     }
 
-    async getAll() {
-        const competitions = await this.competitionService.getAllCompetitions()
+    getAll = withController(async () => {
+        return this.competitionService.getAllCompetitions()
+    })
 
-        return NextResponse.json(competitions)
-    }
+    getBrowser = withController(async () => {
+        return this.competitionService.getCompetitionsForBrowser()
+    })
 
-    async getById(id: string) {
+    getById = withController(async (_req, ctx) => {
+        const { id } = await ctx.params
         const competition = await this.competitionService.getCompetition(id)
 
-        if (!competition) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+        if (!competition) throw Errors.notFound()
 
-        return NextResponse.json(competition)
-    }
+        return competition
+    })
 
-    async create(req: NextRequest) {
-        const body = await req.json()
-        const parsed = createCompetitionSchema.safeParse(body)
+    create = withController(async (req) => {
+        const userId = await requireUserId(req)
 
-        if (!parsed.success) {
-            return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-        }
+        if (isAuthError(userId)) return userId
 
-        try {
-            const competition = await this.competitionService.createCompetition(parsed.data)
+        const data = await parseJson(req, createCompetitionSchema)
+        const competition = await this.competitionService.createCompetition(data)
 
-            return NextResponse.json(competition, { status: 201 })
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to create competition'
+        return NextResponse.json(competition, { status: 201 })
+    })
 
-            return NextResponse.json({ error: message }, { status: 400 })
-        }
-    }
+    delete = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
 
-    async delete(id: string) {
+        if (isAuthError(userId)) return userId
+
+        const { id } = await ctx.params
+
         await this.competitionService.deleteCompetition(id)
 
-        return NextResponse.json(null, { status: 204 })
-    }
+        return new NextResponse(null, { status: 204 })
+    })
 
-    async getLeaderboard(competitionId: string) {
-        try {
-            const leaderboard = await this.competitionService.getLeaderboard(competitionId)
+    getLeaderboard = withController(async (_req, ctx) => {
+        const { id } = await ctx.params
 
-            return NextResponse.json(leaderboard)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to fetch leaderboard'
+        return this.competitionService.getLeaderboard(id)
+    })
 
-            return NextResponse.json({ error: message }, { status: 404 })
-        }
-    }
+    getCompetitionState = withController(async (req) => {
+        const userId = await requireUserId(req)
 
-    async getCompetitionState(req: NextRequest) {
-        try {
-            const session = await auth.api.getSession({ headers: req.headers })
+        if (isAuthError(userId)) return userId
 
-            if (!session?.user?.id) {
-                return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-            }
+        return this.competitionService.getCompetitionState(userId)
+    })
 
-            const state = await this.competitionService.getCompetitionState(session.user.id)
+    generateCompetitions = withController(async (req) => {
+        const userId = await requireUserId(req)
 
-            return NextResponse.json(state)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to get competition state'
+        if (isAuthError(userId)) return userId
 
-            return NextResponse.json({ error: message }, { status: 500 })
-        }
-    }
+        const { totalGameweeks } = await parseJson(req, generateCompetitionsSchema)
 
-    async generateCompetitions(req: NextRequest) {
-        try {
-            const body = await req.json()
-            const totalGameweeks = body.totalGameweeks ?? 38
+        await this.competitionService.generateRollingCompetitions(totalGameweeks ?? 38)
 
-            await this.competitionService.generateRollingCompetitions(totalGameweeks)
-
-            return NextResponse.json({ success: true }, { status: 201 })
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to generate competitions'
-
-            return NextResponse.json({ error: message }, { status: 500 })
-        }
-    }
+        return NextResponse.json({ success: true }, { status: 201 })
+    })
 }

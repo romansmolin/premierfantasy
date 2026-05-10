@@ -1,22 +1,22 @@
 enum TransactionType {
-    COMPETITION_REWARD
-    PURCHASE
-    AI_FEATURE_SPEND
+  COMPETITION_REWARD
+  PURCHASE
+  AI_FEATURE_SPEND
 }
 
 model CoinTransaction {
-    id          String          @id @default(cuid())
-    amount      Int
-    type        TransactionType
-    description String
-    createdAt   DateTime        @default(now()) @map("created_at")
+  id          String          @id @default(cuid())
+  amount      Int
+  type        TransactionType
+  description String
+  createdAt   DateTime        @default(now()) @map("created_at")
 
-    userId String @map("user_id")
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    paymentTokenId String? @unique @map("payment_token_id")
-    payment        PaymentToken? @relation(fields: [paymentTokenId], references: [id], onDelete: SetNull)
+  paymentTokenId String?       @unique @map("payment_token_id")
+  payment        PaymentToken? @relation(fields: [paymentTokenId], references: [id], onDelete: SetNull)
 
-    @@index([userId])
-    @@map("coin_transactions")
+  @@index([userId])
+  @@map("coin_transactions")
 }

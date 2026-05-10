@@ -9,7 +9,8 @@ import { useTransferSuggestions, TransferSuggestionsModal } from '@/features/ai'
 import { useOptionalTransferMode } from '@/features/player/transfer'
 
 import { useFantasyTeams } from '@/entities/fantasy-team'
-import { generatePlayerPrice, mapApiPosition } from '@/entities/players'
+import { mapApiPosition } from '@/entities/players'
+import { getFallbackPrice, usePrices } from '@/entities/players/model/use-prices'
 import type { SelectedPlayer } from '@/entities/players'
 import { useTeamPlayers } from '@/entities/team'
 import type { ISquadPlayer } from '@/entities/team/model/team.types'
@@ -48,6 +49,10 @@ export const TransferModal = ({ open, onClose, squad }: TransferModalProps) => {
 
     const fantasyTeamId = fantasyTeams?.[0]?.id
     const aiSuggestions = useTransferSuggestions(fantasyTeamId)
+    const { priceMap } = usePrices()
+
+    const resolvePrice = (player: ISquadPlayer) =>
+        priceMap.get(player.id) ?? getFallbackPrice(mapApiPosition(player.position))
 
     if (!transferCtx) return null
 
@@ -91,7 +96,7 @@ export const TransferModal = ({ open, onClose, squad }: TransferModalProps) => {
 
     const handleSelectIn = (player: ISquadPlayer, teamId: number) => {
         const position = mapApiPosition(player.position)
-        const price = generatePlayerPrice(player.id, position)
+        const price = resolvePrice(player)
 
         selectPlayerIn({
             id: player.id,
@@ -263,11 +268,7 @@ export const TransferModal = ({ open, onClose, squad }: TransferModalProps) => {
                                                     {mapApiPosition(player.position)}
                                                 </Badge>
                                                 <span className="text-xs text-muted-foreground">
-                                                    {generatePlayerPrice(
-                                                        player.id,
-                                                        mapApiPosition(player.position),
-                                                    )}
-                                                    m
+                                                    {resolvePrice(player).toFixed(1)}m
                                                 </span>
                                             </button>
                                         ))}

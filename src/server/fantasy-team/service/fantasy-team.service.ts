@@ -6,6 +6,8 @@ import type {
 } from '@/entities/fantasy-team/model/fantasy-team.types'
 import { BUDGET_TOTAL } from '@/entities/players'
 
+import { SEASON } from '@/shared/config/league'
+
 import type { IFantasyTeamService, SaveSquadPlayer } from './fantasy-team.service.interface'
 import type {
     IFantasyTeamRepository,
@@ -13,14 +15,21 @@ import type {
     SquadPlayerWithStats,
 } from '../repository/fantasy-team.repository.interface'
 import type { IGameweekRepository } from '@/server/gameweek/repository/gameweek.repository.interface'
+import type { IPricingService } from '@/server/pricing/service/pricing.service.interface'
 
 export class FantasyTeamService implements IFantasyTeamService {
     private readonly fantasyTeamRepository
     private readonly gameweekRepository?: IGameweekRepository
+    private readonly pricingService?: IPricingService
 
-    constructor(fantasyTeamRepository: IFantasyTeamRepository, gameweekRepository?: IGameweekRepository) {
+    constructor(
+        fantasyTeamRepository: IFantasyTeamRepository,
+        gameweekRepository?: IGameweekRepository,
+        pricingService?: IPricingService,
+    ) {
         this.fantasyTeamRepository = fantasyTeamRepository
         this.gameweekRepository = gameweekRepository
+        this.pricingService = pricingService
     }
 
     async getFantasyTeam(id: string): Promise<IFantasyTeam | null> {
@@ -67,6 +76,25 @@ export class FantasyTeamService implements IFantasyTeamService {
 
         if (totalCost > BUDGET_TOTAL) {
             throw new Error(`Squad cost (${totalCost}m) exceeds budget (${BUDGET_TOTAL}m)`)
+        }
+
+        if (this.pricingService) {
+            const lookups = await Promise.all(
+                players.map(async (p) => ({
+                    externalId: p.id,
+                    price: p.price,
+                    internalId: await this.fantasyTeamRepository.findPlayerInternalIdByExternalId(p.id),
+                })),
+            )
+            const validatable = lookups
+                .filter((l): l is { externalId: number; price: number; internalId: string } =>
+                    Boolean(l.internalId),
+                )
+                .map((l) => ({ playerId: l.internalId, price: l.price }))
+
+            if (validatable.length > 0) {
+                await this.pricingService.validateClientPrices(validatable, SEASON)
+            }
         }
 
         await this.fantasyTeamRepository.saveSquadPlayers(
@@ -140,6 +168,27 @@ export class FantasyTeamService implements IFantasyTeamService {
         )
 
         let freeRemaining = Math.max(0, (team.freeTransfers ?? 1) - existingTransfers.length)
+
+        if (this.pricingService) {
+            const lookups = await Promise.all(
+                transfers.map(async (t) => ({
+                    externalId: t.playerInId,
+                    price: t.playerInPrice,
+                    internalId: await this.fantasyTeamRepository.findPlayerInternalIdByExternalId(
+                        t.playerInId,
+                    ),
+                })),
+            )
+            const validatable = lookups
+                .filter((l): l is { externalId: number; price: number; internalId: string } =>
+                    Boolean(l.internalId),
+                )
+                .map((l) => ({ playerId: l.internalId, price: l.price }))
+
+            if (validatable.length > 0) {
+                await this.pricingService.validateClientPrices(validatable, SEASON)
+            }
+        }
 
         for (const transfer of transfers) {
             const currentSquad = await this.fantasyTeamRepository.getSquadPlayers(fantasyTeamId)

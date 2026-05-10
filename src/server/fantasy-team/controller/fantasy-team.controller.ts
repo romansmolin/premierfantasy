@@ -1,128 +1,191 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { z } from 'zod'
 
 import { saveSquadSchema } from '@/entities/players'
 
+import { isAuthError, requireUserId } from '@/shared/lib/auth-helpers'
+import { Errors, parseJson, withController } from '@/shared/lib/http'
+
 import type { IFantasyTeamService } from '../service/fantasy-team.service.interface'
 
+const positionEnum = z.enum(['GK', 'DEF', 'MID', 'FWD'])
+
+const createFantasyTeamSchema = z.object({
+    competitionId: z.string().min(1),
+    name: z.string().min(1),
+    budgetLeft: z.number(),
+})
+
+const updateFantasyTeamSchema = z
+    .object({
+        name: z.string().min(1).optional(),
+        budgetLeft: z.number().optional(),
+        freeTransfers: z.number().int().min(0).optional(),
+    })
+    .strict()
+
+const createTransferSchema = z.object({
+    playerOutId: z.number().int().positive(),
+    playerInId: z.number().int().positive(),
+    playerInName: z.string().min(1),
+    playerInPosition: positionEnum,
+    playerInPrice: z.number().nonnegative(),
+    playerInTeamId: z.number().int().positive(),
+})
+
+const makeTransferSchema = z.array(createTransferSchema).min(1)
+
 export class FantasyTeamController {
-    private readonly fantasyTeamService
+    private readonly fantasyTeamService: IFantasyTeamService
 
     constructor(fantasyTeamService: IFantasyTeamService) {
         this.fantasyTeamService = fantasyTeamService
     }
 
-    async getAll() {
-        const teams = await this.fantasyTeamService.getAllFantasyTeams()
+    private async assertOwner(teamId: string, userId: string) {
+        const team = await this.fantasyTeamService.getFantasyTeam(teamId)
 
-        return NextResponse.json(teams)
+        if (!team) throw Errors.notFound()
+
+        if (team.userId !== userId) throw Errors.forbidden()
+
+        return team
     }
 
-    async getById(id: string) {
-        const team = await this.fantasyTeamService.getFantasyTeam(id)
+    getAll = withController(async (req) => {
+        const userId = await requireUserId(req)
 
-        if (!team) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+        if (isAuthError(userId)) return userId
 
-        return NextResponse.json(team)
-    }
+        return this.fantasyTeamService.getFantasyTeamsByUser(userId)
+    })
 
-    async getByUserId(userId: string) {
-        const teams = await this.fantasyTeamService.getFantasyTeamsByUser(userId)
+    getById = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
 
-        console.log('fantasyTeams: ', teams)
+        if (isAuthError(userId)) return userId
 
-        return NextResponse.json(teams)
-    }
+        const { id } = await ctx.params
 
-    async create(req: NextRequest) {
-        const body = await req.json()
-        // validate with zod here
-        const team = await this.fantasyTeamService.createFantasyTeam(body)
+        return this.assertOwner(id, userId)
+    })
+
+    getByUserId = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
+
+        if (isAuthError(userId)) return userId
+
+        const { userId: targetUserId } = await ctx.params
+
+        if (targetUserId !== userId) throw Errors.forbidden()
+
+        return this.fantasyTeamService.getFantasyTeamsByUser(targetUserId)
+    })
+
+    create = withController(async (req) => {
+        const userId = await requireUserId(req)
+
+        if (isAuthError(userId)) return userId
+
+        const data = await parseJson(req, createFantasyTeamSchema)
+        const team = await this.fantasyTeamService.createFantasyTeam({ ...data, userId })
 
         return NextResponse.json(team, { status: 201 })
-    }
+    })
 
-    async update(req: NextRequest, id: string) {
-        const body = await req.json()
-        const team = await this.fantasyTeamService.updateFantasyTeam(id, body)
+    update = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
 
-        return NextResponse.json(team)
-    }
+        if (isAuthError(userId)) return userId
 
-    async delete(id: string) {
+        const { id } = await ctx.params
+
+        await this.assertOwner(id, userId)
+
+        const data = await parseJson(req, updateFantasyTeamSchema)
+
+        return this.fantasyTeamService.updateFantasyTeam(id, data)
+    })
+
+    delete = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
+
+        if (isAuthError(userId)) return userId
+
+        const { id } = await ctx.params
+
+        await this.assertOwner(id, userId)
+
         await this.fantasyTeamService.deleteFantasyTeam(id)
 
-        return NextResponse.json(null, { status: 204 })
-    }
+        return new NextResponse(null, { status: 204 })
+    })
 
-    async getSquad(id: string) {
-        try {
-            const players = await this.fantasyTeamService.getSquad(id)
+    getSquad = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
 
-            return NextResponse.json(players)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to fetch squad'
+        if (isAuthError(userId)) return userId
 
-            return NextResponse.json({ error: message }, { status: 500 })
-        }
-    }
+        const { id } = await ctx.params
 
-    async getSquadWithGameweekStats(fantasyTeamId: string, gameweekNumber: number) {
-        try {
-            const players = await this.fantasyTeamService.getSquadWithGameweekStats(
-                fantasyTeamId,
-                gameweekNumber,
-            )
+        await this.assertOwner(id, userId)
 
-            return NextResponse.json(players)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to fetch gameweek stats'
+        return this.fantasyTeamService.getSquad(id)
+    })
 
-            return NextResponse.json({ error: message }, { status: 500 })
-        }
-    }
+    getSquadWithGameweekStats = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
 
-    async getTransferInfo(fantasyTeamId: string) {
-        try {
-            const info = await this.fantasyTeamService.getTransferInfo(fantasyTeamId)
+        if (isAuthError(userId)) return userId
 
-            return NextResponse.json(info)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to fetch transfer info'
+        const { id, gameweekNumber } = await ctx.params
 
-            return NextResponse.json({ error: message }, { status: 500 })
-        }
-    }
+        await this.assertOwner(id, userId)
 
-    async makeTransfer(req: NextRequest, fantasyTeamId: string) {
-        try {
-            const body = await req.json()
+        return this.fantasyTeamService.getSquadWithGameweekStats(id, Number(gameweekNumber))
+    })
 
-            await this.fantasyTeamService.makeTransfer(fantasyTeamId, body)
+    getTransferInfo = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
 
-            return NextResponse.json({ success: true })
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to make transfer'
+        if (isAuthError(userId)) return userId
 
-            return NextResponse.json({ error: message }, { status: 400 })
-        }
-    }
+        const { id } = await ctx.params
 
-    async saveSquad(req: NextRequest, id: string) {
-        const body = await req.json()
-        const parsed = saveSquadSchema.safeParse(body)
+        await this.assertOwner(id, userId)
 
-        if (!parsed.success) {
-            return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-        }
+        return this.fantasyTeamService.getTransferInfo(id)
+    })
 
-        try {
-            await this.fantasyTeamService.saveSquad(id, parsed.data.players)
+    makeTransfer = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
 
-            return NextResponse.json({ success: true })
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to save squad'
+        if (isAuthError(userId)) return userId
 
-            return NextResponse.json({ error: message }, { status: 400 })
-        }
-    }
+        const { id } = await ctx.params
+
+        await this.assertOwner(id, userId)
+
+        const transfers = await parseJson(req, makeTransferSchema)
+
+        await this.fantasyTeamService.makeTransfer(id, transfers)
+
+        return { success: true }
+    })
+
+    saveSquad = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
+
+        if (isAuthError(userId)) return userId
+
+        const { id } = await ctx.params
+
+        await this.assertOwner(id, userId)
+
+        const data = await parseJson(req, saveSquadSchema)
+
+        await this.fantasyTeamService.saveSquad(id, data.players)
+
+        return { success: true }
+    })
 }

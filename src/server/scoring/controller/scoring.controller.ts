@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server'
 import { z } from 'zod'
+
+import { parseJson, withController } from '@/shared/lib/http'
 
 import type { IScoringService } from '../service/scoring.service.interface'
 import type { NextRequest } from 'next/server'
@@ -17,26 +18,11 @@ export class ScoringController {
         this.scoringService = scoringService
     }
 
-    async calculateGameweek(req: NextRequest) {
-        const body: unknown = await req.json()
-        const parsed = calculateGameweekSchema.safeParse(body)
+    calculateGameweek = withController(async (req: NextRequest) => {
+        const data = await parseJson(req, calculateGameweekSchema)
 
-        if (!parsed.success) {
-            return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
-        }
+        await this.scoringService.calculateGameweek(data.gameweekId, data.season, data.leagueId)
 
-        try {
-            await this.scoringService.calculateGameweek(
-                parsed.data.gameweekId,
-                parsed.data.season,
-                parsed.data.leagueId,
-            )
-
-            return NextResponse.json({ success: true })
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to calculate gameweek'
-
-            return NextResponse.json({ error: message }, { status: 500 })
-        }
-    }
+        return { success: true }
+    })
 }

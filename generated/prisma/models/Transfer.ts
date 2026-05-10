@@ -452,10 +452,6 @@ export type TransferUncheckedUpdateManyWithoutFantasyTeamNestedInput = {
     deleteMany?: Prisma.TransferScalarWhereInput | Prisma.TransferScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-}
-
 export type TransferCreateNestedManyWithoutPlayerInInput = {
     create?:
         | Prisma.XOR<

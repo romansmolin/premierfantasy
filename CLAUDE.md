@@ -21,33 +21,35 @@ Each layer may only import from layers **below** it. This is enforced by `eslint
 
 Every entity that exposes server-side logic **must** follow the Controller → Service → Repository pattern with dependency injection via constructor parameters.
 
+**Full guide:** [docs/server-architecture.md](./docs/server-architecture.md). Read it before adding a new entity, route, or controller — it defines the conventions for auth, errors, validation, webhooks, and the new-entity checklist.
+
 ### File Structure per Entity
 
+Server-side entity code lives under `src/server/<entity>/`. Frontend types and schemas live under `src/entities/<entity>/`.
+
 ```
-src/entities/<entity-name>/
-├── model/
-│   ├── <entity>.types.ts        # Shared TypeScript interfaces
-│   └── <entity>.schema.ts       # Zod validation schemas (if needed)
-├── server/
-│   ├── <entity>.repository.ts       # Interface (IEntityRepository)
-│   ├── <entity>.repository.impl.ts  # Prisma implementation
-│   ├── <entity>.service.ts          # Interface (IEntityService)
-│   ├── <entity>.service.impl.ts     # Business logic implementation
-│   └── <entity>.controller.ts       # HTTP handler (uses NextRequest/NextResponse)
-├── ui/                              # Client-side UI components (if any)
-└── index.ts                         # Public API exports
+src/server/<entity>/
+├── controller/
+│   └── <entity>.controller.ts
+├── service/
+│   ├── <entity>.service.ts             # implementation (EntityService)
+│   └── <entity>.service.interface.ts   # IEntityService
+├── repository/
+│   ├── <entity>.repository.ts             # implementation (EntityRepository)
+│   └── <entity>.repository.interface.ts   # IEntityRepository
+└── lib/                                # entity-only helpers, optional
 ```
 
 ### Layer Responsibilities
 
-**Repository (`*.repository.ts` + `*.repository.impl.ts`)**
+**Repository** — `<entity>.repository.ts` + `<entity>.repository.interface.ts`
 
 - Interface defines data access methods (CRUD operations)
 - Implementation uses Prisma client from `@/shared/lib/prisma`
 - Never contains business logic
 - Never aware of HTTP/controllers
 
-**Service (`*.service.ts` + `*.service.impl.ts`)**
+**Service** — `<entity>.service.ts` + `<entity>.service.interface.ts`
 
 - Interface defines business operations
 - Implementation receives `IEntityRepository` via constructor injection
@@ -55,11 +57,13 @@ src/entities/<entity-name>/
 - Never imports Prisma or any DB-specific code
 - Never aware of HTTP/controllers
 
-**Controller (`*.controller.ts`)**
+**Controller** — `<entity>.controller.ts`
 
 - Receives `IEntityService` via constructor injection
-- Handles HTTP concerns: parsing request body, returning `NextResponse`, status codes
-- Validates input using Zod schemas before passing to service
+- Methods are class fields wrapped in `withController(...)` from `@/shared/lib/http`
+- Auth via `requireUserId(req)` from `@/shared/lib/auth-helpers`
+- Body validation via `parseJson(req, schema)`; query via `parseQuery(req, schema)`
+- Throws `Errors.notFound() / forbidden() / badRequest() / unprocessable()` — never builds raw error responses
 - Never imports repository or Prisma
 - Never contains business logic
 
@@ -71,10 +75,9 @@ All wiring happens in a single composition root:
 src/shared/lib/container.ts
 ```
 
-This is the **only file** that imports concrete implementations (`*.impl.ts`). It instantiates the dependency chain and exports ready-to-use controllers.
+This is the **only file** that imports concrete implementations. It instantiates the dependency chain (each repository instantiated exactly once and shared) and exports ready-to-use controllers.
 
 ```typescript
-// Example pattern:
 const entityRepository = new EntityRepository()
 const entityService = new EntityService(entityRepository)
 const entityController = new EntityController(entityService)
@@ -86,21 +89,22 @@ export const container = {
 
 ### API Route Wiring
 
-API routes in `src/app/api/` are thin — they delegate entirely to controllers from the container:
+API routes in `src/app/api/` are one-line delegators:
 
 ```typescript
 // src/app/api/<entities>/route.ts
 import { container } from '@/shared/lib/container'
 
-export async function GET() {
-    return container.entityController.getAll()
-}
+export const GET = container.entityController.getAll
+export const POST = container.entityController.create
 ```
+
+Routes do not import controllers, services, repositories, or `auth.api.getSession` — only `container`.
 
 ### Interface Naming Convention
 
-- Repository interfaces: `IEntityRepository` (exported from `<entity>.repository.ts`)
-- Service interfaces: `IEntityService` (exported from `<entity>.service.ts`)
+- Repository interface: `IEntityRepository` (in `<entity>.repository.interface.ts`)
+- Service interface: `IEntityService` (in `<entity>.service.interface.ts`)
 - No `I` prefix for types/models — only for DI interfaces
 
 ### Rules
@@ -109,9 +113,10 @@ export async function GET() {
 2. **Never import concrete implementations** outside of `container.ts`.
 3. **Services must not import from `@prisma/client`** or any DB-specific module.
 4. **Controllers must not import repositories.**
-5. **Each new entity** must follow this exact file structure — no exceptions.
-6. **Zod validation** happens in the controller layer before data reaches the service.
-7. When adding a new entity, also register it in `container.ts`.
+5. **Never call `auth.api.getSession` directly** — use `requireUserId` from `@/shared/lib/auth-helpers`.
+6. **Each new entity** must follow this exact file structure — no exceptions.
+7. **Zod validation** happens in the controller layer via `parseJson` / `parseQuery`.
+8. When adding a new entity, also register it in `container.ts`.
 
 ## Code Style
 

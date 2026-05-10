@@ -1,6 +1,23 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+import { Errors, parseQuery, withController } from '@/shared/lib/http'
 
 import type { ITeamsService } from '../service/team.service.interface'
+
+const teamStatisticsQuerySchema = z.object({
+    league: z.coerce.number().int().positive(),
+    season: z.coerce.number().int().min(2000).max(2100),
+})
+
+const playerDetailsQuerySchema = z.object({
+    season: z.coerce.number().int().min(2000).max(2100).optional(),
+})
+
+const currentSeason = () => {
+    const now = new Date()
+
+    return now.getMonth() + 1 >= 8 ? now.getFullYear() : now.getFullYear() - 1
+}
 
 export class TeamController {
     private readonly teamService: ITeamsService
@@ -9,59 +26,43 @@ export class TeamController {
         this.teamService = teamService
     }
 
-    async getAllTeams() {
-        const teams = await this.teamService.getAllTeams(39, 2025)
+    getAllTeams = withController(async () => {
+        return this.teamService.getAllTeams(39, 2025)
+    })
 
-        return NextResponse.json(teams)
-    }
+    getTeamById = withController(async (_req, ctx) => {
+        const { id } = await ctx.params
+        const team = await this.teamService.getTeamById(Number(id))
 
-    async getTeamById(teamId: string) {
-        const team = await this.teamService.getTeamById(Number(teamId))
+        if (!team) throw Errors.notFound()
 
-        if (!team) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+        return team
+    })
 
-        return NextResponse.json(team)
-    }
+    getTeamPlayers = withController(async (_req, ctx) => {
+        const { id } = await ctx.params
 
-    async getTeamPlayers(teamId: string) {
-        const players = await this.teamService.getTeamPlayers(Number(teamId))
+        return this.teamService.getTeamPlayers(Number(id))
+    })
 
-        return NextResponse.json(players)
-    }
+    getTeamStatistics = withController(async (req, ctx) => {
+        const { id } = await ctx.params
+        const { league, season } = parseQuery(req, teamStatisticsQuerySchema)
 
-    async getTeamStatistics(req: NextRequest, teamId: string) {
-        const leagueId = req.nextUrl.searchParams.get('league')
-        const season = req.nextUrl.searchParams.get('season')
+        const statistics = await this.teamService.getTeamStatistics(Number(id), league, season)
 
-        if (!leagueId || !season) {
-            return NextResponse.json(
-                { error: 'league and season query params are required' },
-                { status: 400 },
-            )
-        }
+        if (!statistics) throw Errors.notFound()
 
-        const statistics = await this.teamService.getTeamStatistics(
-            Number(teamId),
-            Number(leagueId),
-            Number(season),
-        )
+        return statistics
+    })
 
-        if (!statistics) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    getPlayerDetails = withController(async (req, ctx) => {
+        const { id } = await ctx.params
+        const { season } = parseQuery(req, playerDetailsQuerySchema)
+        const player = await this.teamService.getPlayerDetails(Number(id), season ?? currentSeason())
 
-        return NextResponse.json(statistics)
-    }
+        if (!player) throw Errors.notFound('Player not found')
 
-    async getPlayerDetails(playerId: number, season: number) {
-        try {
-            const player = await this.teamService.getPlayerDetails(playerId, season)
-
-            if (!player) return NextResponse.json({ error: 'Player not found' }, { status: 404 })
-
-            return NextResponse.json(player)
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Failed to fetch player details'
-
-            return NextResponse.json({ error: message }, { status: 500 })
-        }
-    }
+        return player
+    })
 }

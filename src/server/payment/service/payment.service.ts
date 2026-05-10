@@ -5,6 +5,7 @@ import {
     verifyWebhookBasicAuth,
     verifyWebhookSignature,
 } from '@/shared/api/secure-processor-client'
+import { Errors } from '@/shared/lib/http'
 
 import type { IPaymentService } from './payment.service.interface'
 import type { IPaymentRepository } from '../repository/payment.repository.interface'
@@ -14,12 +15,19 @@ type NormalizedStatus = 'CREATED' | 'PENDING' | 'SUCCESSFUL' | 'FAILED' | 'DECLI
 
 const normalizeStatus = (status?: string | null): NormalizedStatus => {
     const normalized = (status ?? '').toLowerCase()
+
     if (['successful', 'success', 'completed', 'paid', 'approved'].includes(normalized)) return 'SUCCESSFUL'
+
     if (['failed', 'failure'].includes(normalized)) return 'FAILED'
+
     if (['declined', 'rejected', 'canceled', 'cancelled'].includes(normalized)) return 'DECLINED'
+
     if (normalized === 'expired') return 'EXPIRED'
+
     if (normalized === 'error') return 'ERROR'
+
     if (['pending', 'processing', 'incomplete', 'awaiting', ''].includes(normalized)) return 'PENDING'
+
     return 'PENDING'
 }
 
@@ -35,7 +43,7 @@ export class PaymentService implements IPaymentService {
     async createCheckout(userId: string, coinAmount: number): Promise<{ redirectUrl: string }> {
         const pack = getCoinPack(coinAmount)
 
-        if (!pack) throw new Error(`Invalid coin amount: ${coinAmount}`)
+        if (!pack) throw Errors.badRequest(`Invalid coin amount: ${coinAmount}`)
 
         const trackingId = crypto.randomUUID()
 
@@ -72,44 +80,54 @@ export class PaymentService implements IPaymentService {
         headers: { authorization: string | null; signature: string | null },
     ): Promise<void> {
         if (!verifyWebhookBasicAuth(headers.authorization)) {
-            throw new Error('Invalid webhook authorization')
+            throw Errors.unauthorized('Invalid webhook authorization')
         }
 
         if (!headers.signature || !verifyWebhookSignature(rawBody, headers.signature)) {
-            throw new Error('Invalid webhook signature')
+            throw Errors.unauthorized('Invalid webhook signature')
         }
 
-        const payload = JSON.parse(rawBody)
-        const transaction = payload.transaction ?? payload
-        const trackingId =
-            transaction?.tracking_id ??
-            transaction?.order?.tracking_id ??
-            payload?.metadata?.payment_token_id ??
-            transaction?.metadata?.payment_token_id
-        const rawStatus = transaction?.status ?? payload?.status
+        let payload: unknown
 
-        if (!trackingId) throw new Error('Missing tracking_id in webhook')
+        try {
+            payload = JSON.parse(rawBody)
+        } catch {
+            throw Errors.badRequest('Webhook body is not valid JSON')
+        }
+
+        const data = payload as Record<string, unknown>
+        const transaction = (data.transaction ?? data) as Record<string, unknown>
+        const order = ((transaction.order ?? data.order) as Record<string, unknown> | undefined) ?? {}
+        const metadata = (data.metadata ?? transaction.metadata) as Record<string, unknown> | undefined
+        const trackingId =
+            (transaction.tracking_id as string | undefined) ??
+            (order.tracking_id as string | undefined) ??
+            (metadata?.payment_token_id as string | undefined)
+        const rawStatus = (transaction.status ?? data.status) as string | undefined
+
+        if (!trackingId) throw Errors.badRequest('Missing tracking_id in webhook')
 
         const payment = await this.paymentRepository.findById(trackingId)
 
-        if (!payment) throw new Error(`Payment not found: ${trackingId}`)
+        if (!payment) throw Errors.badRequest(`Payment not found: ${trackingId}`)
 
-        // Cross-check amount and currency against the stored record.
-        const order = transaction?.order ?? payload?.order ?? {}
         const webhookAmount =
             typeof order.amount === 'number'
                 ? order.amount
-                : typeof transaction?.amount === 'number'
-                  ? transaction.amount
+                : typeof transaction.amount === 'number'
+                  ? (transaction.amount as number)
                   : null
-        const webhookCurrency = order.currency ?? transaction?.currency ?? null
+        const webhookCurrency = (order.currency ?? transaction.currency) as string | undefined
+        const txUid = transaction.uid as string | undefined
+
         if (webhookAmount !== null && webhookAmount !== payment.amountCents) {
-            await this.paymentRepository.updateStatus(payment.id, 'ERROR', transaction?.uid)
-            throw new Error('Webhook amount mismatch')
+            await this.paymentRepository.updateStatus(payment.id, 'ERROR', txUid)
+            throw Errors.unprocessable('Webhook amount mismatch')
         }
+
         if (webhookCurrency && webhookCurrency !== payment.currency) {
-            await this.paymentRepository.updateStatus(payment.id, 'ERROR', transaction?.uid)
-            throw new Error('Webhook currency mismatch')
+            await this.paymentRepository.updateStatus(payment.id, 'ERROR', txUid)
+            throw Errors.unprocessable('Webhook currency mismatch')
         }
 
         if (payment.status === 'SUCCESSFUL') return
@@ -117,7 +135,7 @@ export class PaymentService implements IPaymentService {
         const status = normalizeStatus(rawStatus)
 
         if (status === 'SUCCESSFUL') {
-            await this.paymentRepository.updateStatus(payment.id, 'SUCCESSFUL', transaction?.uid)
+            await this.paymentRepository.updateStatus(payment.id, 'SUCCESSFUL', txUid)
 
             await this.walletRepository.createTransaction({
                 userId: payment.userId,
@@ -132,13 +150,14 @@ export class PaymentService implements IPaymentService {
             status === 'DECLINED' ||
             status === 'EXPIRED'
         ) {
-            await this.paymentRepository.updateStatus(payment.id, status, transaction?.uid)
+            await this.paymentRepository.updateStatus(payment.id, status, txUid)
         }
     }
 
     async reconcileReturn(trackingId: string): Promise<{ status: 'SUCCESSFUL' | 'PENDING' | 'FAILED' }> {
         const payment = await this.paymentRepository.findById(trackingId)
-        if (!payment) throw new Error(`Payment not found: ${trackingId}`)
+
+        if (!payment) throw Errors.notFound(`Payment not found: ${trackingId}`)
 
         if (!payment.gatewayUid) {
             return { status: payment.status === 'SUCCESSFUL' ? 'SUCCESSFUL' : 'PENDING' }
@@ -148,10 +167,13 @@ export class PaymentService implements IPaymentService {
 
         if (remote.amountCents !== null && remote.amountCents !== payment.amountCents) {
             await this.paymentRepository.updateStatus(payment.id, 'ERROR', remote.uid ?? undefined)
+
             return { status: 'FAILED' }
         }
+
         if (remote.currency && remote.currency !== payment.currency) {
             await this.paymentRepository.updateStatus(payment.id, 'ERROR', remote.uid ?? undefined)
+
             return { status: 'FAILED' }
         }
 
@@ -166,6 +188,7 @@ export class PaymentService implements IPaymentService {
                 description: `Purchased ${payment.coinAmount} coins`,
                 paymentTokenId: payment.id,
             })
+
             return { status: 'SUCCESSFUL' }
         }
 
@@ -174,6 +197,7 @@ export class PaymentService implements IPaymentService {
         }
 
         await this.paymentRepository.updateStatus(payment.id, status, remote.uid ?? undefined)
+
         return { status: 'FAILED' }
     }
 }

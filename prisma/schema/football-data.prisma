@@ -1,83 +1,101 @@
 enum PlayerPosition {
-    GK
-    DEF
-    MID
-    FWD
+  GK
+  DEF
+  MID
+  FWD
 }
 
 model Team {
-    id         String   @id @default(uuid())
-    externalId Int      @unique @map("external_id")
-    name       String
-    shortName  String   @map("short_name")
-    logo       String?
-    createdAt  DateTime @default(now()) @map("created_at")
+  id         String   @id @default(uuid())
+  externalId Int      @unique @map("external_id")
+  name       String
+  shortName  String   @map("short_name")
+  logo       String?
+  createdAt  DateTime @default(now()) @map("created_at")
 
-    players Player[]
+  players Player[]
 
-    @@map("teams")
+  @@map("teams")
 }
 
 model Player {
-    id         String         @id @default(uuid())
-    externalId Int            @unique @map("external_id")
-    name       String
-    position   PlayerPosition
-    teamId     String         @map("team_id")
-    createdAt  DateTime       @default(now()) @map("created_at")
+  id         String         @id @default(uuid())
+  externalId Int            @unique @map("external_id")
+  name       String
+  position   PlayerPosition
+  teamId     String         @map("team_id")
+  createdAt  DateTime       @default(now()) @map("created_at")
 
-    team             Team                @relation(fields: [teamId], references: [id])
-    fantasyTeamSlots FantasyTeamPlayer[]
-    gameweekStats    PlayerGameweekStats[]
-    transfersIn      Transfer[]          @relation("TransferIn")
-    transfersOut     Transfer[]          @relation("TransferOut")
+  team             Team                  @relation(fields: [teamId], references: [id])
+  fantasyTeamSlots FantasyTeamPlayer[]
+  gameweekStats    PlayerGameweekStats[]
+  transfersIn      Transfer[]            @relation("TransferIn")
+  transfersOut     Transfer[]            @relation("TransferOut")
+  seasonPrices     PlayerSeasonPrice[]
 
-    @@index([teamId])
-    @@map("players")
+  @@index([teamId])
+  @@map("players")
+}
+
+model PlayerSeasonPrice {
+  id           String   @id @default(uuid())
+  playerId     String   @map("player_id")
+  seasonYear   Int      @map("season_year")
+  basePrice    Float    @map("base_price")
+  currentPrice Float    @map("current_price")
+  priceSource  String   @default("MANUAL") @map("price_source")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, seasonYear])
+  @@index([seasonYear])
+  @@map("player_season_prices")
 }
 
 model Gameweek {
-    id         String    @id @default(uuid())
-    number     Int       @unique
-    startDate  DateTime  @map("start_date")
-    endDate    DateTime  @map("end_date")
-    isActive   Boolean   @default(false) @map("is_active")
-    isFinished Boolean   @default(false) @map("is_finished")
-    deadline   DateTime? @map("deadline")
-    createdAt  DateTime  @default(now()) @map("created_at")
+  id         String    @id @default(uuid())
+  number     Int       @unique
+  startDate  DateTime  @map("start_date")
+  endDate    DateTime  @map("end_date")
+  isActive   Boolean   @default(false) @map("is_active")
+  isFinished Boolean   @default(false) @map("is_finished")
+  deadline   DateTime? @map("deadline")
+  createdAt  DateTime  @default(now()) @map("created_at")
 
-    points      GameweekPoints[]
-    playerStats PlayerGameweekStats[]
-    transfers   Transfer[]
+  points      GameweekPoints[]
+  playerStats PlayerGameweekStats[]
+  transfers   Transfer[]
 
-    @@map("gameweeks")
+  @@map("gameweeks")
 }
 
 model PlayerGameweekStats {
-    id         String @id @default(uuid())
-    playerId   String @map("player_id")
-    gameweekId String @map("gameweek_id")
+  id         String @id @default(uuid())
+  playerId   String @map("player_id")
+  gameweekId String @map("gameweek_id")
 
-    minutesPlayed Int     @default(0) @map("minutes_played")
-    goals         Int     @default(0)
-    assists       Int     @default(0)
-    cleanSheet    Boolean @default(false) @map("clean_sheet")
-    saves         Int     @default(0)
-    penaltySaved  Int     @default(0) @map("penalty_saved")
-    penaltyMissed Int     @default(0) @map("penalty_missed")
-    goalsConceded Int     @default(0) @map("goals_conceded")
-    yellowCards   Int     @default(0) @map("yellow_cards")
-    redCards      Int     @default(0) @map("red_cards")
-    ownGoals      Int     @default(0) @map("own_goals")
-    totalPoints   Int     @default(0) @map("total_points")
+  minutesPlayed Int     @default(0) @map("minutes_played")
+  goals         Int     @default(0)
+  assists       Int     @default(0)
+  cleanSheet    Boolean @default(false) @map("clean_sheet")
+  saves         Int     @default(0)
+  penaltySaved  Int     @default(0) @map("penalty_saved")
+  penaltyMissed Int     @default(0) @map("penalty_missed")
+  goalsConceded Int     @default(0) @map("goals_conceded")
+  yellowCards   Int     @default(0) @map("yellow_cards")
+  redCards      Int     @default(0) @map("red_cards")
+  ownGoals      Int     @default(0) @map("own_goals")
+  totalPoints   Int     @default(0) @map("total_points")
 
-    createdAt DateTime @default(now()) @map("created_at")
+  createdAt DateTime @default(now()) @map("created_at")
 
-    player   Player   @relation(fields: [playerId], references: [id])
-    gameweek Gameweek @relation(fields: [gameweekId], references: [id])
+  player   Player   @relation(fields: [playerId], references: [id])
+  gameweek Gameweek @relation(fields: [gameweekId], references: [id])
 
-    @@unique([playerId, gameweekId])
-    @@index([playerId])
-    @@index([gameweekId])
-    @@map("player_gameweek_stats")
+  @@unique([playerId, gameweekId])
+  @@index([playerId])
+  @@index([gameweekId])
+  @@map("player_gameweek_stats")
 }

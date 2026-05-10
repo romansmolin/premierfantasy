@@ -1,11 +1,14 @@
 'use client'
 
-import { DashboardSquare01Icon } from '@hugeicons/core-free-icons'
+import { ChampionIcon, DashboardSquare01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import Link from 'next/link'
 
 import { useCompetitionState } from '@/entities/competition'
 
 import { useSession } from '@/shared/lib/auth-client'
+import { buttonVariants } from '@/shared/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 
 import { DashboardActiveClosed } from './dashboard-active-closed'
@@ -82,9 +85,28 @@ export function DashboardView() {
             )}
 
             {!state.activeCompetition && !state.upcomingCompetition && (
-                <p className="text-sm text-muted-foreground">
-                    No competitions available right now. Check back later.
-                </p>
+                <Card className="border-dashed">
+                    <CardHeader>
+                        <div className="flex items-start gap-3">
+                            <div className="flex items-center justify-center size-10 rounded-xl bg-primary/10 shrink-0">
+                                <HugeiconsIcon icon={ChampionIcon} size={20} className="text-primary" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <CardTitle>No Premier League round to join right now</CardTitle>
+                                <p className="text-sm text-muted-foreground">
+                                    But other leagues are mid-season — MLS, Brasileirão, J1, and more. Pick
+                                    one and start playing today.
+                                </p>
+                            </div>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <Link href="/leagues" className={buttonVariants({ className: 'w-full gap-2' })}>
+                            <HugeiconsIcon icon={ChampionIcon} size={16} />
+                            Browse leagues
+                        </Link>
+                    </CardContent>
+                </Card>
             )}
         </div>
     )

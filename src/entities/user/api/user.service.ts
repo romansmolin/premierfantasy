@@ -6,27 +6,11 @@ import type { IUser } from '../model/user.types'
 const BASE_URL = '/api/users'
 
 export const userService = {
-    async getAll(): Promise<IUser[]> {
-        try {
-            return await httpClient.get<IUser[]>(BASE_URL)
-        } catch (error) {
-            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to fetch users')
-        }
-    },
-
     async getById(id: string | undefined): Promise<IUser> {
         try {
             return await httpClient.get<IUser>(`${BASE_URL}/${id}`)
         } catch (error) {
             throw ApiError.isApiError(error) ? error : new ApiError(500, `Failed to fetch user ${id}`)
-        }
-    },
-
-    async create(data: Pick<IUser, 'name' | 'email'>): Promise<IUser> {
-        try {
-            return await httpClient.post<IUser>(BASE_URL, data)
-        } catch (error) {
-            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to create user')
         }
     },
 

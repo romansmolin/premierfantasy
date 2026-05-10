@@ -49,12 +49,15 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
     Competition: 'Competition',
+    League: 'League',
+    LeagueSeason: 'LeagueSeason',
     FantasyTeam: 'FantasyTeam',
     Transfer: 'Transfer',
     FantasyTeamPlayer: 'FantasyTeamPlayer',
     GameweekPoints: 'GameweekPoints',
     Team: 'Team',
     Player: 'Player',
+    PlayerSeasonPrice: 'PlayerSeasonPrice',
     Gameweek: 'Gameweek',
     PlayerGameweekStats: 'PlayerGameweekStats',
     PaymentToken: 'PaymentToken',
@@ -88,11 +91,40 @@ export const CompetitionScalarFieldEnum = {
     endGameweek: 'endGameweek',
     status: 'status',
     joinDeadline: 'joinDeadline',
+    leagueSeasonId: 'leagueSeasonId',
+    visibility: 'visibility',
     createdAt: 'createdAt',
 } as const
 
 export type CompetitionScalarFieldEnum =
     (typeof CompetitionScalarFieldEnum)[keyof typeof CompetitionScalarFieldEnum]
+
+export const LeagueScalarFieldEnum = {
+    id: 'id',
+    externalId: 'externalId',
+    name: 'name',
+    country: 'country',
+    logo: 'logo',
+    type: 'type',
+    seasonStartMonth: 'seasonStartMonth',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+} as const
+
+export type LeagueScalarFieldEnum = (typeof LeagueScalarFieldEnum)[keyof typeof LeagueScalarFieldEnum]
+
+export const LeagueSeasonScalarFieldEnum = {
+    id: 'id',
+    leagueId: 'leagueId',
+    year: 'year',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    isCurrent: 'isCurrent',
+    createdAt: 'createdAt',
+} as const
+
+export type LeagueSeasonScalarFieldEnum =
+    (typeof LeagueSeasonScalarFieldEnum)[keyof typeof LeagueSeasonScalarFieldEnum]
 
 export const FantasyTeamScalarFieldEnum = {
     id: 'id',
@@ -164,6 +196,20 @@ export const PlayerScalarFieldEnum = {
 } as const
 
 export type PlayerScalarFieldEnum = (typeof PlayerScalarFieldEnum)[keyof typeof PlayerScalarFieldEnum]
+
+export const PlayerSeasonPriceScalarFieldEnum = {
+    id: 'id',
+    playerId: 'playerId',
+    seasonYear: 'seasonYear',
+    basePrice: 'basePrice',
+    currentPrice: 'currentPrice',
+    priceSource: 'priceSource',
+    updatedAt: 'updatedAt',
+    createdAt: 'createdAt',
+} as const
+
+export type PlayerSeasonPriceScalarFieldEnum =
+    (typeof PlayerSeasonPriceScalarFieldEnum)[keyof typeof PlayerSeasonPriceScalarFieldEnum]
 
 export const GameweekScalarFieldEnum = {
     id: 'id',
