@@ -2,6 +2,7 @@ import { FootballPitchIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
 
+import { FooterBankingInfo } from '@/shared/ui/footer-banking-info'
 import { Separator } from '@/shared/ui/separator'
 
 const footerLinks = [
@@ -78,6 +79,10 @@ export function Footer() {
                     <p className="text-xs text-muted-foreground">
                         Powered by API-Football &middot; Built with Next.js
                     </p>
+                </div>
+
+                <div className="mt-8 flex items-center justify-center md:justify-start">
+                    <FooterBankingInfo className="h-6 w-auto opacity-70" />
                 </div>
             </div>
         </footer>
