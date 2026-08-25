@@ -10,6 +10,22 @@ export interface ICompetition {
     createdAt: Date
 }
 
+export interface ICompetitionLeague {
+    id: string
+    externalId: number
+    name: string
+    country: string
+    logo: string | null
+    type: string
+}
+
+/** A competition plus the league/season it belongs to. Drives the team builder. */
+export interface ICompetitionDetail extends ICompetition {
+    league: ICompetitionLeague | null
+    leagueSeasonId: string | null
+    seasonYear: number | null
+}
+
 export interface ICreateCompetition {
     name: string
     startGameweek: number
@@ -18,8 +34,8 @@ export interface ICreateCompetition {
 }
 
 export interface ICompetitionState {
-    activeCompetition: ICompetition | null
-    upcomingCompetition: ICompetition | null
+    activeCompetition: ICompetitionDetail | null
+    upcomingCompetition: ICompetitionDetail | null
     hasTeamInActive: boolean
     hasTeamInUpcoming: boolean
     canJoinActive: boolean

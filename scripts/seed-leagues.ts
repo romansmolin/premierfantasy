@@ -7,6 +7,14 @@
  */
 import { prisma } from '../src/shared/lib/prisma'
 
+interface SeasonSeed {
+    year: number
+    startDate: string
+    endDate: string
+    /** Exactly one season per league may be `true`. */
+    isCurrent: boolean
+}
+
 interface LeagueSeed {
     externalId: number
     name: string
@@ -14,12 +22,7 @@ interface LeagueSeed {
     type: 'League' | 'Cup' | 'Tournament'
     seasonStartMonth: number
     logo?: string
-    currentSeason: {
-        year: number
-        startDate: string
-        endDate: string
-        isCurrent: boolean
-    }
+    seasons: SeasonSeed[]
 }
 
 const apiSportsLogo = (id: number) => `https://media.api-sports.io/football/leagues/${id}.png`
@@ -33,12 +36,20 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 8,
         logo: apiSportsLogo(39),
-        currentSeason: {
-            year: 2025,
-            startDate: '2025-08-15',
-            endDate: '2026-05-24',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-08-15',
+                endDate: '2026-05-24',
+                isCurrent: false,
+            },
+            {
+                year: 2026,
+                startDate: '2026-08-15',
+                endDate: '2027-05-23',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 140,
@@ -47,12 +58,20 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 8,
         logo: apiSportsLogo(140),
-        currentSeason: {
-            year: 2025,
-            startDate: '2025-08-15',
-            endDate: '2026-05-24',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-08-15',
+                endDate: '2026-05-24',
+                isCurrent: false,
+            },
+            {
+                year: 2026,
+                startDate: '2026-08-15',
+                endDate: '2027-05-23',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 78,
@@ -61,12 +80,20 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 8,
         logo: apiSportsLogo(78),
-        currentSeason: {
-            year: 2025,
-            startDate: '2025-08-22',
-            endDate: '2026-05-17',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-08-22',
+                endDate: '2026-05-17',
+                isCurrent: false,
+            },
+            {
+                year: 2026,
+                startDate: '2026-08-21',
+                endDate: '2027-05-15',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 135,
@@ -75,12 +102,20 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 8,
         logo: apiSportsLogo(135),
-        currentSeason: {
-            year: 2025,
-            startDate: '2025-08-23',
-            endDate: '2026-05-24',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-08-23',
+                endDate: '2026-05-24',
+                isCurrent: false,
+            },
+            {
+                year: 2026,
+                startDate: '2026-08-22',
+                endDate: '2027-05-23',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 61,
@@ -89,12 +124,20 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 8,
         logo: apiSportsLogo(61),
-        currentSeason: {
-            year: 2025,
-            startDate: '2025-08-15',
-            endDate: '2026-05-23',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-08-15',
+                endDate: '2026-05-23',
+                isCurrent: false,
+            },
+            {
+                year: 2026,
+                startDate: '2026-08-14',
+                endDate: '2027-05-22',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 88,
@@ -103,12 +146,20 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 8,
         logo: apiSportsLogo(88),
-        currentSeason: {
-            year: 2025,
-            startDate: '2025-08-08',
-            endDate: '2026-05-17',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-08-08',
+                endDate: '2026-05-17',
+                isCurrent: false,
+            },
+            {
+                year: 2026,
+                startDate: '2026-08-07',
+                endDate: '2027-05-16',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 94,
@@ -117,12 +168,20 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 8,
         logo: apiSportsLogo(94),
-        currentSeason: {
-            year: 2025,
-            startDate: '2025-08-08',
-            endDate: '2026-05-17',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-08-08',
+                endDate: '2026-05-17',
+                isCurrent: false,
+            },
+            {
+                year: 2026,
+                startDate: '2026-08-07',
+                endDate: '2027-05-16',
+                isCurrent: true,
+            },
+        ],
     },
     // ── Counter-seasonal leagues (Feb → Dec) ──────────────────────────────────
     {
@@ -132,12 +191,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 2,
         logo: apiSportsLogo(253),
-        currentSeason: {
-            year: 2026,
-            startDate: '2026-02-21',
-            endDate: '2026-12-06',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2026,
+                startDate: '2026-02-21',
+                endDate: '2026-12-06',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 71,
@@ -146,12 +207,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 4,
         logo: apiSportsLogo(71),
-        currentSeason: {
-            year: 2026,
-            startDate: '2026-04-11',
-            endDate: '2026-12-13',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2026,
+                startDate: '2026-04-11',
+                endDate: '2026-12-13',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 128,
@@ -160,12 +223,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 1,
         logo: apiSportsLogo(128),
-        currentSeason: {
-            year: 2026,
-            startDate: '2026-01-23',
-            endDate: '2026-12-13',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2026,
+                startDate: '2026-01-23',
+                endDate: '2026-12-13',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 98,
@@ -174,12 +239,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 2,
         logo: apiSportsLogo(98),
-        currentSeason: {
-            year: 2026,
-            startDate: '2026-02-21',
-            endDate: '2026-12-05',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2026,
+                startDate: '2026-02-21',
+                endDate: '2026-12-05',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 292,
@@ -188,26 +255,36 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 2,
         logo: apiSportsLogo(292),
-        currentSeason: {
-            year: 2026,
-            startDate: '2026-02-28',
-            endDate: '2026-11-29',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2026,
+                startDate: '2026-02-28',
+                endDate: '2026-11-29',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 262,
         name: 'Liga MX',
         country: 'Mexico',
         type: 'League',
-        seasonStartMonth: 1,
+        seasonStartMonth: 7,
         logo: apiSportsLogo(262),
-        currentSeason: {
-            year: 2026,
-            startDate: '2026-01-09',
-            endDate: '2026-05-26',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-07-11',
+                endDate: '2026-05-26',
+                isCurrent: false,
+            },
+            {
+                year: 2026,
+                startDate: '2026-07-03',
+                endDate: '2027-05-24',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 103,
@@ -216,12 +293,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 4,
         logo: apiSportsLogo(103),
-        currentSeason: {
-            year: 2026,
-            startDate: '2026-04-04',
-            endDate: '2026-12-06',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2026,
+                startDate: '2026-04-04',
+                endDate: '2026-12-06',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 113,
@@ -230,12 +309,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'League',
         seasonStartMonth: 4,
         logo: apiSportsLogo(113),
-        currentSeason: {
-            year: 2026,
-            startDate: '2026-03-28',
-            endDate: '2026-11-08',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2026,
+                startDate: '2026-03-28',
+                endDate: '2026-11-08',
+                isCurrent: true,
+            },
+        ],
     },
     // ── Continental club championships ────────────────────────────────────────
     {
@@ -245,12 +326,20 @@ const LEAGUES: LeagueSeed[] = [
         type: 'Cup',
         seasonStartMonth: 9,
         logo: apiSportsLogo(2),
-        currentSeason: {
-            year: 2025,
-            startDate: '2025-09-16',
-            endDate: '2026-05-30',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-09-16',
+                endDate: '2026-05-30',
+                isCurrent: false,
+            },
+            {
+                year: 2026,
+                startDate: '2026-09-15',
+                endDate: '2027-05-29',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 3,
@@ -259,12 +348,20 @@ const LEAGUES: LeagueSeed[] = [
         type: 'Cup',
         seasonStartMonth: 9,
         logo: apiSportsLogo(3),
-        currentSeason: {
-            year: 2025,
-            startDate: '2025-09-24',
-            endDate: '2026-05-27',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-09-24',
+                endDate: '2026-05-27',
+                isCurrent: false,
+            },
+            {
+                year: 2026,
+                startDate: '2026-09-23',
+                endDate: '2027-05-26',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 848,
@@ -273,12 +370,20 @@ const LEAGUES: LeagueSeed[] = [
         type: 'Cup',
         seasonStartMonth: 9,
         logo: apiSportsLogo(848),
-        currentSeason: {
-            year: 2025,
-            startDate: '2025-10-02',
-            endDate: '2026-05-28',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-10-02',
+                endDate: '2026-05-28',
+                isCurrent: false,
+            },
+            {
+                year: 2026,
+                startDate: '2026-10-01',
+                endDate: '2027-05-27',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 13,
@@ -287,12 +392,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'Cup',
         seasonStartMonth: 2,
         logo: apiSportsLogo(13),
-        currentSeason: {
-            year: 2026,
-            startDate: '2026-02-04',
-            endDate: '2026-11-28',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2026,
+                startDate: '2026-02-04',
+                endDate: '2026-11-28',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 11,
@@ -301,12 +408,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'Cup',
         seasonStartMonth: 2,
         logo: apiSportsLogo(11),
-        currentSeason: {
-            year: 2026,
-            startDate: '2026-03-04',
-            endDate: '2026-11-21',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2026,
+                startDate: '2026-03-04',
+                endDate: '2026-11-21',
+                isCurrent: true,
+            },
+        ],
     },
     {
         externalId: 15,
@@ -315,12 +424,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'Tournament',
         seasonStartMonth: 6,
         logo: apiSportsLogo(15),
-        currentSeason: {
-            year: 2025,
-            startDate: '2025-06-15',
-            endDate: '2025-07-13',
-            isCurrent: false,
-        },
+        seasons: [
+            {
+                year: 2025,
+                startDate: '2025-06-15',
+                endDate: '2025-07-13',
+                isCurrent: false,
+            },
+        ],
     },
     // ── International tournaments ─────────────────────────────────────────────
     {
@@ -330,12 +441,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'Tournament',
         seasonStartMonth: 6,
         logo: apiSportsLogo(1),
-        currentSeason: {
-            year: 2026,
-            startDate: '2026-06-11',
-            endDate: '2026-07-19',
-            isCurrent: true,
-        },
+        seasons: [
+            {
+                year: 2026,
+                startDate: '2026-06-11',
+                endDate: '2026-07-19',
+                isCurrent: false,
+            },
+        ],
     },
     {
         externalId: 4,
@@ -344,12 +457,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'Tournament',
         seasonStartMonth: 6,
         logo: apiSportsLogo(4),
-        currentSeason: {
-            year: 2028,
-            startDate: '2028-06-09',
-            endDate: '2028-07-09',
-            isCurrent: false,
-        },
+        seasons: [
+            {
+                year: 2028,
+                startDate: '2028-06-09',
+                endDate: '2028-07-09',
+                isCurrent: false,
+            },
+        ],
     },
     {
         externalId: 9,
@@ -358,12 +473,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'Tournament',
         seasonStartMonth: 6,
         logo: apiSportsLogo(9),
-        currentSeason: {
-            year: 2028,
-            startDate: '2028-06-10',
-            endDate: '2028-07-09',
-            isCurrent: false,
-        },
+        seasons: [
+            {
+                year: 2028,
+                startDate: '2028-06-10',
+                endDate: '2028-07-09',
+                isCurrent: false,
+            },
+        ],
     },
     {
         externalId: 6,
@@ -372,12 +489,14 @@ const LEAGUES: LeagueSeed[] = [
         type: 'Tournament',
         seasonStartMonth: 1,
         logo: apiSportsLogo(6),
-        currentSeason: {
-            year: 2027,
-            startDate: '2027-01-15',
-            endDate: '2027-02-13',
-            isCurrent: false,
-        },
+        seasons: [
+            {
+                year: 2027,
+                startDate: '2027-01-15',
+                endDate: '2027-02-13',
+                isCurrent: false,
+            },
+        ],
     },
     {
         externalId: 7,
@@ -386,17 +505,19 @@ const LEAGUES: LeagueSeed[] = [
         type: 'Tournament',
         seasonStartMonth: 1,
         logo: apiSportsLogo(7),
-        currentSeason: {
-            year: 2027,
-            startDate: '2027-01-07',
-            endDate: '2027-02-05',
-            isCurrent: false,
-        },
+        seasons: [
+            {
+                year: 2027,
+                startDate: '2027-01-07',
+                endDate: '2027-02-05',
+                isCurrent: false,
+            },
+        ],
     },
 ]
 
 async function main() {
-    console.warn(`Seeding ${LEAGUES.length} leagues + their current LeagueSeasons…`)
+    console.warn(`Seeding ${LEAGUES.length} leagues + their LeagueSeasons…`)
 
     let leaguesUpserted = 0
     let seasonsUpserted = 0
@@ -425,33 +546,42 @@ async function main() {
 
         leaguesUpserted++
 
-        await prisma.leagueSeason.upsert({
-            where: {
-                leagueId_year: { leagueId: league.id, year: seed.currentSeason.year },
-            },
-            create: {
-                leagueId: league.id,
-                year: seed.currentSeason.year,
-                startDate: new Date(seed.currentSeason.startDate),
-                endDate: new Date(seed.currentSeason.endDate),
-                isCurrent: seed.currentSeason.isCurrent,
-            },
-            update: {
-                startDate: new Date(seed.currentSeason.startDate),
-                endDate: new Date(seed.currentSeason.endDate),
-                isCurrent: seed.currentSeason.isCurrent,
-            },
-        })
+        const currentCount = seed.seasons.filter((season) => season.isCurrent).length
 
-        seasonsUpserted++
+        if (currentCount > 1) {
+            throw new Error(`${seed.name}: ${currentCount} seasons flagged isCurrent, expected at most 1`)
+        }
+
+        for (const season of seed.seasons) {
+            await prisma.leagueSeason.upsert({
+                where: {
+                    leagueId_year: { leagueId: league.id, year: season.year },
+                },
+                create: {
+                    leagueId: league.id,
+                    year: season.year,
+                    startDate: new Date(season.startDate),
+                    endDate: new Date(season.endDate),
+                    isCurrent: season.isCurrent,
+                },
+                update: {
+                    startDate: new Date(season.startDate),
+                    endDate: new Date(season.endDate),
+                    isCurrent: season.isCurrent,
+                },
+            })
+
+            seasonsUpserted++
+        }
     }
 
-    // Link any existing PL competitions to the PL 2025 season for the browser
+    // Link any legacy unscoped competitions to the PL season they were played in.
     const pl = await prisma.league.findUnique({ where: { externalId: 39 } })
 
     if (pl) {
-        const plSeason = await prisma.leagueSeason.findUnique({
-            where: { leagueId_year: { leagueId: pl.id, year: 2025 } },
+        const plSeason = await prisma.leagueSeason.findFirst({
+            where: { leagueId: pl.id },
+            orderBy: { year: 'asc' },
         })
 
         if (plSeason) {
@@ -460,7 +590,7 @@ async function main() {
                 data: { leagueSeasonId: plSeason.id },
             })
 
-            console.warn(`Linked ${linked.count} unscoped competitions to Premier League 2025`)
+            console.warn(`Linked ${linked.count} unscoped competitions to Premier League ${plSeason.year}`)
         }
     }
 

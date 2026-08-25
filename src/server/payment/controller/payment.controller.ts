@@ -10,6 +10,11 @@ const checkoutSchema = z.object({
     coinAmount: z.number().int().positive(),
 })
 
+// Only the amount of money crosses the wire — the coin count is server-derived.
+const customCheckoutSchema = z.object({
+    amountCents: z.number().int().positive(),
+})
+
 export class PaymentController {
     private readonly paymentService: IPaymentService
 
@@ -25,6 +30,16 @@ export class PaymentController {
         const { coinAmount } = await parseJson(req, checkoutSchema)
 
         return this.paymentService.createCheckout(userId, coinAmount)
+    })
+
+    createCustomCheckout = withController(async (req) => {
+        const userId = await requireUserId(req)
+
+        if (isAuthError(userId)) return userId
+
+        const { amountCents } = await parseJson(req, customCheckoutSchema)
+
+        return this.paymentService.createCustomCheckout(userId, amountCents)
     })
 
     handleWebhook = async (req: Request): Promise<NextResponse> => {

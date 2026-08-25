@@ -60,6 +60,22 @@ export type League = Prisma.LeagueModel
  */
 export type LeagueSeason = Prisma.LeagueSeasonModel
 /**
+ * Model LeagueMembership
+ * *
+ *  * A user's season-long enrolment in a league. Created the moment the user joins,
+ *  * independently of whether they have picked a squad yet — this is what "My Leagues"
+ *  * is built from. One row per user per league season.
+ */
+export type LeagueMembership = Prisma.LeagueMembershipModel
+/**
+ * Model LeagueSeasonTeam
+ * *
+ *  * Which clubs play in a league season. Clubs move between leagues year to year,
+ *  * so the link is per season rather than per league. Populated by the squad sync;
+ *  * lets anything that needs a league-correct player pool resolve one locally.
+ */
+export type LeagueSeasonTeam = Prisma.LeagueSeasonTeamModel
+/**
  * Model FantasyTeam
  *
  */

@@ -8,6 +8,11 @@
         "postinstall": "npx prisma generate --schema prisma/schema",
         "start": "next start",
         "lint": "eslint",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "seed:demo": "tsx -r dotenv/config scripts/seed-demo-competitors.ts",
+        "demo:process": "tsx -r dotenv/config scripts/process-demo-competitions.ts",
+        "demo:recalc": "tsx -r dotenv/config scripts/recalculate-demo-scores.ts",
         "commit": "cz",
         "prepare": "husky"
     },
@@ -57,7 +62,9 @@
         "prettier": "^3.8.1",
         "prisma": "^7.5.0",
         "tailwindcss": "^4",
-        "typescript": "^5"
+        "typescript": "^5",
+        "vite-tsconfig-paths": "^6.1.1",
+        "vitest": "^3.2.7"
     },
     "config": {
         "commitizen": {

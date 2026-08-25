@@ -1,0 +1,99 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - button "Premier Fantasy Premier League" [ref=e9]:
+            - img [ref=e11]
+            - generic [ref=e16]:
+              - generic [ref=e17]: Premier Fantasy
+              - generic [ref=e18]: Premier League
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: Overview
+          - list [ref=e23]:
+            - listitem [ref=e24]:
+              - link "Dashboard" [ref=e25] [cursor=pointer]:
+                - /url: /dashboard
+                - button "Dashboard" [ref=e26]:
+                  - img [ref=e27]
+                  - generic [ref=e32]: Dashboard
+        - generic [ref=e33]:
+          - generic [ref=e34]: Fantasy
+          - list [ref=e36]:
+            - listitem [ref=e37]:
+              - link "Leagues" [ref=e38] [cursor=pointer]:
+                - /url: /leagues
+                - button "Leagues" [ref=e39]:
+                  - img [ref=e40]
+                  - generic [ref=e45]: Leagues
+            - listitem [ref=e46]:
+              - link "Competitions" [ref=e47] [cursor=pointer]:
+                - /url: /competitions
+                - button "Competitions" [ref=e48]:
+                  - img [ref=e49]
+                  - generic [ref=e54]: Competitions
+            - listitem [ref=e55]:
+              - link "Team Builder" [ref=e56] [cursor=pointer]:
+                - /url: /fantasy-team-builder
+                - button "Team Builder" [ref=e57]:
+                  - img [ref=e58]
+                  - generic [ref=e63]: Team Builder
+        - generic [ref=e64]:
+          - generic [ref=e65]: Account
+          - list [ref=e67]:
+            - listitem [ref=e68]:
+              - link "Profile" [ref=e69] [cursor=pointer]:
+                - /url: /profile
+                - button "Profile" [ref=e70]:
+                  - img [ref=e71]
+                  - generic [ref=e74]: Profile
+            - listitem [ref=e75]:
+              - link "Wallet" [ref=e76] [cursor=pointer]:
+                - /url: /wallet
+                - button "Wallet" [ref=e77]:
+                  - img [ref=e78]
+                  - generic [ref=e85]: Wallet
+      - list [ref=e87]:
+        - listitem [ref=e88]:
+          - button "Ro Round 2 Tester tester+1778435184@example.test" [ref=e136]:
+            - generic [ref=e138]: Ro
+            - generic [ref=e139]:
+              - generic [ref=e140]: Round 2 Tester
+              - generic [ref=e141]: tester+1778435184@example.test
+      - button "Toggle Sidebar" [ref=e94]
+    - main [ref=e95]:
+      - generic [ref=e96]:
+        - button "Toggle Sidebar" [ref=e97]:
+          - img
+          - generic [ref=e98]: Toggle Sidebar
+        - separator [ref=e99]
+        - heading "Competition" [level=1] [ref=e539]
+        - button [ref=e102]:
+          - img
+      - generic [ref=e540]:
+        - generic [ref=e541]:
+          - generic [ref=e542]:
+            - generic [ref=e543]:
+              - heading "GW36–GW38" [level=2] [ref=e544]
+              - generic [ref=e545]: active
+            - paragraph [ref=e546]: GW 36 → GW 38
+          - link "Back to Competitions" [ref=e547] [cursor=pointer]:
+            - /url: /competitions
+            - button "Back to Competitions" [ref=e548]
+        - generic [ref=e549]:
+          - generic [ref=e551]: Leaderboard
+          - paragraph [ref=e553]: No entries yet.
+  - region "Notifications alt+T"
+  - generic [ref=e131] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e132]:
+      - img [ref=e133]
+    - generic [ref=e529]:
+      - button "Open issues overlay" [ref=e530]:
+        - generic [ref=e531]:
+          - generic [ref=e532]: "0"
+          - generic [ref=e533]: "1"
+        - generic [ref=e534]: Issue
+      - button "Collapse issues badge" [ref=e535]:
+        - img [ref=e536]
+  - alert [ref=e538]

@@ -1,11 +1,12 @@
 model FantasyTeam {
-  id            String @id @default(uuid())
-  userId        String @map("user_id")
-  competitionId String @map("competition_id")
+  id            String  @id @default(uuid())
+  userId        String  @map("user_id")
+  competitionId String  @map("competition_id")
   name          String
-  budgetTotal   Float  @default(100) @map("budget_total")
-  budgetLeft    Float  @map("budget_left")
-  freeTransfers Int    @default(1) @map("free_transfers")
+  budgetTotal   Float   @default(100) @map("budget_total")
+  budgetLeft    Float   @map("budget_left")
+  freeTransfers Int     @default(1) @map("free_transfers")
+  isDemo        Boolean @default(false) @map("is_demo")
 
   createdAt DateTime @default(now()) @map("created_at")
 

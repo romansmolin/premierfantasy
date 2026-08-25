@@ -1,0 +1,156 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - button "Premier Fantasy Premier League" [ref=e9]:
+            - img [ref=e11]
+            - generic [ref=e16]:
+              - generic [ref=e17]: Premier Fantasy
+              - generic [ref=e18]: Premier League
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: Overview
+          - list [ref=e23]:
+            - listitem [ref=e24]:
+              - link "Dashboard" [ref=e25] [cursor=pointer]:
+                - /url: /dashboard
+                - button "Dashboard" [ref=e26]:
+                  - img [ref=e27]
+                  - generic [ref=e32]: Dashboard
+        - generic [ref=e33]:
+          - generic [ref=e34]: Fantasy
+          - list [ref=e36]:
+            - listitem [ref=e37]:
+              - link "Leagues" [ref=e38] [cursor=pointer]:
+                - /url: /leagues
+                - button "Leagues" [ref=e39]:
+                  - img [ref=e40]
+                  - generic [ref=e45]: Leagues
+            - listitem [ref=e46]:
+              - link "Competitions" [ref=e47] [cursor=pointer]:
+                - /url: /competitions
+                - button "Competitions" [ref=e48]:
+                  - img [ref=e49]
+                  - generic [ref=e54]: Competitions
+            - listitem [ref=e55]:
+              - link "Team Builder" [ref=e56] [cursor=pointer]:
+                - /url: /fantasy-team-builder
+                - button "Team Builder" [ref=e57]:
+                  - img [ref=e58]
+                  - generic [ref=e63]: Team Builder
+        - generic [ref=e64]:
+          - generic [ref=e65]: Account
+          - list [ref=e67]:
+            - listitem [ref=e68]:
+              - link "Profile" [ref=e69] [cursor=pointer]:
+                - /url: /profile
+                - button "Profile" [ref=e70]:
+                  - img [ref=e71]
+                  - generic [ref=e74]: Profile
+            - listitem [ref=e75]:
+              - link "Wallet" [ref=e76] [cursor=pointer]:
+                - /url: /wallet
+                - button "Wallet" [ref=e77]:
+                  - img [ref=e78]
+                  - generic [ref=e85]: Wallet
+      - list [ref=e87]:
+        - listitem [ref=e88]:
+          - button [ref=e89]
+      - button "Toggle Sidebar" [ref=e94]
+    - main [ref=e95]:
+      - generic [ref=e96]:
+        - button "Toggle Sidebar" [ref=e97]:
+          - img
+          - generic [ref=e98]: Toggle Sidebar
+        - separator [ref=e99]
+        - heading "Team Builder" [level=1] [ref=e100]
+        - button [ref=e102]:
+          - img
+      - generic [ref=e105]:
+        - generic [ref=e108]:
+          - generic [ref=e109]: 👆
+          - paragraph [ref=e110]: "Getting started: Select a team badge above to browse players, then check the box next to a player to add them to your squad."
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - generic [ref=e114]: Players Explorer
+              - generic [ref=e115]: Select teams where your desired players are playing
+            - generic [ref=e117]:
+              - generic [ref=e120]:
+                - textbox "Search by player name..." [ref=e121]
+                - generic [ref=e122]:
+                  - generic [ref=e123]: "Position:"
+                  - generic [ref=e124] [cursor=pointer]: GK
+                  - generic [ref=e125] [cursor=pointer]: DEF
+                  - generic [ref=e126] [cursor=pointer]: MID
+                  - generic [ref=e127] [cursor=pointer]: FWD
+              - table "0 players from selected teams" [ref=e130]:
+                - caption [ref=e131]: 0 players from selected teams
+                - rowgroup [ref=e132]:
+                  - row "Player Club Position Price Age Number" [ref=e133]:
+                    - columnheader "Player" [ref=e134]
+                    - columnheader "Club" [ref=e135]
+                    - columnheader "Position" [ref=e136]
+                    - columnheader "Price" [ref=e137]
+                    - columnheader "Age" [ref=e138]
+                    - columnheader "Number" [ref=e139]
+                    - columnheader [ref=e140]
+                - rowgroup
+          - generic [ref=e141]:
+            - generic [ref=e142]:
+              - generic [ref=e143]:
+                - generic [ref=e144]: Squad Builder
+                - generic [ref=e145]: Your selected players in formation
+              - generic [ref=e147]:
+                - combobox [ref=e148]:
+                  - generic [ref=e149]: 4-3-3
+                  - img
+                - textbox [ref=e150]: 4-3-3
+                - generic [ref=e152]:
+                  - generic [ref=e153]:
+                    - generic [ref=e156]: FWD
+                    - generic [ref=e160]: FWD
+                    - generic [ref=e164]: FWD
+                  - generic [ref=e166]:
+                    - generic [ref=e169]: MID
+                    - generic [ref=e173]: MID
+                    - generic [ref=e177]: MID
+                  - generic [ref=e179]:
+                    - generic [ref=e182]: DEF
+                    - generic [ref=e186]: DEF
+                    - generic [ref=e190]: DEF
+                    - generic [ref=e194]: DEF
+                  - generic [ref=e199]: GK
+            - generic [ref=e201]:
+              - generic [ref=e202]:
+                - generic [ref=e203]: Selection Summary
+                - generic [ref=e204]: Your squad budget, positions, and selected players
+              - generic [ref=e206]:
+                - generic [ref=e208]:
+                  - generic [ref=e209]: Budget
+                  - generic [ref=e210]: 100.0m / 100m remaining
+                - generic [ref=e212]:
+                  - generic [ref=e213]: Squad
+                  - generic [ref=e214]: 0 / 11 players
+                - generic [ref=e215]:
+                  - generic [ref=e216]: "GK: 0/1-1"
+                  - generic [ref=e217]: "DEF: 0/3-5"
+                  - generic [ref=e218]: "MID: 0/3-5"
+                  - generic [ref=e219]: "FWD: 0/1-3"
+                - button "Save Team" [disabled]:
+                  - img
+                  - text: Save Team
+  - region "Notifications alt+T"
+  - generic [ref=e224] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e225]:
+      - img [ref=e226]
+    - generic [ref=e229]:
+      - button "Open issues overlay" [ref=e230]:
+        - generic [ref=e231]:
+          - generic [ref=e232]: "0"
+          - generic [ref=e233]: "1"
+        - generic [ref=e234]: Issue
+      - button "Collapse issues badge" [ref=e235]:
+        - img [ref=e236]
+  - alert [ref=e238]

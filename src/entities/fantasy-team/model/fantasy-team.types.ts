@@ -6,6 +6,8 @@ export interface IFantasyTeam {
     budgetTotal: number
     budgetLeft: number
     freeTransfers: number
+    /** Seeded competitor's team — scored by the demo generator, not real stats. */
+    isDemo: boolean
     createdAt: Date
 }
 

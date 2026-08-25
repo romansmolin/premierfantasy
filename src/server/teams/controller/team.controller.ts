@@ -1,5 +1,6 @@
 import { z } from 'zod'
 
+import { LEAGUE_ID, SEASON } from '@/shared/config/league'
 import { Errors, parseQuery, withController } from '@/shared/lib/http'
 
 import type { ITeamsService } from '../service/team.service.interface'
@@ -10,6 +11,11 @@ const teamStatisticsQuerySchema = z.object({
 })
 
 const playerDetailsQuerySchema = z.object({
+    season: z.coerce.number().int().min(2000).max(2100).optional(),
+})
+
+const allTeamsQuerySchema = z.object({
+    league: z.coerce.number().int().positive().optional(),
     season: z.coerce.number().int().min(2000).max(2100).optional(),
 })
 
@@ -26,8 +32,10 @@ export class TeamController {
         this.teamService = teamService
     }
 
-    getAllTeams = withController(async () => {
-        return this.teamService.getAllTeams(39, 2025)
+    getAllTeams = withController(async (req) => {
+        const { league, season } = await parseQuery(req, allTeamsQuerySchema)
+
+        return this.teamService.getAllTeams(league ?? LEAGUE_ID, season ?? SEASON)
     })
 
     getTeamById = withController(async (_req, ctx) => {

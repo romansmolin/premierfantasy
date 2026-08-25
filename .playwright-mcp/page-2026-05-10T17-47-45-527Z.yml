@@ -1,0 +1,644 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - button "Premier Fantasy Premier League" [ref=e9]:
+            - img [ref=e11]
+            - generic [ref=e16]:
+              - generic [ref=e17]: Premier Fantasy
+              - generic [ref=e18]: Premier League
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: Overview
+          - list [ref=e23]:
+            - listitem [ref=e24]:
+              - link "Dashboard" [ref=e25] [cursor=pointer]:
+                - /url: /dashboard
+                - button "Dashboard" [ref=e26]:
+                  - img [ref=e27]
+                  - generic [ref=e32]: Dashboard
+        - generic [ref=e33]:
+          - generic [ref=e34]: Fantasy
+          - list [ref=e36]:
+            - listitem [ref=e37]:
+              - link "Leagues" [ref=e38] [cursor=pointer]:
+                - /url: /leagues
+                - button "Leagues" [ref=e39]:
+                  - img [ref=e40]
+                  - generic [ref=e45]: Leagues
+            - listitem [ref=e46]:
+              - link "Competitions" [ref=e47] [cursor=pointer]:
+                - /url: /competitions
+                - button "Competitions" [ref=e48]:
+                  - img [ref=e49]
+                  - generic [ref=e54]: Competitions
+            - listitem [ref=e55]:
+              - link "Team Builder" [ref=e56] [cursor=pointer]:
+                - /url: /fantasy-team-builder
+                - button "Team Builder" [ref=e57]:
+                  - img [ref=e58]
+                  - generic [ref=e63]: Team Builder
+        - generic [ref=e64]:
+          - generic [ref=e65]: Account
+          - list [ref=e67]:
+            - listitem [ref=e68]:
+              - link "Profile" [ref=e69] [cursor=pointer]:
+                - /url: /profile
+                - button "Profile" [ref=e70]:
+                  - img [ref=e71]
+                  - generic [ref=e74]: Profile
+            - listitem [ref=e75]:
+              - link "Wallet" [ref=e76] [cursor=pointer]:
+                - /url: /wallet
+                - button "Wallet" [ref=e77]:
+                  - img [ref=e78]
+                  - generic [ref=e85]: Wallet
+      - list [ref=e87]:
+        - listitem [ref=e88]:
+          - button "Ro Round 2 Tester tester+1778435184@example.test" [ref=e239]:
+            - generic [ref=e241]: Ro
+            - generic [ref=e242]:
+              - generic [ref=e243]: Round 2 Tester
+              - generic [ref=e244]: tester+1778435184@example.test
+      - button "Toggle Sidebar" [ref=e94]
+    - main [ref=e95]:
+      - generic [ref=e96]:
+        - button "Toggle Sidebar" [ref=e97]:
+          - img
+          - generic [ref=e98]: Toggle Sidebar
+        - separator [ref=e99]
+        - heading "Team Builder" [level=1] [ref=e100]
+        - button [ref=e102]:
+          - img
+      - generic [ref=e105]:
+        - generic [ref=e245]:
+          - generic [ref=e246]:
+            - heading "GW36–GW38" [level=2] [ref=e247]
+            - paragraph [ref=e248]: Gameweeks 36–38 · Join by 17 May
+          - generic [ref=e249]: active
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - generic [ref=e114]: Players Explorer
+              - generic [ref=e115]: Select teams where your desired players are playing
+            - generic [ref=e117]:
+              - generic [ref=e119]:
+                - img "Manchester United logo" [ref=e252] [cursor=pointer]
+                - img "Newcastle logo" [ref=e255] [cursor=pointer]
+                - img "Bournemouth logo" [ref=e258] [cursor=pointer]
+                - img "Fulham logo" [ref=e261] [cursor=pointer]
+                - img "Wolves logo" [ref=e264] [cursor=pointer]
+                - img "Liverpool logo" [ref=e267] [cursor=pointer]
+                - img "Arsenal logo" [ref=e270] [cursor=pointer]
+                - img "Burnley logo" [ref=e273] [cursor=pointer]
+                - img "Everton logo" [ref=e276] [cursor=pointer]
+                - img "Tottenham logo" [ref=e279] [cursor=pointer]
+                - img "West Ham logo" [ref=e282] [cursor=pointer]
+                - img "Chelsea logo" [ref=e285] [cursor=pointer]
+                - img "Manchester City logo" [ref=e288] [cursor=pointer]
+                - img "Brighton logo" [ref=e291] [cursor=pointer]
+                - img "Crystal Palace logo" [ref=e294] [cursor=pointer]
+                - img "Brentford logo" [ref=e297] [cursor=pointer]
+                - img "Leeds logo" [ref=e300] [cursor=pointer]
+                - img "Nottingham Forest logo" [ref=e303] [cursor=pointer]
+                - img "Aston Villa logo" [ref=e306] [cursor=pointer]
+                - img "Sunderland logo" [ref=e309] [cursor=pointer]
+              - generic [ref=e120]:
+                - textbox "Search by player name..." [ref=e121]
+                - generic [ref=e122]:
+                  - generic [ref=e123]: "Position:"
+                  - generic [ref=e124] [cursor=pointer]: GK
+                  - generic [ref=e125] [cursor=pointer]: DEF
+                  - generic [ref=e126] [cursor=pointer]: MID
+                  - generic [ref=e127] [cursor=pointer]: FWD
+              - table "31 players from selected teams" [ref=e310]:
+                - caption [ref=e131]: 31 players from selected teams
+                - rowgroup [ref=e132]:
+                  - row "Player Club Position Price Age Number" [ref=e133]:
+                    - columnheader "Player" [ref=e134]
+                    - columnheader "Club" [ref=e135]
+                    - columnheader "Position" [ref=e136]
+                    - columnheader "Price" [ref=e137]
+                    - columnheader "Age" [ref=e138]
+                    - columnheader "Number" [ref=e139]
+                    - columnheader [ref=e140]
+                - rowgroup [ref=e311]:
+                  - row "M. Dúbravka M. Dúbravka Burnley GK 4.5m 36 1" [ref=e312] [cursor=pointer]:
+                    - cell "M. Dúbravka M. Dúbravka" [ref=e313]:
+                      - generic [ref=e314]:
+                        - img "M. Dúbravka" [ref=e315]
+                        - generic [ref=e316]: M. Dúbravka
+                    - cell "Burnley" [ref=e317]
+                    - cell "GK" [ref=e318]:
+                      - generic [ref=e319]: GK
+                    - cell "4.5m" [ref=e320]
+                    - cell "36" [ref=e321]
+                    - cell "1" [ref=e322]
+                    - cell [ref=e323]:
+                      - checkbox [checked] [ref=e324]:
+                        - img [ref=e747]
+                      - checkbox [checked] [ref=e325]
+                  - row "V. Hladký V. Hladký Burnley GK 4.5m 35 32" [ref=e326] [cursor=pointer]:
+                    - cell "V. Hladký V. Hladký" [ref=e327]:
+                      - generic [ref=e328]:
+                        - img "V. Hladký" [ref=e329]
+                        - generic [ref=e330]: V. Hladký
+                    - cell "Burnley" [ref=e331]
+                    - cell "GK" [ref=e332]:
+                      - generic [ref=e333]: GK
+                    - cell "4.5m" [ref=e334]
+                    - cell "35" [ref=e335]
+                    - cell "32" [ref=e336]
+                    - cell [ref=e337]:
+                      - checkbox [ref=e338]
+                      - checkbox [ref=e339]
+                  - row "M. Weiß M. Weiß Burnley GK 4.5m 21 13" [ref=e340] [cursor=pointer]:
+                    - cell "M. Weiß M. Weiß" [ref=e341]:
+                      - generic [ref=e342]:
+                        - img "M. Weiß" [ref=e343]
+                        - generic [ref=e344]: M. Weiß
+                    - cell "Burnley" [ref=e345]
+                    - cell "GK" [ref=e346]:
+                      - generic [ref=e347]: GK
+                    - cell "4.5m" [ref=e348]
+                    - cell "21" [ref=e349]
+                    - cell "13" [ref=e350]
+                    - cell [ref=e351]:
+                      - checkbox [ref=e352]
+                      - checkbox [ref=e353]
+                  - row "H. Ekdal H. Ekdal Burnley DEF 4.5m 27 18" [ref=e354] [cursor=pointer]:
+                    - cell "H. Ekdal H. Ekdal" [ref=e355]:
+                      - generic [ref=e356]:
+                        - img "H. Ekdal" [ref=e357]
+                        - generic [ref=e358]: H. Ekdal
+                    - cell "Burnley" [ref=e359]
+                    - cell "DEF" [ref=e360]:
+                      - generic [ref=e361]: DEF
+                    - cell "4.5m" [ref=e362]
+                    - cell "27" [ref=e363]
+                    - cell "18" [ref=e364]
+                    - cell [ref=e365]:
+                      - checkbox [checked] [active] [ref=e366]:
+                        - img [ref=e765]
+                      - checkbox [checked] [ref=e367]
+                  - row "M. Estève M. Estève Burnley DEF 4.5m 23 5" [ref=e368] [cursor=pointer]:
+                    - cell "M. Estève M. Estève" [ref=e369]:
+                      - generic [ref=e370]:
+                        - img "M. Estève" [ref=e371]
+                        - generic [ref=e372]: M. Estève
+                    - cell "Burnley" [ref=e373]
+                    - cell "DEF" [ref=e374]:
+                      - generic [ref=e375]: DEF
+                    - cell "4.5m" [ref=e376]
+                    - cell "23" [ref=e377]
+                    - cell "5" [ref=e378]
+                    - cell [ref=e379]:
+                      - checkbox [ref=e380]
+                      - checkbox [ref=e381]
+                  - row "Q. Hartman Q. Hartman Burnley DEF 4.5m 24 3" [ref=e382] [cursor=pointer]:
+                    - cell "Q. Hartman Q. Hartman" [ref=e383]:
+                      - generic [ref=e384]:
+                        - img "Q. Hartman" [ref=e385]
+                        - generic [ref=e386]: Q. Hartman
+                    - cell "Burnley" [ref=e387]
+                    - cell "DEF" [ref=e388]:
+                      - generic [ref=e389]: DEF
+                    - cell "4.5m" [ref=e390]
+                    - cell "24" [ref=e391]
+                    - cell "3" [ref=e392]
+                    - cell [ref=e393]:
+                      - checkbox [ref=e394]
+                      - checkbox [ref=e395]
+                  - row "B. Humphreys B. Humphreys Burnley DEF 4.5m 22 12" [ref=e396] [cursor=pointer]:
+                    - cell "B. Humphreys B. Humphreys" [ref=e397]:
+                      - generic [ref=e398]:
+                        - img "B. Humphreys" [ref=e399]
+                        - generic [ref=e400]: B. Humphreys
+                    - cell "Burnley" [ref=e401]
+                    - cell "DEF" [ref=e402]:
+                      - generic [ref=e403]: DEF
+                    - cell "4.5m" [ref=e404]
+                    - cell "22" [ref=e405]
+                    - cell "12" [ref=e406]
+                    - cell [ref=e407]:
+                      - checkbox [ref=e408]
+                      - checkbox [ref=e409]
+                  - row "Lucas Pires Lucas Pires Burnley DEF 4.5m 24 23" [ref=e410] [cursor=pointer]:
+                    - cell "Lucas Pires Lucas Pires" [ref=e411]:
+                      - generic [ref=e412]:
+                        - img "Lucas Pires" [ref=e413]
+                        - generic [ref=e414]: Lucas Pires
+                    - cell "Burnley" [ref=e415]
+                    - cell "DEF" [ref=e416]:
+                      - generic [ref=e417]: DEF
+                    - cell "4.5m" [ref=e418]
+                    - cell "24" [ref=e419]
+                    - cell "23" [ref=e420]
+                    - cell [ref=e421]:
+                      - checkbox [ref=e422]
+                      - checkbox [ref=e423]
+                  - row "A. Tuanzebe A. Tuanzebe Burnley DEF 4.5m 28 6" [ref=e424] [cursor=pointer]:
+                    - cell "A. Tuanzebe A. Tuanzebe" [ref=e425]:
+                      - generic [ref=e426]:
+                        - img "A. Tuanzebe" [ref=e427]
+                        - generic [ref=e428]: A. Tuanzebe
+                    - cell "Burnley" [ref=e429]
+                    - cell "DEF" [ref=e430]:
+                      - generic [ref=e431]: DEF
+                    - cell "4.5m" [ref=e432]
+                    - cell "28" [ref=e433]
+                    - cell "6" [ref=e434]
+                    - cell [ref=e435]:
+                      - checkbox [ref=e436]
+                      - checkbox [ref=e437]
+                  - row "K. Walker K. Walker Burnley DEF 4.5m 35 2" [ref=e438] [cursor=pointer]:
+                    - cell "K. Walker K. Walker" [ref=e439]:
+                      - generic [ref=e440]:
+                        - img "K. Walker" [ref=e441]
+                        - generic [ref=e442]: K. Walker
+                    - cell "Burnley" [ref=e443]
+                    - cell "DEF" [ref=e444]:
+                      - generic [ref=e445]: DEF
+                    - cell "4.5m" [ref=e446]
+                    - cell "35" [ref=e447]
+                    - cell "2" [ref=e448]
+                    - cell [ref=e449]:
+                      - checkbox [ref=e450]
+                      - checkbox [ref=e451]
+                  - row "J. Worrall J. Worrall Burnley DEF 4.5m 29 4" [ref=e452] [cursor=pointer]:
+                    - cell "J. Worrall J. Worrall" [ref=e453]:
+                      - generic [ref=e454]:
+                        - img "J. Worrall" [ref=e455]
+                        - generic [ref=e456]: J. Worrall
+                    - cell "Burnley" [ref=e457]
+                    - cell "DEF" [ref=e458]:
+                      - generic [ref=e459]: DEF
+                    - cell "4.5m" [ref=e460]
+                    - cell "29" [ref=e461]
+                    - cell "4" [ref=e462]
+                    - cell [ref=e463]:
+                      - checkbox [ref=e464]
+                      - checkbox [ref=e465]
+                  - row "E. Agyei E. Agyei Burnley MID 5.5m 20 7" [ref=e466] [cursor=pointer]:
+                    - cell "E. Agyei E. Agyei" [ref=e467]:
+                      - generic [ref=e468]:
+                        - img "E. Agyei" [ref=e469]
+                        - generic [ref=e470]: E. Agyei
+                    - cell "Burnley" [ref=e471]
+                    - cell "MID" [ref=e472]:
+                      - generic [ref=e473]: MID
+                    - cell "5.5m" [ref=e474]
+                    - cell "20" [ref=e475]
+                    - cell "7" [ref=e476]
+                    - cell [ref=e477]:
+                      - checkbox [ref=e478]
+                      - checkbox [ref=e479]
+                  - row "G. Brierley G. Brierley Burnley MID 5.5m 18 6" [ref=e480] [cursor=pointer]:
+                    - cell "G. Brierley G. Brierley" [ref=e481]:
+                      - generic [ref=e482]:
+                        - img "G. Brierley" [ref=e483]
+                        - generic [ref=e484]: G. Brierley
+                    - cell "Burnley" [ref=e485]
+                    - cell "MID" [ref=e486]:
+                      - generic [ref=e487]: MID
+                    - cell "5.5m" [ref=e488]
+                    - cell "18" [ref=e489]
+                    - cell "6" [ref=e490]
+                    - cell [ref=e491]:
+                      - checkbox [ref=e492]
+                      - checkbox [ref=e493]
+                  - row "J. Bruun Larsen J. Bruun Larsen Burnley MID 5.5m 27 7" [ref=e494] [cursor=pointer]:
+                    - cell "J. Bruun Larsen J. Bruun Larsen" [ref=e495]:
+                      - generic [ref=e496]:
+                        - img "J. Bruun Larsen" [ref=e497]
+                        - generic [ref=e498]: J. Bruun Larsen
+                    - cell "Burnley" [ref=e499]
+                    - cell "MID" [ref=e500]:
+                      - generic [ref=e501]: MID
+                    - cell "5.5m" [ref=e502]
+                    - cell "27" [ref=e503]
+                    - cell "7" [ref=e504]
+                    - cell [ref=e505]:
+                      - checkbox [ref=e506]
+                      - checkbox [ref=e507]
+                  - row "J. Cullen J. Cullen Burnley MID 5.5m 29 24" [ref=e508] [cursor=pointer]:
+                    - cell "J. Cullen J. Cullen" [ref=e509]:
+                      - generic [ref=e510]:
+                        - img "J. Cullen" [ref=e511]
+                        - generic [ref=e512]: J. Cullen
+                    - cell "Burnley" [ref=e513]
+                    - cell "MID" [ref=e514]:
+                      - generic [ref=e515]: MID
+                    - cell "5.5m" [ref=e516]
+                    - cell "29" [ref=e517]
+                    - cell "24" [ref=e518]
+                    - cell [ref=e519]:
+                      - checkbox [ref=e520]
+                      - checkbox [ref=e521]
+                  - row "Z. Flemming Z. Flemming Burnley FWD 6.5m 27 19" [ref=e522] [cursor=pointer]:
+                    - cell "Z. Flemming Z. Flemming" [ref=e523]:
+                      - generic [ref=e524]:
+                        - img "Z. Flemming" [ref=e525]
+                        - generic [ref=e526]: Z. Flemming
+                    - cell "Burnley" [ref=e527]
+                    - cell "FWD" [ref=e528]:
+                      - generic [ref=e529]: FWD
+                    - cell "6.5m" [ref=e530]
+                    - cell "27" [ref=e531]
+                    - cell "19" [ref=e532]
+                    - cell [ref=e533]:
+                      - checkbox [ref=e534]
+                      - checkbox [ref=e535]
+                  - row "Florentino Florentino Burnley MID 5.5m 26 16" [ref=e536] [cursor=pointer]:
+                    - cell "Florentino Florentino" [ref=e537]:
+                      - generic [ref=e538]:
+                        - img "Florentino" [ref=e539]
+                        - generic [ref=e540]: Florentino
+                    - cell "Burnley" [ref=e541]
+                    - cell "MID" [ref=e542]:
+                      - generic [ref=e543]: MID
+                    - cell "5.5m" [ref=e544]
+                    - cell "26" [ref=e545]
+                    - cell "16" [ref=e546]
+                    - cell [ref=e547]:
+                      - checkbox [ref=e548]
+                      - checkbox [ref=e549]
+                  - row "J. Laurent J. Laurent Burnley MID 5.5m 30 29" [ref=e550] [cursor=pointer]:
+                    - cell "J. Laurent J. Laurent" [ref=e551]:
+                      - generic [ref=e552]:
+                        - img "J. Laurent" [ref=e553]
+                        - generic [ref=e554]: J. Laurent
+                    - cell "Burnley" [ref=e555]
+                    - cell "MID" [ref=e556]:
+                      - generic [ref=e557]: MID
+                    - cell "5.5m" [ref=e558]
+                    - cell "30" [ref=e559]
+                    - cell "29" [ref=e560]
+                    - cell [ref=e561]:
+                      - checkbox [ref=e562]
+                      - checkbox [ref=e563]
+                  - row "K. M. Brown K. M. Brown Burnley MID 5.5m 17 —" [ref=e564] [cursor=pointer]:
+                    - cell "K. M. Brown K. M. Brown" [ref=e565]:
+                      - generic [ref=e566]:
+                        - img "K. M. Brown" [ref=e567]
+                        - generic [ref=e568]: K. M. Brown
+                    - cell "Burnley" [ref=e569]
+                    - cell "MID" [ref=e570]:
+                      - generic [ref=e571]: MID
+                    - cell "5.5m" [ref=e572]
+                    - cell "17" [ref=e573]
+                    - cell "—" [ref=e574]
+                    - cell [ref=e575]:
+                      - checkbox [ref=e576]
+                      - checkbox [ref=e577]
+                  - row "H. Mejbri H. Mejbri Burnley MID 5.5m 22 28" [ref=e578] [cursor=pointer]:
+                    - cell "H. Mejbri H. Mejbri" [ref=e579]:
+                      - generic [ref=e580]:
+                        - img "H. Mejbri" [ref=e581]
+                        - generic [ref=e582]: H. Mejbri
+                    - cell "Burnley" [ref=e583]
+                    - cell "MID" [ref=e584]:
+                      - generic [ref=e585]: MID
+                    - cell "5.5m" [ref=e586]
+                    - cell "22" [ref=e587]
+                    - cell "28" [ref=e588]
+                    - cell [ref=e589]:
+                      - checkbox [ref=e590]
+                      - checkbox [ref=e591]
+                  - row "O. Pimlott O. Pimlott Burnley MID 5.5m 18 3" [ref=e592] [cursor=pointer]:
+                    - cell "O. Pimlott O. Pimlott" [ref=e593]:
+                      - generic [ref=e594]:
+                        - img "O. Pimlott" [ref=e595]
+                        - generic [ref=e596]: O. Pimlott
+                    - cell "Burnley" [ref=e597]
+                    - cell "MID" [ref=e598]:
+                      - generic [ref=e599]: MID
+                    - cell "5.5m" [ref=e600]
+                    - cell "18" [ref=e601]
+                    - cell "3" [ref=e602]
+                    - cell [ref=e603]:
+                      - checkbox [ref=e604]
+                      - checkbox [ref=e605]
+                  - row "L. Ugochukwu L. Ugochukwu Burnley MID 5.5m 21 8" [ref=e606] [cursor=pointer]:
+                    - cell "L. Ugochukwu L. Ugochukwu" [ref=e607]:
+                      - generic [ref=e608]:
+                        - img "L. Ugochukwu" [ref=e609]
+                        - generic [ref=e610]: L. Ugochukwu
+                    - cell "Burnley" [ref=e611]
+                    - cell "MID" [ref=e612]:
+                      - generic [ref=e613]: MID
+                    - cell "5.5m" [ref=e614]
+                    - cell "21" [ref=e615]
+                    - cell "8" [ref=e616]
+                    - cell [ref=e617]:
+                      - checkbox [ref=e618]
+                      - checkbox [ref=e619]
+                  - row "J. Ward-Prowse J. Ward-Prowse Burnley MID 5.5m 31 20" [ref=e620] [cursor=pointer]:
+                    - cell "J. Ward-Prowse J. Ward-Prowse" [ref=e621]:
+                      - generic [ref=e622]:
+                        - img "J. Ward-Prowse" [ref=e623]
+                        - generic [ref=e624]: J. Ward-Prowse
+                    - cell "Burnley" [ref=e625]
+                    - cell "MID" [ref=e626]:
+                      - generic [ref=e627]: MID
+                    - cell "5.5m" [ref=e628]
+                    - cell "31" [ref=e629]
+                    - cell "20" [ref=e630]
+                    - cell [ref=e631]:
+                      - checkbox [ref=e632]
+                      - checkbox [ref=e633]
+                  - row "Z. Amdouni Z. Amdouni Burnley FWD 6.5m 25 25" [ref=e634] [cursor=pointer]:
+                    - cell "Z. Amdouni Z. Amdouni" [ref=e635]:
+                      - generic [ref=e636]:
+                        - img "Z. Amdouni" [ref=e637]
+                        - generic [ref=e638]: Z. Amdouni
+                    - cell "Burnley" [ref=e639]
+                    - cell "FWD" [ref=e640]:
+                      - generic [ref=e641]: FWD
+                    - cell "6.5m" [ref=e642]
+                    - cell "25" [ref=e643]
+                    - cell "25" [ref=e644]
+                    - cell [ref=e645]:
+                      - checkbox [ref=e646]
+                      - checkbox [ref=e647]
+                  - row "J. Anthony J. Anthony Burnley MID 5.5m 26 11" [ref=e648] [cursor=pointer]:
+                    - cell "J. Anthony J. Anthony" [ref=e649]:
+                      - generic [ref=e650]:
+                        - img "J. Anthony" [ref=e651]
+                        - generic [ref=e652]: J. Anthony
+                    - cell "Burnley" [ref=e653]
+                    - cell "MID" [ref=e654]:
+                      - generic [ref=e655]: MID
+                    - cell "5.5m" [ref=e656]
+                    - cell "26" [ref=e657]
+                    - cell "11" [ref=e658]
+                    - cell [ref=e659]:
+                      - checkbox [ref=e660]
+                      - checkbox [ref=e661]
+                  - row "A. Barnes A. Barnes Burnley FWD 6.5m 36 35" [ref=e662] [cursor=pointer]:
+                    - cell "A. Barnes A. Barnes" [ref=e663]:
+                      - generic [ref=e664]:
+                        - img "A. Barnes" [ref=e665]
+                        - generic [ref=e666]: A. Barnes
+                    - cell "Burnley" [ref=e667]
+                    - cell "FWD" [ref=e668]:
+                      - generic [ref=e669]: FWD
+                    - cell "6.5m" [ref=e670]
+                    - cell "36" [ref=e671]
+                    - cell "35" [ref=e672]
+                    - cell [ref=e673]:
+                      - checkbox [ref=e674]
+                      - checkbox [ref=e675]
+                  - row "A. Broja A. Broja Burnley FWD 6.5m 24 27" [ref=e676] [cursor=pointer]:
+                    - cell "A. Broja A. Broja" [ref=e677]:
+                      - generic [ref=e678]:
+                        - img "A. Broja" [ref=e679]
+                        - generic [ref=e680]: A. Broja
+                    - cell "Burnley" [ref=e681]
+                    - cell "FWD" [ref=e682]:
+                      - generic [ref=e683]: FWD
+                    - cell "6.5m" [ref=e684]
+                    - cell "24" [ref=e685]
+                    - cell "27" [ref=e686]
+                    - cell [ref=e687]:
+                      - checkbox [ref=e688]
+                      - checkbox [ref=e689]
+                  - row "M. Edwards M. Edwards Burnley FWD 6.5m 27 10" [ref=e690] [cursor=pointer]:
+                    - cell "M. Edwards M. Edwards" [ref=e691]:
+                      - generic [ref=e692]:
+                        - img "M. Edwards" [ref=e693]
+                        - generic [ref=e694]: M. Edwards
+                    - cell "Burnley" [ref=e695]
+                    - cell "FWD" [ref=e696]:
+                      - generic [ref=e697]: FWD
+                    - cell "6.5m" [ref=e698]
+                    - cell "27" [ref=e699]
+                    - cell "10" [ref=e700]
+                    - cell [ref=e701]:
+                      - checkbox [ref=e702]
+                      - checkbox [ref=e703]
+                  - row "L. Foster L. Foster Burnley FWD 6.5m 25 9" [ref=e704] [cursor=pointer]:
+                    - cell "L. Foster L. Foster" [ref=e705]:
+                      - generic [ref=e706]:
+                        - img "L. Foster" [ref=e707]
+                        - generic [ref=e708]: L. Foster
+                    - cell "Burnley" [ref=e709]
+                    - cell "FWD" [ref=e710]:
+                      - generic [ref=e711]: FWD
+                    - cell "6.5m" [ref=e712]
+                    - cell "25" [ref=e713]
+                    - cell "9" [ref=e714]
+                    - cell [ref=e715]:
+                      - checkbox [ref=e716]
+                      - checkbox [ref=e717]
+                  - row "L. Tchaouna L. Tchaouna Burnley MID 5.5m 22 17" [ref=e718] [cursor=pointer]:
+                    - cell "L. Tchaouna L. Tchaouna" [ref=e719]:
+                      - generic [ref=e720]:
+                        - img "L. Tchaouna" [ref=e721]
+                        - generic [ref=e722]: L. Tchaouna
+                    - cell "Burnley" [ref=e723]
+                    - cell "MID" [ref=e724]:
+                      - generic [ref=e725]: MID
+                    - cell "5.5m" [ref=e726]
+                    - cell "22" [ref=e727]
+                    - cell "17" [ref=e728]
+                    - cell [ref=e729]:
+                      - checkbox [ref=e730]
+                      - checkbox [ref=e731]
+                  - row "M. Trésor M. Trésor Burnley FWD 6.5m 26 31" [ref=e732] [cursor=pointer]:
+                    - cell "M. Trésor M. Trésor" [ref=e733]:
+                      - generic [ref=e734]:
+                        - img "M. Trésor" [ref=e735]
+                        - generic [ref=e736]: M. Trésor
+                    - cell "Burnley" [ref=e737]
+                    - cell "FWD" [ref=e738]:
+                      - generic [ref=e739]: FWD
+                    - cell "6.5m" [ref=e740]
+                    - cell "26" [ref=e741]
+                    - cell "31" [ref=e742]
+                    - cell [ref=e743]:
+                      - checkbox [ref=e744]
+                      - checkbox [ref=e745]
+          - generic [ref=e141]:
+            - generic [ref=e142]:
+              - generic [ref=e143]:
+                - generic [ref=e144]: Squad Builder
+                - generic [ref=e145]: Your selected players in formation
+              - generic [ref=e147]:
+                - combobox [ref=e148]:
+                  - generic [ref=e149]: 4-3-3
+                  - img
+                - textbox [ref=e150]: 4-3-3
+                - generic [ref=e152]:
+                  - generic [ref=e153]:
+                    - generic [ref=e156]: FWD
+                    - generic [ref=e160]: FWD
+                    - generic [ref=e164]: FWD
+                  - generic [ref=e166]:
+                    - generic [ref=e169]: MID
+                    - generic [ref=e173]: MID
+                    - generic [ref=e177]: MID
+                  - generic [ref=e179]:
+                    - button "H. Ekdal H. Ekdal" [ref=e767] [cursor=pointer]:
+                      - img "H. Ekdal" [ref=e769]
+                      - generic [ref=e770]: H. Ekdal
+                    - generic [ref=e186]: DEF
+                    - generic [ref=e190]: DEF
+                    - generic [ref=e194]: DEF
+                  - button "M. Dúbravka M. Dúbravka" [ref=e749] [cursor=pointer]:
+                    - img "M. Dúbravka" [ref=e751]
+                    - generic [ref=e752]: M. Dúbravka
+            - generic [ref=e201]:
+              - generic [ref=e202]:
+                - generic [ref=e203]: Selection Summary
+                - generic [ref=e204]: Your squad budget, positions, and selected players
+              - generic [ref=e206]:
+                - generic [ref=e208]:
+                  - generic [ref=e209]: Budget
+                  - generic [ref=e210]: 91.0m / 100m remaining
+                - generic [ref=e212]:
+                  - generic [ref=e213]: Squad
+                  - generic [ref=e214]: 2 / 11 players
+                - generic [ref=e215]:
+                  - generic [ref=e216]: "GK: 1/1-1"
+                  - generic [ref=e217]: "DEF: 1/3-5"
+                  - generic [ref=e218]: "MID: 0/3-5"
+                  - generic [ref=e219]: "FWD: 0/1-3"
+                - generic [ref=e754]:
+                  - generic [ref=e755]: Selected Players
+                  - generic [ref=e756]:
+                    - generic [ref=e757]:
+                      - generic [ref=e758]:
+                        - img "M. Dúbravka" [ref=e759]
+                        - generic [ref=e760]: M. Dúbravka
+                        - generic [ref=e761]: GK
+                        - generic [ref=e762]: 4.5m
+                      - button "Remove" [ref=e763]:
+                        - img
+                        - text: Remove
+                    - generic [ref=e771]:
+                      - generic [ref=e772]:
+                        - img "H. Ekdal" [ref=e773]
+                        - generic [ref=e774]: H. Ekdal
+                        - generic [ref=e775]: DEF
+                        - generic [ref=e776]: 4.5m
+                      - button "Remove" [ref=e777]:
+                        - img
+                        - text: Remove
+                - button "Save Team" [disabled]:
+                  - img
+                  - text: Save Team
+  - region "Notifications alt+T"
+  - generic [ref=e224] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e225]:
+      - img [ref=e226]
+    - generic [ref=e229]:
+      - button "Open issues overlay" [ref=e230]:
+        - generic [ref=e231]:
+          - generic [ref=e232]: "0"
+          - generic [ref=e233]: "1"
+        - generic [ref=e234]: Issue
+      - button "Collapse issues badge" [ref=e235]:
+        - img [ref=e236]
+  - alert [ref=e238]

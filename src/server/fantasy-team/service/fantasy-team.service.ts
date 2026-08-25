@@ -7,6 +7,7 @@ import type {
 import { BUDGET_TOTAL } from '@/entities/players'
 
 import { SEASON } from '@/shared/config/league'
+import { Errors } from '@/shared/lib/http'
 
 import type { IFantasyTeamService, SaveSquadPlayer } from './fantasy-team.service.interface'
 import type {
@@ -14,22 +15,30 @@ import type {
     SquadPlayerRow,
     SquadPlayerWithStats,
 } from '../repository/fantasy-team.repository.interface'
+import type { IDemoCompetitionService } from '@/server/demo/service/demo-competition.service.interface'
 import type { IGameweekRepository } from '@/server/gameweek/repository/gameweek.repository.interface'
+import type { ILeagueMembershipService } from '@/server/league-membership/service/league-membership.service.interface'
 import type { IPricingService } from '@/server/pricing/service/pricing.service.interface'
 
 export class FantasyTeamService implements IFantasyTeamService {
     private readonly fantasyTeamRepository
     private readonly gameweekRepository?: IGameweekRepository
     private readonly pricingService?: IPricingService
+    private readonly leagueMembershipService?: ILeagueMembershipService
+    private readonly demoCompetitionService?: IDemoCompetitionService
 
     constructor(
         fantasyTeamRepository: IFantasyTeamRepository,
         gameweekRepository?: IGameweekRepository,
         pricingService?: IPricingService,
+        leagueMembershipService?: ILeagueMembershipService,
+        demoCompetitionService?: IDemoCompetitionService,
     ) {
         this.fantasyTeamRepository = fantasyTeamRepository
         this.gameweekRepository = gameweekRepository
         this.pricingService = pricingService
+        this.leagueMembershipService = leagueMembershipService
+        this.demoCompetitionService = demoCompetitionService
     }
 
     async getFantasyTeam(id: string): Promise<IFantasyTeam | null> {
@@ -44,15 +53,36 @@ export class FantasyTeamService implements IFantasyTeamService {
         return this.fantasyTeamRepository.findAll()
     }
 
+    /**
+     * One team per user per competition. The unique index on (userId, competitionId)
+     * is the real guard; this check turns the race-free case into a 409 the UI can act on.
+     */
     async createFantasyTeam(data: ICreateFantasyTeam): Promise<IFantasyTeam> {
         const existing = await this.fantasyTeamRepository.findByUserAndCompetition(
             data.userId,
             data.competitionId,
         )
 
-        if (existing) throw new Error('User already has a team in this competition')
+        if (existing) throw Errors.conflict('You already have a team in this competition', existing)
 
-        return this.fantasyTeamRepository.create(data)
+        // Validates the join window and records the league membership the team hangs off.
+        if (this.leagueMembershipService) {
+            await this.leagueMembershipService.joinCompetition(data.userId, data.competitionId)
+        }
+
+        const team = await this.fantasyTeamRepository.create(data)
+
+        // Top the competition up with demo competitors so the new joiner never
+        // lands in an empty room. Best-effort: seeding trouble must not fail the join.
+        if (this.demoCompetitionService) {
+            try {
+                await this.demoCompetitionService.ensureDemoParticipants(data.competitionId)
+            } catch (error) {
+                console.error('Demo seeding after join failed:', error)
+            }
+        }
+
+        return team
     }
 
     async updateFantasyTeam(id: string, data: Partial<IFantasyTeam>): Promise<IFantasyTeam> {
@@ -69,13 +99,13 @@ export class FantasyTeamService implements IFantasyTeamService {
 
     async saveSquad(fantasyTeamId: string, players: SaveSquadPlayer[]): Promise<void> {
         if (players.length !== 11) {
-            throw new Error(`Squad must have exactly 11 players (got ${players.length})`)
+            throw Errors.unprocessable(`Squad must have exactly 11 players (got ${players.length})`)
         }
 
         const totalCost = players.reduce((sum, p) => sum + p.price, 0)
 
         if (totalCost > BUDGET_TOTAL) {
-            throw new Error(`Squad cost (${totalCost}m) exceeds budget (${BUDGET_TOTAL}m)`)
+            throw Errors.unprocessable(`Squad cost (${totalCost}m) exceeds budget (${BUDGET_TOTAL}m)`)
         }
 
         if (this.pricingService) {

@@ -51,6 +51,8 @@ export const ModelName = {
     Competition: 'Competition',
     League: 'League',
     LeagueSeason: 'LeagueSeason',
+    LeagueMembership: 'LeagueMembership',
+    LeagueSeasonTeam: 'LeagueSeasonTeam',
     FantasyTeam: 'FantasyTeam',
     Transfer: 'Transfer',
     FantasyTeamPlayer: 'FantasyTeamPlayer',
@@ -93,6 +95,7 @@ export const CompetitionScalarFieldEnum = {
     joinDeadline: 'joinDeadline',
     leagueSeasonId: 'leagueSeasonId',
     visibility: 'visibility',
+    demoScoringFinalizedAt: 'demoScoringFinalizedAt',
     createdAt: 'createdAt',
 } as const
 
@@ -126,6 +129,28 @@ export const LeagueSeasonScalarFieldEnum = {
 export type LeagueSeasonScalarFieldEnum =
     (typeof LeagueSeasonScalarFieldEnum)[keyof typeof LeagueSeasonScalarFieldEnum]
 
+export const LeagueMembershipScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    leagueId: 'leagueId',
+    leagueSeasonId: 'leagueSeasonId',
+    isDemo: 'isDemo',
+    joinedAt: 'joinedAt',
+} as const
+
+export type LeagueMembershipScalarFieldEnum =
+    (typeof LeagueMembershipScalarFieldEnum)[keyof typeof LeagueMembershipScalarFieldEnum]
+
+export const LeagueSeasonTeamScalarFieldEnum = {
+    id: 'id',
+    leagueSeasonId: 'leagueSeasonId',
+    teamId: 'teamId',
+    createdAt: 'createdAt',
+} as const
+
+export type LeagueSeasonTeamScalarFieldEnum =
+    (typeof LeagueSeasonTeamScalarFieldEnum)[keyof typeof LeagueSeasonTeamScalarFieldEnum]
+
 export const FantasyTeamScalarFieldEnum = {
     id: 'id',
     userId: 'userId',
@@ -134,6 +159,7 @@ export const FantasyTeamScalarFieldEnum = {
     budgetTotal: 'budgetTotal',
     budgetLeft: 'budgetLeft',
     freeTransfers: 'freeTransfers',
+    isDemo: 'isDemo',
     createdAt: 'createdAt',
 } as const
 
@@ -274,6 +300,7 @@ export const UserScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     coinBalance: 'coinBalance',
+    isDemo: 'isDemo',
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

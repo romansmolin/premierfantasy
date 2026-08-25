@@ -41,6 +41,9 @@ export interface IInProgressSeason {
 
 export interface ILeagueRepository {
     findActiveLeagues(): Promise<ILeagueRow[]>
+    findById(leagueId: string): Promise<ILeagueRow | null>
+    /** The season a join should attach to: the flagged current one, else the one spanning `now`, else the next to start. */
+    findJoinableSeason(leagueId: string, now: Date): Promise<ILeagueSeasonRow | null>
     findSeasonsByLeagueIds(leagueIds: string[]): Promise<ILeagueSeasonRow[]>
     findPublicCompetitionsByLeagueSeasonIds(leagueSeasonIds: string[]): Promise<ICompetitionRow[]>
     findInProgressSeasons(now: Date): Promise<IInProgressSeason[]>

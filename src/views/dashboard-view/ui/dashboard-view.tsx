@@ -4,47 +4,41 @@ import { ChampionIcon, DashboardSquare01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
 
-import { useCompetitionState } from '@/entities/competition'
+import { MyLeaguesList } from '@/features/league'
+
+import { sortMyLeagues, useMyLeagues } from '@/entities/league'
 
 import { useSession } from '@/shared/lib/auth-client'
 import { buttonVariants } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 
-import { DashboardActiveClosed } from './dashboard-active-closed'
-import { DashboardActiveTeam } from './dashboard-active-team'
-import { DashboardJoinActive } from './dashboard-join-active'
-import { DashboardUpcomingTeam } from './dashboard-upcoming-team'
+import { LeagueFixturesPanel } from './league-fixtures-panel'
+import { UpcomingFixtures } from './upcoming-fixtures'
 
 export function DashboardView() {
     const { data: session } = useSession()
-    const { state, isLoading } = useCompetitionState()
+    const { myLeagues, isLoading } = useMyLeagues()
+
+    const userName = session?.user?.name ?? 'Manager'
+
+    // Fixtures below the fold default to whichever league is live first; the
+    // panel lets the user switch between every league they have joined.
+    const orderedLeagues = sortMyLeagues(myLeagues)
 
     if (isLoading) {
         return (
             <div className="space-y-4">
                 <Skeleton className="h-10 w-56" />
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    {Array.from({ length: 4 }).map((_, i) => (
-                        <Skeleton key={i} className="h-24 rounded-xl" />
+                <div className="grid gap-4 sm:grid-cols-2">
+                    {Array.from({ length: 2 }).map((_, i) => (
+                        <Skeleton key={i} className="h-48 rounded-xl" />
                     ))}
                 </div>
                 <Skeleton className="h-64 rounded-xl" />
             </div>
         )
     }
-
-    if (!state) {
-        return (
-            <div className="space-y-4">
-                <h2 className="text-lg font-semibold">Dashboard</h2>
-                <p className="text-sm text-muted-foreground">Sign in to view your competition status.</p>
-            </div>
-        )
-    }
-
-    const userId = session?.user?.id ?? ''
-    const userName = session?.user?.name ?? 'Manager'
 
     return (
         <div className="space-y-6">
@@ -54,37 +48,29 @@ export function DashboardView() {
                 </div>
                 <div>
                     <h2 className="text-lg font-bold">
-                        {state.hasTeamInActive ? `Welcome back, ${userName}` : `Welcome, ${userName}`}
+                        {myLeagues.length > 0 ? `Welcome back, ${userName}` : `Welcome, ${userName}`}
                     </h2>
-                    <p className="text-sm text-muted-foreground">Your competition overview</p>
+                    <p className="text-sm text-muted-foreground">
+                        {myLeagues.length > 0
+                            ? `You are competing in ${myLeagues.length} ${myLeagues.length === 1 ? 'league' : 'leagues'}`
+                            : 'Your competition overview'}
+                    </p>
                 </div>
             </div>
 
-            {state.canJoinActive && state.activeCompetition && (
-                <DashboardJoinActive competition={state.activeCompetition} />
-            )}
+            <section className="space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                    <h3 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+                        My Leagues
+                    </h3>
+                    <Link href="/leagues" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+                        Browse all
+                    </Link>
+                </div>
+                <MyLeaguesList />
+            </section>
 
-            {!state.canJoinActive && !state.hasTeamInActive && state.activeCompetition && (
-                <DashboardActiveClosed
-                    activeCompetition={state.activeCompetition}
-                    upcomingCompetition={state.upcomingCompetition}
-                />
-            )}
-
-            {state.hasTeamInActive && state.activeCompetition && (
-                <DashboardActiveTeam
-                    competition={state.activeCompetition}
-                    userRank={state.userRankInActive}
-                    userPoints={state.userPointsInActive}
-                    userId={userId}
-                />
-            )}
-
-            {state.hasTeamInUpcoming && !state.hasTeamInActive && state.upcomingCompetition && (
-                <DashboardUpcomingTeam competition={state.upcomingCompetition} />
-            )}
-
-            {!state.activeCompetition && !state.upcomingCompetition && (
+            {myLeagues.length === 0 && (
                 <Card className="border-dashed">
                     <CardHeader>
                         <div className="flex items-start gap-3">
@@ -92,10 +78,11 @@ export function DashboardView() {
                                 <HugeiconsIcon icon={ChampionIcon} size={20} className="text-primary" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <CardTitle>No Premier League round to join right now</CardTitle>
+                                <CardTitle>How it works</CardTitle>
                                 <p className="text-sm text-muted-foreground">
-                                    But other leagues are mid-season — MLS, Brasileirão, J1, and more. Pick
-                                    one and start playing today.
+                                    Join a league, pick 11 players inside a 100M budget (max 3 per club), and
+                                    score points every gameweek. You can run a separate team in as many
+                                    leagues as you like.
                                 </p>
                             </div>
                         </div>
@@ -107,6 +94,12 @@ export function DashboardView() {
                         </Link>
                     </CardContent>
                 </Card>
+            )}
+
+            {orderedLeagues.length > 0 ? (
+                <LeagueFixturesPanel leagues={orderedLeagues} />
+            ) : (
+                <UpcomingFixtures />
             )}
         </div>
     )

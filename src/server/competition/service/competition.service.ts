@@ -1,5 +1,6 @@
 import type {
     ICompetition,
+    ICompetitionDetail,
     ICompetitionState,
     ICreateCompetition,
     ILeaderboard,
@@ -15,6 +16,8 @@ import type { ILeagueRepository } from '@/server/league/repository/league.reposi
 import type { IWalletService } from '@/server/wallet/service/wallet.service.interface'
 
 const ROLLING_WINDOW = 5
+/** Multi-league windows span the same number of gameweeks as the PL rolling ones. */
+const LEAGUE_WINDOW_GAMEWEEKS = ROLLING_WINDOW
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 const JOIN_DEADLINE_DAYS = 7
 
@@ -39,8 +42,8 @@ export class CompetitionService implements ICompetitionService {
         this.leagueRepository = leagueRepository ?? null
     }
 
-    async getCompetition(id: string): Promise<ICompetition | null> {
-        return this.competitionRepository.findById(id)
+    async getCompetition(id: string): Promise<ICompetitionDetail | null> {
+        return this.competitionRepository.findDetailById(id)
     }
 
     async getAllCompetitions(): Promise<ICompetition[]> {
@@ -79,11 +82,11 @@ export class CompetitionService implements ICompetitionService {
     }
 
     async getActiveCompetition(): Promise<ICompetition | null> {
-        return this.competitionRepository.findActive()
+        return this.competitionRepository.findActivePremierLeague()
     }
 
     async getUpcomingCompetition(): Promise<ICompetition | null> {
-        return this.competitionRepository.findUpcoming()
+        return this.competitionRepository.findUpcomingPremierLeague()
     }
 
     async getCompetitionState(userId: string): Promise<ICompetitionState> {
@@ -91,9 +94,18 @@ export class CompetitionService implements ICompetitionService {
             throw new Error('FantasyTeamRepository is required for getCompetitionState')
         }
 
+        const now = new Date()
+
+        // Prefer the competition the user is already managing; otherwise surface the
+        // one whose join window closes soonest. Both are league-agnostic — the PL-only
+        // finders stay reserved for the gameweek transition pipeline.
+        const activeWithTeam = await this.competitionRepository.findActiveWithUserTeam(userId)
+
         const [active, upcoming] = await Promise.all([
-            this.competitionRepository.findActive(),
-            this.competitionRepository.findUpcoming(),
+            activeWithTeam
+                ? Promise.resolve(activeWithTeam)
+                : this.competitionRepository.findJoinableActive(now),
+            this.competitionRepository.findUpcomingAny(),
         ])
 
         const [activeTeam, upcomingTeam] = await Promise.all([
@@ -104,7 +116,6 @@ export class CompetitionService implements ICompetitionService {
         const hasTeamInActive = !!activeTeam
         const hasTeamInUpcoming = !!upcomingTeam
 
-        const now = new Date()
         const canJoinActive =
             !!active && !hasTeamInActive && !!active.joinDeadline && now < new Date(active.joinDeadline)
         const canJoinUpcoming = !!upcoming && !hasTeamInUpcoming
@@ -226,7 +237,7 @@ export class CompetitionService implements ICompetitionService {
             throw new Error('GameweekRepository is required for transitionCompetitions')
         }
 
-        const active = await this.competitionRepository.findActive()
+        const active = await this.competitionRepository.findActivePremierLeague()
 
         if (active) {
             const endGw = await this.gameweekRepository.findByNumber(active.endGameweek)
@@ -247,28 +258,79 @@ export class CompetitionService implements ICompetitionService {
             }
         }
 
-        const upcoming = await this.competitionRepository.findUpcoming()
+        const upcoming = await this.competitionRepository.findUpcomingPremierLeague()
 
         if (upcoming) {
             await this.competitionRepository.updateStatus(upcoming.id, 'active')
         }
     }
 
+    /**
+     * The gameweek span a newly created (or repaired) multi-league window should cover.
+     *
+     * Anchored on the live gameweek so the window still has rounds left to play;
+     * failing that, the first unfinished one. When the whole calendar is already
+     * behind us — an off-season with no next season loaded yet — it falls back to
+     * the final window of the season so competitions still show real history
+     * instead of a single stub gameweek.
+     */
+    private async resolveLeagueWindow(): Promise<{ start: number; end: number }> {
+        const fallback = { start: 1, end: LEAGUE_WINDOW_GAMEWEEKS }
+
+        if (!this.gameweekRepository) return fallback
+
+        const gameweeks = await this.gameweekRepository.findAll()
+
+        if (gameweeks.length === 0) return fallback
+
+        const sorted = [...gameweeks].sort((a, b) => a.number - b.number)
+        const last = sorted[sorted.length - 1].number
+
+        const anchor =
+            sorted.find((gameweek) => gameweek.isActive) ??
+            sorted.find((gameweek) => !gameweek.isFinished) ??
+            sorted[Math.max(0, sorted.length - LEAGUE_WINDOW_GAMEWEEKS)]
+
+        const start = anchor.number
+
+        return { start, end: Math.min(start + LEAGUE_WINDOW_GAMEWEEKS - 1, last) }
+    }
+
     async ensureCompetitionsForActiveSeasons(): Promise<{
         created: number
         reactivated: number
         skipped: number
+        widened: number
     }> {
         if (!this.leagueRepository) {
-            return { created: 0, reactivated: 0, skipped: 0 }
+            return { created: 0, reactivated: 0, skipped: 0, widened: 0 }
         }
 
         const now = new Date()
         const seasons = await this.leagueRepository.findInProgressSeasons(now)
+        const window = await this.resolveLeagueWindow()
 
         let created = 0
         let reactivated = 0
         let skipped = 0
+        let widened = 0
+
+        /**
+         * Early multi-league competitions were created as a single stub gameweek,
+         * which left their standings frozen after one round of scoring. Repair them
+         * in place rather than replacing them, so existing teams and points survive.
+         */
+        const widenIfStub = async (competition: {
+            id: string
+            startGameweek: number
+            endGameweek: number
+        }): Promise<boolean> => {
+            if (competition.startGameweek !== competition.endGameweek) return false
+
+            await this.competitionRepository.updateGameweekRange(competition.id, window.start, window.end)
+
+            return true
+        }
 
         for (const season of seasons) {
             // Premier League is managed by the gameweek-based pipeline
@@ -284,6 +346,8 @@ export class CompetitionService implements ICompetitionService {
             const existing = await this.competitionRepository.findActiveByLeagueSeasonId(season.seasonId)
 
             if (existing) {
+                if (await widenIfStub(existing)) widened++
+
                 skipped++
                 continue
             }
@@ -295,6 +359,8 @@ export class CompetitionService implements ICompetitionService {
                 // Self-heal: reactivate the most recent competition for this season
                 // instead of leaving the season with no joinable window.
                 await this.competitionRepository.updateStatus(latest.id, 'active')
+
+                if (await widenIfStub(latest)) widened++
 
                 const isStale =
                     !latest.joinDeadline || new Date(latest.joinDeadline).getTime() <= now.getTime()
@@ -312,8 +378,8 @@ export class CompetitionService implements ICompetitionService {
             await this.competitionRepository.createForLeagueSeason({
                 leagueSeasonId: season.seasonId,
                 name: `${season.leagueName} ${season.year} · ${monthName} Window`,
-                startGameweek: 1,
-                endGameweek: 1,
+                startGameweek: window.start,
+                endGameweek: window.end,
                 joinDeadline: freshJoinDeadline,
                 status: 'active',
             })
@@ -321,6 +387,6 @@ export class CompetitionService implements ICompetitionService {
             created++
         }
 
-        return { created, reactivated, skipped }
+        return { created, reactivated, skipped, widened }
     }
 }

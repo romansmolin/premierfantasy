@@ -4,6 +4,7 @@ import { prisma } from '@/shared/lib/prisma'
 
 import type {
     IFantasyTeamRepository,
+    IUserTeamSummaryRow,
     SquadPlayerRow,
     SquadPlayerWithStats,
     TransferRow,
@@ -35,6 +36,34 @@ export class FantasyTeamRepository implements IFantasyTeamRepository {
 
     async findByUserId(userId: string): Promise<IFantasyTeam[]> {
         return prisma.fantasyTeam.findMany({ where: { userId } })
+    }
+
+    async findSummariesByUserAndCompetitions(
+        userId: string,
+        competitionIds: string[],
+    ): Promise<IUserTeamSummaryRow[]> {
+        if (competitionIds.length === 0) return []
+
+        const rows = await prisma.fantasyTeam.findMany({
+            where: { userId, competitionId: { in: competitionIds } },
+            select: {
+                id: true,
+                name: true,
+                competitionId: true,
+                budgetLeft: true,
+                isDemo: true,
+                _count: { select: { players: true } },
+            },
+        })
+
+        return rows.map((r) => ({
+            id: r.id,
+            name: r.name,
+            competitionId: r.competitionId,
+            budgetLeft: r.budgetLeft,
+            isDemo: r.isDemo,
+            playerCount: r._count.players,
+        }))
     }
 
     async findByUserAndCompetition(userId: string, competitionId: string): Promise<IFantasyTeam | null> {

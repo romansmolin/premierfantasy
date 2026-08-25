@@ -13,7 +13,8 @@ model Team {
   logo       String?
   createdAt  DateTime @default(now()) @map("created_at")
 
-  players Player[]
+  players       Player[]
+  leagueSeasons LeagueSeasonTeam[]
 
   @@map("teams")
 }

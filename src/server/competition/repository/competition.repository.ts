@@ -1,5 +1,6 @@
 import type {
     ICompetition,
+    ICompetitionDetail,
     ICreateCompetition,
     ILeaderboardEntry,
 } from '@/entities/competition/model/competition.types'
@@ -9,7 +10,9 @@ import { prisma } from '@/shared/lib/prisma'
 
 import type {
     ICompetitionBrowserRow,
+    ICompetitionLeagueContext,
     ICompetitionRepository,
+    IUserStanding,
     ICreateLeagueSeasonCompetition,
 } from './competition.repository.interface'
 
@@ -26,9 +29,172 @@ const PREMIER_LEAGUE_FILTER = {
     OR: [{ leagueSeasonId: null }, { leagueSeason: { is: { league: { is: { externalId: LEAGUE_ID } } } } }],
 }
 
+type CompetitionWithLeague = {
+    id: string
+    name: string
+    startGameweek: number
+    endGameweek: number
+    status: string
+    joinDeadline: Date | null
+    createdAt: Date
+    leagueSeasonId: string | null
+    leagueSeason: {
+        id: string
+        year: number
+        league: {
+            id: string
+            externalId: number
+            name: string
+            country: string
+            logo: string | null
+            type: string
+        }
+    } | null
+}
+
+const toDetail = (row: CompetitionWithLeague): ICompetitionDetail => ({
+    id: row.id,
+    name: row.name,
+    startGameweek: row.startGameweek,
+    endGameweek: row.endGameweek,
+    status: row.status as ICompetitionDetail['status'],
+    joinDeadline: row.joinDeadline,
+    createdAt: row.createdAt,
+    leagueSeasonId: row.leagueSeasonId,
+    seasonYear: row.leagueSeason?.year ?? null,
+    league: row.leagueSeason?.league
+        ? {
+              id: row.leagueSeason.league.id,
+              externalId: row.leagueSeason.league.externalId,
+              name: row.leagueSeason.league.name,
+              country: row.leagueSeason.league.country,
+              logo: row.leagueSeason.league.logo,
+              type: row.leagueSeason.league.type,
+          }
+        : null,
+})
+
 export class CompetitionRepository implements ICompetitionRepository {
     async findById(id: string): Promise<ICompetition | null> {
         return prisma.competition.findUnique({ where: { id } }) as Promise<ICompetition | null>
+    }
+
+    async findLeagueContext(id: string): Promise<ICompetitionLeagueContext | null> {
+        const row = await prisma.competition.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                name: true,
+                status: true,
+                joinDeadline: true,
+                leagueSeasonId: true,
+                leagueSeason: { select: { leagueId: true } },
+            },
+        })
+
+        if (!row) return null
+
+        return {
+            id: row.id,
+            name: row.name,
+            status: row.status,
+            joinDeadline: row.joinDeadline,
+            leagueSeasonId: row.leagueSeasonId,
+            leagueId: row.leagueSeason?.leagueId ?? null,
+        }
+    }
+
+    /**
+     * Ranks every team in the given competitions once and returns only the rows for
+     * `userId` — one query for the whole dashboard instead of a leaderboard per card.
+     */
+    async getUserStandings(userId: string, competitionIds: string[]): Promise<Map<string, IUserStanding>> {
+        const result = new Map<string, IUserStanding>()
+
+        if (competitionIds.length === 0) return result
+
+        const competitions = await prisma.competition.findMany({
+            where: { id: { in: competitionIds } },
+            select: { id: true, startGameweek: true, endGameweek: true },
+        })
+
+        const teams = await prisma.fantasyTeam.findMany({
+            where: { competitionId: { in: competitionIds } },
+            select: {
+                id: true,
+                userId: true,
+                competitionId: true,
+                points: {
+                    select: { points: true, gameweek: { select: { number: true } } },
+                },
+            },
+        })
+
+        for (const competition of competitions) {
+            const entries = teams
+                .filter((team) => team.competitionId === competition.id)
+                .map((team) => ({
+                    userId: team.userId,
+                    totalPoints: team.points
+                        .filter(
+                            (p) =>
+                                p.gameweek.number >= competition.startGameweek &&
+                                p.gameweek.number <= competition.endGameweek,
+                        )
+                        .reduce((sum, p) => sum + p.points, 0),
+                }))
+                .sort((a, b) => b.totalPoints - a.totalPoints)
+
+            const index = entries.findIndex((entry) => entry.userId === userId)
+
+            if (index === -1) continue
+
+            result.set(competition.id, {
+                rank: index + 1,
+                totalPoints: entries[index].totalPoints,
+                participants: entries.length,
+            })
+        }
+
+        return result
+    }
+
+    async findByLeagueSeasonIds(leagueSeasonIds: string[]): Promise<ICompetitionBrowserRow[]> {
+        if (leagueSeasonIds.length === 0) return []
+
+        const rows = await prisma.competition.findMany({
+            where: { leagueSeasonId: { in: leagueSeasonIds }, visibility: 'PUBLIC' },
+            orderBy: [{ startGameweek: 'asc' }],
+            select: {
+                id: true,
+                name: true,
+                startGameweek: true,
+                endGameweek: true,
+                status: true,
+                joinDeadline: true,
+                createdAt: true,
+                leagueSeasonId: true,
+                leagueSeason: {
+                    select: {
+                        league: {
+                            select: { id: true, name: true, country: true, logo: true, type: true },
+                        },
+                    },
+                },
+            },
+        })
+
+        return rows.map((r) => ({
+            id: r.id,
+            name: r.name,
+            startGameweek: r.startGameweek,
+            endGameweek: r.endGameweek,
+            status: r.status,
+            joinDeadline: r.joinDeadline,
+            createdAt: r.createdAt,
+            leagueSeasonId: r.leagueSeasonId,
+            league: r.leagueSeason?.league ?? null,
+        }))
     }
 
     async findAll(): Promise<ICompetition[]> {
@@ -42,17 +208,61 @@ export class CompetitionRepository implements ICompetitionRepository {
         }) as Promise<ICompetition[]>
     }
 
-    async findActive(): Promise<ICompetition | null> {
+    async findActivePremierLeague(): Promise<ICompetition | null> {
         return prisma.competition.findFirst({
             where: { status: 'active', ...PREMIER_LEAGUE_FILTER },
         }) as Promise<ICompetition | null>
     }
 
-    async findUpcoming(): Promise<ICompetition | null> {
+    async findUpcomingPremierLeague(): Promise<ICompetition | null> {
         return prisma.competition.findFirst({
             where: { status: 'upcoming', ...PREMIER_LEAGUE_FILTER },
             orderBy: { startGameweek: 'asc' },
         }) as Promise<ICompetition | null>
+    }
+
+    async findDetailById(id: string): Promise<ICompetitionDetail | null> {
+        const row = await prisma.competition.findUnique({
+            where: { id },
+            include: { leagueSeason: { include: { league: true } } },
+        })
+
+        return row ? toDetail(row) : null
+    }
+
+    /**
+     * The active competition the user already manages a team in — regardless of
+     * league. Most recently created wins if they somehow hold several.
+     */
+    async findActiveWithUserTeam(userId: string): Promise<ICompetitionDetail | null> {
+        const row = await prisma.competition.findFirst({
+            where: { status: 'active', teams: { some: { userId } } },
+            orderBy: { createdAt: 'desc' },
+            include: { leagueSeason: { include: { league: true } } },
+        })
+
+        return row ? toDetail(row) : null
+    }
+
+    /** The active public competition whose join window closes soonest. */
+    async findJoinableActive(now: Date): Promise<ICompetitionDetail | null> {
+        const row = await prisma.competition.findFirst({
+            where: { status: 'active', visibility: 'PUBLIC', joinDeadline: { gt: now } },
+            orderBy: { joinDeadline: 'asc' },
+            include: { leagueSeason: { include: { league: true } } },
+        })
+
+        return row ? toDetail(row) : null
+    }
+
+    async findUpcomingAny(): Promise<ICompetitionDetail | null> {
+        const row = await prisma.competition.findFirst({
+            where: { status: 'upcoming', visibility: 'PUBLIC' },
+            orderBy: [{ joinDeadline: 'asc' }, { startGameweek: 'asc' }],
+            include: { leagueSeason: { include: { league: true } } },
+        })
+
+        return row ? toDetail(row) : null
     }
 
     async findByGameweekRange(startGw: number, endGw: number): Promise<ICompetition | null> {
@@ -196,5 +406,9 @@ export class CompetitionRepository implements ICompetitionRepository {
 
     async updateJoinDeadline(id: string, joinDeadline: Date): Promise<void> {
         await prisma.competition.update({ where: { id }, data: { joinDeadline } })
+    }
+
+    async updateGameweekRange(id: string, startGameweek: number, endGameweek: number): Promise<void> {
+        await prisma.competition.update({ where: { id }, data: { startGameweek, endGameweek } })
     }
 }

@@ -1,5 +1,6 @@
 import type {
     ICompetition,
+    ICompetitionDetail,
     ICompetitionState,
     ICreateCompetition,
     ILeaderboard,
@@ -8,7 +9,7 @@ import type {
 import type { ICompetitionBrowserRow } from '../repository/competition.repository.interface'
 
 export interface ICompetitionService {
-    getCompetition(id: string): Promise<ICompetition | null>
+    getCompetition(id: string): Promise<ICompetitionDetail | null>
     getAllCompetitions(): Promise<ICompetition[]>
     getCompetitionsForBrowser(): Promise<ICompetitionBrowserRow[]>
     createCompetition(data: ICreateCompetition): Promise<ICompetition>
@@ -24,5 +25,6 @@ export interface ICompetitionService {
         created: number
         reactivated: number
         skipped: number
+        widened: number
     }>
 }

@@ -3,15 +3,23 @@ import { AITransferService } from '@/server/ai/service/ai-transfer.service'
 import { CompetitionController } from '@/server/competition/controller/competition.controller'
 import { CompetitionRepository } from '@/server/competition/repository/competition.repository'
 import { CompetitionService } from '@/server/competition/service/competition.service'
+import { DemoRepository } from '@/server/demo/repository/demo.repository'
+import { DemoCompetitionService } from '@/server/demo/service/demo-competition.service'
 import { FantasyTeamController } from '@/server/fantasy-team/controller/fantasy-team.controller'
 import { FantasyTeamRepository } from '@/server/fantasy-team/repository/fantasy-team.repository'
 import { FantasyTeamService } from '@/server/fantasy-team/service/fantasy-team.service'
+import { FixtureController } from '@/server/fixtures/controller/fixture.controller'
+import { FixtureRepository } from '@/server/fixtures/repository/fixture.repository'
+import { FixtureService } from '@/server/fixtures/service/fixture.service'
 import { GameweekController } from '@/server/gameweek/controller/gameweek.controller'
 import { GameweekRepository } from '@/server/gameweek/repository/gameweek.repository'
 import { GameweekService } from '@/server/gameweek/service/gameweek.service'
 import { LeagueController } from '@/server/league/controller/league.controller'
 import { LeagueRepository } from '@/server/league/repository/league.repository'
 import { LeagueService } from '@/server/league/service/league.service'
+import { LeagueMembershipController } from '@/server/league-membership/controller/league-membership.controller'
+import { LeagueMembershipRepository } from '@/server/league-membership/repository/league-membership.repository'
+import { LeagueMembershipService } from '@/server/league-membership/service/league-membership.service'
 import { OrchestratorService } from '@/server/orchestrator/service/orchestrator.service'
 import { PaymentController } from '@/server/payment/controller/payment.controller'
 import { PaymentRepository } from '@/server/payment/repository/payment.repository'
@@ -34,10 +42,13 @@ import { WalletService } from '@/server/wallet/service/wallet.service'
 
 // Repositories — instantiated once each, shared across services that need them.
 const competitionRepository = new CompetitionRepository()
+const demoRepository = new DemoRepository()
 const fantasyTeamRepository = new FantasyTeamRepository()
+const fixtureRepository = new FixtureRepository()
 const gameweekRepository = new GameweekRepository()
 const paymentRepository = new PaymentRepository()
 const leagueRepository = new LeagueRepository()
+const leagueMembershipRepository = new LeagueMembershipRepository()
 const playerGameweekStatsRepository = new PlayerGameweekStatsRepository()
 const pricingRepository = new PricingRepository()
 const teamRepository = new TeamRepository()
@@ -50,8 +61,22 @@ const userService = new UserService(userRepository)
 const gameweekService = new GameweekService(gameweekRepository)
 const pricingService = new PricingService(pricingRepository)
 const leagueService = new LeagueService(leagueRepository)
-const fantasyTeamService = new FantasyTeamService(fantasyTeamRepository, gameweekRepository, pricingService)
+const leagueMembershipService = new LeagueMembershipService(
+    leagueMembershipRepository,
+    leagueRepository,
+    competitionRepository,
+    fantasyTeamRepository,
+)
+const demoCompetitionService = new DemoCompetitionService(demoRepository)
+const fantasyTeamService = new FantasyTeamService(
+    fantasyTeamRepository,
+    gameweekRepository,
+    pricingService,
+    leagueMembershipService,
+    demoCompetitionService,
+)
 const teamService = new TeamService(teamRepository)
+const fixtureService = new FixtureService(fixtureRepository)
 const scoringService = new ScoringService(
     gameweekRepository,
     playerGameweekStatsRepository,
@@ -72,8 +97,10 @@ const orchestratorService = new OrchestratorService(gameweekService, scoringServ
 const aiController = new AIController(aiTransferService)
 const competitionController = new CompetitionController(competitionService)
 const fantasyTeamController = new FantasyTeamController(fantasyTeamService)
+const fixtureController = new FixtureController(fixtureService)
 const gameweekController = new GameweekController(gameweekService)
 const leagueController = new LeagueController(leagueService)
+const leagueMembershipController = new LeagueMembershipController(leagueMembershipService)
 const paymentController = new PaymentController(paymentService)
 const pricingController = new PricingController(pricingService)
 const scoringController = new ScoringController(scoringService)
@@ -85,8 +112,10 @@ export const container = {
     aiController,
     competitionController,
     fantasyTeamController,
+    fixtureController,
     gameweekController,
     leagueController,
+    leagueMembershipController,
     paymentController,
     pricingController,
     pricingService,
@@ -96,4 +125,5 @@ export const container = {
     walletController,
     orchestratorService,
     competitionService,
+    demoCompetitionService,
 } as const

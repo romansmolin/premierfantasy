@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import useSWR from 'swr'
 
 import { useTransferSuggestions, TransferSuggestionsModal } from '@/features/ai'
+import { CustomTopupCard } from '@/features/wallet'
 
 import { useFantasyTeams } from '@/entities/fantasy-team'
 import { useWallet, walletService } from '@/entities/wallet'
@@ -15,7 +16,7 @@ import type { ICoinPack, TransactionType } from '@/entities/wallet'
 
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 
@@ -138,10 +139,13 @@ export const WalletView = () => {
                 </Card>
             )}
 
+            <CustomTopupCard />
+
             <div className="grid gap-4 sm:grid-cols-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Buy Coins</CardTitle>
+                        <CardTitle>Coin Packs</CardTitle>
+                        <CardDescription>Fixed bundles at the same rate as a custom top-up.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2">
                         {isPacksLoading ? (
@@ -152,7 +156,7 @@ export const WalletView = () => {
                                     <div>
                                         <p className="text-sm font-medium">{pack.coins} coins</p>
                                         <p className="text-xs text-muted-foreground">
-                                            ${(pack.priceCents / 100).toFixed(2)}
+                                            &euro;{(pack.priceCents / 100).toFixed(2)}
                                         </p>
                                     </div>
                                     <Button

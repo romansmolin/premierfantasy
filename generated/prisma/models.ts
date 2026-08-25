@@ -10,6 +10,8 @@
 export type * from './models/Competition'
 export type * from './models/League'
 export type * from './models/LeagueSeason'
+export type * from './models/LeagueMembership'
+export type * from './models/LeagueSeasonTeam'
 export type * from './models/FantasyTeam'
 export type * from './models/Transfer'
 export type * from './models/FantasyTeamPlayer'

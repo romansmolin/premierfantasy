@@ -88,6 +88,10 @@ export class ScoringService implements IScoringService {
         const playerPointsMap = new Map(statsRows.map((row) => [row.playerId, row.totalPoints]))
 
         for (const team of allTeams) {
+            // Demo teams are scored by the demo generator; overwriting them here
+            // would zero out teams from leagues this pipeline never fetched.
+            if (team.isDemo) continue
+
             const squadPlayers = await this.fantasyTeamRepository.getSquadPlayers(team.id)
             let teamPoints = 0
 

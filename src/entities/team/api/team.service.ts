@@ -3,9 +3,9 @@ import { httpClient } from '@/shared/api/http-client'
 
 import type { ISquadPlayer, ITeamResponse } from '../model/team.types'
 
-export const getAllTeams = async (): Promise<ITeamResponse[]> => {
+export const getAllTeams = async (leagueId: number, season: number): Promise<ITeamResponse[]> => {
     try {
-        const teams = await httpClient.get<ITeamResponse[]>('/api/teams')
+        const teams = await httpClient.get<ITeamResponse[]>(`/api/teams?league=${leagueId}&season=${season}`)
 
         return teams
     } catch (error: unknown) {

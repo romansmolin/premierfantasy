@@ -38,6 +38,17 @@ export const walletService = {
         }
     },
 
+    /** Checkout for a free-chosen amount. Coins are decided by the server. */
+    async createCustomCheckout(amountCents: number): Promise<ICheckoutResponse> {
+        try {
+            return await httpClient.post<ICheckoutResponse>('/api/payments/checkout/custom', {
+                amountCents,
+            })
+        } catch (error) {
+            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to create checkout')
+        }
+    },
+
     async getCoinPacks(): Promise<ICoinPack[]> {
         try {
             return await httpClient.get<ICoinPack[]>('/api/wallet/packs')

@@ -1,0 +1,373 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - button "Premier Fantasy Premier League" [ref=e9]:
+            - img [ref=e11]
+            - generic [ref=e16]:
+              - generic [ref=e17]: Premier Fantasy
+              - generic [ref=e18]: Premier League
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: Overview
+          - list [ref=e23]:
+            - listitem [ref=e24]:
+              - link "Dashboard" [ref=e25] [cursor=pointer]:
+                - /url: /dashboard
+                - button "Dashboard" [ref=e26]:
+                  - img [ref=e27]
+                  - generic [ref=e32]: Dashboard
+        - generic [ref=e33]:
+          - generic [ref=e34]: Fantasy
+          - list [ref=e36]:
+            - listitem [ref=e37]:
+              - link "Leagues" [ref=e38] [cursor=pointer]:
+                - /url: /leagues
+                - button "Leagues" [ref=e39]:
+                  - img [ref=e40]
+                  - generic [ref=e45]: Leagues
+            - listitem [ref=e46]:
+              - link "Competitions" [ref=e47] [cursor=pointer]:
+                - /url: /competitions
+                - button "Competitions" [ref=e48]:
+                  - img [ref=e49]
+                  - generic [ref=e54]: Competitions
+            - listitem [ref=e55]:
+              - link "Team Builder" [ref=e56] [cursor=pointer]:
+                - /url: /fantasy-team-builder
+                - button "Team Builder" [ref=e57]:
+                  - img [ref=e58]
+                  - generic [ref=e63]: Team Builder
+        - generic [ref=e64]:
+          - generic [ref=e65]: Account
+          - list [ref=e67]:
+            - listitem [ref=e68]:
+              - link "Profile" [ref=e69] [cursor=pointer]:
+                - /url: /profile
+                - button "Profile" [ref=e70]:
+                  - img [ref=e71]
+                  - generic [ref=e74]: Profile
+            - listitem [ref=e75]:
+              - link "Wallet" [ref=e76] [cursor=pointer]:
+                - /url: /wallet
+                - button "Wallet" [ref=e77]:
+                  - img [ref=e78]
+                  - generic [ref=e85]: Wallet
+      - list [ref=e87]:
+        - listitem [ref=e88]:
+          - button "Ro Round 2 Tester tester+1778435184@example.test" [ref=e131]:
+            - generic [ref=e133]: Ro
+            - generic [ref=e134]:
+              - generic [ref=e135]: Round 2 Tester
+              - generic [ref=e136]: tester+1778435184@example.test
+      - button "Toggle Sidebar" [ref=e94]
+    - main [ref=e95]:
+      - generic [ref=e96]:
+        - button "Toggle Sidebar" [ref=e97]:
+          - img
+          - generic [ref=e98]: Toggle Sidebar
+        - separator [ref=e99]
+        - heading "Dashboard" [level=1] [ref=e100]
+        - button [ref=e102]:
+          - img
+      - generic [ref=e104]:
+        - generic [ref=e137]:
+          - img [ref=e139]
+          - generic [ref=e144]:
+            - heading "Welcome back, Round 2 Tester" [level=2] [ref=e145]
+            - paragraph [ref=e146]: Your competition overview
+        - generic [ref=e147]:
+          - generic [ref=e148]:
+            - generic [ref=e150]:
+              - img [ref=e152]
+              - generic [ref=e157]:
+                - paragraph [ref=e158]: Your Rank
+                - paragraph [ref=e159]: "1"
+            - generic [ref=e161]:
+              - img [ref=e163]
+              - generic [ref=e166]:
+                - paragraph [ref=e167]: Total Points
+                - paragraph [ref=e168]: "0"
+            - generic [ref=e170]:
+              - img [ref=e172]
+              - generic [ref=e177]:
+                - paragraph [ref=e178]: Competition
+                - generic [ref=e179]:
+                  - paragraph [ref=e180]: GW36–GW38
+                  - generic [ref=e181]: Active
+          - generic [ref=e182]:
+            - generic [ref=e184]:
+              - generic [ref=e185]:
+                - img [ref=e186]
+                - generic [ref=e192]:
+                  - generic [ref=e193]: Leaderboard
+                  - generic [ref=e194]: Top performers in GW36–GW38
+              - link "View Full" [ref=e195] [cursor=pointer]:
+                - /url: /competitions/seed-comp-8
+            - table [ref=e198]:
+              - rowgroup [ref=e199]:
+                - row "Rank Manager GW Points Total" [ref=e200]:
+                  - columnheader "Rank" [ref=e201]
+                  - columnheader "Manager" [ref=e202]
+                  - columnheader "GW Points" [ref=e203]
+                  - columnheader "Total" [ref=e204]
+              - rowgroup [ref=e205]:
+                - row "1 Round 2 Tester Round 2 Tester's Team 0 0" [ref=e206]:
+                  - cell "1" [ref=e207]
+                  - cell "Round 2 Tester Round 2 Tester's Team" [ref=e208]:
+                    - generic [ref=e209]:
+                      - paragraph [ref=e210]: Round 2 Tester
+                      - paragraph [ref=e211]: Round 2 Tester's Team
+                  - cell "0" [ref=e212]
+                  - cell "0" [ref=e213]
+          - generic [ref=e214]:
+            - generic [ref=e216]:
+              - img [ref=e217]
+              - generic [ref=e221]:
+                - generic [ref=e222]: Upcoming Fixtures
+                - generic [ref=e223]: Next Premier League matches
+            - generic [ref=e224]:
+              - generic [ref=e225]:
+                - paragraph [ref=e226]: GW36
+                - generic [ref=e228]:
+                  - generic [ref=e229]:
+                    - generic [ref=e230]: Tottenham
+                    - img "Tottenham" [ref=e231]
+                  - paragraph [ref=e233]: Mon 11 May, 22:00
+                  - generic [ref=e234]:
+                    - img "Leeds" [ref=e235]
+                    - generic [ref=e236]: Leeds
+                  - button "300" [disabled]:
+                    - img
+                    - text: "300"
+              - generic [ref=e237]:
+                - paragraph [ref=e238]: GW31
+                - generic [ref=e240]:
+                  - generic [ref=e241]:
+                    - generic [ref=e242]: Manchester City
+                    - img "Manchester City" [ref=e243]
+                  - paragraph [ref=e245]: Wed 13 May, 22:00
+                  - generic [ref=e246]:
+                    - img "Crystal Palace" [ref=e247]
+                    - generic [ref=e248]: Crystal Palace
+                  - button "300" [disabled]:
+                    - img
+                    - text: "300"
+              - generic [ref=e249]:
+                - paragraph [ref=e250]: GW37
+                - generic [ref=e251]:
+                  - generic [ref=e252]:
+                    - generic [ref=e253]:
+                      - generic [ref=e254]: Aston Villa
+                      - img "Aston Villa" [ref=e255]
+                    - paragraph [ref=e257]: Fri 15 May, 22:00
+                    - generic [ref=e258]:
+                      - img "Liverpool" [ref=e259]
+                      - generic [ref=e260]: Liverpool
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e261]:
+                    - generic [ref=e262]:
+                      - generic [ref=e263]: Manchester United
+                      - img "Manchester United" [ref=e264]
+                    - paragraph [ref=e266]: Sun 17 May, 14:30
+                    - generic [ref=e267]:
+                      - img "Nottingham Forest" [ref=e268]
+                      - generic [ref=e269]: Nottingham Forest
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e270]:
+                    - generic [ref=e271]:
+                      - generic [ref=e272]: Wolves
+                      - img "Wolves" [ref=e273]
+                    - paragraph [ref=e275]: Sun 17 May, 17:00
+                    - generic [ref=e276]:
+                      - img "Fulham" [ref=e277]
+                      - generic [ref=e278]: Fulham
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e279]:
+                    - generic [ref=e280]:
+                      - generic [ref=e281]: Everton
+                      - img "Everton" [ref=e282]
+                    - paragraph [ref=e284]: Sun 17 May, 17:00
+                    - generic [ref=e285]:
+                      - img "Sunderland" [ref=e286]
+                      - generic [ref=e287]: Sunderland
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e288]:
+                    - generic [ref=e289]:
+                      - generic [ref=e290]: Brentford
+                      - img "Brentford" [ref=e291]
+                    - paragraph [ref=e293]: Sun 17 May, 17:00
+                    - generic [ref=e294]:
+                      - img "Crystal Palace" [ref=e295]
+                      - generic [ref=e296]: Crystal Palace
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e297]:
+                    - generic [ref=e298]:
+                      - generic [ref=e299]: Leeds
+                      - img "Leeds" [ref=e300]
+                    - paragraph [ref=e302]: Sun 17 May, 17:00
+                    - generic [ref=e303]:
+                      - img "Brighton" [ref=e304]
+                      - generic [ref=e305]: Brighton
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e306]:
+                    - generic [ref=e307]:
+                      - generic [ref=e308]: Newcastle
+                      - img "Newcastle" [ref=e309]
+                    - paragraph [ref=e311]: Sun 17 May, 19:30
+                    - generic [ref=e312]:
+                      - img "West Ham" [ref=e313]
+                      - generic [ref=e314]: West Ham
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e315]:
+                    - generic [ref=e316]:
+                      - generic [ref=e317]: Arsenal
+                      - img "Arsenal" [ref=e318]
+                    - paragraph [ref=e320]: Mon 18 May, 22:00
+                    - generic [ref=e321]:
+                      - img "Burnley" [ref=e322]
+                      - generic [ref=e323]: Burnley
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e324]:
+                    - generic [ref=e325]:
+                      - generic [ref=e326]: Bournemouth
+                      - img "Bournemouth" [ref=e327]
+                    - paragraph [ref=e329]: Tue 19 May, 21:30
+                    - generic [ref=e330]:
+                      - img "Manchester City" [ref=e331]
+                      - generic [ref=e332]: Manchester City
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e333]:
+                    - generic [ref=e334]:
+                      - generic [ref=e335]: Chelsea
+                      - img "Chelsea" [ref=e336]
+                    - paragraph [ref=e338]: Tue 19 May, 22:15
+                    - generic [ref=e339]:
+                      - img "Tottenham" [ref=e340]
+                      - generic [ref=e341]: Tottenham
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+              - generic [ref=e342]:
+                - paragraph [ref=e343]: GW38
+                - generic [ref=e344]:
+                  - generic [ref=e345]:
+                    - generic [ref=e346]:
+                      - generic [ref=e347]: Fulham
+                      - img "Fulham" [ref=e348]
+                    - paragraph [ref=e350]: Sun 24 May, 18:00
+                    - generic [ref=e351]:
+                      - img "Newcastle" [ref=e352]
+                      - generic [ref=e353]: Newcastle
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e354]:
+                    - generic [ref=e355]:
+                      - generic [ref=e356]: Liverpool
+                      - img "Liverpool" [ref=e357]
+                    - paragraph [ref=e359]: Sun 24 May, 18:00
+                    - generic [ref=e360]:
+                      - img "Brentford" [ref=e361]
+                      - generic [ref=e362]: Brentford
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e363]:
+                    - generic [ref=e364]:
+                      - generic [ref=e365]: Burnley
+                      - img "Burnley" [ref=e366]
+                    - paragraph [ref=e368]: Sun 24 May, 18:00
+                    - generic [ref=e369]:
+                      - img "Wolves" [ref=e370]
+                      - generic [ref=e371]: Wolves
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e372]:
+                    - generic [ref=e373]:
+                      - generic [ref=e374]: Tottenham
+                      - img "Tottenham" [ref=e375]
+                    - paragraph [ref=e377]: Sun 24 May, 18:00
+                    - generic [ref=e378]:
+                      - img "Everton" [ref=e379]
+                      - generic [ref=e380]: Everton
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e381]:
+                    - generic [ref=e382]:
+                      - generic [ref=e383]: West Ham
+                      - img "West Ham" [ref=e384]
+                    - paragraph [ref=e386]: Sun 24 May, 18:00
+                    - generic [ref=e387]:
+                      - img "Leeds" [ref=e388]
+                      - generic [ref=e389]: Leeds
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e390]:
+                    - generic [ref=e391]:
+                      - generic [ref=e392]: Manchester City
+                      - img "Manchester City" [ref=e393]
+                    - paragraph [ref=e395]: Sun 24 May, 18:00
+                    - generic [ref=e396]:
+                      - img "Aston Villa" [ref=e397]
+                      - generic [ref=e398]: Aston Villa
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e399]:
+                    - generic [ref=e400]:
+                      - generic [ref=e401]: Brighton
+                      - img "Brighton" [ref=e402]
+                    - paragraph [ref=e404]: Sun 24 May, 18:00
+                    - generic [ref=e405]:
+                      - img "Manchester United" [ref=e406]
+                      - generic [ref=e407]: Manchester United
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+                  - generic [ref=e408]:
+                    - generic [ref=e409]:
+                      - generic [ref=e410]: Crystal Palace
+                      - img "Crystal Palace" [ref=e411]
+                    - paragraph [ref=e413]: Sun 24 May, 18:00
+                    - generic [ref=e414]:
+                      - img "Arsenal" [ref=e415]
+                      - generic [ref=e416]: Arsenal
+                    - button "300" [disabled]:
+                      - img
+                      - text: "300"
+  - region "Notifications alt+T"
+  - generic [ref=e116] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e117]:
+      - img [ref=e118]
+    - generic [ref=e121]:
+      - button "Open issues overlay" [ref=e122]:
+        - generic [ref=e123]:
+          - generic [ref=e124]: "0"
+          - generic [ref=e125]: "1"
+        - generic [ref=e126]: Issue
+      - button "Collapse issues badge" [ref=e127]:
+        - img [ref=e128]
+  - alert [ref=e130]

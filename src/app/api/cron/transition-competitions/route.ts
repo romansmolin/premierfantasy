@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server'
 
 import { container } from '@/shared/lib/container'
+import { isCronAuthorized } from '@/shared/lib/cron-auth'
 
 import type { NextRequest } from 'next/server'
 
 export async function GET(req: NextRequest) {
-    const authHeader = req.headers.get('authorization')
-
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (!isCronAuthorized(req.headers.get('authorization'))) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

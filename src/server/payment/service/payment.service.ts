@@ -1,6 +1,14 @@
 import { getCoinPack } from '@/server/wallet/lib/coin-pricing'
 
 import {
+    coinsForAmountCents,
+    MAX_TOPUP_CENTS,
+    MIN_TOPUP_CENTS,
+    TOPUP_CURRENCY,
+    formatCents,
+} from '@/entities/wallet/model/coin-pricing'
+
+import {
     secureProcessorClient,
     verifyWebhookBasicAuth,
     verifyWebhookSignature,
@@ -61,6 +69,58 @@ export class PaymentService implements IPaymentService {
                 amountCents: pack.priceCents,
                 currency: pack.currency,
                 description: `Purchase ${pack.coins} Premier Fantasy coins`,
+                trackingId: payment.id,
+                userId,
+            })
+
+            await this.paymentRepository.updateStatus(payment.id, 'PENDING', checkout.token)
+
+            return { redirectUrl: checkout.redirectUrl }
+        } catch (error) {
+            await this.paymentRepository.updateStatus(payment.id, 'FAILED')
+
+            throw error
+        }
+    }
+
+    /**
+     * The client sends only the money it wants to spend — never the coin count.
+     * Coins are recomputed here from the same pricing table the UI quotes with,
+     * so a tampered request can only ever change what the user is charged, not
+     * what they receive for it.
+     */
+    async createCustomCheckout(userId: string, amountCents: number): Promise<{ redirectUrl: string }> {
+        if (!Number.isInteger(amountCents)) {
+            throw Errors.badRequest('Amount must be a whole number of cents')
+        }
+
+        if (amountCents < MIN_TOPUP_CENTS || amountCents > MAX_TOPUP_CENTS) {
+            throw Errors.badRequest(
+                `Amount must be between €${formatCents(MIN_TOPUP_CENTS)} and €${formatCents(MAX_TOPUP_CENTS)}`,
+            )
+        }
+
+        const coins = coinsForAmountCents(amountCents)
+
+        if (coins <= 0) throw Errors.badRequest('Amount is too small to buy any coins')
+
+        const trackingId = crypto.randomUUID()
+        const description = `Purchase ${coins} coins`
+
+        const payment = await this.paymentRepository.create({
+            userId,
+            token: trackingId,
+            amountCents,
+            currency: TOPUP_CURRENCY,
+            coinAmount: coins,
+            description,
+        })
+
+        try {
+            const checkout = await secureProcessorClient.createCheckout({
+                amountCents,
+                currency: TOPUP_CURRENCY,
+                description: `Purchase ${coins} Premier Fantasy coins`,
                 trackingId: payment.id,
                 userId,
             })

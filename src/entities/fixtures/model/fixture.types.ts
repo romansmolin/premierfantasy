@@ -7,3 +7,8 @@ export interface IFixture {
     goals: { home: number | null; away: number | null }
     round: string
 }
+
+export interface ILeagueNextFixtures {
+    leagueExternalId: number
+    fixtures: IFixture[]
+}

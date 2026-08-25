@@ -1,6 +1,8 @@
 export type {
     ICompetition,
     ICompetitionBrowserRow,
+    ICompetitionDetail,
+    ICompetitionLeague,
     ICompetitionState,
     ICreateCompetition,
     ILeaderboard,

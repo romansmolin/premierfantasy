@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 
@@ -21,6 +21,20 @@ export const useTransferMode = () => {
     const [selectedOutPlayer, setSelectedOutPlayer] = useState<SelectedPlayer | null>(null)
     const [stagedTransfers, setStagedTransfers] = useState<IStagedTransfer[]>([])
     const [isConfirming, setIsConfirming] = useState(false)
+
+    // Staged transfers belong to one team. Switching the builder to another
+    // league must drop them, or they would be confirmed against the wrong squad.
+    const stagedForTeamRef = useRef<string | null>(null)
+
+    useEffect(() => {
+        const currentTeam = fantasyTeamId ?? null
+
+        if (stagedForTeamRef.current === currentTeam) return
+
+        stagedForTeamRef.current = currentTeam
+        setStagedTransfers([])
+        setSelectedOutPlayer(null)
+    }, [fantasyTeamId])
 
     const { data: transferInfo, mutate: mutateTransferInfo } = useSWR(
         fantasyTeamId ? `/api/fantasy-teams/${fantasyTeamId}/transfers` : null,

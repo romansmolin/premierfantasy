@@ -1,0 +1,149 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - button "Premier Fantasy Premier League" [ref=e9]:
+            - img [ref=e11]
+            - generic [ref=e16]:
+              - generic [ref=e17]: Premier Fantasy
+              - generic [ref=e18]: Premier League
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: Overview
+          - list [ref=e23]:
+            - listitem [ref=e24]:
+              - link "Dashboard" [ref=e25] [cursor=pointer]:
+                - /url: /dashboard
+                - button "Dashboard" [ref=e26]:
+                  - img [ref=e27]
+                  - generic [ref=e32]: Dashboard
+        - generic [ref=e33]:
+          - generic [ref=e34]: Fantasy
+          - list [ref=e36]:
+            - listitem [ref=e37]:
+              - link "Leagues" [ref=e38] [cursor=pointer]:
+                - /url: /leagues
+                - button "Leagues" [ref=e39]:
+                  - img [ref=e40]
+                  - generic [ref=e45]: Leagues
+            - listitem [ref=e46]:
+              - link "Competitions" [ref=e47] [cursor=pointer]:
+                - /url: /competitions
+                - button "Competitions" [ref=e48]:
+                  - img [ref=e49]
+                  - generic [ref=e54]: Competitions
+            - listitem [ref=e55]:
+              - link "Team Builder" [ref=e56] [cursor=pointer]:
+                - /url: /fantasy-team-builder
+                - button "Team Builder" [ref=e57]:
+                  - img [ref=e58]
+                  - generic [ref=e63]: Team Builder
+        - generic [ref=e64]:
+          - generic [ref=e65]: Account
+          - list [ref=e67]:
+            - listitem [ref=e68]:
+              - link "Profile" [ref=e69] [cursor=pointer]:
+                - /url: /profile
+                - button "Profile" [ref=e70]:
+                  - img [ref=e71]
+                  - generic [ref=e74]: Profile
+            - listitem [ref=e75]:
+              - link "Wallet" [ref=e76] [cursor=pointer]:
+                - /url: /wallet
+                - button "Wallet" [ref=e77]:
+                  - img [ref=e78]
+                  - generic [ref=e85]: Wallet
+      - list [ref=e87]:
+        - listitem [ref=e88]:
+          - button "Le League Tester tester+1778434252@example.test" [ref=e121]:
+            - generic [ref=e123]: Le
+            - generic [ref=e124]:
+              - generic [ref=e125]: League Tester
+              - generic [ref=e126]: tester+1778434252@example.test
+      - button "Toggle Sidebar" [ref=e94]
+    - main [ref=e95]:
+      - generic [ref=e96]:
+        - button "Toggle Sidebar" [ref=e97]:
+          - img
+          - generic [ref=e98]: Toggle Sidebar
+        - separator [ref=e99]
+        - heading "Dashboard" [level=1] [ref=e100]
+        - button [ref=e102]:
+          - img
+      - generic [ref=e104]:
+        - generic [ref=e127]:
+          - img [ref=e129]
+          - generic [ref=e134]:
+            - heading "Welcome, League Tester" [level=2] [ref=e135]
+            - paragraph [ref=e136]: Your competition overview
+        - generic [ref=e137]:
+          - generic [ref=e139]:
+            - generic [ref=e140]:
+              - img [ref=e142]
+              - generic [ref=e147]:
+                - generic [ref=e148]: GW36–GW38
+                - paragraph [ref=e149]: Gameweeks 36–38
+            - generic [ref=e150]: Open for Registration
+          - generic [ref=e151]:
+            - generic [ref=e152]:
+              - paragraph [ref=e153]: Get started in 3 steps
+              - generic [ref=e154]:
+                - generic [ref=e155]:
+                  - generic [ref=e157]: "1"
+                  - paragraph [ref=e158]: Pick 11 Players
+                  - paragraph [ref=e159]: Build your dream squad
+                - generic [ref=e160]:
+                  - generic [ref=e162]: "2"
+                  - paragraph [ref=e163]: Compete Weekly
+                  - paragraph [ref=e164]: 5-gameweek rolling competitions
+                - generic [ref=e165]:
+                  - generic [ref=e167]: "3"
+                  - paragraph [ref=e168]: Earn Rewards
+                  - paragraph [ref=e169]: Top 3 win coins every round
+            - generic [ref=e170]:
+              - generic [ref=e171]:
+                - img [ref=e172]
+                - generic [ref=e177]:
+                  - paragraph [ref=e178]: Squad Size
+                  - paragraph [ref=e179]: 11 Players
+              - generic [ref=e180]:
+                - img [ref=e181]
+                - generic [ref=e188]:
+                  - paragraph [ref=e189]: Budget
+                  - paragraph [ref=e190]: 100M
+              - generic [ref=e191]:
+                - img [ref=e192]
+                - generic [ref=e197]:
+                  - paragraph [ref=e198]: Max Per Club
+                  - paragraph [ref=e199]: 3 Players
+            - generic [ref=e200]:
+              - generic [ref=e201]:
+                - img [ref=e202]
+                - generic [ref=e205]: Time left to join
+              - generic [ref=e206]:
+                - generic [ref=e207]:
+                  - generic [ref=e208]: "06"
+                  - generic [ref=e209]: Days
+                - generic [ref=e210]: ":"
+                - generic [ref=e211]:
+                  - generic [ref=e212]: "23"
+                  - generic [ref=e213]: Hours
+                - generic [ref=e214]: ":"
+                - generic [ref=e215]:
+                  - generic [ref=e216]: "55"
+                  - generic [ref=e217]: Min
+                - generic [ref=e218]: ":"
+                - generic [ref=e219]:
+                  - generic [ref=e220]: "16"
+                  - generic [ref=e221]: Sec
+            - group [ref=e222]:
+              - generic "How scoring works" [ref=e223] [cursor=pointer]
+            - link "Build Your Team for GW36–GW38" [ref=e224] [cursor=pointer]:
+              - /url: /fantasy-team-builder?competitionId=seed-comp-8
+              - img
+              - text: Build Your Team for GW36–GW38
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e117] [cursor=pointer]:
+    - img [ref=e118]
+  - alert [ref=e234]

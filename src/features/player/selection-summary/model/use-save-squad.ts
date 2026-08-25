@@ -1,11 +1,14 @@
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
+import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
 import { fantasyTeamService, useFantasyTeams } from '@/entities/fantasy-team'
+import { MY_LEAGUES_KEY } from '@/entities/league'
 import { usePlayersStorage } from '@/entities/players'
 import type { SelectedPlayer } from '@/entities/players'
 
+import { ApiError } from '@/shared/api/api-error'
 import { useSession } from '@/shared/lib/auth-client'
 
 const mapPlayersToSquad = (players: SelectedPlayer[]) =>
@@ -19,6 +22,7 @@ export const useSaveSquad = () => {
     const searchParams = useSearchParams()
     const competitionId = searchParams.get('competitionId')
 
+    const { mutate: mutateGlobal } = useSWRConfig()
     const { fantasyTeams, mutate } = useFantasyTeams()
     const fantasyTeamId = fantasyTeams?.find((t) => t.competitionId === competitionId)?.id
     const selectedPlayers = usePlayersStorage((s) => s.selectedPlayers)
@@ -34,14 +38,16 @@ export const useSaveSquad = () => {
             })
 
             await fantasyTeamService.saveSquad(team.id, mapPlayersToSquad(arg))
-            await mutate()
+            await Promise.all([mutate(), mutateGlobal(MY_LEAGUES_KEY)])
         },
     )
 
     const { trigger: updateSquad, isMutating: isUpdating } = useSWRMutation(
         fantasyTeamId ? `/api/fantasy-teams/${fantasyTeamId}/squad` : null,
-        (_url: string, { arg }: { arg: SelectedPlayer[] }) =>
-            fantasyTeamService.saveSquad(fantasyTeamId!, mapPlayersToSquad(arg)),
+        async (_url: string, { arg }: { arg: SelectedPlayer[] }) => {
+            await fantasyTeamService.saveSquad(fantasyTeamId!, mapPlayersToSquad(arg))
+            await mutateGlobal(MY_LEAGUES_KEY)
+        },
     )
 
     const handleSave = async () => {
@@ -65,8 +71,12 @@ export const useSaveSquad = () => {
             }
 
             toast.success('Squad saved successfully!')
-        } catch {
-            toast.error('Failed to save squad. Please try again.')
+        } catch (error) {
+            // Surface what the API actually said — budget busts and closed join
+            // windows come back as 422s with a usable message.
+            toast.error(
+                ApiError.isApiError(error) ? error.message : 'Failed to save squad. Please try again.',
+            )
         }
     }
 

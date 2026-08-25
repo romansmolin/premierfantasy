@@ -1,3 +1,5 @@
 export { FantasyTeamDialogOnboardingButton } from './create-fantasy-team/ui/fantasy-team-dialog-onboarding-button'
+export { CreateFantasyTeamButton } from './create-fantasy-team/ui/create-fantasy-team-button'
+export { useCreateFantasyTeam } from './create-fantasy-team/model/use-create-fantasy-team'
 export { FantasyTeamField } from './fantasy-team-field/ui/fantasy-team-field'
 export { useHydrateSquad } from './fantasy-team-field/model/use-hydrate-squad'

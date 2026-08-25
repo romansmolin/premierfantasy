@@ -1,14 +1,15 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
 import { useMemo, useState } from 'react'
+
+import { JoinLeagueButton, MyLeaguesList } from '@/features/league'
 
 import { useLeaguesBrowser, type LeagueBrowserItem, type LeagueState } from '@/entities/league'
 
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
-import { Button, buttonVariants } from '@/shared/ui/button'
+import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -103,6 +104,13 @@ export const LeaguesBrowserView = () => {
                     your spot for the next one.
                 </p>
             </div>
+
+            <section className="space-y-3">
+                <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+                    My Leagues
+                </h2>
+                <MyLeaguesList />
+            </section>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Input
@@ -261,24 +269,21 @@ const LeagueCard = ({ item }: { item: LeagueBrowserItem }) => {
                 </div>
 
                 <div className="mt-auto flex flex-wrap gap-2 pt-2">
-                    {activeCompetition ? (
-                        <Link
-                            href={`/competitions/${activeCompetition.id}`}
-                            className={buttonVariants({ size: 'sm' })}
-                        >
-                            Join active competition
-                        </Link>
+                    {currentSeason && !hasSeasonEnded ? (
+                        <JoinLeagueButton
+                            leagueId={item.league.id}
+                            leagueName={item.league.name}
+                            competitionId={activeCompetition?.id ?? nextCompetition?.id ?? null}
+                        />
                     ) : (
                         <Button size="sm" disabled>
-                            {nextCompetition
-                                ? `Opens ${formatDays(nextCompetition.daysUntilStart)}`
-                                : isSeasonInProgress
-                                  ? 'Joining opens soon'
-                                  : isSeasonUpcoming && currentSeason
-                                    ? `Season starts ${formatDate(currentSeason.startDate)}`
-                                    : hasSeasonEnded
-                                      ? 'Next season TBD'
-                                      : 'Coming soon'}
+                            {isSeasonInProgress
+                                ? 'Joining opens soon'
+                                : isSeasonUpcoming && currentSeason
+                                  ? `Season starts ${formatDate(currentSeason.startDate)}`
+                                  : hasSeasonEnded
+                                    ? 'Next season TBD'
+                                    : 'Coming soon'}
                         </Button>
                     )}
                 </div>

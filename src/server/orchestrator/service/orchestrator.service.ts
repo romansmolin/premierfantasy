@@ -11,6 +11,7 @@ export interface PipelineResult {
     generated: boolean
     multiLeagueCreated: number
     multiLeagueReactivated: number
+    multiLeagueWidened: number
     errors: string[]
 }
 
@@ -37,6 +38,7 @@ export class OrchestratorService {
             generated: false,
             multiLeagueCreated: 0,
             multiLeagueReactivated: 0,
+            multiLeagueWidened: 0,
             errors: [],
         }
 
@@ -104,6 +106,7 @@ export class OrchestratorService {
 
             result.multiLeagueCreated = ensured.created
             result.multiLeagueReactivated = ensured.reactivated
+            result.multiLeagueWidened = ensured.widened
         } catch (error) {
             result.errors.push(`Multi-league: ${error instanceof Error ? error.message : 'Unknown error'}`)
         }

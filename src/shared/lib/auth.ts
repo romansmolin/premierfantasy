@@ -1,5 +1,8 @@
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
+import { APIError } from 'better-auth/api'
+
+import { DEMO_EMAIL_DOMAIN } from '@/server/demo/lib/demo-roster'
 
 import { getEnv } from '../utils/get-env'
 
@@ -14,6 +17,21 @@ export const auth = betterAuth({
     databaseHooks: {
         user: {
             create: {
+                /**
+                 * Demo competitors are seeded straight into the users table and
+                 * deliberately have no Account row, so they cannot sign in. This
+                 * closes the other direction: nobody can sign up on the reserved
+                 * demo domain and inherit a seeded manager's identity.
+                 */
+                async before(user) {
+                    if (user.email.toLowerCase().endsWith(`@${DEMO_EMAIL_DOMAIN}`)) {
+                        throw new APIError('BAD_REQUEST', {
+                            message: 'This email domain is reserved.',
+                        })
+                    }
+
+                    return { data: user }
+                },
                 // async after(user) {
                 //     await sendWelcomeEmail(user.email, user.name)
                 // },

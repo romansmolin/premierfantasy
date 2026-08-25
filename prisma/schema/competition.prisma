@@ -1,13 +1,17 @@
 model Competition {
-  id             String    @id @default(uuid())
-  name           String
-  startGameweek  Int       @map("start_gameweek")
-  endGameweek    Int       @map("end_gameweek")
-  status         String    @default("upcoming")
-  joinDeadline   DateTime? @map("join_deadline")
-  leagueSeasonId String?   @map("league_season_id")
-  visibility     String    @default("PUBLIC")
-  createdAt      DateTime  @default(now()) @map("created_at")
+  id                     String    @id @default(uuid())
+  name                   String
+  startGameweek          Int       @map("start_gameweek")
+  endGameweek            Int       @map("end_gameweek")
+  status                 String    @default("upcoming")
+  joinDeadline           DateTime? @map("join_deadline")
+  leagueSeasonId         String?   @map("league_season_id")
+  visibility             String    @default("PUBLIC")
+  /**
+   * Set once when demo scores for a finished competition are locked in.
+   */
+  demoScoringFinalizedAt DateTime? @map("demo_scoring_finalized_at")
+  createdAt              DateTime  @default(now()) @map("created_at")
 
   teams        FantasyTeam[]
   leagueSeason LeagueSeason? @relation(fields: [leagueSeasonId], references: [id])
@@ -27,7 +31,8 @@ model League {
   isActive         Boolean  @default(true) @map("is_active")
   createdAt        DateTime @default(now()) @map("created_at")
 
-  seasons LeagueSeason[]
+  seasons     LeagueSeason[]
+  memberships LeagueMembership[]
 
   @@map("leagues")
 }
@@ -41,10 +46,54 @@ model LeagueSeason {
   isCurrent Boolean  @default(false) @map("is_current")
   createdAt DateTime @default(now()) @map("created_at")
 
-  league       League        @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  league       League             @relation(fields: [leagueId], references: [id], onDelete: Cascade)
   competitions Competition[]
+  memberships  LeagueMembership[]
+  teams        LeagueSeasonTeam[]
 
   @@unique([leagueId, year])
   @@index([leagueId])
   @@map("league_seasons")
+}
+
+/**
+ * A user's season-long enrolment in a league. Created the moment the user joins,
+ * independently of whether they have picked a squad yet — this is what "My Leagues"
+ * is built from. One row per user per league season.
+ */
+model LeagueMembership {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  leagueId       String   @map("league_id")
+  leagueSeasonId String   @map("league_season_id")
+  isDemo         Boolean  @default(false) @map("is_demo")
+  joinedAt       DateTime @default(now()) @map("joined_at")
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  league       League       @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  leagueSeason LeagueSeason @relation(fields: [leagueSeasonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, leagueSeasonId])
+  @@index([userId])
+  @@index([leagueSeasonId])
+  @@map("league_memberships")
+}
+
+/**
+ * Which clubs play in a league season. Clubs move between leagues year to year,
+ * so the link is per season rather than per league. Populated by the squad sync;
+ * lets anything that needs a league-correct player pool resolve one locally.
+ */
+model LeagueSeasonTeam {
+  id             String   @id @default(uuid())
+  leagueSeasonId String   @map("league_season_id")
+  teamId         String   @map("team_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  leagueSeason LeagueSeason @relation(fields: [leagueSeasonId], references: [id], onDelete: Cascade)
+  team         Team         @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([leagueSeasonId, teamId])
+  @@index([teamId])
+  @@map("league_season_teams")
 }

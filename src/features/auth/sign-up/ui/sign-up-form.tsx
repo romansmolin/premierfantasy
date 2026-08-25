@@ -2,6 +2,7 @@
 
 import { LoaderCircle, Login02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import Link from 'next/link'
 
 import { Button } from '@/shared/ui/button'
 import { Checkbox } from '@/shared/ui/checkbox'
@@ -17,6 +18,13 @@ import {
 import { Input } from '@/shared/ui/input'
 
 import { useSignUpForm } from '../model/use-sign-up-form'
+
+const legalLinks = [
+    { label: 'Terms of Service', href: '/terms-of-service' },
+    { label: 'Privacy Policy', href: '/private-policy' },
+    { label: 'Cookie Policy', href: '/cookies-policy' },
+    { label: 'Return Policy', href: '/return-policy' },
+]
 
 export const SignUpForm = () => {
     const { onSubmit, form, agreeToTerms, setAgreeToTerms } = useSignUpForm()
@@ -90,8 +98,27 @@ export const SignUpForm = () => {
                             checked={agreeToTerms}
                             onCheckedChange={(checked) => setAgreeToTerms(!!checked)}
                         />
-                        <FieldLabel htmlFor="sign-up-agree-to-terms" className="font-normal">
-                            I agree to the Terms and Privacy Policy
+                        <FieldLabel
+                            htmlFor="sign-up-agree-to-terms"
+                            className="w-full font-normal [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-primary"
+                        >
+                            <span className="block leading-relaxed">
+                                I agree to the{' '}
+                                {legalLinks.map(({ label, href }, index) => (
+                                    <span key={href}>
+                                        <Link
+                                            href={href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={(event) => event.stopPropagation()}
+                                        >
+                                            {label}
+                                        </Link>
+                                        {index < legalLinks.length - 2 && ', '}
+                                        {index === legalLinks.length - 2 && ' and '}
+                                    </span>
+                                ))}
+                            </span>
                         </FieldLabel>
                     </Field>
 

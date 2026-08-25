@@ -4,6 +4,7 @@ import { httpClient } from '@/shared/api/http-client'
 import type {
     ICompetition,
     ICompetitionBrowserRow,
+    ICompetitionDetail,
     ICompetitionState,
     ILeaderboard,
 } from '../model/competition.types'
@@ -27,9 +28,9 @@ export const competitionService = {
         }
     },
 
-    async getById(id: string): Promise<ICompetition> {
+    async getById(id: string): Promise<ICompetitionDetail> {
         try {
-            return await httpClient.get<ICompetition>(`${BASE_URL}/${id}`)
+            return await httpClient.get<ICompetitionDetail>(`${BASE_URL}/${id}`)
         } catch (error) {
             throw ApiError.isApiError(error) ? error : new ApiError(500, `Failed to fetch competition ${id}`)
         }

@@ -38,7 +38,21 @@ export interface TransferRow {
     createdAt: Date
 }
 
+/** A user's team in a competition, with enough detail for league cards. */
+export interface IUserTeamSummaryRow {
+    id: string
+    name: string
+    competitionId: string
+    budgetLeft: number
+    isDemo: boolean
+    playerCount: number
+}
+
 export interface IFantasyTeamRepository {
+    findSummariesByUserAndCompetitions(
+        userId: string,
+        competitionIds: string[],
+    ): Promise<IUserTeamSummaryRow[]>
     getSquadPlayers(fantasyTeamId: string): Promise<SquadPlayerRow[]>
     findById(id: string): Promise<IFantasyTeam | null>
     findByUserId(userId: string): Promise<IFantasyTeam[]>

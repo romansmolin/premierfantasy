@@ -25,6 +25,43 @@ export class LeagueRepository implements ILeagueRepository {
         })
     }
 
+    async findById(leagueId: string): Promise<ILeagueRow | null> {
+        return prisma.league.findUnique({
+            where: { id: leagueId },
+            select: {
+                id: true,
+                externalId: true,
+                name: true,
+                country: true,
+                logo: true,
+                type: true,
+                seasonStartMonth: true,
+            },
+        })
+    }
+
+    async findJoinableSeason(leagueId: string, now: Date): Promise<ILeagueSeasonRow | null> {
+        const seasons = await prisma.leagueSeason.findMany({
+            where: { leagueId },
+            orderBy: { year: 'desc' },
+            select: {
+                id: true,
+                leagueId: true,
+                year: true,
+                startDate: true,
+                endDate: true,
+                isCurrent: true,
+            },
+        })
+
+        return (
+            seasons.find((s) => s.isCurrent) ??
+            seasons.find((s) => s.startDate <= now && s.endDate >= now) ??
+            seasons.filter((s) => s.startDate > now).sort((a, b) => a.year - b.year)[0] ??
+            null
+        )
+    }
+
     async findSeasonsByLeagueIds(leagueIds: string[]): Promise<ILeagueSeasonRow[]> {
         if (leagueIds.length === 0) return []
 

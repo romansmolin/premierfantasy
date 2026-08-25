@@ -40,13 +40,22 @@ function formatDate(dateStr: string): string {
     })
 }
 
-export const UpcomingFixtures = () => {
+interface UpcomingFixturesProps {
+    /** Defaults to the Premier League when the user has no live league. */
+    leagueExternalId?: number
+    season?: number
+    leagueName?: string
+}
+
+export const UpcomingFixtures = ({ leagueExternalId, season, leagueName }: UpcomingFixturesProps = {}) => {
     const matchPrediction = useMatchPrediction()
     const {
         data: fixtures,
         isLoading,
         error,
-    } = useSWR('/api/fixtures/upcoming', () => fixtureService.getUpcoming(20))
+    } = useSWR(['fixtures', 'upcoming', leagueExternalId ?? 'default', season ?? 'default'], () =>
+        fixtureService.getUpcoming(20, leagueExternalId, season),
+    )
 
     if (isLoading) {
         return (
@@ -85,7 +94,7 @@ export const UpcomingFixtures = () => {
                     <HugeiconsIcon icon={Calendar03Icon} size={18} className="text-muted-foreground" />
                     <div>
                         <CardTitle>Upcoming Fixtures</CardTitle>
-                        <CardDescription>Next Premier League matches</CardDescription>
+                        <CardDescription>Next {leagueName ?? 'Premier League'} matches</CardDescription>
                     </div>
                 </div>
             </CardHeader>
