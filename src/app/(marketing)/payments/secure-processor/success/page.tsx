@@ -2,6 +2,14 @@ export const dynamic = 'force-dynamic'
 
 import { PaymentStatusPage } from '@/views/payment-return'
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Payment Successful',
+    description: 'Your Coin purchase is complete and your balance has been updated.',
+    robots: { index: false, follow: false },
+}
+
 type SearchParams = Promise<Record<string, string | string[] | undefined>>
 
 const SuccessPage = async ({ searchParams }: { searchParams: SearchParams }) => {

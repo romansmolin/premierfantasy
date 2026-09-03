@@ -2,6 +2,14 @@ export const dynamic = 'force-dynamic'
 
 import { PaymentStatusPage } from '@/views/payment-return'
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Payment Failed',
+    description: 'Your Coin purchase could not be completed.',
+    robots: { index: false, follow: false },
+}
+
 type SearchParams = Promise<Record<string, string | string[] | undefined>>
 
 const FailedPage = async ({ searchParams }: { searchParams: SearchParams }) => {

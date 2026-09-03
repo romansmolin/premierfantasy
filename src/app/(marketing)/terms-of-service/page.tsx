@@ -1,6 +1,10 @@
 import { LegalLayout } from '@/widgets/sections/legal-layout/ui/legal-layout'
 
-export const metadata = { title: 'Terms of Service — Premier Fantasy' }
+export const metadata = {
+    title: 'Terms of Service',
+    description:
+        'The rules for using Premier Fantasy — accounts, in-app Coins, competitions, payments, AI features, and acceptable use.',
+}
 
 export default function TermsOfServicePage() {
     return (

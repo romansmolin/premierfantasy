@@ -2,6 +2,7 @@ import { ArrowLeft01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
 
+import { COMPANY } from '@/shared/config/company'
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent } from '@/shared/ui/card'
 import { Separator } from '@/shared/ui/separator'
@@ -37,6 +38,16 @@ export function LegalLayout({ title, lastUpdated, children }: LegalLayoutProps) 
                     <div className="legal-content space-y-6 text-sm leading-relaxed text-muted-foreground [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-foreground [&_h2]:mt-8 [&_h2]:mb-3 [&_h3]:text-base [&_h3]:font-medium [&_h3]:text-foreground [&_h3]:mt-6 [&_h3]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1.5 [&_li]:text-sm [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-4 [&_strong]:text-foreground [&_strong]:font-medium [&_code]:rounded [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-xs [&_code]:font-mono [&_table]:w-full [&_table]:text-left [&_table]:text-xs [&_th]:border [&_th]:px-3 [&_th]:py-2 [&_th]:font-medium [&_th]:text-foreground [&_th]:bg-muted/50 [&_td]:border [&_td]:px-3 [&_td]:py-2">
                         {children}
                     </div>
+
+                    <Separator className="my-8" />
+
+                    <address className="text-xs not-italic leading-relaxed text-muted-foreground">
+                        <strong className="font-medium text-foreground">{COMPANY.name}</strong>
+                        <br />
+                        KRS: {COMPANY.registrationNumber}
+                        <br />
+                        {COMPANY.address}
+                    </address>
                 </CardContent>
             </Card>
         </div>

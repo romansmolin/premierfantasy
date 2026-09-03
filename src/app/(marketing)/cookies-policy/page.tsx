@@ -1,6 +1,10 @@
 import { LegalLayout } from '@/widgets/sections/legal-layout/ui/legal-layout'
 
-export const metadata = { title: 'Cookie Policy — Premier Fantasy' }
+export const metadata = {
+    title: 'Cookie Policy',
+    description:
+        'The cookies Premier Fantasy uses — essential authentication and preference cookies only, with no tracking or advertising cookies.',
+}
 
 export default function CookiesPolicyPage() {
     return (

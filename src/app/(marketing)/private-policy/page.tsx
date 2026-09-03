@@ -1,6 +1,10 @@
 import { LegalLayout } from '@/widgets/sections/legal-layout/ui/legal-layout'
 
-export const metadata = { title: 'Privacy Policy — Premier Fantasy' }
+export const metadata = {
+    title: 'Privacy Policy',
+    description:
+        'How Premier Fantasy collects, uses, and protects your data — account details, usage data, payment records, and your privacy rights.',
+}
 
 export default function PrivacyPolicyPage() {
     return (

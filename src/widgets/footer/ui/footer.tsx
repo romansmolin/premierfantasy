@@ -2,6 +2,7 @@ import { FootballPitchIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
 
+import { COMPANY } from '@/shared/config/company'
 import { FooterBankingInfo } from '@/shared/ui/footer-banking-info'
 import { Separator } from '@/shared/ui/separator'
 
@@ -48,6 +49,13 @@ export function Footer() {
                             The fairest fantasy football platform. Rolling competitions, real Premier League
                             data, and AI-powered insights.
                         </p>
+                        <address className="text-xs text-muted-foreground not-italic leading-relaxed">
+                            {COMPANY.name}
+                            <br />
+                            KRS: {COMPANY.registrationNumber}
+                            <br />
+                            {COMPANY.address}
+                        </address>
                     </div>
 
                     {/* Link columns */}
@@ -75,9 +83,6 @@ export function Footer() {
                 <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
                     <p className="text-xs text-muted-foreground">
                         &copy; {new Date().getFullYear()} Premier Fantasy. All rights reserved.
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                        Powered by API-Football &middot; Built with Next.js
                     </p>
                 </div>
 

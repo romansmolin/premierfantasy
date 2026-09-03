@@ -1,6 +1,10 @@
 import { LegalLayout } from '@/widgets/sections/legal-layout/ui/legal-layout'
 
-export const metadata = { title: 'Return & Refund Policy — Premier Fantasy' }
+export const metadata = {
+    title: 'Return & Refund Policy',
+    description:
+        'Premier Fantasy refund policy for Coin purchases — what qualifies for a refund, how to request one, and processing times.',
+}
 
 export default function ReturnPolicyPage() {
     return (

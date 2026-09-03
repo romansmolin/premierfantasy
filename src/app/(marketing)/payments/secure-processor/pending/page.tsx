@@ -2,6 +2,14 @@ export const dynamic = 'force-dynamic'
 
 import { PaymentStatusPage } from '@/views/payment-return'
 
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Payment Pending',
+    description: 'Your Coin purchase is being processed.',
+    robots: { index: false, follow: false },
+}
+
 type SearchParams = Promise<Record<string, string | string[] | undefined>>
 
 const PendingPage = async ({ searchParams }: { searchParams: SearchParams }) => {
