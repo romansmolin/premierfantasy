@@ -1,12 +1,14 @@
 import { Audiowide, Montserrat } from 'next/font/google'
+import Image from 'next/image'
+import { redirect } from 'next/navigation'
 import { Toaster } from 'sonner'
 
 import { SITE } from '@/shared/config/site'
+import { getServerSession } from '@/shared/lib/get-server-session'
 
 import type { Metadata } from 'next'
 
 import '../globals.css'
-import Image from 'next/image'
 
 const audiowide = Audiowide({
     weight: ['400'],
@@ -29,11 +31,17 @@ export const metadata: Metadata = {
     robots: { index: false, follow: false },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode
 }>) {
+    const session = await getServerSession()
+
+    if (session) {
+        redirect('/dashboard')
+    }
+
     return (
         <html lang="en">
             <body className={`${audiowide.variable} ${montserrat.variable} antialiased`}>

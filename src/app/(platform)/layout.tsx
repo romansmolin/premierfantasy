@@ -1,10 +1,12 @@
 import { Audiowide, Montserrat } from 'next/font/google'
+import { redirect } from 'next/navigation'
 import { ThemeProvider } from 'next-themes'
 import { Toaster } from 'sonner'
 
 import { DashboardLayout } from '@/widgets/dashboard-layout'
 
 import { SITE } from '@/shared/config/site'
+import { getServerSession } from '@/shared/lib/get-server-session'
 
 import type { Metadata } from 'next'
 
@@ -31,11 +33,17 @@ export const metadata: Metadata = {
     robots: { index: false, follow: false },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode
 }>) {
+    const session = await getServerSession()
+
+    if (!session) {
+        redirect('/sign-in')
+    }
+
     return (
         <html lang="en">
             <body className={`${audiowide.variable} ${montserrat.variable} antialiased`}>
