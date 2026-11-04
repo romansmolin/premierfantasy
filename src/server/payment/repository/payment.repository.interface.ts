@@ -8,11 +8,15 @@ export interface PaymentTokenRecord {
     currency: string
     coinAmount: number
     description: string
+    withdrawalConsentAt: Date | null
+    withdrawalConsentText: string | null
     createdAt: Date
     updatedAt: Date
 }
 
 export interface CreatePaymentData {
+    withdrawalConsentAt: Date
+    withdrawalConsentText: string
     userId: string
     token: string
     amountCents: number

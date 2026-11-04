@@ -10,7 +10,7 @@ import { Card, CardContent } from '@/shared/ui/card'
 
 export function SignupSection() {
     return (
-        <section className="py-10 md:py-16">
+        <section id="how-it-works" className="py-10 md:py-16">
             <div className="mx-auto max-w-5xl px-6">
                 <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
                     {/* Left: copy */}

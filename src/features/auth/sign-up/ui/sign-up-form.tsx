@@ -103,7 +103,7 @@ export const SignUpForm = () => {
                             className="w-full font-normal [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-primary"
                         >
                             <span className="block leading-relaxed">
-                                I agree to the{' '}
+                                I confirm that I am at least 18 years old and agree to the{' '}
                                 {legalLinks.map(({ label, href }, index) => (
                                     <span key={href}>
                                         <Link

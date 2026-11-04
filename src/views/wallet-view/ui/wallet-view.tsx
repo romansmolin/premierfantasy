@@ -1,9 +1,11 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { AiBrain01Icon, Coins01Icon, GoldBuyIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 
@@ -11,18 +13,32 @@ import { useTransferSuggestions, TransferSuggestionsModal } from '@/features/ai'
 import { CustomTopupCard } from '@/features/wallet'
 
 import { useFantasyTeams } from '@/entities/fantasy-team'
-import { useWallet, walletService } from '@/entities/wallet'
-import type { ICoinPack, TransactionType } from '@/entities/wallet'
+import { useWallet, walletService, WITHDRAWAL_CONSENT_TEXT, checkoutCustomerSchema } from '@/entities/wallet'
+import type { CheckoutCustomer, ICoinPack, TransactionType } from '@/entities/wallet'
 
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import { Checkbox } from '@/shared/ui/checkbox'
+import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 
+const CUSTOMER_FIELDS = [
+    { name: 'firstName', label: 'First name', autoComplete: 'given-name' },
+    { name: 'lastName', label: 'Last name', autoComplete: 'family-name' },
+    { name: 'email', label: 'Email', type: 'email', autoComplete: 'email' },
+    { name: 'phone', label: 'Phone number', type: 'tel', autoComplete: 'tel' },
+    { name: 'address', label: 'Billing address', autoComplete: 'street-address' },
+    { name: 'city', label: 'City', autoComplete: 'address-level2' },
+    { name: 'country', label: 'Country code', autoComplete: 'country', placeholder: 'e.g. PL' },
+    { name: 'zip', label: 'Postal code', autoComplete: 'postal-code' },
+    { name: 'birthDate', label: 'Date of birth (optional)', type: 'date', autoComplete: 'bday' },
+] as const
+
 const AI_FEATURES = [
-    { name: 'Advanced Player Analytics', cost: 100 },
-    { name: 'Match Prediction Insights', cost: 75 },
+    { name: 'Advanced Player Analytics', cost: 300 },
+    { name: 'Match Prediction Insights', cost: 300 },
 ] as const
 
 const typeBadgeVariant: Record<TransactionType, 'default' | 'secondary' | 'outline'> = {
@@ -40,8 +56,23 @@ const typeLabel: Record<TransactionType, string> = {
 export const WalletView = () => {
     const { balance, transactions, isLoading, mutate } = useWallet()
     const { fantasyTeams } = useFantasyTeams()
+    const [withdrawalConsent, setWithdrawalConsent] = useState(false)
     const [loadingAction, setLoadingAction] = useState<string | null>(null)
     const searchParams = useSearchParams()
+    const customerForm = useForm<CheckoutCustomer>({
+        resolver: zodResolver(checkoutCustomerSchema),
+        defaultValues: {
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            address: '',
+            city: '',
+            country: '',
+            zip: '',
+            birthDate: '',
+        },
+    })
 
     const fantasyTeamId = fantasyTeams?.[0]?.id
     const transferSuggestions = useTransferSuggestions(fantasyTeamId)
@@ -65,29 +96,27 @@ export const WalletView = () => {
         }
     }, [searchParams, mutate])
 
+    const getCustomer = async (): Promise<CheckoutCustomer | null> => {
+        if (!(await customerForm.trigger(undefined, { shouldFocus: true }))) return null
+
+        const result = checkoutCustomerSchema.safeParse(customerForm.getValues())
+
+        return result.success ? result.data : null
+    }
+
     const handleBuyCoins = async (coinAmount: number) => {
+        const customer = await getCustomer()
+
+        if (!customer) return
+
         setLoadingAction(`buy-${coinAmount}`)
 
         try {
-            const result = await walletService.createCheckout(coinAmount)
+            const result = await walletService.createCheckout(coinAmount, customer)
 
-            window.location.href = result.redirectUrl
+            window.location.assign(result.redirectUrl)
         } catch {
             toast.error('Failed to start checkout. Please try again.')
-            setLoadingAction(null)
-        }
-    }
-
-    const handleSpend = async (featureName: string, cost: number) => {
-        setLoadingAction(`spend-${featureName}`)
-
-        try {
-            await walletService.spendCoins(cost, featureName)
-            await mutate()
-            toast.success(`Unlocked ${featureName}`)
-        } catch {
-            toast.error('Insufficient coins or purchase failed')
-        } finally {
             setLoadingAction(null)
         }
     }
@@ -139,7 +168,55 @@ export const WalletView = () => {
                 </Card>
             )}
 
-            <CustomTopupCard />
+            <Card>
+                <CardHeader>
+                    <CardTitle>Billing details</CardTitle>
+                    <CardDescription>Enter the details of the person making the payment.</CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-4 sm:grid-cols-2">
+                    {CUSTOMER_FIELDS.map((field) => {
+                        const error = customerForm.formState.errors[field.name]
+                        const id = `billing-${field.name}`
+
+                        return (
+                            <div key={field.name} className="space-y-1.5">
+                                <label htmlFor={id} className="text-sm font-medium">
+                                    {field.label}
+                                </label>
+                                <Input
+                                    id={id}
+                                    type={'type' in field ? field.type : 'text'}
+                                    autoComplete={field.autoComplete}
+                                    placeholder={'placeholder' in field ? field.placeholder : undefined}
+                                    aria-invalid={Boolean(error)}
+                                    aria-describedby={error ? `${id}-error` : undefined}
+                                    {...customerForm.register(field.name)}
+                                />
+                                {error && (
+                                    <p id={`${id}-error`} className="text-sm text-destructive">
+                                        {error.message}
+                                    </p>
+                                )}
+                            </div>
+                        )
+                    })}
+                </CardContent>
+            </Card>
+            <div className="flex items-start gap-3 rounded-xl border p-4">
+                <Checkbox
+                    id="withdrawal-consent"
+                    checked={withdrawalConsent}
+                    onCheckedChange={setWithdrawalConsent}
+                />
+                <label htmlFor="withdrawal-consent" className="text-sm leading-relaxed">
+                    {WITHDRAWAL_CONSENT_TEXT} See the{' '}
+                    <a className="underline" href="/return-policy" target="_blank" rel="noreferrer">
+                        Return &amp; Refund Policy
+                    </a>
+                    .
+                </label>
+            </div>
+            <CustomTopupCard withdrawalConsent={withdrawalConsent} getCustomer={getCustomer} />
 
             <div className="grid gap-4 sm:grid-cols-2">
                 <Card>
@@ -161,7 +238,7 @@ export const WalletView = () => {
                                     </div>
                                     <Button
                                         size="sm"
-                                        disabled={loadingAction === `buy-${pack.coins}`}
+                                        disabled={!withdrawalConsent || loadingAction === `buy-${pack.coins}`}
                                         onClick={() => handleBuyCoins(pack.coins)}
                                         className={'flex gap-1'}
                                     >
@@ -203,18 +280,6 @@ export const WalletView = () => {
                                     <p className="text-sm font-medium">{feature.name}</p>
                                     <p className="text-xs text-muted-foreground">{feature.cost} coins</p>
                                 </div>
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    disabled={
-                                        balance < feature.cost || loadingAction === `spend-${feature.name}`
-                                    }
-                                    onClick={() => handleSpend(feature.name, feature.cost)}
-                                >
-                                    <HugeiconsIcon icon={AiBrain01Icon} />
-
-                                    {loadingAction === `spend-${feature.name}` ? 'Using...' : 'Use'}
-                                </Button>
                             </div>
                         ))}
                     </CardContent>
@@ -253,7 +318,17 @@ export const WalletView = () => {
                                                 {typeLabel[tx.type]}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell className="text-sm">{tx.description}</TableCell>
+                                        <TableCell className="text-sm">
+                                            {tx.description}
+                                            {tx.paymentTokenId && (
+                                                <a
+                                                    className="ml-2 underline"
+                                                    href={`/api/payments/secure-processor/${encodeURIComponent(tx.paymentTokenId)}/receipt`}
+                                                >
+                                                    Download confirmation
+                                                </a>
+                                            )}
+                                        </TableCell>
                                         <TableCell
                                             className={`text-right font-medium ${
                                                 tx.amount > 0 ? 'text-green-600' : 'text-red-500'

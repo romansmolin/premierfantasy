@@ -8,12 +8,18 @@ export const metadata = {
 
 export default function TermsOfServicePage() {
     return (
-        <LegalLayout title="Terms of Service" lastUpdated="April 6, 2026">
+        <LegalLayout title="Terms of Service" lastUpdated="November 4, 2026">
             <h2>1. Acceptance of Terms</h2>
             <p>
                 By accessing or using the Premier Fantasy platform (&quot;Service&quot;), you agree to be
                 bound by these Terms of Service. If you do not agree to these terms, please do not use the
                 Service.
+            </p>
+
+            <p>
+                You must be at least 18 years old to use the Service. You are responsible for ensuring that
+                use of the Service and any paid features is permitted in your location. Access may be
+                restricted where required by applicable law.
             </p>
 
             <h2>2. Description of Service</h2>
@@ -58,8 +64,9 @@ export default function TermsOfServicePage() {
             <h2>7. Payments</h2>
             <p>
                 All payments for Coin purchases are processed through our third-party payment provider. By
-                making a purchase, you agree to the payment processor&apos;s terms and conditions. All
-                purchases are final unless otherwise required by applicable law.
+                making a purchase, you agree to the payment processor&apos;s terms and conditions. Your
+                statutory consumer rights, including any applicable right of withdrawal, remain unaffected.
+                See our <a href="/return-policy">Return &amp; Refund Policy</a> for details.
             </p>
 
             <h2>8. Prohibited Conduct</h2>
@@ -99,9 +106,18 @@ export default function TermsOfServicePage() {
                 changes via the platform.
             </p>
 
-            <h2>13. Contact</h2>
+            <h2>13. Governing Law and Jurisdiction</h2>
             <p>
-                For questions about these Terms, please contact us at{' '}
+                These Terms are governed by Polish law. This choice does not deprive consumers of mandatory
+                protections available under the law of their country of residence. Disputes may be brought
+                before the competent courts determined by applicable law, including mandatory consumer
+                jurisdiction rules.
+            </p>
+
+            <h2>14. Contact</h2>
+            <p>
+                DIGIDROP Sp. z o.o., KRS 0001185058, Aleja Jana Pawła II 27, 00-867 Warszawa, Poland. For
+                questions about these Terms, contact{' '}
                 <a href="mailto:support@premierfantasy.net">support@premierfantasy.net</a>.
             </p>
         </LegalLayout>

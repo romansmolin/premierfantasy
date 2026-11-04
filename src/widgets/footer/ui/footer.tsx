@@ -55,6 +55,8 @@ export function Footer() {
                             KRS: {COMPANY.registrationNumber}
                             <br />
                             {COMPANY.address}
+                            <br />
+                            <a href="mailto:support@premierfantasy.net">support@premierfantasy.net</a>
                         </address>
                     </div>
 

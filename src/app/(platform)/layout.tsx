@@ -7,6 +7,7 @@ import { DashboardLayout } from '@/widgets/dashboard-layout'
 
 import { SITE } from '@/shared/config/site'
 import { getServerSession } from '@/shared/lib/get-server-session'
+import { CookieNotice } from '@/shared/ui/cookie-notice'
 
 import type { Metadata } from 'next'
 
@@ -49,6 +50,7 @@ export default async function RootLayout({
             <body className={`${audiowide.variable} ${montserrat.variable} antialiased`}>
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                     <DashboardLayout>{children}</DashboardLayout>
+                    <CookieNotice />
                     <Toaster richColors position="top-right" />
                 </ThemeProvider>
             </body>

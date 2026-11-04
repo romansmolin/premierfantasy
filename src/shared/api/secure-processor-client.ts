@@ -1,11 +1,14 @@
 import crypto from 'crypto'
 
+import type { CheckoutCustomer } from '@/shared/model/checkout-customer'
+
 interface CheckoutRequest {
     amountCents: number
     currency: string
     description: string
     trackingId: string
     userId: string
+    customer: CheckoutCustomer
 }
 
 interface CheckoutResponse {
@@ -23,9 +26,11 @@ export interface RemoteCheckoutState {
 
 const readRequired = (name: string): string => {
     const value = process.env[name]
+
     if (!value || value.trim().length === 0) {
         throw new Error(`Missing required env var: ${name}`)
     }
+
     return value
 }
 
@@ -37,6 +42,7 @@ const formatPublicKey = (raw: string): string => {
         .replace(/\\n/g, '')
         .trim()
     const wrapped = normalized.match(/.{1,64}/g)?.join('\n') ?? normalized
+
     return `-----BEGIN PUBLIC KEY-----\n${wrapped}\n-----END PUBLIC KEY-----`
 }
 
@@ -86,7 +92,16 @@ class SecureProcessorClient {
                     tracking_id: data.trackingId,
                 },
                 customer: {
-                    id: data.userId,
+                    external_id: data.userId,
+                    email: data.customer.email,
+                    first_name: data.customer.firstName,
+                    last_name: data.customer.lastName,
+                    phone: data.customer.phone,
+                    address: data.customer.address,
+                    city: data.customer.city,
+                    country: data.customer.country.toUpperCase(),
+                    zip: data.customer.zip,
+                    ...(data.customer.birthDate ? { birth_date: data.customer.birthDate } : {}),
                 },
                 metadata: {
                     payment_token_id: data.trackingId,
@@ -162,6 +177,7 @@ export const secureProcessorClient = new SecureProcessorClient()
 export function verifyWebhookSignature(rawBody: string, signature: string): boolean {
     const trimmed = signature.trim()
     const signatureValue = trimmed.includes('=') ? trimmed.split('=').slice(-1)[0] : trimmed
+
     try {
         return crypto.verify(
             'RSA-SHA256',
@@ -176,8 +192,11 @@ export function verifyWebhookSignature(rawBody: string, signature: string): bool
 
 export function verifyWebhookBasicAuth(authorization: string | null): boolean {
     if (!authorization?.startsWith('Basic ')) return false
+
     const provided = Buffer.from(authorization.slice('Basic '.length).trim())
     const expected = Buffer.from(secureProcessorClient.authHeader.slice('Basic '.length))
+
     if (provided.length !== expected.length) return false
+
     return crypto.timingSafeEqual(provided, expected)
 }

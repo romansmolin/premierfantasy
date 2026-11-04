@@ -4,6 +4,7 @@ import { FaqSection } from '@/widgets/sections/faq-section/ui/faq-section'
 import { FeatureSection } from '@/widgets/sections/feature-section/ui/feature-section'
 import { FeatureTabsSection } from '@/widgets/sections/feature-tabs-section/ui/feature-tabs-section'
 import { HeroSection } from '@/widgets/sections/hero-section/ui/hero-section'
+import { PricingSection } from '@/widgets/sections/pricing-section/ui/pricing-section'
 import { SignupSection } from '@/widgets/sections/signup-section/ui/signup-section'
 
 import { SITE } from '@/shared/config/site'
@@ -25,6 +26,7 @@ export default function LandingPage() {
             <FeatureSection />
             <FeatureTabsSection />
             <AboutSection />
+            <PricingSection />
             <FaqSection />
             <CtaSection />
             <SignupSection />

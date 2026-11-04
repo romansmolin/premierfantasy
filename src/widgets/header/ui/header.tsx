@@ -8,8 +8,8 @@ import {
     Sun01Icon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { useTheme } from 'next-themes'
 import Link from 'next/link'
+import { useTheme } from 'next-themes'
 import { useState } from 'react'
 
 import { cn } from '@/shared/lib/utils'
@@ -17,9 +17,9 @@ import { Button, buttonVariants } from '@/shared/ui/button'
 import { Sheet, SheetContent, SheetFooter } from '@/shared/ui/sheet'
 
 const links = [
-    { label: 'Features', href: '#features' },
-    { label: 'How It Works', href: '#how-it-works' },
-    { label: 'Pricing', href: '#pricing' },
+    { label: 'Features', href: '/#features' },
+    { label: 'How It Works', href: '/#how-it-works' },
+    { label: 'Pricing', href: '/#pricing' },
 ]
 
 export function FloatingHeader() {
@@ -91,6 +91,7 @@ export function FloatingHeader() {
                                             className: 'justify-start',
                                         })}
                                         href={link.href}
+                                        onClick={() => setOpen(false)}
                                     >
                                         {link.label}
                                     </a>

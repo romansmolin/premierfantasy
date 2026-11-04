@@ -5,6 +5,7 @@ import { Toaster } from 'sonner'
 
 import { SITE } from '@/shared/config/site'
 import { getServerSession } from '@/shared/lib/get-server-session'
+import { CookieNotice } from '@/shared/ui/cookie-notice'
 
 import type { Metadata } from 'next'
 
@@ -59,6 +60,7 @@ export default async function RootLayout({
                         </div>
                     </section>
                 </main>
+                <CookieNotice />
                 <Toaster richColors position="top-right" />
             </body>
         </html>

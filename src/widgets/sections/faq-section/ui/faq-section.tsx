@@ -90,7 +90,7 @@ export function FaqSection() {
     const [openIndex, setOpenIndex] = useState<number | null>(null)
 
     return (
-        <section className="py-10 md:py-16">
+        <section id="faq" className="py-10 md:py-16">
             <div className="mx-auto max-w-3xl px-6">
                 <AnimateIn variant="fadeUp">
                     <div className="flex flex-col items-center gap-4 text-center mb-10">

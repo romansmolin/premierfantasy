@@ -283,6 +283,8 @@ export const PaymentTokenScalarFieldEnum = {
     currency: 'currency',
     coinAmount: 'coinAmount',
     description: 'description',
+    withdrawalConsentAt: 'withdrawalConsentAt',
+    withdrawalConsentText: 'withdrawalConsentText',
     errorMessage: 'errorMessage',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',

@@ -29,7 +29,7 @@ const contentSections = [
 
 export function AboutSection() {
     return (
-        <section className="py-10 md:py-16">
+        <section id="about" className="py-10 md:py-16">
             <div className="mx-auto max-w-6xl px-6">
                 {/* Header */}
                 <AnimateIn variant="fadeUp">

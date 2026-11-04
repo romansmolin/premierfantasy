@@ -1,18 +1,24 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
+import { COMPANY } from '@/shared/config/company'
 import { isAuthError, requireUserId } from '@/shared/lib/auth-helpers'
-import { AppError, parseJson, withController } from '@/shared/lib/http'
+import { AppError, Errors, parseJson, withController } from '@/shared/lib/http'
+import { checkoutCustomerSchema } from '@/shared/model/checkout-customer'
 
 import type { IPaymentService } from '../service/payment.service.interface'
 
 const checkoutSchema = z.object({
     coinAmount: z.number().int().positive(),
+    withdrawalConsent: z.literal(true),
+    customer: checkoutCustomerSchema,
 })
 
 // Only the amount of money crosses the wire — the coin count is server-derived.
 const customCheckoutSchema = z.object({
     amountCents: z.number().int().positive(),
+    withdrawalConsent: z.literal(true),
+    customer: checkoutCustomerSchema,
 })
 
 export class PaymentController {
@@ -27,9 +33,9 @@ export class PaymentController {
 
         if (isAuthError(userId)) return userId
 
-        const { coinAmount } = await parseJson(req, checkoutSchema)
+        const { coinAmount, customer } = await parseJson(req, checkoutSchema)
 
-        return this.paymentService.createCheckout(userId, coinAmount)
+        return this.paymentService.createCheckout(userId, coinAmount, customer)
     })
 
     createCustomCheckout = withController(async (req) => {
@@ -37,9 +43,68 @@ export class PaymentController {
 
         if (isAuthError(userId)) return userId
 
-        const { amountCents } = await parseJson(req, customCheckoutSchema)
+        const { amountCents, customer } = await parseJson(req, customCheckoutSchema)
 
-        return this.paymentService.createCustomCheckout(userId, amountCents)
+        return this.paymentService.createCustomCheckout(userId, amountCents, customer)
+    })
+
+    getStatus = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
+
+        if (isAuthError(userId)) return userId
+
+        const { token } = await ctx.params
+        const payment = await this.paymentService.getPaymentForUser(userId, token)
+
+        return {
+            status: payment.status,
+            amountCents: payment.amountCents,
+            currency: payment.currency,
+            updatedAt: payment.updatedAt,
+        }
+    })
+
+    downloadReceipt = withController(async (req, ctx) => {
+        const userId = await requireUserId(req)
+
+        if (isAuthError(userId)) return userId
+
+        const { token } = await ctx.params
+        const payment = await this.paymentService.getPaymentForUser(userId, token)
+
+        if (payment.status !== 'SUCCESSFUL') throw Errors.notFound('Completed payment not found')
+
+        const lines = [
+            'Premier Fantasy - Purchase confirmation',
+            '',
+            `Merchant: ${COMPANY.name}`,
+            `KRS: ${COMPANY.registrationNumber}`,
+            `Address: ${COMPANY.address}`,
+            'Contact: support@premierfantasy.net',
+            `Payment reference: ${payment.id}`,
+            `Order created: ${payment.createdAt.toISOString()}`,
+            `Amount: ${(payment.amountCents / 100).toFixed(2)} ${payment.currency}`,
+            `Coins purchased: ${payment.coinAmount}`,
+            `Status: ${payment.status}`,
+            '',
+            ...(payment.withdrawalConsentAt && payment.withdrawalConsentText
+                ? [
+                      `Consent recorded: ${payment.withdrawalConsentAt.toISOString()}`,
+                      payment.withdrawalConsentText,
+                  ]
+                : ['No withdrawal consent was recorded for this purchase.']),
+            '',
+            'Return and refund policy: https://www.premierfantasy.net/return-policy',
+        ]
+
+        return new NextResponse(lines.join('\n'), {
+            headers: {
+                'Content-Type': 'text/plain; charset=utf-8',
+                'Content-Disposition': 'attachment; filename="premier-fantasy-purchase.txt"',
+                'Cache-Control': 'private, no-store',
+                'X-Content-Type-Options': 'nosniff',
+            },
+        })
     })
 
     handleWebhook = async (req: Request): Promise<NextResponse> => {

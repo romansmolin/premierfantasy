@@ -8,11 +8,25 @@ export const metadata = {
 
 export default function ReturnPolicyPage() {
     return (
-        <LegalLayout title="Return & Refund Policy" lastUpdated="April 6, 2026">
+        <LegalLayout title="Return & Refund Policy" lastUpdated="November 4, 2026">
             <h2>Digital Goods</h2>
             <p>
                 Premier Fantasy is a digital service. All purchases of Coins (in-app currency) are considered
                 digital goods and are subject to the following refund policy.
+            </p>
+
+            <h2>Consumer Right of Withdrawal</h2>
+            <p>
+                Consumers may have a statutory right to withdraw from a distance contract within 14 days
+                without giving a reason. To exercise it, contact us using the details below with a clear
+                statement of your decision. Mandatory remedies for faulty digital content or services and
+                other rights under applicable law are not affected.
+            </p>
+            <p>
+                For digital content, the right of withdrawal may be lost when delivery begins only if the
+                applicable legal conditions are met, including your prior express consent, acknowledgement of
+                the loss of that right and confirmation of the contract. Different rules may apply to digital
+                services. Using Coins does not by itself waive rights that cannot legally be waived.
             </p>
 
             <h2>Coin Purchases</h2>
@@ -20,13 +34,13 @@ export default function ReturnPolicyPage() {
             <ul>
                 <li>Payment was processed but Coins were not credited due to a technical error.</li>
                 <li>You were charged multiple times for a single purchase.</li>
-                <li>Unauthorized purchase on your account (report within 48 hours).</li>
+                <li>Unauthorized purchase on your account (please report it promptly).</li>
             </ul>
 
             <h3>Not Eligible for Refund</h3>
             <ul>
                 <li>Coins that have already been spent on AI features or other services.</li>
-                <li>Change of mind after purchase.</li>
+                <li>Change of mind where no statutory right of withdrawal applies.</li>
                 <li>Account suspension due to Terms of Service violations.</li>
                 <li>Competition results you are unsatisfied with.</li>
             </ul>
@@ -34,8 +48,7 @@ export default function ReturnPolicyPage() {
             <h2>AI Feature Usage</h2>
             <p>
                 Coins spent on AI features (Transfer Suggestions, Player Analytics, Match Predictions) are
-                non-refundable once the analysis has been generated, regardless of the quality or accuracy of
-                the results.
+                subject to your statutory rights, including remedies for faulty services.
             </p>
 
             <h2>Competition Rewards</h2>
@@ -48,7 +61,7 @@ export default function ReturnPolicyPage() {
             <ol>
                 <li>
                     Contact us at <a href="mailto:support@premierfantasy.net">support@premierfantasy.net</a>{' '}
-                    within 14 days of the purchase.
+                    with your request. Statutory deadlines and remedies remain applicable.
                 </li>
                 <li>Include your account email, the date of purchase, and the amount.</li>
                 <li>Provide a description of the issue.</li>

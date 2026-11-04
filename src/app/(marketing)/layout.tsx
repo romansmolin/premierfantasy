@@ -6,6 +6,7 @@ import { Footer } from '@/widgets/footer/ui/footer'
 import { FloatingHeader } from '@/widgets/header/ui/header'
 
 import { SITE } from '@/shared/config/site'
+import { CookieNotice } from '@/shared/ui/cookie-notice'
 
 import type { Metadata } from 'next'
 
@@ -62,6 +63,7 @@ export default function RootMarketingLayout({
                     <FloatingHeader />
                     <main>{children}</main>
                     <Footer />
+                    <CookieNotice />
                     <Toaster richColors position="top-right" />
                 </ThemeProvider>
             </body>

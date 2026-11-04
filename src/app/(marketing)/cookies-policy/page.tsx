@@ -1,5 +1,7 @@
 import { LegalLayout } from '@/widgets/sections/legal-layout/ui/legal-layout'
 
+import { CookiePreferencesButton } from '@/shared/ui/cookie-notice'
+
 export const metadata = {
     title: 'Cookie Policy',
     description:
@@ -17,7 +19,10 @@ export default function CookiesPolicyPage() {
 
             <h2>Cookies We Use</h2>
             <h3>Essential Cookies</h3>
-            <p>These cookies are required for the Service to function and cannot be disabled.</p>
+            <p>
+                We use authentication cookies and local storage for site preferences. Authentication cookies
+                are needed to stay signed in.
+            </p>
             <table>
                 <thead>
                     <tr>
@@ -29,7 +34,7 @@ export default function CookiesPolicyPage() {
                 <tbody>
                     <tr>
                         <td>
-                            <code>better-auth.session_token</code>
+                            <code>premier-fantasy.session_token</code>
                         </td>
                         <td>Authentication — keeps you signed in</td>
                         <td>7 days</td>
@@ -39,14 +44,14 @@ export default function CookiesPolicyPage() {
                             <code>sidebar_state</code>
                         </td>
                         <td>Remembers sidebar open/closed preference</td>
-                        <td>7 days</td>
+                        <td>Browser cookie</td>
                     </tr>
                     <tr>
                         <td>
                             <code>theme</code>
                         </td>
                         <td>Stores light/dark mode preference</td>
-                        <td>1 year</td>
+                        <td>Local storage until cleared</td>
                     </tr>
                 </tbody>
             </table>
@@ -66,8 +71,13 @@ export default function CookiesPolicyPage() {
 
             <h2>Managing Cookies</h2>
             <p>
-                You can manage cookies through your browser settings. Disabling essential cookies will prevent
-                you from staying signed in.
+                You can manage cookies and local storage through your browser settings. Your cookie preference
+                is stored locally on your device. Disabling essential cookies will prevent you from staying
+                signed in.
+            </p>
+
+            <p>
+                <CookiePreferencesButton />
             </p>
 
             <h2>Contact</h2>
