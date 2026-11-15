@@ -221,10 +221,7 @@ export type PlayerWhereInput = {
     teamId?: Prisma.StringFilter<'Player'> | string
     createdAt?: Prisma.DateTimeFilter<'Player'> | Date | string
     team?: Prisma.XOR<Prisma.TeamScalarRelationFilter, Prisma.TeamWhereInput>
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerListRelationFilter
     gameweekStats?: Prisma.PlayerGameweekStatsListRelationFilter
-    transfersIn?: Prisma.TransferListRelationFilter
-    transfersOut?: Prisma.TransferListRelationFilter
     seasonPrices?: Prisma.PlayerSeasonPriceListRelationFilter
 }
 
@@ -236,10 +233,7 @@ export type PlayerOrderByWithRelationInput = {
     teamId?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     team?: Prisma.TeamOrderByWithRelationInput
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerOrderByRelationAggregateInput
     gameweekStats?: Prisma.PlayerGameweekStatsOrderByRelationAggregateInput
-    transfersIn?: Prisma.TransferOrderByRelationAggregateInput
-    transfersOut?: Prisma.TransferOrderByRelationAggregateInput
     seasonPrices?: Prisma.PlayerSeasonPriceOrderByRelationAggregateInput
 }
 
@@ -255,10 +249,7 @@ export type PlayerWhereUniqueInput = Prisma.AtLeast<
         teamId?: Prisma.StringFilter<'Player'> | string
         createdAt?: Prisma.DateTimeFilter<'Player'> | Date | string
         team?: Prisma.XOR<Prisma.TeamScalarRelationFilter, Prisma.TeamWhereInput>
-        fantasyTeamSlots?: Prisma.FantasyTeamPlayerListRelationFilter
         gameweekStats?: Prisma.PlayerGameweekStatsListRelationFilter
-        transfersIn?: Prisma.TransferListRelationFilter
-        transfersOut?: Prisma.TransferListRelationFilter
         seasonPrices?: Prisma.PlayerSeasonPriceListRelationFilter
     },
     'id' | 'externalId'
@@ -297,10 +288,7 @@ export type PlayerCreateInput = {
     position: $Enums.PlayerPosition
     createdAt?: Date | string
     team: Prisma.TeamCreateNestedOneWithoutPlayersInput
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutPlayerInput
     gameweekStats?: Prisma.PlayerGameweekStatsCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferCreateNestedManyWithoutPlayerInInput
-    transfersOut?: Prisma.TransferCreateNestedManyWithoutPlayerOutInput
     seasonPrices?: Prisma.PlayerSeasonPriceCreateNestedManyWithoutPlayerInput
 }
 
@@ -311,10 +299,7 @@ export type PlayerUncheckedCreateInput = {
     position: $Enums.PlayerPosition
     teamId: string
     createdAt?: Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutPlayerInput
     gameweekStats?: Prisma.PlayerGameweekStatsUncheckedCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerInInput
-    transfersOut?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerOutInput
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedCreateNestedManyWithoutPlayerInput
 }
 
@@ -325,10 +310,7 @@ export type PlayerUpdateInput = {
     position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     team?: Prisma.TeamUpdateOneRequiredWithoutPlayersNestedInput
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUpdateManyWithoutPlayerNestedInput
     gameweekStats?: Prisma.PlayerGameweekStatsUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUpdateManyWithoutPlayerInNestedInput
-    transfersOut?: Prisma.TransferUpdateManyWithoutPlayerOutNestedInput
     seasonPrices?: Prisma.PlayerSeasonPriceUpdateManyWithoutPlayerNestedInput
 }
 
@@ -339,10 +321,7 @@ export type PlayerUncheckedUpdateInput = {
     position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
     teamId?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutPlayerNestedInput
     gameweekStats?: Prisma.PlayerGameweekStatsUncheckedUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUncheckedUpdateManyWithoutPlayerInNestedInput
-    transfersOut?: Prisma.TransferUncheckedUpdateManyWithoutPlayerOutNestedInput
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
@@ -370,11 +349,6 @@ export type PlayerUncheckedUpdateManyInput = {
     position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
     teamId?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type PlayerScalarRelationFilter = {
-    is?: Prisma.PlayerWhereInput
-    isNot?: Prisma.PlayerWhereInput
 }
 
 export type PlayerListRelationFilter = {
@@ -422,82 +396,9 @@ export type PlayerSumOrderByAggregateInput = {
     externalId?: Prisma.SortOrder
 }
 
-export type PlayerCreateNestedOneWithoutTransfersInInput = {
-    create?: Prisma.XOR<
-        Prisma.PlayerCreateWithoutTransfersInInput,
-        Prisma.PlayerUncheckedCreateWithoutTransfersInInput
-    >
-    connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutTransfersInInput
-    connect?: Prisma.PlayerWhereUniqueInput
-}
-
-export type PlayerCreateNestedOneWithoutTransfersOutInput = {
-    create?: Prisma.XOR<
-        Prisma.PlayerCreateWithoutTransfersOutInput,
-        Prisma.PlayerUncheckedCreateWithoutTransfersOutInput
-    >
-    connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutTransfersOutInput
-    connect?: Prisma.PlayerWhereUniqueInput
-}
-
-export type PlayerUpdateOneRequiredWithoutTransfersInNestedInput = {
-    create?: Prisma.XOR<
-        Prisma.PlayerCreateWithoutTransfersInInput,
-        Prisma.PlayerUncheckedCreateWithoutTransfersInInput
-    >
-    connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutTransfersInInput
-    upsert?: Prisma.PlayerUpsertWithoutTransfersInInput
-    connect?: Prisma.PlayerWhereUniqueInput
-    update?: Prisma.XOR<
-        Prisma.XOR<
-            Prisma.PlayerUpdateToOneWithWhereWithoutTransfersInInput,
-            Prisma.PlayerUpdateWithoutTransfersInInput
-        >,
-        Prisma.PlayerUncheckedUpdateWithoutTransfersInInput
-    >
-}
-
-export type PlayerUpdateOneRequiredWithoutTransfersOutNestedInput = {
-    create?: Prisma.XOR<
-        Prisma.PlayerCreateWithoutTransfersOutInput,
-        Prisma.PlayerUncheckedCreateWithoutTransfersOutInput
-    >
-    connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutTransfersOutInput
-    upsert?: Prisma.PlayerUpsertWithoutTransfersOutInput
-    connect?: Prisma.PlayerWhereUniqueInput
-    update?: Prisma.XOR<
-        Prisma.XOR<
-            Prisma.PlayerUpdateToOneWithWhereWithoutTransfersOutInput,
-            Prisma.PlayerUpdateWithoutTransfersOutInput
-        >,
-        Prisma.PlayerUncheckedUpdateWithoutTransfersOutInput
-    >
-}
-
-export type PlayerCreateNestedOneWithoutFantasyTeamSlotsInput = {
-    create?: Prisma.XOR<
-        Prisma.PlayerCreateWithoutFantasyTeamSlotsInput,
-        Prisma.PlayerUncheckedCreateWithoutFantasyTeamSlotsInput
-    >
-    connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutFantasyTeamSlotsInput
-    connect?: Prisma.PlayerWhereUniqueInput
-}
-
-export type PlayerUpdateOneRequiredWithoutFantasyTeamSlotsNestedInput = {
-    create?: Prisma.XOR<
-        Prisma.PlayerCreateWithoutFantasyTeamSlotsInput,
-        Prisma.PlayerUncheckedCreateWithoutFantasyTeamSlotsInput
-    >
-    connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutFantasyTeamSlotsInput
-    upsert?: Prisma.PlayerUpsertWithoutFantasyTeamSlotsInput
-    connect?: Prisma.PlayerWhereUniqueInput
-    update?: Prisma.XOR<
-        Prisma.XOR<
-            Prisma.PlayerUpdateToOneWithWhereWithoutFantasyTeamSlotsInput,
-            Prisma.PlayerUpdateWithoutFantasyTeamSlotsInput
-        >,
-        Prisma.PlayerUncheckedUpdateWithoutFantasyTeamSlotsInput
-    >
+export type PlayerScalarRelationFilter = {
+    is?: Prisma.PlayerWhereInput
+    isNot?: Prisma.PlayerWhereInput
 }
 
 export type PlayerCreateNestedManyWithoutTeamInput = {
@@ -574,6 +475,10 @@ export type PlayerUncheckedUpdateManyWithoutTeamNestedInput = {
     deleteMany?: Prisma.PlayerScalarWhereInput | Prisma.PlayerScalarWhereInput[]
 }
 
+export type EnumPlayerPositionFieldUpdateOperationsInput = {
+    set?: $Enums.PlayerPosition
+}
+
 export type PlayerCreateNestedOneWithoutSeasonPricesInput = {
     create?: Prisma.XOR<
         Prisma.PlayerCreateWithoutSeasonPricesInput,
@@ -626,256 +531,13 @@ export type PlayerUpdateOneRequiredWithoutGameweekStatsNestedInput = {
     >
 }
 
-export type PlayerCreateWithoutTransfersInInput = {
-    id?: string
-    externalId: number
-    name: string
-    position: $Enums.PlayerPosition
-    createdAt?: Date | string
-    team: Prisma.TeamCreateNestedOneWithoutPlayersInput
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutPlayerInput
-    gameweekStats?: Prisma.PlayerGameweekStatsCreateNestedManyWithoutPlayerInput
-    transfersOut?: Prisma.TransferCreateNestedManyWithoutPlayerOutInput
-    seasonPrices?: Prisma.PlayerSeasonPriceCreateNestedManyWithoutPlayerInput
-}
-
-export type PlayerUncheckedCreateWithoutTransfersInInput = {
-    id?: string
-    externalId: number
-    name: string
-    position: $Enums.PlayerPosition
-    teamId: string
-    createdAt?: Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutPlayerInput
-    gameweekStats?: Prisma.PlayerGameweekStatsUncheckedCreateNestedManyWithoutPlayerInput
-    transfersOut?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerOutInput
-    seasonPrices?: Prisma.PlayerSeasonPriceUncheckedCreateNestedManyWithoutPlayerInput
-}
-
-export type PlayerCreateOrConnectWithoutTransfersInInput = {
-    where: Prisma.PlayerWhereUniqueInput
-    create: Prisma.XOR<
-        Prisma.PlayerCreateWithoutTransfersInInput,
-        Prisma.PlayerUncheckedCreateWithoutTransfersInInput
-    >
-}
-
-export type PlayerCreateWithoutTransfersOutInput = {
-    id?: string
-    externalId: number
-    name: string
-    position: $Enums.PlayerPosition
-    createdAt?: Date | string
-    team: Prisma.TeamCreateNestedOneWithoutPlayersInput
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutPlayerInput
-    gameweekStats?: Prisma.PlayerGameweekStatsCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferCreateNestedManyWithoutPlayerInInput
-    seasonPrices?: Prisma.PlayerSeasonPriceCreateNestedManyWithoutPlayerInput
-}
-
-export type PlayerUncheckedCreateWithoutTransfersOutInput = {
-    id?: string
-    externalId: number
-    name: string
-    position: $Enums.PlayerPosition
-    teamId: string
-    createdAt?: Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutPlayerInput
-    gameweekStats?: Prisma.PlayerGameweekStatsUncheckedCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerInInput
-    seasonPrices?: Prisma.PlayerSeasonPriceUncheckedCreateNestedManyWithoutPlayerInput
-}
-
-export type PlayerCreateOrConnectWithoutTransfersOutInput = {
-    where: Prisma.PlayerWhereUniqueInput
-    create: Prisma.XOR<
-        Prisma.PlayerCreateWithoutTransfersOutInput,
-        Prisma.PlayerUncheckedCreateWithoutTransfersOutInput
-    >
-}
-
-export type PlayerUpsertWithoutTransfersInInput = {
-    update: Prisma.XOR<
-        Prisma.PlayerUpdateWithoutTransfersInInput,
-        Prisma.PlayerUncheckedUpdateWithoutTransfersInInput
-    >
-    create: Prisma.XOR<
-        Prisma.PlayerCreateWithoutTransfersInInput,
-        Prisma.PlayerUncheckedCreateWithoutTransfersInInput
-    >
-    where?: Prisma.PlayerWhereInput
-}
-
-export type PlayerUpdateToOneWithWhereWithoutTransfersInInput = {
-    where?: Prisma.PlayerWhereInput
-    data: Prisma.XOR<
-        Prisma.PlayerUpdateWithoutTransfersInInput,
-        Prisma.PlayerUncheckedUpdateWithoutTransfersInInput
-    >
-}
-
-export type PlayerUpdateWithoutTransfersInInput = {
-    id?: Prisma.StringFieldUpdateOperationsInput | string
-    externalId?: Prisma.IntFieldUpdateOperationsInput | number
-    name?: Prisma.StringFieldUpdateOperationsInput | string
-    position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
-    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-    team?: Prisma.TeamUpdateOneRequiredWithoutPlayersNestedInput
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUpdateManyWithoutPlayerNestedInput
-    gameweekStats?: Prisma.PlayerGameweekStatsUpdateManyWithoutPlayerNestedInput
-    transfersOut?: Prisma.TransferUpdateManyWithoutPlayerOutNestedInput
-    seasonPrices?: Prisma.PlayerSeasonPriceUpdateManyWithoutPlayerNestedInput
-}
-
-export type PlayerUncheckedUpdateWithoutTransfersInInput = {
-    id?: Prisma.StringFieldUpdateOperationsInput | string
-    externalId?: Prisma.IntFieldUpdateOperationsInput | number
-    name?: Prisma.StringFieldUpdateOperationsInput | string
-    position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
-    teamId?: Prisma.StringFieldUpdateOperationsInput | string
-    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutPlayerNestedInput
-    gameweekStats?: Prisma.PlayerGameweekStatsUncheckedUpdateManyWithoutPlayerNestedInput
-    transfersOut?: Prisma.TransferUncheckedUpdateManyWithoutPlayerOutNestedInput
-    seasonPrices?: Prisma.PlayerSeasonPriceUncheckedUpdateManyWithoutPlayerNestedInput
-}
-
-export type PlayerUpsertWithoutTransfersOutInput = {
-    update: Prisma.XOR<
-        Prisma.PlayerUpdateWithoutTransfersOutInput,
-        Prisma.PlayerUncheckedUpdateWithoutTransfersOutInput
-    >
-    create: Prisma.XOR<
-        Prisma.PlayerCreateWithoutTransfersOutInput,
-        Prisma.PlayerUncheckedCreateWithoutTransfersOutInput
-    >
-    where?: Prisma.PlayerWhereInput
-}
-
-export type PlayerUpdateToOneWithWhereWithoutTransfersOutInput = {
-    where?: Prisma.PlayerWhereInput
-    data: Prisma.XOR<
-        Prisma.PlayerUpdateWithoutTransfersOutInput,
-        Prisma.PlayerUncheckedUpdateWithoutTransfersOutInput
-    >
-}
-
-export type PlayerUpdateWithoutTransfersOutInput = {
-    id?: Prisma.StringFieldUpdateOperationsInput | string
-    externalId?: Prisma.IntFieldUpdateOperationsInput | number
-    name?: Prisma.StringFieldUpdateOperationsInput | string
-    position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
-    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-    team?: Prisma.TeamUpdateOneRequiredWithoutPlayersNestedInput
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUpdateManyWithoutPlayerNestedInput
-    gameweekStats?: Prisma.PlayerGameweekStatsUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUpdateManyWithoutPlayerInNestedInput
-    seasonPrices?: Prisma.PlayerSeasonPriceUpdateManyWithoutPlayerNestedInput
-}
-
-export type PlayerUncheckedUpdateWithoutTransfersOutInput = {
-    id?: Prisma.StringFieldUpdateOperationsInput | string
-    externalId?: Prisma.IntFieldUpdateOperationsInput | number
-    name?: Prisma.StringFieldUpdateOperationsInput | string
-    position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
-    teamId?: Prisma.StringFieldUpdateOperationsInput | string
-    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutPlayerNestedInput
-    gameweekStats?: Prisma.PlayerGameweekStatsUncheckedUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUncheckedUpdateManyWithoutPlayerInNestedInput
-    seasonPrices?: Prisma.PlayerSeasonPriceUncheckedUpdateManyWithoutPlayerNestedInput
-}
-
-export type PlayerCreateWithoutFantasyTeamSlotsInput = {
-    id?: string
-    externalId: number
-    name: string
-    position: $Enums.PlayerPosition
-    createdAt?: Date | string
-    team: Prisma.TeamCreateNestedOneWithoutPlayersInput
-    gameweekStats?: Prisma.PlayerGameweekStatsCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferCreateNestedManyWithoutPlayerInInput
-    transfersOut?: Prisma.TransferCreateNestedManyWithoutPlayerOutInput
-    seasonPrices?: Prisma.PlayerSeasonPriceCreateNestedManyWithoutPlayerInput
-}
-
-export type PlayerUncheckedCreateWithoutFantasyTeamSlotsInput = {
-    id?: string
-    externalId: number
-    name: string
-    position: $Enums.PlayerPosition
-    teamId: string
-    createdAt?: Date | string
-    gameweekStats?: Prisma.PlayerGameweekStatsUncheckedCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerInInput
-    transfersOut?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerOutInput
-    seasonPrices?: Prisma.PlayerSeasonPriceUncheckedCreateNestedManyWithoutPlayerInput
-}
-
-export type PlayerCreateOrConnectWithoutFantasyTeamSlotsInput = {
-    where: Prisma.PlayerWhereUniqueInput
-    create: Prisma.XOR<
-        Prisma.PlayerCreateWithoutFantasyTeamSlotsInput,
-        Prisma.PlayerUncheckedCreateWithoutFantasyTeamSlotsInput
-    >
-}
-
-export type PlayerUpsertWithoutFantasyTeamSlotsInput = {
-    update: Prisma.XOR<
-        Prisma.PlayerUpdateWithoutFantasyTeamSlotsInput,
-        Prisma.PlayerUncheckedUpdateWithoutFantasyTeamSlotsInput
-    >
-    create: Prisma.XOR<
-        Prisma.PlayerCreateWithoutFantasyTeamSlotsInput,
-        Prisma.PlayerUncheckedCreateWithoutFantasyTeamSlotsInput
-    >
-    where?: Prisma.PlayerWhereInput
-}
-
-export type PlayerUpdateToOneWithWhereWithoutFantasyTeamSlotsInput = {
-    where?: Prisma.PlayerWhereInput
-    data: Prisma.XOR<
-        Prisma.PlayerUpdateWithoutFantasyTeamSlotsInput,
-        Prisma.PlayerUncheckedUpdateWithoutFantasyTeamSlotsInput
-    >
-}
-
-export type PlayerUpdateWithoutFantasyTeamSlotsInput = {
-    id?: Prisma.StringFieldUpdateOperationsInput | string
-    externalId?: Prisma.IntFieldUpdateOperationsInput | number
-    name?: Prisma.StringFieldUpdateOperationsInput | string
-    position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
-    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-    team?: Prisma.TeamUpdateOneRequiredWithoutPlayersNestedInput
-    gameweekStats?: Prisma.PlayerGameweekStatsUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUpdateManyWithoutPlayerInNestedInput
-    transfersOut?: Prisma.TransferUpdateManyWithoutPlayerOutNestedInput
-    seasonPrices?: Prisma.PlayerSeasonPriceUpdateManyWithoutPlayerNestedInput
-}
-
-export type PlayerUncheckedUpdateWithoutFantasyTeamSlotsInput = {
-    id?: Prisma.StringFieldUpdateOperationsInput | string
-    externalId?: Prisma.IntFieldUpdateOperationsInput | number
-    name?: Prisma.StringFieldUpdateOperationsInput | string
-    position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
-    teamId?: Prisma.StringFieldUpdateOperationsInput | string
-    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-    gameweekStats?: Prisma.PlayerGameweekStatsUncheckedUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUncheckedUpdateManyWithoutPlayerInNestedInput
-    transfersOut?: Prisma.TransferUncheckedUpdateManyWithoutPlayerOutNestedInput
-    seasonPrices?: Prisma.PlayerSeasonPriceUncheckedUpdateManyWithoutPlayerNestedInput
-}
-
 export type PlayerCreateWithoutTeamInput = {
     id?: string
     externalId: number
     name: string
     position: $Enums.PlayerPosition
     createdAt?: Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutPlayerInput
     gameweekStats?: Prisma.PlayerGameweekStatsCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferCreateNestedManyWithoutPlayerInInput
-    transfersOut?: Prisma.TransferCreateNestedManyWithoutPlayerOutInput
     seasonPrices?: Prisma.PlayerSeasonPriceCreateNestedManyWithoutPlayerInput
 }
 
@@ -885,10 +547,7 @@ export type PlayerUncheckedCreateWithoutTeamInput = {
     name: string
     position: $Enums.PlayerPosition
     createdAt?: Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutPlayerInput
     gameweekStats?: Prisma.PlayerGameweekStatsUncheckedCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerInInput
-    transfersOut?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerOutInput
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedCreateNestedManyWithoutPlayerInput
 }
 
@@ -937,10 +596,7 @@ export type PlayerCreateWithoutSeasonPricesInput = {
     position: $Enums.PlayerPosition
     createdAt?: Date | string
     team: Prisma.TeamCreateNestedOneWithoutPlayersInput
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutPlayerInput
     gameweekStats?: Prisma.PlayerGameweekStatsCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferCreateNestedManyWithoutPlayerInInput
-    transfersOut?: Prisma.TransferCreateNestedManyWithoutPlayerOutInput
 }
 
 export type PlayerUncheckedCreateWithoutSeasonPricesInput = {
@@ -950,10 +606,7 @@ export type PlayerUncheckedCreateWithoutSeasonPricesInput = {
     position: $Enums.PlayerPosition
     teamId: string
     createdAt?: Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutPlayerInput
     gameweekStats?: Prisma.PlayerGameweekStatsUncheckedCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerInInput
-    transfersOut?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerOutInput
 }
 
 export type PlayerCreateOrConnectWithoutSeasonPricesInput = {
@@ -991,10 +644,7 @@ export type PlayerUpdateWithoutSeasonPricesInput = {
     position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     team?: Prisma.TeamUpdateOneRequiredWithoutPlayersNestedInput
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUpdateManyWithoutPlayerNestedInput
     gameweekStats?: Prisma.PlayerGameweekStatsUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUpdateManyWithoutPlayerInNestedInput
-    transfersOut?: Prisma.TransferUpdateManyWithoutPlayerOutNestedInput
 }
 
 export type PlayerUncheckedUpdateWithoutSeasonPricesInput = {
@@ -1004,10 +654,7 @@ export type PlayerUncheckedUpdateWithoutSeasonPricesInput = {
     position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
     teamId?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutPlayerNestedInput
     gameweekStats?: Prisma.PlayerGameweekStatsUncheckedUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUncheckedUpdateManyWithoutPlayerInNestedInput
-    transfersOut?: Prisma.TransferUncheckedUpdateManyWithoutPlayerOutNestedInput
 }
 
 export type PlayerCreateWithoutGameweekStatsInput = {
@@ -1017,9 +664,6 @@ export type PlayerCreateWithoutGameweekStatsInput = {
     position: $Enums.PlayerPosition
     createdAt?: Date | string
     team: Prisma.TeamCreateNestedOneWithoutPlayersInput
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferCreateNestedManyWithoutPlayerInInput
-    transfersOut?: Prisma.TransferCreateNestedManyWithoutPlayerOutInput
     seasonPrices?: Prisma.PlayerSeasonPriceCreateNestedManyWithoutPlayerInput
 }
 
@@ -1030,9 +674,6 @@ export type PlayerUncheckedCreateWithoutGameweekStatsInput = {
     position: $Enums.PlayerPosition
     teamId: string
     createdAt?: Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedCreateNestedManyWithoutPlayerInput
-    transfersIn?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerInInput
-    transfersOut?: Prisma.TransferUncheckedCreateNestedManyWithoutPlayerOutInput
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedCreateNestedManyWithoutPlayerInput
 }
 
@@ -1071,9 +712,6 @@ export type PlayerUpdateWithoutGameweekStatsInput = {
     position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     team?: Prisma.TeamUpdateOneRequiredWithoutPlayersNestedInput
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUpdateManyWithoutPlayerInNestedInput
-    transfersOut?: Prisma.TransferUpdateManyWithoutPlayerOutNestedInput
     seasonPrices?: Prisma.PlayerSeasonPriceUpdateManyWithoutPlayerNestedInput
 }
 
@@ -1084,9 +722,6 @@ export type PlayerUncheckedUpdateWithoutGameweekStatsInput = {
     position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
     teamId?: Prisma.StringFieldUpdateOperationsInput | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUncheckedUpdateManyWithoutPlayerInNestedInput
-    transfersOut?: Prisma.TransferUncheckedUpdateManyWithoutPlayerOutNestedInput
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
@@ -1104,10 +739,7 @@ export type PlayerUpdateWithoutTeamInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUpdateManyWithoutPlayerNestedInput
     gameweekStats?: Prisma.PlayerGameweekStatsUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUpdateManyWithoutPlayerInNestedInput
-    transfersOut?: Prisma.TransferUpdateManyWithoutPlayerOutNestedInput
     seasonPrices?: Prisma.PlayerSeasonPriceUpdateManyWithoutPlayerNestedInput
 }
 
@@ -1117,10 +749,7 @@ export type PlayerUncheckedUpdateWithoutTeamInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string
     position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-    fantasyTeamSlots?: Prisma.FantasyTeamPlayerUncheckedUpdateManyWithoutPlayerNestedInput
     gameweekStats?: Prisma.PlayerGameweekStatsUncheckedUpdateManyWithoutPlayerNestedInput
-    transfersIn?: Prisma.TransferUncheckedUpdateManyWithoutPlayerInNestedInput
-    transfersOut?: Prisma.TransferUncheckedUpdateManyWithoutPlayerOutNestedInput
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
@@ -1137,20 +766,14 @@ export type PlayerUncheckedUpdateManyWithoutTeamInput = {
  */
 
 export type PlayerCountOutputType = {
-    fantasyTeamSlots: number
     gameweekStats: number
-    transfersIn: number
-    transfersOut: number
     seasonPrices: number
 }
 
 export type PlayerCountOutputTypeSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
-    fantasyTeamSlots?: boolean | PlayerCountOutputTypeCountFantasyTeamSlotsArgs
     gameweekStats?: boolean | PlayerCountOutputTypeCountGameweekStatsArgs
-    transfersIn?: boolean | PlayerCountOutputTypeCountTransfersInArgs
-    transfersOut?: boolean | PlayerCountOutputTypeCountTransfersOutArgs
     seasonPrices?: boolean | PlayerCountOutputTypeCountSeasonPricesArgs
 }
 
@@ -1169,37 +792,10 @@ export type PlayerCountOutputTypeDefaultArgs<
 /**
  * PlayerCountOutputType without action
  */
-export type PlayerCountOutputTypeCountFantasyTeamSlotsArgs<
-    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-> = {
-    where?: Prisma.FantasyTeamPlayerWhereInput
-}
-
-/**
- * PlayerCountOutputType without action
- */
 export type PlayerCountOutputTypeCountGameweekStatsArgs<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     where?: Prisma.PlayerGameweekStatsWhereInput
-}
-
-/**
- * PlayerCountOutputType without action
- */
-export type PlayerCountOutputTypeCountTransfersInArgs<
-    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-> = {
-    where?: Prisma.TransferWhereInput
-}
-
-/**
- * PlayerCountOutputType without action
- */
-export type PlayerCountOutputTypeCountTransfersOutArgs<
-    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-> = {
-    where?: Prisma.TransferWhereInput
 }
 
 /**
@@ -1222,10 +818,7 @@ export type PlayerSelect<
         teamId?: boolean
         createdAt?: boolean
         team?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
-        fantasyTeamSlots?: boolean | Prisma.Player$fantasyTeamSlotsArgs<ExtArgs>
         gameweekStats?: boolean | Prisma.Player$gameweekStatsArgs<ExtArgs>
-        transfersIn?: boolean | Prisma.Player$transfersInArgs<ExtArgs>
-        transfersOut?: boolean | Prisma.Player$transfersOutArgs<ExtArgs>
         seasonPrices?: boolean | Prisma.Player$seasonPricesArgs<ExtArgs>
         _count?: boolean | Prisma.PlayerCountOutputTypeDefaultArgs<ExtArgs>
     },
@@ -1281,10 +874,7 @@ export type PlayerInclude<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     team?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
-    fantasyTeamSlots?: boolean | Prisma.Player$fantasyTeamSlotsArgs<ExtArgs>
     gameweekStats?: boolean | Prisma.Player$gameweekStatsArgs<ExtArgs>
-    transfersIn?: boolean | Prisma.Player$transfersInArgs<ExtArgs>
-    transfersOut?: boolean | Prisma.Player$transfersOutArgs<ExtArgs>
     seasonPrices?: boolean | Prisma.Player$seasonPricesArgs<ExtArgs>
     _count?: boolean | Prisma.PlayerCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1305,10 +895,7 @@ export type $PlayerPayload<
     name: 'Player'
     objects: {
         team: Prisma.$TeamPayload<ExtArgs>
-        fantasyTeamSlots: Prisma.$FantasyTeamPlayerPayload<ExtArgs>[]
         gameweekStats: Prisma.$PlayerGameweekStatsPayload<ExtArgs>[]
-        transfersIn: Prisma.$TransferPayload<ExtArgs>[]
-        transfersOut: Prisma.$TransferPayload<ExtArgs>[]
         seasonPrices: Prisma.$PlayerSeasonPricePayload<ExtArgs>[]
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
@@ -1841,17 +1428,6 @@ export interface Prisma__PlayerClient<
         ExtArgs,
         GlobalOmitOptions
     >
-    fantasyTeamSlots<T extends Prisma.Player$fantasyTeamSlotsArgs<ExtArgs> = {}>(
-        args?: Prisma.Subset<T, Prisma.Player$fantasyTeamSlotsArgs<ExtArgs>>,
-    ): Prisma.PrismaPromise<
-        | runtime.Types.Result.GetResult<
-              Prisma.$FantasyTeamPlayerPayload<ExtArgs>,
-              T,
-              'findMany',
-              GlobalOmitOptions
-          >
-        | Null
-    >
     gameweekStats<T extends Prisma.Player$gameweekStatsArgs<ExtArgs> = {}>(
         args?: Prisma.Subset<T, Prisma.Player$gameweekStatsArgs<ExtArgs>>,
     ): Prisma.PrismaPromise<
@@ -1861,18 +1437,6 @@ export interface Prisma__PlayerClient<
               'findMany',
               GlobalOmitOptions
           >
-        | Null
-    >
-    transfersIn<T extends Prisma.Player$transfersInArgs<ExtArgs> = {}>(
-        args?: Prisma.Subset<T, Prisma.Player$transfersInArgs<ExtArgs>>,
-    ): Prisma.PrismaPromise<
-        | runtime.Types.Result.GetResult<Prisma.$TransferPayload<ExtArgs>, T, 'findMany', GlobalOmitOptions>
-        | Null
-    >
-    transfersOut<T extends Prisma.Player$transfersOutArgs<ExtArgs> = {}>(
-        args?: Prisma.Subset<T, Prisma.Player$transfersOutArgs<ExtArgs>>,
-    ): Prisma.PrismaPromise<
-        | runtime.Types.Result.GetResult<Prisma.$TransferPayload<ExtArgs>, T, 'findMany', GlobalOmitOptions>
         | Null
     >
     seasonPrices<T extends Prisma.Player$seasonPricesArgs<ExtArgs> = {}>(
@@ -2351,34 +1915,6 @@ export type PlayerDeleteManyArgs<
 }
 
 /**
- * Player.fantasyTeamSlots
- */
-export type Player$fantasyTeamSlotsArgs<
-    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-> = {
-    /**
-     * Select specific fields to fetch from the FantasyTeamPlayer
-     */
-    select?: Prisma.FantasyTeamPlayerSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the FantasyTeamPlayer
-     */
-    omit?: Prisma.FantasyTeamPlayerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Prisma.FantasyTeamPlayerInclude<ExtArgs> | null
-    where?: Prisma.FantasyTeamPlayerWhereInput
-    orderBy?:
-        | Prisma.FantasyTeamPlayerOrderByWithRelationInput
-        | Prisma.FantasyTeamPlayerOrderByWithRelationInput[]
-    cursor?: Prisma.FantasyTeamPlayerWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Prisma.FantasyTeamPlayerScalarFieldEnum | Prisma.FantasyTeamPlayerScalarFieldEnum[]
-}
-
-/**
  * Player.gameweekStats
  */
 export type Player$gameweekStatsArgs<
@@ -2404,58 +1940,6 @@ export type Player$gameweekStatsArgs<
     take?: number
     skip?: number
     distinct?: Prisma.PlayerGameweekStatsScalarFieldEnum | Prisma.PlayerGameweekStatsScalarFieldEnum[]
-}
-
-/**
- * Player.transfersIn
- */
-export type Player$transfersInArgs<
-    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-> = {
-    /**
-     * Select specific fields to fetch from the Transfer
-     */
-    select?: Prisma.TransferSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transfer
-     */
-    omit?: Prisma.TransferOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Prisma.TransferInclude<ExtArgs> | null
-    where?: Prisma.TransferWhereInput
-    orderBy?: Prisma.TransferOrderByWithRelationInput | Prisma.TransferOrderByWithRelationInput[]
-    cursor?: Prisma.TransferWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Prisma.TransferScalarFieldEnum | Prisma.TransferScalarFieldEnum[]
-}
-
-/**
- * Player.transfersOut
- */
-export type Player$transfersOutArgs<
-    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
-> = {
-    /**
-     * Select specific fields to fetch from the Transfer
-     */
-    select?: Prisma.TransferSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Transfer
-     */
-    omit?: Prisma.TransferOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: Prisma.TransferInclude<ExtArgs> | null
-    where?: Prisma.TransferWhereInput
-    orderBy?: Prisma.TransferOrderByWithRelationInput | Prisma.TransferOrderByWithRelationInput[]
-    cursor?: Prisma.TransferWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Prisma.TransferScalarFieldEnum | Prisma.TransferScalarFieldEnum[]
 }
 
 /**

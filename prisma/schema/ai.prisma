@@ -1,0 +1,13 @@
+model AiReport {
+  id         String   @id @default(cuid())
+  userId     String   @map("user_id")
+  kind       String // AiFeature
+  subjectKey String   @map("subject_key")
+  payload    Json
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, kind, subjectKey, createdAt])
+  @@map("ai_reports")
+}

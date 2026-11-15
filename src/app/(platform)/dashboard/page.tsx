@@ -4,8 +4,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
     title: 'Dashboard',
-    description:
-        'Your fantasy football overview — active competition, squad status, Coin balance, and recent results.',
+    description: 'Upcoming fixtures, your Credit balance and quick access to AI match predictions.',
 }
 
 export default function Dashboard() {

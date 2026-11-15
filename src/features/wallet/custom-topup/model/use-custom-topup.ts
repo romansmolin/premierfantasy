@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
 import { parseAmountToCents, quoteForAmountCents, walletService } from '@/entities/wallet'
-import type { CoinQuote } from '@/entities/wallet'
+import type { CheckoutCustomer, CoinQuote } from '@/entities/wallet'
 
 import { ApiError } from '@/shared/api/api-error'
 
@@ -24,7 +24,7 @@ const EMPTY_QUOTE: CoinQuote = {
  * the server recomputes it from the same table when the checkout is created, and
  * that result is what gets charged and credited.
  */
-export function useCustomTopup() {
+export function useCustomTopup(getCustomer: () => Promise<CheckoutCustomer | null>) {
     const [amount, setAmount] = useState('')
     const [isRedirecting, setIsRedirecting] = useState(false)
 
@@ -43,12 +43,16 @@ export function useCustomTopup() {
     const checkout = async () => {
         if (!quote.isValid) return
 
+        const customer = await getCustomer()
+
+        if (!customer) return
+
         setIsRedirecting(true)
 
         try {
-            const result = await walletService.createCustomCheckout(quote.amountCents)
+            const result = await walletService.createCustomCheckout(quote.amountCents, customer)
 
-            window.location.href = result.redirectUrl
+            window.location.assign(result.redirectUrl)
         } catch (error) {
             toast.error(
                 ApiError.isApiError(error) ? error.message : 'Failed to start checkout. Please try again.',

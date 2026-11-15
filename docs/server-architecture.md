@@ -57,7 +57,7 @@ The **only** file that instantiates concrete classes is:
 src/shared/lib/container.ts
 ```
 
-It builds the whole DI graph once, at module-load time, and exports a `container` object containing every controller (and any service that's used directly, e.g. orchestrator from cron).
+It builds the whole DI graph once, at module-load time, and exports a `container` object containing every controller (and any service that's used directly, e.g. `pricingService`).
 
 ```ts
 const userRepository = new UserRepository()
@@ -143,9 +143,13 @@ Player list prices live in `PlayerSeasonPrice` (table `player_season_prices`), k
 
 Admin upload: `POST /api/admin/pricing/{seasonYear}` with `Authorization: Bearer ${ADMIN_SECRET}` and a CSV body (`external_id,base_price` headers). Idempotent — the same CSV uploaded twice is a no-op. Unknown `external_id`s reject the entire upload.
 
-Server-side: any client-supplied price (e.g. on `saveSquad`, `makeTransfer`) is validated against `PlayerSeasonPrice.currentPrice` for the active season. Drift > 0.01 → `Errors.unprocessable('Price mismatch — refresh and retry')`. Never trust prices that came in on the request.
+Server-side: any client-supplied price is validated against `PlayerSeasonPrice.currentPrice` for the active season. Drift > 0.01 → `Errors.unprocessable('Price mismatch — refresh and retry')`. Never trust prices that came in on the request. (Prices are currently placeholders; stage 2 replaces them with FPL prices.)
 
 Phase 2a interim: `PlayerSeasonPrice.seasonYear` is an `Int`. Phase 2b replaces it with `leagueSeasonId` (FK) so prices become league-scoped.
+
+## 6.6. Paid AI features
+
+Paid features charge credits on the server, inside the service, after the result was generated successfully — never from the client. Use `IWalletService.spendOnFeature(userId, amount, featureName)`: it is atomic (one conditional update, no read-then-write) and throws `Errors.paymentRequired()` (402) when the balance is too low. Prices live in `src/entities/ai/model/ai-pricing.ts`. Check the balance before generating, charge after generating, and cache the result (`AiReport`) so re-opening it is free. See `AIInsightsService`.
 
 ## 7. Validation
 

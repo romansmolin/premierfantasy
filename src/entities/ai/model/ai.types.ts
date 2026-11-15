@@ -1,17 +1,3 @@
-export interface TransferSuggestion {
-    playerOut: { name: string; position: string; reason: string }
-    playerIn: { name: string; position: string; team: string; reason: string }
-    expectedPointsGain: string
-}
-
-export interface AITransferAnalysis {
-    summary: string
-    squadStrengths: string[]
-    squadWeaknesses: string[]
-    suggestions: TransferSuggestion[]
-    keyInsight: string
-}
-
 export interface PlayerAnalysis {
     playerName: string
     overallRating: string

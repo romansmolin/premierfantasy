@@ -6,6 +6,7 @@ export interface ICoinTransaction {
     amount: number
     type: TransactionType
     description: string
+    paymentTokenId?: string | null
     createdAt: Date
 }
 

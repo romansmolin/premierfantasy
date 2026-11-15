@@ -46,6 +46,8 @@ export type PaymentTokenMinAggregateOutputType = {
     currency: string | null
     coinAmount: number | null
     description: string | null
+    withdrawalConsentAt: Date | null
+    withdrawalConsentText: string | null
     errorMessage: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -62,6 +64,8 @@ export type PaymentTokenMaxAggregateOutputType = {
     currency: string | null
     coinAmount: number | null
     description: string | null
+    withdrawalConsentAt: Date | null
+    withdrawalConsentText: string | null
     errorMessage: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -78,6 +82,8 @@ export type PaymentTokenCountAggregateOutputType = {
     currency: number
     coinAmount: number
     description: number
+    withdrawalConsentAt: number
+    withdrawalConsentText: number
     errorMessage: number
     createdAt: number
     updatedAt: number
@@ -105,6 +111,8 @@ export type PaymentTokenMinAggregateInputType = {
     currency?: true
     coinAmount?: true
     description?: true
+    withdrawalConsentAt?: true
+    withdrawalConsentText?: true
     errorMessage?: true
     createdAt?: true
     updatedAt?: true
@@ -121,6 +129,8 @@ export type PaymentTokenMaxAggregateInputType = {
     currency?: true
     coinAmount?: true
     description?: true
+    withdrawalConsentAt?: true
+    withdrawalConsentText?: true
     errorMessage?: true
     createdAt?: true
     updatedAt?: true
@@ -137,6 +147,8 @@ export type PaymentTokenCountAggregateInputType = {
     currency?: true
     coinAmount?: true
     description?: true
+    withdrawalConsentAt?: true
+    withdrawalConsentText?: true
     errorMessage?: true
     createdAt?: true
     updatedAt?: true
@@ -243,6 +255,8 @@ export type PaymentTokenGroupByOutputType = {
     currency: string
     coinAmount: number
     description: string
+    withdrawalConsentAt: Date | null
+    withdrawalConsentText: string | null
     errorMessage: string | null
     createdAt: Date
     updatedAt: Date
@@ -279,6 +293,8 @@ export type PaymentTokenWhereInput = {
     currency?: Prisma.StringFilter<'PaymentToken'> | string
     coinAmount?: Prisma.IntFilter<'PaymentToken'> | number
     description?: Prisma.StringFilter<'PaymentToken'> | string
+    withdrawalConsentAt?: Prisma.DateTimeNullableFilter<'PaymentToken'> | Date | string | null
+    withdrawalConsentText?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
     errorMessage?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
     createdAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
     updatedAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
@@ -300,6 +316,8 @@ export type PaymentTokenOrderByWithRelationInput = {
     currency?: Prisma.SortOrder
     coinAmount?: Prisma.SortOrder
     description?: Prisma.SortOrder
+    withdrawalConsentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+    withdrawalConsentText?: Prisma.SortOrderInput | Prisma.SortOrder
     errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
@@ -322,6 +340,8 @@ export type PaymentTokenWhereUniqueInput = Prisma.AtLeast<
         currency?: Prisma.StringFilter<'PaymentToken'> | string
         coinAmount?: Prisma.IntFilter<'PaymentToken'> | number
         description?: Prisma.StringFilter<'PaymentToken'> | string
+        withdrawalConsentAt?: Prisma.DateTimeNullableFilter<'PaymentToken'> | Date | string | null
+        withdrawalConsentText?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
         errorMessage?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
         createdAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
         updatedAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
@@ -345,6 +365,8 @@ export type PaymentTokenOrderByWithAggregationInput = {
     currency?: Prisma.SortOrder
     coinAmount?: Prisma.SortOrder
     description?: Prisma.SortOrder
+    withdrawalConsentAt?: Prisma.SortOrderInput | Prisma.SortOrder
+    withdrawalConsentText?: Prisma.SortOrderInput | Prisma.SortOrder
     errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
@@ -373,6 +395,8 @@ export type PaymentTokenScalarWhereWithAggregatesInput = {
     currency?: Prisma.StringWithAggregatesFilter<'PaymentToken'> | string
     coinAmount?: Prisma.IntWithAggregatesFilter<'PaymentToken'> | number
     description?: Prisma.StringWithAggregatesFilter<'PaymentToken'> | string
+    withdrawalConsentAt?: Prisma.DateTimeNullableWithAggregatesFilter<'PaymentToken'> | Date | string | null
+    withdrawalConsentText?: Prisma.StringNullableWithAggregatesFilter<'PaymentToken'> | string | null
     errorMessage?: Prisma.StringNullableWithAggregatesFilter<'PaymentToken'> | string | null
     createdAt?: Prisma.DateTimeWithAggregatesFilter<'PaymentToken'> | Date | string
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<'PaymentToken'> | Date | string
@@ -388,6 +412,8 @@ export type PaymentTokenCreateInput = {
     currency?: string
     coinAmount: number
     description: string
+    withdrawalConsentAt?: Date | string | null
+    withdrawalConsentText?: string | null
     errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -406,6 +432,8 @@ export type PaymentTokenUncheckedCreateInput = {
     currency?: string
     coinAmount: number
     description: string
+    withdrawalConsentAt?: Date | string | null
+    withdrawalConsentText?: string | null
     errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -422,6 +450,8 @@ export type PaymentTokenUpdateInput = {
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    withdrawalConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    withdrawalConsentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -440,6 +470,8 @@ export type PaymentTokenUncheckedUpdateInput = {
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    withdrawalConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    withdrawalConsentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -457,6 +489,8 @@ export type PaymentTokenCreateManyInput = {
     currency?: string
     coinAmount: number
     description: string
+    withdrawalConsentAt?: Date | string | null
+    withdrawalConsentText?: string | null
     errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -472,6 +506,8 @@ export type PaymentTokenUpdateManyMutationInput = {
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    withdrawalConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    withdrawalConsentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -488,6 +524,8 @@ export type PaymentTokenUncheckedUpdateManyInput = {
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    withdrawalConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    withdrawalConsentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -504,6 +542,8 @@ export type PaymentTokenCountOrderByAggregateInput = {
     currency?: Prisma.SortOrder
     coinAmount?: Prisma.SortOrder
     description?: Prisma.SortOrder
+    withdrawalConsentAt?: Prisma.SortOrder
+    withdrawalConsentText?: Prisma.SortOrder
     errorMessage?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
@@ -525,6 +565,8 @@ export type PaymentTokenMaxOrderByAggregateInput = {
     currency?: Prisma.SortOrder
     coinAmount?: Prisma.SortOrder
     description?: Prisma.SortOrder
+    withdrawalConsentAt?: Prisma.SortOrder
+    withdrawalConsentText?: Prisma.SortOrder
     errorMessage?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
@@ -541,6 +583,8 @@ export type PaymentTokenMinOrderByAggregateInput = {
     currency?: Prisma.SortOrder
     coinAmount?: Prisma.SortOrder
     description?: Prisma.SortOrder
+    withdrawalConsentAt?: Prisma.SortOrder
+    withdrawalConsentText?: Prisma.SortOrder
     errorMessage?: Prisma.SortOrder
     createdAt?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
@@ -694,6 +738,8 @@ export type PaymentTokenCreateWithoutUserInput = {
     currency?: string
     coinAmount: number
     description: string
+    withdrawalConsentAt?: Date | string | null
+    withdrawalConsentText?: string | null
     errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -710,6 +756,8 @@ export type PaymentTokenUncheckedCreateWithoutUserInput = {
     currency?: string
     coinAmount: number
     description: string
+    withdrawalConsentAt?: Date | string | null
+    withdrawalConsentText?: string | null
     errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -771,6 +819,8 @@ export type PaymentTokenScalarWhereInput = {
     currency?: Prisma.StringFilter<'PaymentToken'> | string
     coinAmount?: Prisma.IntFilter<'PaymentToken'> | number
     description?: Prisma.StringFilter<'PaymentToken'> | string
+    withdrawalConsentAt?: Prisma.DateTimeNullableFilter<'PaymentToken'> | Date | string | null
+    withdrawalConsentText?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
     errorMessage?: Prisma.StringNullableFilter<'PaymentToken'> | string | null
     createdAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
     updatedAt?: Prisma.DateTimeFilter<'PaymentToken'> | Date | string
@@ -786,6 +836,8 @@ export type PaymentTokenCreateWithoutTransactionInput = {
     currency?: string
     coinAmount: number
     description: string
+    withdrawalConsentAt?: Date | string | null
+    withdrawalConsentText?: string | null
     errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -803,6 +855,8 @@ export type PaymentTokenUncheckedCreateWithoutTransactionInput = {
     currency?: string
     coinAmount: number
     description: string
+    withdrawalConsentAt?: Date | string | null
+    withdrawalConsentText?: string | null
     errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -846,6 +900,8 @@ export type PaymentTokenUpdateWithoutTransactionInput = {
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    withdrawalConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    withdrawalConsentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -863,6 +919,8 @@ export type PaymentTokenUncheckedUpdateWithoutTransactionInput = {
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    withdrawalConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    withdrawalConsentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -878,6 +936,8 @@ export type PaymentTokenCreateManyUserInput = {
     currency?: string
     coinAmount: number
     description: string
+    withdrawalConsentAt?: Date | string | null
+    withdrawalConsentText?: string | null
     errorMessage?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -893,6 +953,8 @@ export type PaymentTokenUpdateWithoutUserInput = {
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    withdrawalConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    withdrawalConsentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -909,6 +971,8 @@ export type PaymentTokenUncheckedUpdateWithoutUserInput = {
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    withdrawalConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    withdrawalConsentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -925,6 +989,8 @@ export type PaymentTokenUncheckedUpdateManyWithoutUserInput = {
     currency?: Prisma.StringFieldUpdateOperationsInput | string
     coinAmount?: Prisma.IntFieldUpdateOperationsInput | number
     description?: Prisma.StringFieldUpdateOperationsInput | string
+    withdrawalConsentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    withdrawalConsentText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -944,6 +1010,8 @@ export type PaymentTokenSelect<
         currency?: boolean
         coinAmount?: boolean
         description?: boolean
+        withdrawalConsentAt?: boolean
+        withdrawalConsentText?: boolean
         errorMessage?: boolean
         createdAt?: boolean
         updatedAt?: boolean
@@ -967,6 +1035,8 @@ export type PaymentTokenSelectCreateManyAndReturn<
         currency?: boolean
         coinAmount?: boolean
         description?: boolean
+        withdrawalConsentAt?: boolean
+        withdrawalConsentText?: boolean
         errorMessage?: boolean
         createdAt?: boolean
         updatedAt?: boolean
@@ -989,6 +1059,8 @@ export type PaymentTokenSelectUpdateManyAndReturn<
         currency?: boolean
         coinAmount?: boolean
         description?: boolean
+        withdrawalConsentAt?: boolean
+        withdrawalConsentText?: boolean
         errorMessage?: boolean
         createdAt?: boolean
         updatedAt?: boolean
@@ -1008,6 +1080,8 @@ export type PaymentTokenSelectScalar = {
     currency?: boolean
     coinAmount?: boolean
     description?: boolean
+    withdrawalConsentAt?: boolean
+    withdrawalConsentText?: boolean
     errorMessage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -1026,6 +1100,8 @@ export type PaymentTokenOmit<
     | 'currency'
     | 'coinAmount'
     | 'description'
+    | 'withdrawalConsentAt'
+    | 'withdrawalConsentText'
     | 'errorMessage'
     | 'createdAt'
     | 'updatedAt',
@@ -1068,6 +1144,8 @@ export type $PaymentTokenPayload<
             currency: string
             coinAmount: number
             description: string
+            withdrawalConsentAt: Date | null
+            withdrawalConsentText: string | null
             errorMessage: string | null
             createdAt: Date
             updatedAt: Date
@@ -1647,6 +1725,8 @@ export interface PaymentTokenFieldRefs {
     readonly currency: Prisma.FieldRef<'PaymentToken', 'String'>
     readonly coinAmount: Prisma.FieldRef<'PaymentToken', 'Int'>
     readonly description: Prisma.FieldRef<'PaymentToken', 'String'>
+    readonly withdrawalConsentAt: Prisma.FieldRef<'PaymentToken', 'DateTime'>
+    readonly withdrawalConsentText: Prisma.FieldRef<'PaymentToken', 'String'>
     readonly errorMessage: Prisma.FieldRef<'PaymentToken', 'String'>
     readonly createdAt: Prisma.FieldRef<'PaymentToken', 'DateTime'>
     readonly updatedAt: Prisma.FieldRef<'PaymentToken', 'DateTime'>

@@ -11,9 +11,8 @@ const footerLinks = [
         title: 'Product',
         links: [
             { label: 'Features', href: '/#features' },
-            { label: 'Competitions', href: '/competitions' },
             { label: 'Pricing', href: '/#pricing' },
-            { label: 'AI Insights', href: '/wallet' },
+            { label: 'AI Insights', href: '/players' },
         ],
     },
     {
@@ -46,8 +45,7 @@ export function Footer() {
                             <span className="font-heading text-lg font-bold">Premier Fantasy</span>
                         </Link>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            The fairest fantasy football platform. Rolling competitions, real Premier League
-                            data, and AI-powered insights.
+                            Advanced football statistics and AI insights for fantasy managers.
                         </p>
                         <address className="text-xs text-muted-foreground not-italic leading-relaxed">
                             {COMPANY.name}
@@ -55,6 +53,8 @@ export function Footer() {
                             KRS: {COMPANY.registrationNumber}
                             <br />
                             {COMPANY.address}
+                            <br />
+                            <a href="mailto:support@premierfantasy.net">support@premierfantasy.net</a>
                         </address>
                     </div>
 
@@ -81,6 +81,11 @@ export function Footer() {
                 <Separator className="my-8" />
 
                 <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+                    <p className="max-w-xl text-xs text-muted-foreground">
+                        Premier Fantasy is an independent analytics tool and is not affiliated with, endorsed
+                        by, or connected to the Premier League, Fantasy Premier League, UEFA or any fantasy
+                        game operator.
+                    </p>
                     <p className="text-xs text-muted-foreground">
                         &copy; {new Date().getFullYear()} Premier Fantasy. All rights reserved.
                     </p>

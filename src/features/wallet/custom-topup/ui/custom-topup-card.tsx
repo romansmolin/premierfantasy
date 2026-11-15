@@ -3,6 +3,7 @@
 import { Coins01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
+import type { CheckoutCustomer } from '@/entities/wallet'
 import { formatCents, MAX_TOPUP_CENTS, MIN_TOPUP_CENTS } from '@/entities/wallet'
 
 import { Badge } from '@/shared/ui/badge'
@@ -14,15 +15,21 @@ import { useCustomTopup } from '../model/use-custom-topup'
 
 const QUICK_AMOUNTS = ['5', '10', '25', '50']
 
-export const CustomTopupCard = () => {
-    const { amount, setAmount, quote, checkout, isRedirecting } = useCustomTopup()
+export const CustomTopupCard = ({
+    withdrawalConsent,
+    getCustomer,
+}: {
+    withdrawalConsent: boolean
+    getCustomer: () => Promise<CheckoutCustomer | null>
+}) => {
+    const { amount, setAmount, quote, checkout, isRedirecting } = useCustomTopup(getCustomer)
 
     return (
         <Card>
             <CardHeader>
                 <CardTitle>Choose your own amount</CardTitle>
                 <CardDescription>
-                    Enter what you want to spend and see the coins before you pay. Bigger top-ups earn a
+                    Enter what you want to spend and see the Credits before you pay. Bigger top-ups earn a
                     better rate.
                 </CardDescription>
             </CardHeader>
@@ -36,7 +43,8 @@ export const CustomTopupCard = () => {
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                             onKeyDown={(e) => {
-                                if (e.key === 'Enter' && quote.isValid && !isRedirecting) checkout()
+                                if (e.key === 'Enter' && quote.isValid && withdrawalConsent && !isRedirecting)
+                                    checkout()
                             }}
                             inputMode="decimal"
                             placeholder="43.65"
@@ -68,10 +76,10 @@ export const CustomTopupCard = () => {
                                 <HugeiconsIcon icon={Coins01Icon} size={20} className="text-amber-500" />
                                 <div>
                                     <p className="text-xl font-bold tabular-nums">
-                                        {quote.coins.toLocaleString()} coins
+                                        {quote.coins.toLocaleString()} Credits
                                     </p>
                                     <p className="text-xs text-muted-foreground">
-                                        {Math.round(quote.coinsPerEuro)} coins per €1 · €
+                                        {Math.round(quote.coinsPerEuro)} Credits per €1 · €
                                         {formatCents(quote.amountCents)} total
                                     </p>
                                 </div>
@@ -92,20 +100,20 @@ export const CustomTopupCard = () => {
 
                 <Button
                     className="w-full gap-2"
-                    disabled={!quote.isValid || isRedirecting}
+                    disabled={!quote.isValid || !withdrawalConsent || isRedirecting}
                     onClick={checkout}
                 >
                     <HugeiconsIcon icon={Coins01Icon} size={16} />
                     {isRedirecting
                         ? 'Redirecting…'
                         : quote.isValid
-                          ? `Pay €${formatCents(quote.amountCents)} for ${quote.coins.toLocaleString()} coins`
+                          ? `Pay €${formatCents(quote.amountCents)} for ${quote.coins.toLocaleString()} Credits`
                           : 'Enter an amount'}
                 </Button>
 
                 <p className="text-xs text-muted-foreground">
-                    Final coins are confirmed by the server at checkout. Payment is handled by our secure
-                    processor — card details never reach this app.
+                    The final number of Credits is confirmed by the server at checkout. Payment is handled by
+                    our secure processor — card details never reach this app.
                 </p>
             </CardContent>
         </Card>

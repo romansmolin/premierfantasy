@@ -7,15 +7,10 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/Competition'
+export type * from './models/AiReport'
 export type * from './models/League'
 export type * from './models/LeagueSeason'
-export type * from './models/LeagueMembership'
 export type * from './models/LeagueSeasonTeam'
-export type * from './models/FantasyTeam'
-export type * from './models/Transfer'
-export type * from './models/FantasyTeamPlayer'
-export type * from './models/GameweekPoints'
 export type * from './models/Team'
 export type * from './models/Player'
 export type * from './models/PlayerSeasonPrice'

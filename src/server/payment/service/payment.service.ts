@@ -7,6 +7,7 @@ import {
     TOPUP_CURRENCY,
     formatCents,
 } from '@/entities/wallet/model/coin-pricing'
+import { WITHDRAWAL_CONSENT_TEXT } from '@/entities/wallet/model/withdrawal-consent'
 
 import {
     secureProcessorClient,
@@ -14,6 +15,7 @@ import {
     verifyWebhookSignature,
 } from '@/shared/api/secure-processor-client'
 import { Errors } from '@/shared/lib/http'
+import type { CheckoutCustomer } from '@/shared/model/checkout-customer'
 
 import type { IPaymentService } from './payment.service.interface'
 import type { IPaymentRepository } from '../repository/payment.repository.interface'
@@ -48,7 +50,11 @@ export class PaymentService implements IPaymentService {
         this.walletRepository = walletRepository
     }
 
-    async createCheckout(userId: string, coinAmount: number): Promise<{ redirectUrl: string }> {
+    async createCheckout(
+        userId: string,
+        coinAmount: number,
+        customer: CheckoutCustomer,
+    ): Promise<{ redirectUrl: string }> {
         const pack = getCoinPack(coinAmount)
 
         if (!pack) throw Errors.badRequest(`Invalid coin amount: ${coinAmount}`)
@@ -57,20 +63,23 @@ export class PaymentService implements IPaymentService {
 
         const payment = await this.paymentRepository.create({
             userId,
+            withdrawalConsentAt: new Date(),
+            withdrawalConsentText: WITHDRAWAL_CONSENT_TEXT,
             token: trackingId,
             amountCents: pack.priceCents,
             currency: pack.currency,
             coinAmount: pack.coins,
-            description: `Purchase ${pack.coins} coins`,
+            description: `Purchase ${pack.coins} credits`,
         })
 
         try {
             const checkout = await secureProcessorClient.createCheckout({
                 amountCents: pack.priceCents,
                 currency: pack.currency,
-                description: `Purchase ${pack.coins} Premier Fantasy coins`,
+                description: `Purchase ${pack.coins} Premier Fantasy credits`,
                 trackingId: payment.id,
                 userId,
+                customer,
             })
 
             await this.paymentRepository.updateStatus(payment.id, 'PENDING', checkout.token)
@@ -89,7 +98,11 @@ export class PaymentService implements IPaymentService {
      * so a tampered request can only ever change what the user is charged, not
      * what they receive for it.
      */
-    async createCustomCheckout(userId: string, amountCents: number): Promise<{ redirectUrl: string }> {
+    async createCustomCheckout(
+        userId: string,
+        amountCents: number,
+        customer: CheckoutCustomer,
+    ): Promise<{ redirectUrl: string }> {
         if (!Number.isInteger(amountCents)) {
             throw Errors.badRequest('Amount must be a whole number of cents')
         }
@@ -102,13 +115,15 @@ export class PaymentService implements IPaymentService {
 
         const coins = coinsForAmountCents(amountCents)
 
-        if (coins <= 0) throw Errors.badRequest('Amount is too small to buy any coins')
+        if (coins <= 0) throw Errors.badRequest('Amount is too small to buy any Credits')
 
         const trackingId = crypto.randomUUID()
-        const description = `Purchase ${coins} coins`
+        const description = `Purchase ${coins} credits`
 
         const payment = await this.paymentRepository.create({
             userId,
+            withdrawalConsentAt: new Date(),
+            withdrawalConsentText: WITHDRAWAL_CONSENT_TEXT,
             token: trackingId,
             amountCents,
             currency: TOPUP_CURRENCY,
@@ -120,9 +135,10 @@ export class PaymentService implements IPaymentService {
             const checkout = await secureProcessorClient.createCheckout({
                 amountCents,
                 currency: TOPUP_CURRENCY,
-                description: `Purchase ${coins} Premier Fantasy coins`,
+                description: `Purchase ${coins} Premier Fantasy credits`,
                 trackingId: payment.id,
                 userId,
+                customer,
             })
 
             await this.paymentRepository.updateStatus(payment.id, 'PENDING', checkout.token)
@@ -132,6 +148,24 @@ export class PaymentService implements IPaymentService {
             await this.paymentRepository.updateStatus(payment.id, 'FAILED')
 
             throw error
+        }
+    }
+
+    async getPaymentForUser(userId: string, paymentId: string) {
+        const payment = await this.paymentRepository.findById(paymentId)
+
+        if (!payment || payment.userId !== userId) throw Errors.notFound('Payment not found')
+
+        return {
+            id: payment.id,
+            status: payment.status,
+            amountCents: payment.amountCents,
+            currency: payment.currency,
+            coinAmount: payment.coinAmount,
+            createdAt: payment.createdAt,
+            updatedAt: payment.updatedAt,
+            withdrawalConsentAt: payment.withdrawalConsentAt,
+            withdrawalConsentText: payment.withdrawalConsentText,
         }
     }
 

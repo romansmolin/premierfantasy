@@ -6,7 +6,6 @@ import { useState } from 'react'
 import { usePlayerAnalytics, PlayerAnalyticsModal } from '@/features/ai'
 
 import { mapApiPosition, PlayerDetailsModal } from '@/entities/players'
-import { getFallbackPrice, usePrices } from '@/entities/players/model/use-prices'
 import { useTeamPlayers } from '@/entities/team'
 
 import { cn } from '@/shared/lib/utils'
@@ -24,7 +23,6 @@ import {
     TableRow,
 } from '@/shared/ui/table'
 
-import { SelectPlayerCheckbox } from '../../select-player/ui/select-player-checkbox'
 import { getPositionBadgeClass } from '../lib/position-badge-variant'
 import { usePlayerDetails } from '../model/use-player-details'
 import { usePlayersExplorer } from '../model/use-players-explorer'
@@ -56,7 +54,6 @@ export const PlayersExplorer = () => {
 
     const { player, isLoading, error } = usePlayerDetails(selectedPlayerId)
     const analytics = usePlayerAnalytics(selectedPlayerId)
-    const { priceMap } = usePrices()
 
     return (
         <div className="flex flex-col gap-3 ">
@@ -172,10 +169,8 @@ export const PlayersExplorer = () => {
                             <TableHead className="min-w-40">Player</TableHead>
                             <TableHead className="min-w-28">Club</TableHead>
                             <TableHead>Position</TableHead>
-                            <TableHead>Price</TableHead>
                             <TableHead>Age</TableHead>
                             <TableHead className="text-right">Number</TableHead>
-                            <TableHead className="w-10"></TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -206,23 +201,8 @@ export const PlayersExplorer = () => {
                                             {mapApiPosition(player.position)}
                                         </Badge>
                                     </TableCell>
-                                    <TableCell>
-                                        {(
-                                            priceMap.get(player.id) ??
-                                            getFallbackPrice(mapApiPosition(player.position))
-                                        ).toFixed(1)}
-                                        m
-                                    </TableCell>
                                     <TableCell>{player.age ?? '—'}</TableCell>
                                     <TableCell className="text-right">{player.number ?? '—'}</TableCell>
-                                    <TableCell
-                                        className="pl-10"
-                                        onClick={(e) => e.stopPropagation()}
-                                        onPointerDown={(e) => e.stopPropagation()}
-                                        onMouseDown={(e) => e.stopPropagation()}
-                                    >
-                                        <SelectPlayerCheckbox player={player} teamId={Number(teamId)} />
-                                    </TableCell>
                                 </TableRow>
                             )),
                         )}
@@ -237,7 +217,6 @@ export const PlayersExplorer = () => {
                 error={error}
                 onRequestAnalysis={analytics.requestAnalysis}
                 isAnalysisLoading={analytics.isLoading}
-                canAffordAnalysis={analytics.canAfford}
                 analysisCost={analytics.cost}
             />
             <PlayerAnalyticsModal

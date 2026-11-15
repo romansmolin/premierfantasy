@@ -1,9 +1,9 @@
 'use client'
 
+import { CheckmarkCircle02Icon, Clock01Icon, AlertCircleIcon, Home01Icon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { CheckmarkCircle02Icon, Clock01Icon, AlertCircleIcon, Home01Icon } from '@hugeicons/core-free-icons'
 
 type StatusVariant = 'success' | 'pending' | 'failed'
 type AuthoritativeStatus =
@@ -31,13 +31,13 @@ const statusCopy: Record<
 > = {
     success: {
         title: 'Payment successful',
-        description: 'Thanks for your payment! Your coin balance will reflect the purchase shortly.',
+        description: 'Thanks for your payment! Your Credit balance will reflect the purchase shortly.',
         accent: 'text-green-600 bg-green-50 border-green-100 dark:bg-green-950/40 dark:border-green-900',
         icon: CheckmarkCircle02Icon,
     },
     pending: {
         title: 'Payment pending',
-        description: 'Your payment is being confirmed. We will update your coin balance once it clears.',
+        description: 'Your payment is being confirmed. We will update your Credit balance once it clears.',
         accent: 'text-amber-600 bg-amber-50 border-amber-100 dark:bg-amber-950/40 dark:border-amber-900',
         icon: Clock01Icon,
     },
@@ -52,7 +52,9 @@ const statusCopy: Record<
 
 const mapAuthoritativeToVariant = (status: AuthoritativeStatus): StatusVariant => {
     if (status === 'SUCCESSFUL') return 'success'
+
     if (status === 'PENDING' || status === 'CREATED') return 'pending'
+
     return 'failed'
 }
 
@@ -66,12 +68,14 @@ const POLL_INTERVAL_MS = 2000
 
 const PaymentStatusPage = ({ status, token }: PaymentStatusPageProps) => {
     const [variant, setVariant] = useState<StatusVariant>(status)
+    const [confirmedSuccess, setConfirmedSuccess] = useState(false)
     const [isResolving, setIsResolving] = useState(Boolean(token))
     const attemptsRef = useRef(0)
 
     useEffect(() => {
         if (!token) {
             setIsResolving(false)
+
             return
         }
 
@@ -84,21 +88,29 @@ const PaymentStatusPage = ({ status, token }: PaymentStatusPageProps) => {
                 clearInterval(interval)
                 interval = null
             }
+
             setIsResolving(false)
         }
 
         const poll = async () => {
             attemptsRef.current += 1
+
             try {
                 const res = await fetch(
                     `/api/payments/secure-processor/${encodeURIComponent(token)}/status`,
                     { signal: controller.signal, cache: 'no-store' },
                 )
+
                 if (!res.ok) return
+
                 const data = (await res.json()) as { status?: AuthoritativeStatus }
                 const authoritative = data.status
+
                 if (!authoritative || cancelled) return
+
                 setVariant(mapAuthoritativeToVariant(authoritative))
+                setConfirmedSuccess(authoritative === 'SUCCESSFUL')
+
                 if (TERMINAL_STATUSES.includes(authoritative)) stop()
             } catch {
                 // ignore — polling continues until terminal or max attempts
@@ -113,6 +125,7 @@ const PaymentStatusPage = ({ status, token }: PaymentStatusPageProps) => {
         return () => {
             cancelled = true
             controller.abort()
+
             if (interval) clearInterval(interval)
         }
     }, [token])
@@ -137,6 +150,14 @@ const PaymentStatusPage = ({ status, token }: PaymentStatusPageProps) => {
                     </div>
                 )}
                 {isResolving && <p className="text-xs text-muted-foreground">Confirming your payment…</p>}
+                {confirmedSuccess && token && (
+                    <a
+                        className="inline-block text-sm underline"
+                        href={`/api/payments/secure-processor/${encodeURIComponent(token)}/receipt`}
+                    >
+                        Download purchase confirmation
+                    </a>
+                )}
                 <div className="flex flex-wrap justify-center gap-3">
                     <Link
                         href="/wallet"

@@ -48,15 +48,10 @@ export const JsonNull = runtime.JsonNull
 export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
-    Competition: 'Competition',
+    AiReport: 'AiReport',
     League: 'League',
     LeagueSeason: 'LeagueSeason',
-    LeagueMembership: 'LeagueMembership',
     LeagueSeasonTeam: 'LeagueSeasonTeam',
-    FantasyTeam: 'FantasyTeam',
-    Transfer: 'Transfer',
-    FantasyTeamPlayer: 'FantasyTeamPlayer',
-    GameweekPoints: 'GameweekPoints',
     Team: 'Team',
     Player: 'Player',
     PlayerSeasonPrice: 'PlayerSeasonPrice',
@@ -86,21 +81,16 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel =
     (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
-export const CompetitionScalarFieldEnum = {
+export const AiReportScalarFieldEnum = {
     id: 'id',
-    name: 'name',
-    startGameweek: 'startGameweek',
-    endGameweek: 'endGameweek',
-    status: 'status',
-    joinDeadline: 'joinDeadline',
-    leagueSeasonId: 'leagueSeasonId',
-    visibility: 'visibility',
-    demoScoringFinalizedAt: 'demoScoringFinalizedAt',
+    userId: 'userId',
+    kind: 'kind',
+    subjectKey: 'subjectKey',
+    payload: 'payload',
     createdAt: 'createdAt',
 } as const
 
-export type CompetitionScalarFieldEnum =
-    (typeof CompetitionScalarFieldEnum)[keyof typeof CompetitionScalarFieldEnum]
+export type AiReportScalarFieldEnum = (typeof AiReportScalarFieldEnum)[keyof typeof AiReportScalarFieldEnum]
 
 export const LeagueScalarFieldEnum = {
     id: 'id',
@@ -129,18 +119,6 @@ export const LeagueSeasonScalarFieldEnum = {
 export type LeagueSeasonScalarFieldEnum =
     (typeof LeagueSeasonScalarFieldEnum)[keyof typeof LeagueSeasonScalarFieldEnum]
 
-export const LeagueMembershipScalarFieldEnum = {
-    id: 'id',
-    userId: 'userId',
-    leagueId: 'leagueId',
-    leagueSeasonId: 'leagueSeasonId',
-    isDemo: 'isDemo',
-    joinedAt: 'joinedAt',
-} as const
-
-export type LeagueMembershipScalarFieldEnum =
-    (typeof LeagueMembershipScalarFieldEnum)[keyof typeof LeagueMembershipScalarFieldEnum]
-
 export const LeagueSeasonTeamScalarFieldEnum = {
     id: 'id',
     leagueSeasonId: 'leagueSeasonId',
@@ -150,56 +128,6 @@ export const LeagueSeasonTeamScalarFieldEnum = {
 
 export type LeagueSeasonTeamScalarFieldEnum =
     (typeof LeagueSeasonTeamScalarFieldEnum)[keyof typeof LeagueSeasonTeamScalarFieldEnum]
-
-export const FantasyTeamScalarFieldEnum = {
-    id: 'id',
-    userId: 'userId',
-    competitionId: 'competitionId',
-    name: 'name',
-    budgetTotal: 'budgetTotal',
-    budgetLeft: 'budgetLeft',
-    freeTransfers: 'freeTransfers',
-    isDemo: 'isDemo',
-    createdAt: 'createdAt',
-} as const
-
-export type FantasyTeamScalarFieldEnum =
-    (typeof FantasyTeamScalarFieldEnum)[keyof typeof FantasyTeamScalarFieldEnum]
-
-export const TransferScalarFieldEnum = {
-    id: 'id',
-    fantasyTeamId: 'fantasyTeamId',
-    gameweekId: 'gameweekId',
-    playerInId: 'playerInId',
-    playerOutId: 'playerOutId',
-    isFree: 'isFree',
-    createdAt: 'createdAt',
-} as const
-
-export type TransferScalarFieldEnum = (typeof TransferScalarFieldEnum)[keyof typeof TransferScalarFieldEnum]
-
-export const FantasyTeamPlayerScalarFieldEnum = {
-    id: 'id',
-    fantasyTeamId: 'fantasyTeamId',
-    playerId: 'playerId',
-    position: 'position',
-    purchasePrice: 'purchasePrice',
-    createdAt: 'createdAt',
-} as const
-
-export type FantasyTeamPlayerScalarFieldEnum =
-    (typeof FantasyTeamPlayerScalarFieldEnum)[keyof typeof FantasyTeamPlayerScalarFieldEnum]
-
-export const GameweekPointsScalarFieldEnum = {
-    id: 'id',
-    fantasyTeamId: 'fantasyTeamId',
-    gameweekId: 'gameweekId',
-    points: 'points',
-    createdAt: 'createdAt',
-} as const
-
-export type GameweekPointsScalarFieldEnum =
-    (typeof GameweekPointsScalarFieldEnum)[keyof typeof GameweekPointsScalarFieldEnum]
 
 export const TeamScalarFieldEnum = {
     id: 'id',
@@ -283,6 +211,8 @@ export const PaymentTokenScalarFieldEnum = {
     currency: 'currency',
     coinAmount: 'coinAmount',
     description: 'description',
+    withdrawalConsentAt: 'withdrawalConsentAt',
+    withdrawalConsentText: 'withdrawalConsentText',
     errorMessage: 'errorMessage',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -300,7 +230,6 @@ export const UserScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     coinBalance: 'coinBalance',
-    isDemo: 'isDemo',
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -368,12 +297,26 @@ export const SortOrder = {
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
+export const JsonNullValueInput = {
+    JsonNull: JsonNull,
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
 export const QueryMode = {
     default: 'default',
     insensitive: 'insensitive',
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+export const JsonNullValueFilter = {
+    DbNull: DbNull,
+    JsonNull: JsonNull,
+    AnyNull: AnyNull,
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 export const NullsOrder = {
     first: 'first',

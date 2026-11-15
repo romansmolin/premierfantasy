@@ -12,14 +12,14 @@ export function HeroSection() {
                 titleComponent={
                     <AnimateIn variant="blur">
                         <h1 className="font-heading text-4xl font-semibold text-foreground">
-                            Build Your Dream Team <br />
+                            Smarter Fantasy Football <br />
                             <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none">
                                 Premier Fantasy
                             </span>
                         </h1>
                         <p className="text-lg text-muted-foreground mt-4 max-w-2xl mx-auto">
-                            Compete in 5-gameweek rolling competitions, earn coins, and use AI-powered
-                            insights to dominate the Premier League fantasy game.
+                            Advanced player and team statistics plus AI insights, to help you plan the squad
+                            you enter on your favourite fantasy platform.
                         </p>
                     </AnimateIn>
                 }

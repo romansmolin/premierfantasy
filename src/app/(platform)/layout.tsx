@@ -7,6 +7,7 @@ import { DashboardLayout } from '@/widgets/dashboard-layout'
 
 import { SITE } from '@/shared/config/site'
 import { getServerSession } from '@/shared/lib/get-server-session'
+import { CookieNotice } from '@/shared/ui/cookie-notice'
 
 import type { Metadata } from 'next'
 
@@ -28,8 +29,7 @@ export const metadata: Metadata = {
         default: `Dashboard — ${SITE.name}`,
         template: `%s — ${SITE.name}`,
     },
-    description:
-        'Manage your fantasy squad, track live gameweek scores, run transfers, and follow your competition and league standings.',
+    description: 'Explore fixtures and player stats, and use AI insights paid with Credits.',
     robots: { index: false, follow: false },
 }
 
@@ -49,6 +49,7 @@ export default async function RootLayout({
             <body className={`${audiowide.variable} ${montserrat.variable} antialiased`}>
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                     <DashboardLayout>{children}</DashboardLayout>
+                    <CookieNotice />
                     <Toaster richColors position="top-right" />
                 </ThemeProvider>
             </body>

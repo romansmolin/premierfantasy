@@ -575,25 +575,6 @@ async function main() {
         }
     }
 
-    // Link any legacy unscoped competitions to the PL season they were played in.
-    const pl = await prisma.league.findUnique({ where: { externalId: 39 } })
-
-    if (pl) {
-        const plSeason = await prisma.leagueSeason.findFirst({
-            where: { leagueId: pl.id },
-            orderBy: { year: 'asc' },
-        })
-
-        if (plSeason) {
-            const linked = await prisma.competition.updateMany({
-                where: { leagueSeasonId: null },
-                data: { leagueSeasonId: plSeason.id },
-            })
-
-            console.warn(`Linked ${linked.count} unscoped competitions to Premier League ${plSeason.year}`)
-        }
-    }
-
     console.warn(`Seed complete: leaguesUpserted=${leaguesUpserted}, seasonsUpserted=${seasonsUpserted}`)
 
     await prisma.$disconnect()

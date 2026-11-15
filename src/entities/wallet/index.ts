@@ -18,3 +18,8 @@ export {
 } from './model/coin-pricing'
 export type { CoinQuote } from './model/coin-pricing'
 export { useWallet } from './model/use-wallet'
+
+export { WITHDRAWAL_CONSENT_TEXT } from './model/withdrawal-consent'
+
+export { checkoutCustomerSchema } from '@/shared/model/checkout-customer'
+export type { CheckoutCustomer } from '@/shared/model/checkout-customer'

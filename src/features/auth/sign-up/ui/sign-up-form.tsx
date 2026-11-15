@@ -43,7 +43,7 @@ export const SignUpForm = () => {
                         Welcome To Premier Fantasy 🚀
                     </FieldLegend>
 
-                    <FieldDescription>Create you team, follow matches, analyze, and win.</FieldDescription>
+                    <FieldDescription>Follow matches and player stats, and use AI analysis.</FieldDescription>
 
                     <FieldGroup>
                         <Field data-invalid={!!errors.username}>
@@ -103,7 +103,7 @@ export const SignUpForm = () => {
                             className="w-full font-normal [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-primary"
                         >
                             <span className="block leading-relaxed">
-                                I agree to the{' '}
+                                I confirm that I am at least 18 years old and agree to the{' '}
                                 {legalLinks.map(({ label, href }, index) => (
                                     <span key={href}>
                                         <Link

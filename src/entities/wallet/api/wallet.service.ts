@@ -1,5 +1,6 @@
 import { ApiError } from '@/shared/api/api-error'
 import { httpClient } from '@/shared/api/http-client'
+import type { CheckoutCustomer } from '@/shared/model/checkout-customer'
 
 import type { ICheckoutResponse, ICoinPack, IWalletData } from '../model/wallet.types'
 
@@ -14,35 +15,25 @@ export const walletService = {
         }
     },
 
-    async purchaseCoins(amount: number): Promise<IWalletData> {
+    async createCheckout(coinAmount: number, customer: CheckoutCustomer): Promise<ICheckoutResponse> {
         try {
-            return await httpClient.post<IWalletData>(`${BASE_URL}/purchase`, { amount })
-        } catch (error) {
-            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to purchase coins')
-        }
-    },
-
-    async spendCoins(amount: number, feature: string): Promise<IWalletData> {
-        try {
-            return await httpClient.post<IWalletData>(`${BASE_URL}/spend`, { amount, feature })
-        } catch (error) {
-            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to spend coins')
-        }
-    },
-
-    async createCheckout(coinAmount: number): Promise<ICheckoutResponse> {
-        try {
-            return await httpClient.post<ICheckoutResponse>('/api/payments/checkout', { coinAmount })
+            return await httpClient.post<ICheckoutResponse>('/api/payments/checkout', {
+                coinAmount,
+                customer,
+                withdrawalConsent: true,
+            })
         } catch (error) {
             throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to create checkout')
         }
     },
 
     /** Checkout for a free-chosen amount. Coins are decided by the server. */
-    async createCustomCheckout(amountCents: number): Promise<ICheckoutResponse> {
+    async createCustomCheckout(amountCents: number, customer: CheckoutCustomer): Promise<ICheckoutResponse> {
         try {
             return await httpClient.post<ICheckoutResponse>('/api/payments/checkout/custom', {
                 amountCents,
+                customer,
+                withdrawalConsent: true,
             })
         } catch (error) {
             throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to create checkout')
@@ -53,7 +44,7 @@ export const walletService = {
         try {
             return await httpClient.get<ICoinPack[]>('/api/wallet/packs')
         } catch (error) {
-            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to fetch coin packs')
+            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to fetch Credit packs')
         }
     },
 }

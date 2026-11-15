@@ -5,7 +5,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
     title: 'Create account',
     description:
-        'Create a free Premier Fantasy account to draft a squad, join rolling 5-gameweek competitions, and compete in private leagues.',
+        'Create a free Premier Fantasy account to explore player stats and use AI insights paid with Credits.',
 }
 
 export default function SignUp() {

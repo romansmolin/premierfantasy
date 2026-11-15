@@ -2,12 +2,10 @@
 
 import {
     AccountSetting01Icon,
-    ChampionIcon,
     Coins01Icon,
     DashboardSquare01Icon,
     FootballPitchIcon,
-    GlobalIcon,
-    NoteEditIcon,
+    UserGroupIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
@@ -35,18 +33,14 @@ const navGroups = [
         items: [{ title: 'Dashboard', icon: DashboardSquare01Icon, href: '/dashboard' }],
     },
     {
-        label: 'Fantasy',
-        items: [
-            { title: 'Leagues', icon: ChampionIcon, href: '/leagues' },
-            { title: 'Competitions', icon: GlobalIcon, href: '/competitions' },
-            { title: 'Team Builder', icon: NoteEditIcon, href: '/fantasy-team-builder' },
-        ],
+        label: 'Stats',
+        items: [{ title: 'Players', icon: UserGroupIcon, href: '/players' }],
     },
     {
         label: 'Account',
         items: [
             { title: 'Profile', icon: AccountSetting01Icon, href: '/profile' },
-            { title: 'Wallet', icon: Coins01Icon, href: '/wallet' },
+            { title: 'Credits', icon: Coins01Icon, href: '/wallet' },
         ],
     },
 ]

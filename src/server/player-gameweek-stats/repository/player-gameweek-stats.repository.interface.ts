@@ -30,5 +30,4 @@ export interface IPlayerGameweekStatsRepository {
     findByPlayer(playerId: string): Promise<PlayerStatsRow[]>
     findByPlayerAndGameweek(playerId: string, gameweekId: string): Promise<PlayerStatsRow | null>
     findPlayersByExternalIds(externalIds: number[]): Promise<PlayerLookupRow[]>
-    upsertGameweekPoints(fantasyTeamId: string, gameweekId: string, points: number): Promise<void>
 }

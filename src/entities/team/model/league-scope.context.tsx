@@ -23,9 +23,8 @@ interface LeagueScopeProviderProps {
 }
 
 /**
- * Scopes the team/player explorer to the league and season of the competition
- * being built for. Falls back to the Premier League defaults while the
- * competition is still loading or has no league link.
+ * Scopes the team/player explorer to a league and season. Falls back to the
+ * Premier League defaults when none is given.
  */
 export const LeagueScopeProvider = ({ leagueId, seasonYear, children }: LeagueScopeProviderProps) => {
     const value = useMemo<LeagueScope>(

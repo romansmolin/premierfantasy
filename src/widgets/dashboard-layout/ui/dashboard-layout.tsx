@@ -14,16 +14,13 @@ import { TooltipProvider } from '@/shared/ui/tooltip'
 
 const pageTitles: Record<string, string> = {
     '/dashboard': 'Dashboard',
-    '/competitions': 'Competitions',
-    '/fantasy-team-builder': 'Team Builder',
-    '/wallet': 'Wallet',
+    '/players': 'Players',
+    '/wallet': 'Credits',
     '/profile': 'Profile',
 }
 
 function getPageTitle(pathname: string): string {
     if (pageTitles[pathname]) return pageTitles[pathname]
-
-    if (pathname.startsWith('/competitions/')) return 'Competition'
 
     return 'Premier Fantasy'
 }

@@ -21,7 +21,6 @@ interface PlayerDetailsModalProps {
     error: Error | null | undefined
     onRequestAnalysis?: () => void
     isAnalysisLoading?: boolean
-    canAffordAnalysis?: boolean
     analysisCost?: number
 }
 
@@ -114,7 +113,6 @@ export const PlayerDetailsModal = ({
     error,
     onRequestAnalysis,
     isAnalysisLoading,
-    canAffordAnalysis,
     analysisCost,
 }: PlayerDetailsModalProps) => {
     return (
@@ -193,13 +191,13 @@ export const PlayerDetailsModal = ({
                                         size="sm"
                                         variant="outline"
                                         className="gap-1.5"
-                                        disabled={isAnalysisLoading || !canAffordAnalysis}
+                                        disabled={isAnalysisLoading}
                                         onClick={onRequestAnalysis}
                                     >
                                         <HugeiconsIcon icon={AiBrain01Icon} size={14} />
                                         {isAnalysisLoading
                                             ? 'Analyzing...'
-                                            : `AI Analysis (${analysisCost ?? 100} coins)`}
+                                            : `AI Analysis (${analysisCost ?? 10} Credits)`}
                                     </Button>
                                 </div>
                             )}

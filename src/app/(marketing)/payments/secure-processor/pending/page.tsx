@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
     title: 'Payment Pending',
-    description: 'Your Coin purchase is being processed.',
+    description: 'Your Credit purchase is being processed.',
     robots: { index: false, follow: false },
 }
 

@@ -10,9 +10,6 @@
         "lint": "eslint",
         "test": "vitest run",
         "test:watch": "vitest",
-        "seed:demo": "tsx -r dotenv/config scripts/seed-demo-competitors.ts",
-        "demo:process": "tsx -r dotenv/config scripts/process-demo-competitions.ts",
-        "demo:recalc": "tsx -r dotenv/config scripts/recalculate-demo-scores.ts",
         "commit": "cz",
         "prepare": "husky"
     },

@@ -308,9 +308,9 @@ export const ProfileView = () => {
                                 <DialogHeader>
                                     <DialogTitle>Are you sure?</DialogTitle>
                                     <DialogDescription>
-                                        This action cannot be undone. Your account, teams, and all associated
-                                        data will be permanently deleted. Type <strong>DELETE</strong> to
-                                        confirm.
+                                        This action cannot be undone. Your account, Credit balance, and all
+                                        associated data will be permanently deleted. Type{' '}
+                                        <strong>DELETE</strong> to confirm.
                                     </DialogDescription>
                                 </DialogHeader>
 

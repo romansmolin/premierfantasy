@@ -16,32 +16,32 @@ interface FaqItem {
 
 const faqs: FaqItem[] = [
     {
-        question: 'How do competitions work?',
-        answer: 'Competitions run in rolling 5-gameweek cycles. A new competition starts as soon as the previous one ends. You can join the active competition before its first gameweek deadline. Top 3 finishers earn coin rewards.',
+        question: 'Is Premier Fantasy a fantasy game?',
+        answer: 'No. Premier Fantasy is an analytics tool. We do not run fantasy games, contests, leagues or prizes, and nothing you do here earns points or rewards. You enter your squad on the fantasy platform you already play.',
     },
     {
-        question: 'How is scoring calculated?',
-        answer: 'Points are calculated from real Premier League match data. Goals score 4-6 points depending on position, assists earn 3 points, clean sheets earn 4 points for defenders/goalkeepers. Yellow cards cost -1 point and red cards -3 points.',
+        question: 'What can I do for free?',
+        answer: 'Create an account, see the upcoming fixtures, browse clubs and players, and open player profiles with season statistics.',
     },
     {
-        question: 'What are coins and how do I earn them?',
-        answer: 'Coins are the in-app currency. You earn them by finishing in the top 3 of a competition (1st: 500, 2nd: 300, 3rd: 100 coins). You can also purchase coin packs. Coins unlock AI-powered features like transfer suggestions and match predictions.',
+        question: 'What are Credits?',
+        answer: 'Credits are a prepaid unit used to pay for AI features. You buy a pack, and Credits never expire. They have no cash value and cannot be transferred to another account.',
     },
     {
-        question: 'How do transfers work?',
-        answer: 'You get free transfers between gameweeks. Use the transfer modal in the Team Builder to swap players. Transfers are locked once the gameweek deadline passes. The next transfer window opens before the following gameweek.',
+        question: 'Which AI features are available and what do they cost?',
+        answer: 'AI player analysis costs 10 Credits and AI match prediction costs 10 Credits. Squad review (30 Credits) and auto-build (300 Credits) are coming soon. Re-opening a match prediction you already paid for is always free, and a player analysis stays free to re-open for 7 days.',
     },
     {
-        question: 'What AI features are available?',
-        answer: "Three AI features powered by GPT: Transfer Suggestions (analyzes your full squad and recommends swaps), Player Analytics (deep dive into a specific player's form and value), and Match Predictions (score predictions with fantasy player picks for upcoming fixtures).",
+        question: 'Can I get a refund?',
+        answer: 'Unused Credits you purchased can be refunded on request within 14 days of purchase. Credits that were already spent on AI features cannot be refunded. Write to support@premierfantasy.net.',
     },
     {
-        question: 'Can I join mid-season?',
-        answer: "Yes! That's the beauty of rolling competitions. Each competition only spans 5 gameweeks, so new users are never at a disadvantage. Sign up anytime and join the next available competition.",
+        question: 'Does the AI guarantee better results?',
+        answer: 'No. AI output is informational, based on public statistics, and does not guarantee any result on any fantasy platform.',
     },
     {
-        question: 'Is it free to play?',
-        answer: 'Yes, the core game is completely free. Build your squad, compete in leaderboards, and earn coins through competition placement. Coin purchases are optional and unlock premium AI analysis features.',
+        question: 'Is Premier Fantasy affiliated with the Premier League or Fantasy Premier League?',
+        answer: 'No. Premier Fantasy is an independent tool and is not affiliated with, endorsed by, or connected to the Premier League, Fantasy Premier League, UEFA or any fantasy game operator.',
     },
 ]
 
@@ -90,7 +90,7 @@ export function FaqSection() {
     const [openIndex, setOpenIndex] = useState<number | null>(null)
 
     return (
-        <section className="py-10 md:py-16">
+        <section id="faq" className="py-10 md:py-16">
             <div className="mx-auto max-w-3xl px-6">
                 <AnimateIn variant="fadeUp">
                     <div className="flex flex-col items-center gap-4 text-center mb-10">
