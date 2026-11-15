@@ -26,6 +26,23 @@ export class WalletRepository implements IWalletRepository {
         return transaction as ICoinTransaction
     }
 
+    async spendIfSufficient(userId: string, amount: number, description: string): Promise<boolean> {
+        return prisma.$transaction(async (tx) => {
+            const { count } = await tx.user.updateMany({
+                where: { id: userId, coinBalance: { gte: amount } },
+                data: { coinBalance: { decrement: amount } },
+            })
+
+            if (count === 0) return false
+
+            await tx.coinTransaction.create({
+                data: { userId, amount: -amount, type: 'AI_FEATURE_SPEND', description },
+            })
+
+            return true
+        })
+    }
+
     async getTransactionHistory(userId: string, limit = 50): Promise<ICoinTransaction[]> {
         const transactions = await prisma.coinTransaction.findMany({
             where: { userId },

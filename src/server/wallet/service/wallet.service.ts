@@ -1,5 +1,7 @@
 import type { IWalletData } from '@/entities/wallet/model/wallet.types'
 
+import { Errors } from '@/shared/lib/http'
+
 import type { IWalletService } from './wallet.service.interface'
 import type { IWalletRepository } from '../repository/wallet.repository.interface'
 
@@ -21,21 +23,20 @@ export class WalletService implements IWalletService {
         return { balance, transactions }
     }
 
-    async spendOnFeature(userId: string, amount: number, featureName: string): Promise<IWalletData> {
-        if (amount <= 0) throw new Error('Amount must be positive')
+    getBalance(userId: string): Promise<number> {
+        return this.walletRepository.getUserBalance(userId)
+    }
 
-        const balance = await this.walletRepository.getUserBalance(userId)
+    async spendOnFeature(userId: string, amount: number, featureName: string): Promise<void> {
+        if (amount <= 0) throw Errors.badRequest('Amount must be positive')
 
-        if (balance < amount) throw new Error('Insufficient coin balance')
-
-        await this.walletRepository.createTransaction({
+        const spent = await this.walletRepository.spendIfSufficient(
             userId,
-            amount: -amount,
-            type: 'AI_FEATURE_SPEND',
-            description: `Spent ${amount} coins on ${featureName}`,
-        })
+            amount,
+            `Spent ${amount} credits on ${featureName}`,
+        )
 
-        return this.getWallet(userId)
+        if (!spent) throw Errors.paymentRequired()
     }
 
     async awardCompetitionReward(userId: string, competitionId: string, rank: number): Promise<void> {

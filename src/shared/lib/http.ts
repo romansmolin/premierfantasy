@@ -19,6 +19,7 @@ export class AppError extends Error {
 export const Errors = {
     badRequest: (message: string, details?: unknown) => new AppError(400, message, details),
     unauthorized: (message = 'Unauthorized') => new AppError(401, message),
+    paymentRequired: (message = 'Not enough credits') => new AppError(402, message),
     forbidden: (message = 'Forbidden') => new AppError(403, message),
     notFound: (message = 'Not found') => new AppError(404, message),
     conflict: (message: string, details?: unknown) => new AppError(409, message, details),
