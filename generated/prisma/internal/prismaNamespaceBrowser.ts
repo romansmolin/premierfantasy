@@ -49,15 +49,9 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
     AiReport: 'AiReport',
-    Competition: 'Competition',
     League: 'League',
     LeagueSeason: 'LeagueSeason',
-    LeagueMembership: 'LeagueMembership',
     LeagueSeasonTeam: 'LeagueSeasonTeam',
-    FantasyTeam: 'FantasyTeam',
-    Transfer: 'Transfer',
-    FantasyTeamPlayer: 'FantasyTeamPlayer',
-    GameweekPoints: 'GameweekPoints',
     Team: 'Team',
     Player: 'Player',
     PlayerSeasonPrice: 'PlayerSeasonPrice',
@@ -98,22 +92,6 @@ export const AiReportScalarFieldEnum = {
 
 export type AiReportScalarFieldEnum = (typeof AiReportScalarFieldEnum)[keyof typeof AiReportScalarFieldEnum]
 
-export const CompetitionScalarFieldEnum = {
-    id: 'id',
-    name: 'name',
-    startGameweek: 'startGameweek',
-    endGameweek: 'endGameweek',
-    status: 'status',
-    joinDeadline: 'joinDeadline',
-    leagueSeasonId: 'leagueSeasonId',
-    visibility: 'visibility',
-    demoScoringFinalizedAt: 'demoScoringFinalizedAt',
-    createdAt: 'createdAt',
-} as const
-
-export type CompetitionScalarFieldEnum =
-    (typeof CompetitionScalarFieldEnum)[keyof typeof CompetitionScalarFieldEnum]
-
 export const LeagueScalarFieldEnum = {
     id: 'id',
     externalId: 'externalId',
@@ -141,18 +119,6 @@ export const LeagueSeasonScalarFieldEnum = {
 export type LeagueSeasonScalarFieldEnum =
     (typeof LeagueSeasonScalarFieldEnum)[keyof typeof LeagueSeasonScalarFieldEnum]
 
-export const LeagueMembershipScalarFieldEnum = {
-    id: 'id',
-    userId: 'userId',
-    leagueId: 'leagueId',
-    leagueSeasonId: 'leagueSeasonId',
-    isDemo: 'isDemo',
-    joinedAt: 'joinedAt',
-} as const
-
-export type LeagueMembershipScalarFieldEnum =
-    (typeof LeagueMembershipScalarFieldEnum)[keyof typeof LeagueMembershipScalarFieldEnum]
-
 export const LeagueSeasonTeamScalarFieldEnum = {
     id: 'id',
     leagueSeasonId: 'leagueSeasonId',
@@ -162,56 +128,6 @@ export const LeagueSeasonTeamScalarFieldEnum = {
 
 export type LeagueSeasonTeamScalarFieldEnum =
     (typeof LeagueSeasonTeamScalarFieldEnum)[keyof typeof LeagueSeasonTeamScalarFieldEnum]
-
-export const FantasyTeamScalarFieldEnum = {
-    id: 'id',
-    userId: 'userId',
-    competitionId: 'competitionId',
-    name: 'name',
-    budgetTotal: 'budgetTotal',
-    budgetLeft: 'budgetLeft',
-    freeTransfers: 'freeTransfers',
-    isDemo: 'isDemo',
-    createdAt: 'createdAt',
-} as const
-
-export type FantasyTeamScalarFieldEnum =
-    (typeof FantasyTeamScalarFieldEnum)[keyof typeof FantasyTeamScalarFieldEnum]
-
-export const TransferScalarFieldEnum = {
-    id: 'id',
-    fantasyTeamId: 'fantasyTeamId',
-    gameweekId: 'gameweekId',
-    playerInId: 'playerInId',
-    playerOutId: 'playerOutId',
-    isFree: 'isFree',
-    createdAt: 'createdAt',
-} as const
-
-export type TransferScalarFieldEnum = (typeof TransferScalarFieldEnum)[keyof typeof TransferScalarFieldEnum]
-
-export const FantasyTeamPlayerScalarFieldEnum = {
-    id: 'id',
-    fantasyTeamId: 'fantasyTeamId',
-    playerId: 'playerId',
-    position: 'position',
-    purchasePrice: 'purchasePrice',
-    createdAt: 'createdAt',
-} as const
-
-export type FantasyTeamPlayerScalarFieldEnum =
-    (typeof FantasyTeamPlayerScalarFieldEnum)[keyof typeof FantasyTeamPlayerScalarFieldEnum]
-
-export const GameweekPointsScalarFieldEnum = {
-    id: 'id',
-    fantasyTeamId: 'fantasyTeamId',
-    gameweekId: 'gameweekId',
-    points: 'points',
-    createdAt: 'createdAt',
-} as const
-
-export type GameweekPointsScalarFieldEnum =
-    (typeof GameweekPointsScalarFieldEnum)[keyof typeof GameweekPointsScalarFieldEnum]
 
 export const TeamScalarFieldEnum = {
     id: 'id',
@@ -314,7 +230,6 @@ export const UserScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     coinBalance: 'coinBalance',
-    isDemo: 'isDemo',
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

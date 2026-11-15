@@ -27,12 +27,9 @@ model Player {
   teamId     String         @map("team_id")
   createdAt  DateTime       @default(now()) @map("created_at")
 
-  team             Team                  @relation(fields: [teamId], references: [id])
-  fantasyTeamSlots FantasyTeamPlayer[]
-  gameweekStats    PlayerGameweekStats[]
-  transfersIn      Transfer[]            @relation("TransferIn")
-  transfersOut     Transfer[]            @relation("TransferOut")
-  seasonPrices     PlayerSeasonPrice[]
+  team          Team                  @relation(fields: [teamId], references: [id])
+  gameweekStats PlayerGameweekStats[]
+  seasonPrices  PlayerSeasonPrice[]
 
   @@index([teamId])
   @@map("players")
@@ -65,9 +62,7 @@ model Gameweek {
   deadline   DateTime? @map("deadline")
   createdAt  DateTime  @default(now()) @map("created_at")
 
-  points      GameweekPoints[]
   playerStats PlayerGameweekStats[]
-  transfers   Transfer[]
 
   @@map("gameweeks")
 }

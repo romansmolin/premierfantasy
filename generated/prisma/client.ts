@@ -50,11 +50,6 @@ export { Prisma }
  */
 export type AiReport = Prisma.AiReportModel
 /**
- * Model Competition
- *
- */
-export type Competition = Prisma.CompetitionModel
-/**
  * Model League
  *
  */
@@ -65,14 +60,6 @@ export type League = Prisma.LeagueModel
  */
 export type LeagueSeason = Prisma.LeagueSeasonModel
 /**
- * Model LeagueMembership
- * *
- *  * A user's season-long enrolment in a league. Created the moment the user joins,
- *  * independently of whether they have picked a squad yet — this is what "My Leagues"
- *  * is built from. One row per user per league season.
- */
-export type LeagueMembership = Prisma.LeagueMembershipModel
-/**
  * Model LeagueSeasonTeam
  * *
  *  * Which clubs play in a league season. Clubs move between leagues year to year,
@@ -80,26 +67,6 @@ export type LeagueMembership = Prisma.LeagueMembershipModel
  *  * lets anything that needs a league-correct player pool resolve one locally.
  */
 export type LeagueSeasonTeam = Prisma.LeagueSeasonTeamModel
-/**
- * Model FantasyTeam
- *
- */
-export type FantasyTeam = Prisma.FantasyTeamModel
-/**
- * Model Transfer
- *
- */
-export type Transfer = Prisma.TransferModel
-/**
- * Model FantasyTeamPlayer
- *
- */
-export type FantasyTeamPlayer = Prisma.FantasyTeamPlayerModel
-/**
- * Model GameweekPoints
- *
- */
-export type GameweekPoints = Prisma.GameweekPointsModel
 /**
  * Model Team
  *

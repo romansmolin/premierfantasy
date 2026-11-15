@@ -10,21 +10,21 @@ enum PaymentStatus {
 }
 
 model PaymentToken {
-  id           String        @id @default(cuid())
-  userId       String        @map("user_id")
-  token        String        @unique
-  gatewayUid   String?       @unique @map("gateway_uid")
-  trackingId   String?       @unique @map("tracking_id")
-  status       PaymentStatus @default(CREATED)
-  amountCents  Int           @map("amount_cents")
-  currency     String        @default("USD")
-  coinAmount   Int           @map("coin_amount")
-  description  String
-  withdrawalConsentAt DateTime? @map("withdrawal_consent_at")
-  withdrawalConsentText String? @map("withdrawal_consent_text")
-  errorMessage String?       @map("error_message")
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
+  id                    String        @id @default(cuid())
+  userId                String        @map("user_id")
+  token                 String        @unique
+  gatewayUid            String?       @unique @map("gateway_uid")
+  trackingId            String?       @unique @map("tracking_id")
+  status                PaymentStatus @default(CREATED)
+  amountCents           Int           @map("amount_cents")
+  currency              String        @default("USD")
+  coinAmount            Int           @map("coin_amount")
+  description           String
+  withdrawalConsentAt   DateTime?     @map("withdrawal_consent_at")
+  withdrawalConsentText String?       @map("withdrawal_consent_text")
+  errorMessage          String?       @map("error_message")
+  createdAt             DateTime      @default(now()) @map("created_at")
+  updatedAt             DateTime      @updatedAt @map("updated_at")
 
   user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   transaction CoinTransaction?

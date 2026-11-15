@@ -9,18 +9,11 @@ model User {
 
   coinBalance Int @default(0) @map("coin_balance")
 
-  /**
-   * Seeded demo manager: has no credentials and can never authenticate.
-   */
-  isDemo Boolean @default(false) @map("is_demo")
-
-  sessions          Session[]
-  accounts          Account[]
-  fantasyTeams      FantasyTeam[]
-  coinTransactions  CoinTransaction[]
-  paymentTokens     PaymentToken[]
-  leagueMemberships LeagueMembership[]
-  aiReports         AiReport[]
+  sessions         Session[]
+  accounts         Account[]
+  coinTransactions CoinTransaction[]
+  paymentTokens    PaymentToken[]
+  aiReports        AiReport[]
 
   @@map("users")
 }

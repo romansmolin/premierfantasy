@@ -139,20 +139,4 @@ export class PlayerGameweekStatsRepository implements IPlayerGameweekStatsReposi
             position: p.position as PlayerLookupRow['position'],
         }))
     }
-
-    async upsertGameweekPoints(fantasyTeamId: string, gameweekId: string, points: number): Promise<void> {
-        await prisma.gameweekPoints.upsert({
-            where: {
-                fantasyTeamId_gameweekId: { fantasyTeamId, gameweekId },
-            },
-            create: {
-                fantasyTeamId,
-                gameweekId,
-                points,
-            },
-            update: {
-                points,
-            },
-        })
-    }
 }
