@@ -4,8 +4,10 @@ import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 
+import { SquadAiPanel } from '@/features/ai'
+
 import { squadService, validateSquad } from '@/entities/squad'
-import type { PoolPlayer, Position, SavedSquad, SquadPlayerInfo } from '@/entities/squad'
+import type { AutoBuildResult, PoolPlayer, Position, SavedSquad, SquadPlayerInfo } from '@/entities/squad'
 
 import { ApiError } from '@/shared/api/api-error'
 import { Badge } from '@/shared/ui/badge'
@@ -27,6 +29,8 @@ export function BuilderView() {
     const [viceCaptainId, setViceCaptainId] = useState('')
     const [name, setName] = useState('My squad')
     const [editingId, setEditingId] = useState<string | null>(null)
+    const [lockedIds, setLockedIds] = useState<string[]>([])
+    const [excludedIds, setExcludedIds] = useState<string[]>([])
     const [filters, setFilters] = useState({ position: '', club: '', q: '', sort: 'forecast' })
 
     const byId = useMemo(() => new Map((pool?.players ?? []).map((p) => [p.id, p])), [pool])
@@ -83,6 +87,7 @@ export function BuilderView() {
     }
 
     const remove = (id: string) => {
+        setLockedIds(lockedIds.filter((x) => x !== id))
         setStarters(starters.filter((x) => x !== id))
         setBench(bench.filter((x) => x !== id))
 
@@ -123,7 +128,26 @@ export function BuilderView() {
         setEditingId(s.id)
     }
 
+    const applyAutoBuild = (result: AutoBuildResult) => {
+        setStarters(result.starters)
+        setBench(result.bench)
+        setCaptainId(result.captainId)
+        setViceCaptainId(result.viceCaptainId)
+        setName('Auto-built squad')
+        setEditingId(null)
+    }
+
+    const toggleLock = (id: string) =>
+        setLockedIds(lockedIds.includes(id) ? lockedIds.filter((x) => x !== id) : [...lockedIds, id])
+
+    const exclude = (id: string) => {
+        if (chosen.includes(id)) remove(id)
+
+        setExcludedIds([...excludedIds, id])
+    }
+
     const reset = () => {
+        setLockedIds([])
         setStarters([])
         setBench([])
         setCaptainId('')
@@ -209,6 +233,14 @@ export function BuilderView() {
                         onClick={() => (isStarter ? toBench(id) : toStart(id))}
                     >
                         {isStarter ? 'Bench' : 'Start'}
+                    </Button>
+                    <Button
+                        size="xs"
+                        variant={lockedIds.includes(id) ? 'secondary' : 'ghost'}
+                        onClick={() => toggleLock(id)}
+                        aria-label={lockedIds.includes(id) ? 'Unlock' : 'Lock for auto-build'}
+                    >
+                        {lockedIds.includes(id) ? 'Locked' : 'Lock'}
                     </Button>
                     <Button size="xs" variant="ghost" onClick={() => remove(id)}>
                         ✕
@@ -334,6 +366,17 @@ export function BuilderView() {
                         ))}
                     </CardContent>
                 </Card>
+
+                <SquadAiPanel
+                    players={byId}
+                    lockedIds={lockedIds}
+                    excludedIds={excludedIds}
+                    onUnlock={(id) => setLockedIds(lockedIds.filter((x) => x !== id))}
+                    onInclude={(id) => setExcludedIds(excludedIds.filter((x) => x !== id))}
+                    onApply={applyAutoBuild}
+                    savedSquadId={editingId}
+                    forecastEnabled={pool.forecastEnabled}
+                />
             </div>
 
             <Card>
@@ -408,6 +451,14 @@ export function BuilderView() {
                                         {price(p.priceTenths)} · form {pts(p.form)}
                                         {pool.forecastEnabled ? ` · ${pts(p.forecast)}` : ''}
                                     </span>
+                                    <Button
+                                        size="xs"
+                                        variant="ghost"
+                                        disabled={excludedIds.includes(p.id)}
+                                        onClick={() => exclude(p.id)}
+                                    >
+                                        Skip
+                                    </Button>
                                     <Button size="xs" disabled={chosen.includes(p.id)} onClick={() => add(p)}>
                                         Add
                                     </Button>

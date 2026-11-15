@@ -151,12 +151,19 @@ Phase 2a interim: `PlayerSeasonPrice.seasonYear` is an `Int`. Phase 2b replaces 
 
 Paid features charge credits on the server, inside the service, after the result was generated successfully — never from the client. Use `IWalletService.spendOnFeature(userId, amount, featureName)`: it is atomic (one conditional update, no read-then-write) and throws `Errors.paymentRequired()` (402) when the balance is too low. Prices live in `src/entities/ai/model/ai-pricing.ts`. Check the balance before generating, charge after generating, and cache the result (`AiReport`) so re-opening it is free. See `AIInsightsService`.
 
+New paid features use `BilledRunner` (`src/server/ai/service/billed-runner.ts`), which implements exactly this order (cached → balance → generate → re-check the cache for a concurrent request → atomic charge → save) and takes a cache key per (user, feature, subject, gameweek). Two use it:
+
+- **Auto-build** (`AutoBuildService`, `POST /api/autobuild`, 300 Credits). The optimizer (`src/server/autobuild/lib/optimizer.ts`) chooses the squad under the FPL rules with locked and excluded players; the AI only explains the result and a failed explanation never withholds a paid squad (`explanation: null`). The result is validated with `validateSquad` before it is charged. Refuses with 422 when the forecast is off, fewer than half of the players have a price, or the constraints cannot be met.
+- **Squad review** (`SquadReviewService`, `POST /api/squads/{id}/review`, 30 Credits). Reviews the saved squad; suggested swaps are filtered to real players of the same position (squad → best-forecast alternatives), so invented players never reach the user.
+
+A repeat of the same request in the same gameweek is free; `refresh: true` pays again, and `forecastUpdated` tells the client the stored result predates the latest forecast run.
+
 ## 6.7. Sync jobs and their composition root
 
 Data sync (API-Football and FPL into our database) runs as plain Node scripts, not as HTTP routes: `npm run sync -- <fixtures|match-stats|fpl-bootstrap|fpl-fixtures|fpl-points|short|full> [--max-requests N]`, scheduled by Vercel Cron: `vercel.json` calls `GET /api/cron/sync` daily (06:00 UTC), which runs the `full` group with a 45 s / 300-request budget (`SyncCronController`, auth `Authorization: Bearer ${CRON_SECRET}`; Vercel sends it when the `CRON_SECRET` env var is set on the project). The first big load is run by hand from a machine with `npm run sync -- full --max-requests 1000`.
 
 - Job services follow the usual Service → Repository split under `src/server/<entity>/`, but they are wired in a **second composition root**, `src/server/sync/sync.container.ts`. It must not import controllers, `next/*`, `server-only` or `@/shared/lib/http` (scripts cannot load them). `src/shared/lib/container.ts` stays the only root for HTTP.
-- Every job is wrapped by `runJob` (`src/server/sync/service/job-runner.ts`), which records a `SyncRun` row and never throws. A job returns `OK`, `PARTIAL` (stopped early on the request budget or daily quota) or throws (`FAILED`, exit code 1 so the workflow turns red).
+- Every job is wrapped by `runJob` (`src/server/sync/service/job-runner.ts`), which records a `SyncRun` row and never throws. A job returns `OK`, `PARTIAL` (stopped early on the request budget or daily quota) or throws (`FAILED`, exit code 1).
 - Refuse before writing: empty, short or changed-shape upstream answers throw `SuspiciousResponseError` so good data is never overwritten. API-Football answers HTTP 200 with an `errors` payload when the quota is gone; `ApiFootballHttp` turns that into `ApiFootballError`.
 - Writes are idempotent upserts keyed on external ids, so a repeated or overlapping run does nothing new.
 - FPL code lives only in `src/server/fpl/` (adapter): prices, squad rules, event/fixture links, actual points for accuracy checks. If FPL has to be switched off, nothing outside that folder depends on it.

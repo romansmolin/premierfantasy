@@ -1,6 +1,7 @@
 import { ApiError } from '@/shared/api/api-error'
 import { httpClient } from '@/shared/api/http-client'
 
+import type { AutoBuildRequest, AutoBuildResult, SquadReview } from '../model/autobuild.types'
 import type { BuilderPool, SavedSquad, SquadInput } from '../model/squad.types'
 
 const wrap = async <T>(call: () => Promise<T>, fallback: string): Promise<T> => {
@@ -20,4 +21,11 @@ export const squadService = {
         wrap(() => httpClient.put<SavedSquad>(`/api/squads/${id}`, input), 'Failed to save the squad'),
     remove: (id: string) =>
         wrap(() => httpClient.delete<{ ok: true }>(`/api/squads/${id}`), 'Failed to delete the squad'),
+    autoBuild: (request: AutoBuildRequest) =>
+        wrap(() => httpClient.post<AutoBuildResult>('/api/autobuild', request), 'Auto-build failed'),
+    review: (id: string, refresh = false) =>
+        wrap(
+            () => httpClient.post<SquadReview>(`/api/squads/${id}/review`, { refresh }),
+            'Squad review failed',
+        ),
 }
