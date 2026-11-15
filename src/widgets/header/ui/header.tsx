@@ -17,6 +17,9 @@ import { Button, buttonVariants } from '@/shared/ui/button'
 import { Sheet, SheetContent, SheetFooter } from '@/shared/ui/sheet'
 
 const links = [
+    { label: 'Players', href: '/players' },
+    { label: 'Fixtures', href: '/fixtures' },
+    { label: 'How we calculate', href: '/how-we-calculate' },
     { label: 'Features', href: '/#features' },
     { label: 'How It Works', href: '/#how-it-works' },
     { label: 'Pricing', href: '/#pricing' },

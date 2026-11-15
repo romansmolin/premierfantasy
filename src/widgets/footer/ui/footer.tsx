@@ -12,7 +12,8 @@ const footerLinks = [
         links: [
             { label: 'Features', href: '/#features' },
             { label: 'Pricing', href: '/#pricing' },
-            { label: 'AI Insights', href: '/players' },
+            { label: 'Players', href: '/players' },
+            { label: 'How we calculate', href: '/how-we-calculate' },
         ],
     },
     {

@@ -10,6 +10,10 @@ const PUBLIC_PATHS = [
     '/private-policy',
     '/cookies-policy',
     '/return-policy',
+    '/players',
+    '/fixtures',
+    '/how-we-calculate',
+    '/sitemap.xml',
 ]
 
 function hasSessionCookie(request: NextRequest): boolean {
