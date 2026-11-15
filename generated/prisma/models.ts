@@ -7,6 +7,7 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/AiReport'
 export type * from './models/Competition'
 export type * from './models/League'
 export type * from './models/LeagueSeason'

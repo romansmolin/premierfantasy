@@ -17,6 +17,11 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums'
 /**
+ * Model AiReport
+ *
+ */
+export type AiReport = Prisma.AiReportModel
+/**
  * Model Competition
  *
  */

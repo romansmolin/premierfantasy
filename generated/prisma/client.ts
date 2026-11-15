@@ -30,8 +30,8 @@ export * from './enums'
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Competitions
- * const competitions = await prisma.competition.findMany()
+ * // Fetch zero or more AiReports
+ * const aiReports = await prisma.aiReport.findMany()
  * ```
  *
  * Read more in our [docs](https://pris.ly/d/client).
@@ -44,6 +44,11 @@ export type PrismaClient<
 > = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
+/**
+ * Model AiReport
+ *
+ */
+export type AiReport = Prisma.AiReportModel
 /**
  * Model Competition
  *

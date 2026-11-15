@@ -1,5 +1,7 @@
 import { AIController } from '@/server/ai/controller/ai.controller'
-import { AITransferService } from '@/server/ai/service/ai-transfer.service'
+import { AiReportRepository } from '@/server/ai/repository/ai-report.repository'
+import { AIGeneratorService } from '@/server/ai/service/ai-generator.service'
+import { AIInsightsService } from '@/server/ai/service/ai-insights.service'
 import { CompetitionController } from '@/server/competition/controller/competition.controller'
 import { CompetitionRepository } from '@/server/competition/repository/competition.repository'
 import { CompetitionService } from '@/server/competition/service/competition.service'
@@ -41,6 +43,7 @@ import { WalletRepository } from '@/server/wallet/repository/wallet.repository'
 import { WalletService } from '@/server/wallet/service/wallet.service'
 
 // Repositories — instantiated once each, shared across services that need them.
+const aiReportRepository = new AiReportRepository()
 const competitionRepository = new CompetitionRepository()
 const demoRepository = new DemoRepository()
 const fantasyTeamRepository = new FantasyTeamRepository()
@@ -89,12 +92,13 @@ const competitionService = new CompetitionService(
     walletService,
     leagueRepository,
 )
-const aiTransferService = new AITransferService(fantasyTeamRepository)
+const aiGeneratorService = new AIGeneratorService()
+const aiInsightsService = new AIInsightsService(aiGeneratorService, aiReportRepository, walletService)
 const paymentService = new PaymentService(paymentRepository, walletRepository)
 const orchestratorService = new OrchestratorService(gameweekService, scoringService, competitionService)
 
 // Controllers
-const aiController = new AIController(aiTransferService)
+const aiController = new AIController(aiInsightsService)
 const competitionController = new CompetitionController(competitionService)
 const fantasyTeamController = new FantasyTeamController(fantasyTeamService)
 const fixtureController = new FixtureController(fixtureService)

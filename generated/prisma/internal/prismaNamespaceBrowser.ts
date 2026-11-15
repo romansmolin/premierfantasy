@@ -48,6 +48,7 @@ export const JsonNull = runtime.JsonNull
 export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
+    AiReport: 'AiReport',
     Competition: 'Competition',
     League: 'League',
     LeagueSeason: 'LeagueSeason',
@@ -85,6 +86,17 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 
 export type TransactionIsolationLevel =
     (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+export const AiReportScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    kind: 'kind',
+    subjectKey: 'subjectKey',
+    payload: 'payload',
+    createdAt: 'createdAt',
+} as const
+
+export type AiReportScalarFieldEnum = (typeof AiReportScalarFieldEnum)[keyof typeof AiReportScalarFieldEnum]
 
 export const CompetitionScalarFieldEnum = {
     id: 'id',
@@ -370,12 +382,26 @@ export const SortOrder = {
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
+export const JsonNullValueInput = {
+    JsonNull: JsonNull,
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
 export const QueryMode = {
     default: 'default',
     insensitive: 'insensitive',
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+export const JsonNullValueFilter = {
+    DbNull: DbNull,
+    JsonNull: JsonNull,
+    AnyNull: AnyNull,
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 export const NullsOrder = {
     first: 'first',

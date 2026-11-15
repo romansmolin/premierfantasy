@@ -250,6 +250,7 @@ export type UserWhereInput = {
     coinTransactions?: Prisma.CoinTransactionListRelationFilter
     paymentTokens?: Prisma.PaymentTokenListRelationFilter
     leagueMemberships?: Prisma.LeagueMembershipListRelationFilter
+    aiReports?: Prisma.AiReportListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -268,6 +269,7 @@ export type UserOrderByWithRelationInput = {
     coinTransactions?: Prisma.CoinTransactionOrderByRelationAggregateInput
     paymentTokens?: Prisma.PaymentTokenOrderByRelationAggregateInput
     leagueMemberships?: Prisma.LeagueMembershipOrderByRelationAggregateInput
+    aiReports?: Prisma.AiReportOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<
@@ -290,6 +292,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
         coinTransactions?: Prisma.CoinTransactionListRelationFilter
         paymentTokens?: Prisma.PaymentTokenListRelationFilter
         leagueMemberships?: Prisma.LeagueMembershipListRelationFilter
+        aiReports?: Prisma.AiReportListRelationFilter
     },
     'id' | 'email'
 >
@@ -342,6 +345,7 @@ export type UserCreateInput = {
     coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -360,6 +364,7 @@ export type UserUncheckedCreateInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -378,6 +383,7 @@ export type UserUpdateInput = {
     coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -396,6 +402,7 @@ export type UserUncheckedUpdateInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -481,6 +488,32 @@ export type UserMinOrderByAggregateInput = {
 
 export type UserSumOrderByAggregateInput = {
     coinBalance?: Prisma.SortOrder
+}
+
+export type UserCreateNestedOneWithoutAiReportsInput = {
+    create?: Prisma.XOR<
+        Prisma.UserCreateWithoutAiReportsInput,
+        Prisma.UserUncheckedCreateWithoutAiReportsInput
+    >
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiReportsInput
+    connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAiReportsNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.UserCreateWithoutAiReportsInput,
+        Prisma.UserUncheckedCreateWithoutAiReportsInput
+    >
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiReportsInput
+    upsert?: Prisma.UserUpsertWithoutAiReportsInput
+    connect?: Prisma.UserWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.UserUpdateToOneWithWhereWithoutAiReportsInput,
+            Prisma.UserUpdateWithoutAiReportsInput
+        >,
+        Prisma.UserUncheckedUpdateWithoutAiReportsInput
+    >
 }
 
 export type UserCreateNestedOneWithoutLeagueMembershipsInput = {
@@ -627,6 +660,103 @@ export type UserUpdateOneRequiredWithoutCoinTransactionsNestedInput = {
     >
 }
 
+export type UserCreateWithoutAiReportsInput = {
+    id?: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    coinBalance?: number
+    isDemo?: boolean
+    sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+    accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+    fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
+    paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
+    leagueMemberships?: Prisma.LeagueMembershipCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAiReportsInput = {
+    id?: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    coinBalance?: number
+    isDemo?: boolean
+    sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+    fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
+    paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
+    leagueMemberships?: Prisma.LeagueMembershipUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAiReportsInput = {
+    where: Prisma.UserWhereUniqueInput
+    create: Prisma.XOR<
+        Prisma.UserCreateWithoutAiReportsInput,
+        Prisma.UserUncheckedCreateWithoutAiReportsInput
+    >
+}
+
+export type UserUpsertWithoutAiReportsInput = {
+    update: Prisma.XOR<
+        Prisma.UserUpdateWithoutAiReportsInput,
+        Prisma.UserUncheckedUpdateWithoutAiReportsInput
+    >
+    create: Prisma.XOR<
+        Prisma.UserCreateWithoutAiReportsInput,
+        Prisma.UserUncheckedCreateWithoutAiReportsInput
+    >
+    where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAiReportsInput = {
+    where?: Prisma.UserWhereInput
+    data: Prisma.XOR<Prisma.UserUpdateWithoutAiReportsInput, Prisma.UserUncheckedUpdateWithoutAiReportsInput>
+}
+
+export type UserUpdateWithoutAiReportsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    email?: Prisma.StringFieldUpdateOperationsInput | string
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
+    isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+    accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+    fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
+    paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
+    leagueMemberships?: Prisma.LeagueMembershipUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAiReportsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    email?: Prisma.StringFieldUpdateOperationsInput | string
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
+    isDemo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+    fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
+    paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
+    leagueMemberships?: Prisma.LeagueMembershipUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutLeagueMembershipsInput = {
     id?: string
     name: string
@@ -642,6 +772,7 @@ export type UserCreateWithoutLeagueMembershipsInput = {
     fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
     coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeagueMembershipsInput = {
@@ -659,6 +790,7 @@ export type UserUncheckedCreateWithoutLeagueMembershipsInput = {
     fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
     coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeagueMembershipsInput = {
@@ -704,6 +836,7 @@ export type UserUpdateWithoutLeagueMembershipsInput = {
     fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
     coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeagueMembershipsInput = {
@@ -721,6 +854,7 @@ export type UserUncheckedUpdateWithoutLeagueMembershipsInput = {
     fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
     coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFantasyTeamsInput = {
@@ -738,6 +872,7 @@ export type UserCreateWithoutFantasyTeamsInput = {
     coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFantasyTeamsInput = {
@@ -755,6 +890,7 @@ export type UserUncheckedCreateWithoutFantasyTeamsInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFantasyTeamsInput = {
@@ -800,6 +936,7 @@ export type UserUpdateWithoutFantasyTeamsInput = {
     coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFantasyTeamsInput = {
@@ -817,6 +954,7 @@ export type UserUncheckedUpdateWithoutFantasyTeamsInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentTokensInput = {
@@ -834,6 +972,7 @@ export type UserCreateWithoutPaymentTokensInput = {
     fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
     coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentTokensInput = {
@@ -851,6 +990,7 @@ export type UserUncheckedCreateWithoutPaymentTokensInput = {
     fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
     coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentTokensInput = {
@@ -896,6 +1036,7 @@ export type UserUpdateWithoutPaymentTokensInput = {
     fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
     coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentTokensInput = {
@@ -913,6 +1054,7 @@ export type UserUncheckedUpdateWithoutPaymentTokensInput = {
     fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
     coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -930,6 +1072,7 @@ export type UserCreateWithoutSessionsInput = {
     coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -947,6 +1090,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -980,6 +1124,7 @@ export type UserUpdateWithoutSessionsInput = {
     coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -997,6 +1142,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -1014,6 +1160,7 @@ export type UserCreateWithoutAccountsInput = {
     coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1031,6 +1178,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1064,6 +1212,7 @@ export type UserUpdateWithoutAccountsInput = {
     coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1081,6 +1230,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCoinTransactionsInput = {
@@ -1098,6 +1248,7 @@ export type UserCreateWithoutCoinTransactionsInput = {
     fantasyTeams?: Prisma.FantasyTeamCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCoinTransactionsInput = {
@@ -1115,6 +1266,7 @@ export type UserUncheckedCreateWithoutCoinTransactionsInput = {
     fantasyTeams?: Prisma.FantasyTeamUncheckedCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCoinTransactionsInput = {
@@ -1160,6 +1312,7 @@ export type UserUpdateWithoutCoinTransactionsInput = {
     fantasyTeams?: Prisma.FantasyTeamUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCoinTransactionsInput = {
@@ -1177,6 +1330,7 @@ export type UserUncheckedUpdateWithoutCoinTransactionsInput = {
     fantasyTeams?: Prisma.FantasyTeamUncheckedUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
     leagueMemberships?: Prisma.LeagueMembershipUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
 }
 
 /**
@@ -1190,6 +1344,7 @@ export type UserCountOutputType = {
     coinTransactions: number
     paymentTokens: number
     leagueMemberships: number
+    aiReports: number
 }
 
 export type UserCountOutputTypeSelect<
@@ -1201,6 +1356,7 @@ export type UserCountOutputTypeSelect<
     coinTransactions?: boolean | UserCountOutputTypeCountCoinTransactionsArgs
     paymentTokens?: boolean | UserCountOutputTypeCountPaymentTokensArgs
     leagueMemberships?: boolean | UserCountOutputTypeCountLeagueMembershipsArgs
+    aiReports?: boolean | UserCountOutputTypeCountAiReportsArgs
 }
 
 /**
@@ -1269,6 +1425,15 @@ export type UserCountOutputTypeCountLeagueMembershipsArgs<
     where?: Prisma.LeagueMembershipWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAiReportsArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    where?: Prisma.AiReportWhereInput
+}
+
 export type UserSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
@@ -1288,6 +1453,7 @@ export type UserSelect<
         coinTransactions?: boolean | Prisma.User$coinTransactionsArgs<ExtArgs>
         paymentTokens?: boolean | Prisma.User$paymentTokensArgs<ExtArgs>
         leagueMemberships?: boolean | Prisma.User$leagueMembershipsArgs<ExtArgs>
+        aiReports?: boolean | Prisma.User$aiReportsArgs<ExtArgs>
         _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
     },
     ExtArgs['result']['user']
@@ -1362,6 +1528,7 @@ export type UserInclude<
     coinTransactions?: boolean | Prisma.User$coinTransactionsArgs<ExtArgs>
     paymentTokens?: boolean | Prisma.User$paymentTokensArgs<ExtArgs>
     leagueMemberships?: boolean | Prisma.User$leagueMembershipsArgs<ExtArgs>
+    aiReports?: boolean | Prisma.User$aiReportsArgs<ExtArgs>
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<
@@ -1382,6 +1549,7 @@ export type $UserPayload<
         coinTransactions: Prisma.$CoinTransactionPayload<ExtArgs>[]
         paymentTokens: Prisma.$PaymentTokenPayload<ExtArgs>[]
         leagueMemberships: Prisma.$LeagueMembershipPayload<ExtArgs>[]
+        aiReports: Prisma.$AiReportPayload<ExtArgs>[]
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -1960,6 +2128,12 @@ export interface Prisma__UserClient<
               'findMany',
               GlobalOmitOptions
           >
+        | Null
+    >
+    aiReports<T extends Prisma.User$aiReportsArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.User$aiReportsArgs<ExtArgs>>,
+    ): Prisma.PrismaPromise<
+        | runtime.Types.Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, 'findMany', GlobalOmitOptions>
         | Null
     >
     /**
@@ -2579,6 +2753,32 @@ export type User$leagueMembershipsArgs<
     take?: number
     skip?: number
     distinct?: Prisma.LeagueMembershipScalarFieldEnum | Prisma.LeagueMembershipScalarFieldEnum[]
+}
+
+/**
+ * User.aiReports
+ */
+export type User$aiReportsArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: Prisma.AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: Prisma.AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.AiReportInclude<ExtArgs> | null
+    where?: Prisma.AiReportWhereInput
+    orderBy?: Prisma.AiReportOrderByWithRelationInput | Prisma.AiReportOrderByWithRelationInput[]
+    cursor?: Prisma.AiReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Prisma.AiReportScalarFieldEnum | Prisma.AiReportScalarFieldEnum[]
 }
 
 /**

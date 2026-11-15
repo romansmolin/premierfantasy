@@ -20,6 +20,7 @@ model User {
   coinTransactions  CoinTransaction[]
   paymentTokens     PaymentToken[]
   leagueMemberships LeagueMembership[]
+  aiReports         AiReport[]
 
   @@map("users")
 }

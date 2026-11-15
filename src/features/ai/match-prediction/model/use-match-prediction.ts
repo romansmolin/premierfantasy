@@ -4,32 +4,26 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import useSWRMutation from 'swr/mutation'
 
-import { aiService } from '@/entities/ai'
+import { aiService, AI_FEATURE_PRICES } from '@/entities/ai'
 import type { MatchPrediction } from '@/entities/ai'
 import { useWallet } from '@/entities/wallet'
 
-const AI_FEATURE_COST = 300
+import { ApiError } from '@/shared/api/api-error'
+
+const AI_FEATURE_COST = AI_FEATURE_PRICES.MATCH_PREDICTION
 
 export const useMatchPrediction = () => {
     const [prediction, setPrediction] = useState<MatchPrediction | null>(null)
     const [isOpen, setIsOpen] = useState(false)
     const [activeFixtureId, setActiveFixtureId] = useState<number | null>(null)
-    const { balance } = useWallet()
+    const { balance, mutate: mutateWallet } = useWallet()
 
     const { trigger, isMutating: isLoading } = useSWRMutation(
         activeFixtureId ? `/api/ai/match-prediction?fixtureId=${activeFixtureId}` : null,
-        async () => {
-            return aiService.getMatchPrediction(activeFixtureId!)
-        },
+        async () => aiService.getMatchPrediction(activeFixtureId!),
     )
 
     const requestPrediction = async (fixtureId: number) => {
-        if (balance < AI_FEATURE_COST) {
-            toast.error(`Not enough coins. You need ${AI_FEATURE_COST} coins.`)
-
-            return
-        }
-
         setActiveFixtureId(fixtureId)
 
         try {
@@ -40,7 +34,13 @@ export const useMatchPrediction = () => {
                 setIsOpen(true)
             }
         } catch (error) {
-            toast.error(error instanceof Error ? error.message : 'Prediction failed')
+            if (ApiError.isApiError(error) && error.status === 402) {
+                toast.error(`Not enough credits. You need ${AI_FEATURE_COST} credits.`)
+            } else {
+                toast.error(error instanceof Error ? error.message : 'Prediction failed')
+            }
+        } finally {
+            await mutateWallet()
         }
     }
 

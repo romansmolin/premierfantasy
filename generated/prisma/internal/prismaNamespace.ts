@@ -372,6 +372,7 @@ export type FieldRef<Model, FieldType> = runtime.FieldRef<Model, FieldType>
 type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRef<Model, FieldType>
 
 export const ModelName = {
+    AiReport: 'AiReport',
     Competition: 'Competition',
     League: 'League',
     LeagueSeason: 'LeagueSeason',
@@ -412,6 +413,7 @@ export type TypeMap<
     }
     meta: {
         modelProps:
+            | 'aiReport'
             | 'competition'
             | 'league'
             | 'leagueSeason'
@@ -435,6 +437,80 @@ export type TypeMap<
         txIsolationLevel: TransactionIsolationLevel
     }
     model: {
+        AiReport: {
+            payload: Prisma.$AiReportPayload<ExtArgs>
+            fields: Prisma.AiReportFieldRefs
+            operations: {
+                findUnique: {
+                    args: Prisma.AiReportFindUniqueArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReportPayload> | null
+                }
+                findUniqueOrThrow: {
+                    args: Prisma.AiReportFindUniqueOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReportPayload>
+                }
+                findFirst: {
+                    args: Prisma.AiReportFindFirstArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReportPayload> | null
+                }
+                findFirstOrThrow: {
+                    args: Prisma.AiReportFindFirstOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReportPayload>
+                }
+                findMany: {
+                    args: Prisma.AiReportFindManyArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReportPayload>[]
+                }
+                create: {
+                    args: Prisma.AiReportCreateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReportPayload>
+                }
+                createMany: {
+                    args: Prisma.AiReportCreateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                createManyAndReturn: {
+                    args: Prisma.AiReportCreateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReportPayload>[]
+                }
+                delete: {
+                    args: Prisma.AiReportDeleteArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReportPayload>
+                }
+                update: {
+                    args: Prisma.AiReportUpdateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReportPayload>
+                }
+                deleteMany: {
+                    args: Prisma.AiReportDeleteManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateMany: {
+                    args: Prisma.AiReportUpdateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateManyAndReturn: {
+                    args: Prisma.AiReportUpdateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReportPayload>[]
+                }
+                upsert: {
+                    args: Prisma.AiReportUpsertArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AiReportPayload>
+                }
+                aggregate: {
+                    args: Prisma.AiReportAggregateArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateAiReport>
+                }
+                groupBy: {
+                    args: Prisma.AiReportGroupByArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AiReportGroupByOutputType>[]
+                }
+                count: {
+                    args: Prisma.AiReportCountArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AiReportCountAggregateOutputType> | number
+                }
+            }
+        }
         Competition: {
             payload: Prisma.$CompetitionPayload<ExtArgs>
             fields: Prisma.CompetitionFieldRefs
@@ -1968,6 +2044,17 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel =
     (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
+export const AiReportScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    kind: 'kind',
+    subjectKey: 'subjectKey',
+    payload: 'payload',
+    createdAt: 'createdAt',
+} as const
+
+export type AiReportScalarFieldEnum = (typeof AiReportScalarFieldEnum)[keyof typeof AiReportScalarFieldEnum]
+
 export const CompetitionScalarFieldEnum = {
     id: 'id',
     name: 'name',
@@ -2252,12 +2339,26 @@ export const SortOrder = {
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
+export const JsonNullValueInput = {
+    JsonNull: JsonNull,
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
 export const QueryMode = {
     default: 'default',
     insensitive: 'insensitive',
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+export const JsonNullValueFilter = {
+    DbNull: DbNull,
+    JsonNull: JsonNull,
+    AnyNull: AnyNull,
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 export const NullsOrder = {
     first: 'first',
@@ -2281,14 +2382,14 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'Json'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
 
 /**
- * Reference to a field of type 'Int[]'
+ * Reference to a field of type 'QueryMode'
  */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
 
 /**
  * Reference to a field of type 'DateTime'
@@ -2299,6 +2400,16 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
 
 /**
  * Reference to a field of type 'Boolean'
@@ -2460,6 +2571,7 @@ export type PrismaClientOptions = (
     comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+    aiReport?: Prisma.AiReportOmit
     competition?: Prisma.CompetitionOmit
     league?: Prisma.LeagueOmit
     leagueSeason?: Prisma.LeagueSeasonOmit

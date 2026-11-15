@@ -498,10 +498,6 @@ export type CompetitionScalarRelationFilter = {
     isNot?: Prisma.CompetitionWhereInput
 }
 
-export type StringFieldUpdateOperationsInput = {
-    set?: string
-}
-
 export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -512,10 +508,6 @@ export type IntFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
