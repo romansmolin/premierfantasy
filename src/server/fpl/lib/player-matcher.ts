@@ -22,7 +22,12 @@ export interface PlayerCandidates {
     candidates: { playerId: string; score: number }[]
 }
 
-const POSITION_BY_ELEMENT_TYPE: Record<number, PlayerPosition> = { 1: 'GK', 2: 'DEF', 3: 'MID', 4: 'FWD' }
+export const POSITION_BY_ELEMENT_TYPE: Record<number, PlayerPosition> = {
+    1: 'GK',
+    2: 'DEF',
+    3: 'MID',
+    4: 'FWD',
+}
 
 const EXACT = 1
 const SURNAME = 0.8

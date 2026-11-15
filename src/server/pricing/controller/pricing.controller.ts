@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
-import { Errors, withController } from '@/shared/lib/http'
+import { assertAdmin } from '@/shared/lib/admin-auth'
+import { withController } from '@/shared/lib/http'
 
 import type { IPricingService } from '../service/pricing.service.interface'
 
@@ -22,17 +23,7 @@ export class PricingController {
     })
 
     uploadCsv = withController(async (req, ctx) => {
-        const adminSecret = process.env.ADMIN_SECRET
-
-        if (!adminSecret) {
-            throw Errors.internal('ADMIN_SECRET is not configured')
-        }
-
-        const authHeader = req.headers.get('authorization')
-
-        if (authHeader !== `Bearer ${adminSecret}`) {
-            throw Errors.unauthorized()
-        }
+        assertAdmin(req)
 
         const { seasonYear } = seasonParamSchema.parse(await ctx.params)
         const csv = await req.text()

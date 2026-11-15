@@ -5,6 +5,10 @@ import { AIInsightsService } from '@/server/ai/service/ai-insights.service'
 import { FixtureController } from '@/server/fixtures/controller/fixture.controller'
 import { FixtureRepository } from '@/server/fixtures/repository/fixture.repository'
 import { FixtureService } from '@/server/fixtures/service/fixture.service'
+import { FplMappingController } from '@/server/fpl/controller/fpl-mapping.controller'
+import { createFplClient } from '@/server/fpl/lib/fpl-client'
+import { FplMappingRepository } from '@/server/fpl/repository/fpl-mapping.repository'
+import { FplMappingService } from '@/server/fpl/service/fpl-mapping.service'
 import { GameweekController } from '@/server/gameweek/controller/gameweek.controller'
 import { GameweekRepository } from '@/server/gameweek/repository/gameweek.repository'
 import { GameweekService } from '@/server/gameweek/service/gameweek.service'
@@ -26,6 +30,7 @@ import { WalletService } from '@/server/wallet/service/wallet.service'
 
 // Repositories — instantiated once each, shared across services that need them.
 const aiReportRepository = new AiReportRepository()
+const fplMappingRepository = new FplMappingRepository()
 const fixtureRepository = new FixtureRepository()
 const gameweekRepository = new GameweekRepository()
 const paymentRepository = new PaymentRepository()
@@ -44,10 +49,12 @@ const fixtureService = new FixtureService(fixtureRepository)
 const aiGeneratorService = new AIGeneratorService()
 const aiInsightsService = new AIInsightsService(aiGeneratorService, aiReportRepository, walletService)
 const paymentService = new PaymentService(paymentRepository, walletRepository)
+const fplMappingService = new FplMappingService(fplMappingRepository, createFplClient())
 
 // Controllers
 const aiController = new AIController(aiInsightsService)
 const fixtureController = new FixtureController(fixtureService)
+const fplMappingController = new FplMappingController(fplMappingService)
 const gameweekController = new GameweekController(gameweekService)
 const paymentController = new PaymentController(paymentService)
 const pricingController = new PricingController(pricingService)
@@ -58,6 +65,7 @@ const walletController = new WalletController(walletService)
 export const container = {
     aiController,
     fixtureController,
+    fplMappingController,
     gameweekController,
     paymentController,
     pricingController,
