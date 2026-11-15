@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { runSyncCli } from './cli'
+import { parseSyncArgs, runSyncCli } from './cli'
 
 import type { CliDeps } from './cli'
 
@@ -49,5 +49,31 @@ describe('runSyncCli', () => {
         expect(await runSyncCli(['short'], deps)).toBe(1)
         expect(deps.lines.join('\n')).toMatch(/a: FAILED.*boom/)
         expect(deps.lines.join('\n')).toMatch(/b: OK/)
+    })
+})
+
+describe('parseSyncArgs', () => {
+    it('reads a job name without any flag', () => {
+        expect(parseSyncArgs(['short'])).toEqual({ names: ['short'], maxRequests: 2000 })
+    })
+
+    it('reads the max-requests flag after the job name', () => {
+        expect(parseSyncArgs(['full', '--max-requests', '500'])).toEqual({
+            names: ['full'],
+            maxRequests: 500,
+        })
+    })
+
+    it('reads the max-requests flag before the job name', () => {
+        expect(parseSyncArgs(['--max-requests', '5', 'fixtures'])).toEqual({
+            names: ['fixtures'],
+            maxRequests: 5,
+        })
+    })
+
+    it('rejects a max-requests value that is not a positive integer', () => {
+        expect(() => parseSyncArgs(['full', '--max-requests', 'abc'])).toThrow(/max-requests/)
+        expect(() => parseSyncArgs(['full', '--max-requests', '0'])).toThrow(/max-requests/)
+        expect(() => parseSyncArgs(['full', '--max-requests'])).toThrow(/max-requests/)
     })
 })
