@@ -13,4 +13,10 @@ describe('normalizeName', () => {
         expect(normalizeName('D.  Raya')).toBe('d raya')
         expect(normalizeName('Calvert-Lewin')).toBe('calvert lewin')
     })
+
+    it('decodes the HTML entities API-Football puts into names', () => {
+        expect(normalizeName('D. O&apos;Shea')).toBe('d oshea')
+        expect(normalizeName('Brighton &amp; Hove')).toBe('brighton hove')
+        expect(normalizeName('A &#39;B&quot;')).toBe('a b')
+    })
 })

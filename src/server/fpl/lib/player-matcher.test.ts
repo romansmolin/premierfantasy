@@ -83,15 +83,61 @@ describe('matchPlayers', () => {
         expect(result.matched).toEqual([{ fplId: 4, playerId: 'city-silva', confidence: 0.8 }])
     })
 
-    it('does not match across positions', () => {
+    it('matches across outfield positions with lower confidence when no same-position candidate exists', () => {
         const result = matchPlayers(
-            [el(5, 'Erling', 'Haaland', 'Haaland', 2, 3)],
+            [el(5, 'Bukayo', 'Saka', 'Saka', 1, 3)],
+            [our('saka', 'B. Saka', 'FWD', 't-ars')],
+            teamMap,
+        )
+
+        expect(result.matched).toEqual([{ fplId: 5, playerId: 'saka', confidence: 0.6 }])
+    })
+
+    it('prefers a same-position candidate over a cross-position one', () => {
+        const result = matchPlayers(
+            [el(5, 'Matheus', 'Nunes', 'Nunes', 2, 2)],
+            [our('same-pos', 'M. Nunes', 'DEF', 't-mci'), our('cross-pos', 'Matheus Nunes', 'MID', 't-mci')],
+            teamMap,
+        )
+
+        expect(result.matched).toEqual([{ fplId: 5, playerId: 'same-pos', confidence: 0.8 }])
+    })
+
+    it('never matches a goalkeeper with an outfield player or the other way round', () => {
+        const toKeeper = matchPlayers(
+            [el(5, 'Erling', 'Haaland', 'Haaland', 2, 1)],
             [our('p2', 'Erling Haaland', 'FWD', 't-mci')],
+            teamMap,
+        )
+        const toOutfield = matchPlayers(
+            [el(6, 'Erling', 'Haaland', 'Haaland', 2, 4)],
+            [our('p3', 'Erling Haaland', 'GK', 't-mci')],
+            teamMap,
+        )
+
+        expect(toKeeper.matched).toEqual([])
+        expect(toKeeper.unmatched).toEqual([5])
+        expect(toOutfield.matched).toEqual([])
+    })
+
+    it('accepts a shortened first name such as Josh for Joshua', () => {
+        const result = matchPlayers(
+            [el(8, 'Josh', 'King', 'King', 1, 3)],
+            [our('jk', 'Joshua King', 'MID', 't-ars')],
+            teamMap,
+        )
+
+        expect(result.matched).toEqual([{ fplId: 8, playerId: 'jk', confidence: 0.8 }])
+    })
+
+    it('does not accept a different first name with the same surname', () => {
+        const result = matchPlayers(
+            [el(9, 'Tom', 'King', 'King', 1, 3)],
+            [our('jk', 'Joshua King', 'MID', 't-ars')],
             teamMap,
         )
 
         expect(result.matched).toEqual([])
-        expect(result.unmatched).toEqual([5])
     })
 
     it('a player of an unmapped team is unmatched', () => {

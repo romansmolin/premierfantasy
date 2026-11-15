@@ -31,6 +31,8 @@ export const POSITION_BY_ELEMENT_TYPE: Record<number, PlayerPosition> = {
 
 const EXACT = 1
 const SURNAME = 0.8
+/** The two sources disagree on a player's position often (MID vs FWD, DEF vs MID): confidence is scaled down. */
+const CROSS_POSITION_FACTOR = 0.75
 
 function score(element: FplElement, ourName: string): number {
     const full = normalizeName(`${element.first_name} ${element.second_name}`)
@@ -49,9 +51,16 @@ function score(element: FplElement, ourName: string): number {
     const first = ourTokens[0]
     const fplFirst = normalizeName(element.first_name).split(' ')
     const firstMatches =
-        first.length === 1 ? fplFirst.some((token) => token[0] === first) : fplFirst.includes(first)
+        first.length === 1
+            ? fplFirst.some((token) => token[0] === first)
+            : fplFirst.some((token) => token === first || isShortenedForm(token, first))
 
     return firstMatches ? SURNAME : 0
+}
+
+/** "josh" ↔ "joshua": one is a prefix of the other, both at least 3 letters. */
+function isShortenedForm(a: string, b: string): boolean {
+    return Math.min(a.length, b.length) >= 3 && (a.startsWith(b) || b.startsWith(a))
 }
 
 /**
@@ -76,14 +85,28 @@ export function matchPlayers(
     for (const element of fpl) {
         const teamId = teamMap.get(element.team)
         const position = POSITION_BY_ELEMENT_TYPE[element.element_type]
-        const candidates = ours
-            .filter((player) => player.teamId === teamId && player.position === position)
-            .map((player) => ({
-                playerId: player.id,
-                score: score(element, ourNames.get(player.id) as string),
-            }))
-            .filter((candidate) => candidate.score > 0)
-            .sort((a, b) => b.score - a.score)
+        const inClub = ours.filter((player) => player.teamId === teamId)
+        const scoreAll = (pool: OurPlayer[], factor: number) =>
+            pool
+                .map((player) => ({
+                    playerId: player.id,
+                    score: Math.round(score(element, ourNames.get(player.id) as string) * factor * 100) / 100,
+                }))
+                .filter((candidate) => candidate.score > 0)
+        let candidates = scoreAll(
+            inClub.filter((player) => player.position === position),
+            1,
+        )
+
+        // Fallback for MID/FWD/DEF disagreements between the sources; goalkeepers are never mixed with outfield players.
+        if (candidates.length === 0 && position !== 'GK') {
+            candidates = scoreAll(
+                inClub.filter((player) => player.position !== position && player.position !== 'GK'),
+                CROSS_POSITION_FACTOR,
+            )
+        }
+
+        candidates.sort((a, b) => b.score - a.score)
 
         if (!teamId || candidates.length === 0) {
             unmatched.push(element.id)
