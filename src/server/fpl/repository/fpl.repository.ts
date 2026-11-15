@@ -75,7 +75,7 @@ export class FplRepository implements IFplRepository {
     }
 
     async saveAvailability(rows: FplAvailabilityRow[]): Promise<void> {
-        for (const group of chunk(rows, WRITE_CHUNK_SIZE * 4)) {
+        for (const group of chunk(rows, WRITE_CHUNK_SIZE)) {
             await prisma.$transaction(
                 group.map((row) =>
                     prisma.fplPlayerStatus.upsert({
