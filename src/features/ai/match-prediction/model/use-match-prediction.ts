@@ -16,18 +16,20 @@ export const useMatchPrediction = () => {
     const [prediction, setPrediction] = useState<MatchPrediction | null>(null)
     const [isOpen, setIsOpen] = useState(false)
     const [activeFixtureId, setActiveFixtureId] = useState<number | null>(null)
-    const { balance, mutate: mutateWallet } = useWallet()
+    const { mutate: mutateWallet } = useWallet()
 
+    // Static key, fixture id passed as the trigger arg: the key must exist on the very first click,
+    // before the state update from setActiveFixtureId has re-rendered.
     const { trigger, isMutating: isLoading } = useSWRMutation(
-        activeFixtureId ? `/api/ai/match-prediction?fixtureId=${activeFixtureId}` : null,
-        async () => aiService.getMatchPrediction(activeFixtureId!),
+        '/api/ai/match-prediction',
+        async (_key: string, { arg }: { arg: number }) => aiService.getMatchPrediction(arg),
     )
 
     const requestPrediction = async (fixtureId: number) => {
         setActiveFixtureId(fixtureId)
 
         try {
-            const result = await trigger()
+            const result = await trigger(fixtureId)
 
             if (result) {
                 setPrediction(result)
@@ -55,6 +57,5 @@ export const useMatchPrediction = () => {
             setActiveFixtureId(null)
         },
         cost: AI_FEATURE_COST,
-        canAfford: balance >= AI_FEATURE_COST,
     }
 }

@@ -76,7 +76,11 @@ describe('payment confirmation download', () => {
 
         expect(response.status).toBe(200)
         expect(response.headers.get('content-disposition')).toContain('attachment')
-        expect(await response.text()).toContain('Consent text')
+        const body = await response.text()
+
+        expect(body).toContain('Consent text')
+        expect(body).toContain('Credits purchased: 100')
+        expect(body).not.toContain('Coins')
         expect(getPaymentForUser).toHaveBeenCalledWith('user-1', 'pay-1')
     })
 })

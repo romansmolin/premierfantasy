@@ -55,8 +55,9 @@ export default function ReturnPolicyPage() {
             <h2>AI Feature Usage</h2>
             <p>
                 Credits spent on AI features (Player Analysis, Match Prediction) are subject to your statutory
-                rights, including remedies for faulty services. Re-opening a result you already paid for does
-                not cost further Credits.
+                rights, including remedies for faulty services. You may re-open a match prediction you already
+                paid for at any time, and a player analysis for 7 days after it was generated, without further
+                Credits being charged.
             </p>
 
             <h2>Credits Do Not Expire</h2>

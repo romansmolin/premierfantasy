@@ -15,7 +15,7 @@ const AI_FEATURE_COST = AI_FEATURE_PRICES.PLAYER_ANALYSIS
 export const usePlayerAnalytics = (playerExternalId: number | null) => {
     const [analysis, setAnalysis] = useState<PlayerAnalysis | null>(null)
     const [isOpen, setIsOpen] = useState(false)
-    const { balance, mutate: mutateWallet } = useWallet()
+    const { mutate: mutateWallet } = useWallet()
 
     const { trigger, isMutating: isLoading } = useSWRMutation(
         playerExternalId ? `/api/ai/player-analysis?playerId=${playerExternalId}` : null,
@@ -50,6 +50,5 @@ export const usePlayerAnalytics = (playerExternalId: number | null) => {
         requestAnalysis,
         closeModal: () => setIsOpen(false),
         cost: AI_FEATURE_COST,
-        canAfford: balance >= AI_FEATURE_COST,
     }
 }

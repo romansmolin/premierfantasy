@@ -146,9 +146,8 @@ export const UpcomingFixtures = ({ leagueExternalId, season, leagueName }: Upcom
                                         size="xs"
                                         variant="outline"
                                         disabled={
-                                            !matchPrediction.canAfford ||
-                                            (matchPrediction.isLoading &&
-                                                matchPrediction.activeFixtureId === fixture.id)
+                                            matchPrediction.isLoading &&
+                                            matchPrediction.activeFixtureId === fixture.id
                                         }
                                         onClick={() => matchPrediction.requestPrediction(fixture.id)}
                                         className="shrink-0"

@@ -46,7 +46,7 @@ export class AIInsightsService implements IAIInsightsService {
         )
     }
 
-    /** Cache hit is free. A miss is charged only after generation succeeded, and cached only after the charge did. */
+    /** Cache hit is free. A miss is charged only after generation succeeded, and cached only after the charge did. A failed save never withholds a paid result. */
     private async billed<T>(
         userId: string,
         kind: AiFeature,
@@ -64,8 +64,20 @@ export class AIInsightsService implements IAIInsightsService {
 
         const result = await generate()
 
+        // A concurrent request (second tab, retry) may have been paid and saved while we generated.
+        // shortcut: this narrows the double-charge window to milliseconds, it is not a lock — upgrade to a unique key if it ever matters.
+        const concurrent = await this.reports.findLatest(userId, kind, subjectKey, notBefore)
+
+        if (concurrent) return concurrent as T
+
         await this.wallet.spendOnFeature(userId, price, AI_FEATURE_LABELS[kind])
-        await this.reports.save(userId, kind, subjectKey, result)
+
+        try {
+            await this.reports.save(userId, kind, subjectKey, result)
+        } catch (error) {
+            // Already charged: hand over the result anyway. Only re-opening it later is not free.
+            console.error('Failed to save AI report', error)
+        }
 
         return result
     }

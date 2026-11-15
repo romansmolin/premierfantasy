@@ -37,7 +37,7 @@ const tabs: Tab[] = [
             badge: 'Powered by GPT',
             title: 'AI that explains the numbers.',
             description:
-                'Get an in-depth analysis of any player or a prediction for an upcoming match, built on real Premier League data. Each request costs Credits, and re-opening a report you already paid for is free.',
+                'Get an in-depth analysis of any player or a prediction for an upcoming match, built on real Premier League data. Each request costs Credits, and re-opening a report you already paid for is free for a limited time.',
             buttonText: 'Get Started',
             buttonHref: '/sign-up',
             imageSrc: '/assets/aura1.png',

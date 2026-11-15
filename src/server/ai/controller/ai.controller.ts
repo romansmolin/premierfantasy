@@ -1,16 +1,16 @@
 import { z } from 'zod'
 
 import { isAuthError, requireUserId } from '@/shared/lib/auth-helpers'
-import { parseQuery, withController } from '@/shared/lib/http'
+import { parseJson, withController } from '@/shared/lib/http'
 
 import type { IAIInsightsService } from '../service/ai-insights.service.interface'
 
-const playerAnalysisQuerySchema = z.object({
-    playerId: z.coerce.number().int().positive(),
+const playerAnalysisBodySchema = z.object({
+    playerId: z.number().int().positive(),
 })
 
-const matchPredictionQuerySchema = z.object({
-    fixtureId: z.coerce.number().int().positive(),
+const matchPredictionBodySchema = z.object({
+    fixtureId: z.number().int().positive(),
 })
 
 export class AIController {
@@ -25,7 +25,7 @@ export class AIController {
 
         if (isAuthError(userId)) return userId
 
-        const { playerId } = parseQuery(req, playerAnalysisQuerySchema)
+        const { playerId } = await parseJson(req, playerAnalysisBodySchema)
 
         return this.aiInsightsService.getPlayerAnalysis(userId, playerId)
     })
@@ -35,7 +35,7 @@ export class AIController {
 
         if (isAuthError(userId)) return userId
 
-        const { fixtureId } = parseQuery(req, matchPredictionQuerySchema)
+        const { fixtureId } = await parseJson(req, matchPredictionBodySchema)
 
         return this.aiInsightsService.getMatchPrediction(userId, fixtureId)
     })

@@ -98,6 +98,32 @@ describe('AIInsightsService.getPlayerAnalysis', () => {
     })
 })
 
+describe('AIInsightsService concurrency and failures', () => {
+    it('returns a report saved by a concurrent request without charging again', async () => {
+        const { service, reports, wallet } = setup()
+        const concurrent = { summary: 'saved by the other tab' }
+
+        reports.findLatest.mockResolvedValueOnce(null).mockResolvedValueOnce(concurrent)
+
+        const result = await service.getPlayerAnalysis('u1', 7)
+
+        expect(result).toBe(concurrent)
+        expect(wallet.spendOnFeature).not.toHaveBeenCalled()
+        expect(reports.save).not.toHaveBeenCalled()
+    })
+
+    it('still returns the result, charged once, when saving the report fails', async () => {
+        const { service, reports, wallet } = setup()
+
+        reports.save.mockRejectedValue(new Error('db down'))
+
+        const result = await service.getPlayerAnalysis('u1', 7)
+
+        expect(result).toBe(playerResult)
+        expect(wallet.spendOnFeature).toHaveBeenCalledTimes(1)
+    })
+})
+
 describe('AIInsightsService.getMatchPrediction', () => {
     it('match prediction cache has no window', async () => {
         const { service, reports } = setup()

@@ -84,7 +84,7 @@ export class PaymentController {
             `Payment reference: ${payment.id}`,
             `Order created: ${payment.createdAt.toISOString()}`,
             `Amount: ${(payment.amountCents / 100).toFixed(2)} ${payment.currency}`,
-            `Coins purchased: ${payment.coinAmount}`,
+            `Credits purchased: ${payment.coinAmount}`,
             `Status: ${payment.status}`,
             '',
             ...(payment.withdrawalConsentAt && payment.withdrawalConsentText

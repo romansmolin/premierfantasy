@@ -39,7 +39,7 @@ const features = [
         icon: Coins01Icon,
         title: 'Credits That Never Expire',
         description:
-            'Buy Credits once and use them whenever you like. Re-opening a report you already paid for is free.',
+            'Buy Credits once and use them whenever you like. Re-opening a report you already paid for is free for a limited time (see FAQ).',
     },
     {
         icon: UserSwitchIcon,

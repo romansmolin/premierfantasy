@@ -52,8 +52,8 @@ export function PricingSection() {
                         ))}
                     </ul>
                     <p className="text-muted-foreground">
-                        Re-opening a report you already paid for is free. Unused Credits can be refunded
-                        within 14 days of purchase.
+                        Re-opening a report you already paid for is free (match predictions always, player
+                        analyses for 7 days). Unused Credits can be refunded within 14 days of purchase.
                     </p>
                 </div>
             </div>

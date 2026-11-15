@@ -42,6 +42,11 @@ export default function TermsOfServicePage() {
                 <li>Credits are a prepaid unit used to pay for AI features of the Service.</li>
                 <li>Credits are purchased with real currency through our payment processor.</li>
                 <li>Credits never expire.</li>
+                <li>
+                    Unused Credits you purchased can be refunded on request within 14 days of purchase, as set
+                    out in the <a href="/return-policy">Return &amp; Refund Policy</a>. Credits already spent
+                    are not refundable.
+                </li>
                 <li>Credits have no cash value and cannot be exchanged for cash.</li>
                 <li>Credits are non-transferable between accounts.</li>
                 <li>
@@ -64,8 +69,10 @@ export default function TermsOfServicePage() {
                 AI-powered features (currently Player Analysis and Match Prediction) are provided as
                 informational tools. They are powered by third-party AI models and do not guarantee accuracy
                 or any result on any fantasy platform. Credits spent on AI features are not refundable once
-                the result has been delivered, without prejudice to your statutory rights. If you open a
-                result you already paid for again, no further Credits are charged.
+                the result has been delivered, without prejudice to your statutory rights. You may re-open a
+                match prediction you already paid for at any time, and a player analysis for 7 days after it
+                was generated, without further Credits being charged. After that, a new request for the same
+                player is charged again.
             </p>
 
             <h2>7. Payments</h2>

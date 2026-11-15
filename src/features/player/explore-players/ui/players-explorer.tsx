@@ -217,7 +217,6 @@ export const PlayersExplorer = () => {
                 error={error}
                 onRequestAnalysis={analytics.requestAnalysis}
                 isAnalysisLoading={analytics.isLoading}
-                canAffordAnalysis={analytics.canAfford}
                 analysisCost={analytics.cost}
             />
             <PlayerAnalyticsModal

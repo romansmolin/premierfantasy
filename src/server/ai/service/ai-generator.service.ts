@@ -3,6 +3,7 @@ import type { MatchPrediction, PlayerAnalysis } from '@/entities/ai/model/ai.typ
 import { apiFootballClient } from '@/shared/api/api-football-client'
 import { openaiClient } from '@/shared/api/openai-client'
 import { LEAGUE_ID, SEASON } from '@/shared/config/league'
+import { Errors } from '@/shared/lib/http'
 
 import type { IAIGenerator } from './ai-generator.service.interface'
 
@@ -66,17 +67,7 @@ Provide a thorough analysis comparing both seasons, assessing current form, and 
 
             return JSON.parse(cleaned) as PlayerAnalysis
         } catch {
-            return {
-                playerName: 'Unknown',
-                overallRating: 'N/A',
-                form: response,
-                strengths: [],
-                weaknesses: [],
-                fantasyVerdict: 'Analysis could not be fully structured.',
-                keepOrSell: 'Hold',
-                keyStats: [],
-                prediction: 'Unable to generate prediction.',
-            }
+            throw Errors.internal('AI returned an unreadable result')
         }
     }
 
@@ -190,21 +181,7 @@ Provide a detailed prediction with score, probabilities, a fantasy captain pick,
 
             return JSON.parse(cleaned) as MatchPrediction
         } catch {
-            return {
-                homeTeam: teams?.home?.name ?? 'Unknown',
-                awayTeam: teams?.away?.name ?? 'Unknown',
-                predictedScore: 'N/A',
-                winProbability: { home: 0, draw: 0, away: 0 },
-                cleanSheetProbability: { home: 0, away: 0 },
-                analysis: response,
-                keyMatchups: [],
-                fantasyPicks: {
-                    captainPick: { name: 'N/A', team: 'N/A', reason: 'Analysis could not be structured' },
-                    topPicks: [],
-                },
-                goalThreat: [],
-                tacticalInsight: 'Analysis could not be fully structured.',
-            }
+            throw Errors.internal('AI returned an unreadable result')
         }
     }
 }
