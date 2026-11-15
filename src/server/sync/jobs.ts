@@ -16,8 +16,9 @@ export function buildJobs(container: SyncContainer, budget: RequestBudget): Reco
         'fpl-bootstrap': () => container.fplSyncService.syncBootstrap(SEASON),
         'fpl-fixtures': () => container.fplSyncService.linkFixtures(SEASON),
         'fpl-points': () => container.fplSyncService.syncPoints(),
+        forecast: () => container.forecastService.run(),
     }
 }
 
-export const SHORT_JOBS = ['fixtures', 'match-stats', 'fpl-fixtures', 'fpl-points']
+export const SHORT_JOBS = ['fixtures', 'match-stats', 'fpl-fixtures', 'fpl-points', 'forecast']
 export const FULL_JOBS = ['fpl-bootstrap', ...SHORT_JOBS]

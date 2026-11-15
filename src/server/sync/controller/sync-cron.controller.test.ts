@@ -29,6 +29,7 @@ const allOk = {
     'match-stats': ok,
     'fpl-fixtures': ok,
     'fpl-points': ok,
+    forecast: ok,
 }
 
 describe('SyncCronController', () => {
@@ -65,12 +66,20 @@ describe('SyncCronController', () => {
             'match-stats': track('match-stats'),
             'fpl-fixtures': track('fpl-fixtures'),
             'fpl-points': track('fpl-points'),
+            forecast: track('forecast'),
         })
 
         const response = await controller.run(request('Bearer cron-secret'), ctx)
 
         expect(response.status).toBe(200)
-        expect(order).toEqual(['fpl-bootstrap', 'fixtures', 'match-stats', 'fpl-fixtures', 'fpl-points'])
+        expect(order).toEqual([
+            'fpl-bootstrap',
+            'fixtures',
+            'match-stats',
+            'fpl-fixtures',
+            'fpl-points',
+            'forecast',
+        ])
         expect(Object.keys(await response.json())).toEqual(order)
     })
 
