@@ -68,6 +68,7 @@ const makeRepo = (state: RepoState = {}, overrides: Partial<IFplRepository> = {}
         saveGameSettings: vi.fn().mockResolvedValue(undefined),
         findLeagueTeams: vi.fn().mockResolvedValue(ourTeams),
         setTeamFplIds: vi.fn().mockResolvedValue(undefined),
+        saveAvailability: vi.fn().mockResolvedValue(undefined),
         findLeaguePlayers: vi.fn().mockResolvedValue(state.players ?? []),
         loadMappingState: vi.fn().mockImplementation(async () => ({
             mappedFplIds: new Set(mappings.keys()),
@@ -211,6 +212,33 @@ describe('FplSyncService.syncBootstrap', () => {
 
         expect([...mappings.entries()]).toEqual([[2, 'ok']])
         expect(result.stats).toMatchObject({ newMappings: 1, ambiguous: 1 })
+    })
+
+    it('saves availability for every FPL player, mapped or not', async () => {
+        const { repo } = makeRepo()
+        const injured = {
+            ...el(7, 'Hurt', 'Player', 'Player', 13, 3),
+            status: 'i',
+            chance_of_playing_next_round: 25,
+            news: 'Knee',
+        }
+        const bootstrap = bootstrapWith([injured])
+
+        await new FplSyncService(
+            repo,
+            makeClient({ getBootstrap: vi.fn().mockResolvedValue(bootstrap) }),
+        ).syncBootstrap(2026)
+
+        const rows = (repo.saveAvailability as ReturnType<typeof vi.fn>).mock.calls[0][0]
+
+        expect(rows).toHaveLength(bootstrap.elements.length)
+        expect(rows.find((r: { fplId: number }) => r.fplId === 7)).toEqual({
+            fplId: 7,
+            teamId: 't-13',
+            status: 'i',
+            chanceOfPlaying: 25,
+            news: 'Knee',
+        })
     })
 
     it('converts now_cost tenths to millions', async () => {

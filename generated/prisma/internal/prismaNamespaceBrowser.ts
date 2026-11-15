@@ -57,11 +57,14 @@ export const ModelName = {
     PlayerSeasonPrice: 'PlayerSeasonPrice',
     Gameweek: 'Gameweek',
     PlayerGameweekStats: 'PlayerGameweekStats',
+    Prediction: 'Prediction',
+    ModelEvaluation: 'ModelEvaluation',
     FplPlayerMap: 'FplPlayerMap',
     FplPlayerMapRejection: 'FplPlayerMapRejection',
     FplEvent: 'FplEvent',
     FplGameSettings: 'FplGameSettings',
     FplEventPoints: 'FplEventPoints',
+    FplPlayerStatus: 'FplPlayerStatus',
     Fixture: 'Fixture',
     PlayerMatchStats: 'PlayerMatchStats',
     PaymentToken: 'PaymentToken',
@@ -209,6 +212,38 @@ export const PlayerGameweekStatsScalarFieldEnum = {
 export type PlayerGameweekStatsScalarFieldEnum =
     (typeof PlayerGameweekStatsScalarFieldEnum)[keyof typeof PlayerGameweekStatsScalarFieldEnum]
 
+export const PredictionScalarFieldEnum = {
+    id: 'id',
+    fplEvent: 'fplEvent',
+    playerId: 'playerId',
+    modelVersion: 'modelVersion',
+    expectedMinutes: 'expectedMinutes',
+    expectedPoints: 'expectedPoints',
+    rawPoints: 'rawPoints',
+    components: 'components',
+    createdAt: 'createdAt',
+} as const
+
+export type PredictionScalarFieldEnum =
+    (typeof PredictionScalarFieldEnum)[keyof typeof PredictionScalarFieldEnum]
+
+export const ModelEvaluationScalarFieldEnum = {
+    id: 'id',
+    modelVersion: 'modelVersion',
+    createdAt: 'createdAt',
+    eventsEvaluated: 'eventsEvaluated',
+    playerEvents: 'playerEvents',
+    mae: 'mae',
+    baselineMae: 'baselineMae',
+    rankCorr: 'rankCorr',
+    baselineRankCorr: 'baselineRankCorr',
+    passed: 'passed',
+    details: 'details',
+} as const
+
+export type ModelEvaluationScalarFieldEnum =
+    (typeof ModelEvaluationScalarFieldEnum)[keyof typeof ModelEvaluationScalarFieldEnum]
+
 export const FplPlayerMapScalarFieldEnum = {
     id: 'id',
     fplId: 'fplId',
@@ -266,6 +301,18 @@ export const FplEventPointsScalarFieldEnum = {
 
 export type FplEventPointsScalarFieldEnum =
     (typeof FplEventPointsScalarFieldEnum)[keyof typeof FplEventPointsScalarFieldEnum]
+
+export const FplPlayerStatusScalarFieldEnum = {
+    fplId: 'fplId',
+    teamId: 'teamId',
+    status: 'status',
+    chanceOfPlaying: 'chanceOfPlaying',
+    news: 'news',
+    updatedAt: 'updatedAt',
+} as const
+
+export type FplPlayerStatusScalarFieldEnum =
+    (typeof FplPlayerStatusScalarFieldEnum)[keyof typeof FplPlayerStatusScalarFieldEnum]
 
 export const FixtureScalarFieldEnum = {
     id: 'id',

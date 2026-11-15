@@ -1,0 +1,36 @@
+model Prediction {
+  id              String   @id @default(uuid())
+  fplEvent        Int      @map("fpl_event")
+  playerId        String   @map("player_id")
+  modelVersion    String   @map("model_version")
+  expectedMinutes Float    @map("expected_minutes")
+  /// Calibrated expected FPL points for the event.
+  expectedPoints  Float    @map("expected_points")
+  rawPoints       Float    @map("raw_points")
+  components      Json
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([fplEvent, playerId, modelVersion])
+  @@index([fplEvent])
+  @@map("predictions")
+}
+
+/// One walk-forward check of the model against FPL actual points. The latest row per model version decides whether forecasts are shown.
+model ModelEvaluation {
+  id               String   @id @default(cuid())
+  modelVersion     String   @map("model_version")
+  createdAt        DateTime @default(now()) @map("created_at")
+  eventsEvaluated  Int      @map("events_evaluated")
+  playerEvents     Int      @map("player_events")
+  mae              Float
+  baselineMae      Float    @map("baseline_mae")
+  rankCorr         Float    @map("rank_corr")
+  baselineRankCorr Float    @map("baseline_rank_corr")
+  passed           Boolean
+  details          Json
+
+  @@index([modelVersion, createdAt])
+  @@map("model_evaluations")
+}

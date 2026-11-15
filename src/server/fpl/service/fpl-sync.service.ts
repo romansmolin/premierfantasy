@@ -56,6 +56,15 @@ export class FplSyncService implements IFplSyncService {
         )
         await this.repo.saveGameSettings(this.toGameSettings(data, seasonYear))
         await this.repo.setTeamFplIds(teamMap)
+        await this.repo.saveAvailability(
+            data.elements.map((e) => ({
+                fplId: e.id,
+                teamId: teamMap.get(e.team) ?? null,
+                status: e.status,
+                chanceOfPlaying: e.chance_of_playing_next_round,
+                news: e.news,
+            })),
+        )
 
         const state = await this.repo.loadMappingState()
         const ours = (await this.repo.findLeaguePlayers(seasonYear)).filter(

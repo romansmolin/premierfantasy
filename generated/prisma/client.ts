@@ -93,6 +93,16 @@ export type Gameweek = Prisma.GameweekModel
  */
 export type PlayerGameweekStats = Prisma.PlayerGameweekStatsModel
 /**
+ * Model Prediction
+ *
+ */
+export type Prediction = Prisma.PredictionModel
+/**
+ * Model ModelEvaluation
+ * One walk-forward check of the model against FPL actual points. The latest row per model version decides whether forecasts are shown.
+ */
+export type ModelEvaluation = Prisma.ModelEvaluationModel
+/**
  * Model FplPlayerMap
  * Confirmed link between an FPL player and one of our players.
  */
@@ -117,6 +127,11 @@ export type FplGameSettings = Prisma.FplGameSettingsModel
  * Actual FPL points of a finished event; used only to check the accuracy of our forecast.
  */
 export type FplEventPoints = Prisma.FplEventPointsModel
+/**
+ * Model FplPlayerStatus
+ * Availability of an FPL player as of the last bootstrap sync (a: available, d: doubtful, i: injured, s: suspended, u: unavailable, n: not in squad).
+ */
+export type FplPlayerStatus = Prisma.FplPlayerStatusModel
 /**
  * Model Fixture
  *

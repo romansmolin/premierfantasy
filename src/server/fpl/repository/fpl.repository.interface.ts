@@ -49,6 +49,14 @@ export interface FplEventPointRow {
     minutes: number
 }
 
+export interface FplAvailabilityRow {
+    fplId: number
+    teamId: string | null
+    status: string
+    chanceOfPlaying: number | null
+    news: string
+}
+
 export interface IFplRepository {
     saveEvents(events: FplEventRow[]): Promise<void>
     saveGameSettings(row: FplGameSettingsRow): Promise<void>
@@ -56,6 +64,7 @@ export interface IFplRepository {
     findLeagueTeams(seasonYear: number): Promise<OurTeam[]>
     /** fplTeamId → our Team.id */
     setTeamFplIds(map: Map<number, string>): Promise<void>
+    saveAvailability(rows: FplAvailabilityRow[]): Promise<void>
     findLeaguePlayers(seasonYear: number): Promise<OurPlayer[]>
     loadMappingState(): Promise<{
         mappedFplIds: Set<number>

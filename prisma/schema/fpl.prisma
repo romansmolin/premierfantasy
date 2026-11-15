@@ -60,3 +60,16 @@ model FplEventPoints {
   @@index([event])
   @@map("fpl_event_points")
 }
+
+/// Availability of an FPL player as of the last bootstrap sync (a: available, d: doubtful, i: injured, s: suspended, u: unavailable, n: not in squad).
+model FplPlayerStatus {
+  fplId           Int      @id @map("fpl_id")
+  /// Our Team.id of the player's current FPL club.
+  teamId          String?  @map("team_id")
+  status          String
+  chanceOfPlaying Int?     @map("chance_of_playing")
+  news            String
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("fpl_player_status")
+}

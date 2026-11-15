@@ -5,6 +5,7 @@ import { prisma } from '@/shared/lib/prisma'
 
 import type {
     FixtureFplLink,
+    FplAvailabilityRow,
     FixtureForLinking,
     FplEventPointRow,
     FplEventRow,
@@ -71,6 +72,25 @@ export class FplRepository implements IFplRepository {
                 prisma.team.update({ where: { id: teamId }, data: { fplId } }),
             ),
         ])
+    }
+
+    async saveAvailability(rows: FplAvailabilityRow[]): Promise<void> {
+        for (const group of chunk(rows, WRITE_CHUNK_SIZE * 4)) {
+            await prisma.$transaction(
+                group.map((row) =>
+                    prisma.fplPlayerStatus.upsert({
+                        where: { fplId: row.fplId },
+                        create: row,
+                        update: {
+                            teamId: row.teamId,
+                            status: row.status,
+                            chanceOfPlaying: row.chanceOfPlaying,
+                            news: row.news,
+                        },
+                    }),
+                ),
+            )
+        }
     }
 
     async findLeaguePlayers(seasonYear: number): Promise<OurPlayer[]> {

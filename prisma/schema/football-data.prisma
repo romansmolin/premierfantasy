@@ -36,6 +36,7 @@ model Player {
   seasonPrices  PlayerSeasonPrice[]
   matchStats    PlayerMatchStats[]
   fplMap        FplPlayerMap?
+  predictions   Prediction[]
 
   @@index([teamId])
   @@map("players")
