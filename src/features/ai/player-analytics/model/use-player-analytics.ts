@@ -6,21 +6,18 @@ import useSWRMutation from 'swr/mutation'
 
 import { aiService } from '@/entities/ai'
 import type { PlayerAnalysis } from '@/entities/ai'
-import { walletService, useWallet } from '@/entities/wallet'
+import { useWallet } from '@/entities/wallet'
 
 const AI_FEATURE_COST = 300
 
 export const usePlayerAnalytics = (playerExternalId: number | null) => {
     const [analysis, setAnalysis] = useState<PlayerAnalysis | null>(null)
     const [isOpen, setIsOpen] = useState(false)
-    const { balance, mutate: mutateWallet } = useWallet()
+    const { balance } = useWallet()
 
     const { trigger, isMutating: isLoading } = useSWRMutation(
         playerExternalId ? `/api/ai/player-analysis?playerId=${playerExternalId}` : null,
         async () => {
-            await walletService.spendCoins(AI_FEATURE_COST, 'Advanced Player Analytics')
-            await mutateWallet()
-
             return aiService.getPlayerAnalysis(playerExternalId!)
         },
     )

@@ -6,23 +6,18 @@ import useSWRMutation from 'swr/mutation'
 
 import { aiService } from '@/entities/ai'
 import type { AITransferAnalysis } from '@/entities/ai'
-import { walletService, useWallet } from '@/entities/wallet'
+import { useWallet } from '@/entities/wallet'
 
 const AI_FEATURE_COST = 500
 
 export const useTransferSuggestions = (fantasyTeamId: string | undefined) => {
     const [analysis, setAnalysis] = useState<AITransferAnalysis | null>(null)
     const [isOpen, setIsOpen] = useState(false)
-    const { balance, mutate: mutateWallet } = useWallet()
+    const { balance } = useWallet()
 
     const { trigger, isMutating: isLoading } = useSWRMutation(
         fantasyTeamId ? `/api/ai/transfer-suggestions?fantasyTeamId=${fantasyTeamId}` : null,
         async () => {
-            // 1. Spend coins first
-            await walletService.spendCoins(AI_FEATURE_COST, 'AI Transfer Suggestions')
-            await mutateWallet()
-
-            // 2. Fetch AI analysis
             const result = await aiService.getTransferSuggestions(fantasyTeamId!)
 
             return result

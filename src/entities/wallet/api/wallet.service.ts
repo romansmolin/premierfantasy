@@ -15,22 +15,6 @@ export const walletService = {
         }
     },
 
-    async purchaseCoins(amount: number): Promise<IWalletData> {
-        try {
-            return await httpClient.post<IWalletData>(`${BASE_URL}/purchase`, { amount })
-        } catch (error) {
-            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to purchase coins')
-        }
-    },
-
-    async spendCoins(amount: number, feature: string): Promise<IWalletData> {
-        try {
-            return await httpClient.post<IWalletData>(`${BASE_URL}/spend`, { amount, feature })
-        } catch (error) {
-            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to spend coins')
-        }
-    },
-
     async createCheckout(coinAmount: number, customer: CheckoutCustomer): Promise<ICheckoutResponse> {
         try {
             return await httpClient.post<ICheckoutResponse>('/api/payments/checkout', {

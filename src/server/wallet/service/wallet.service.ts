@@ -21,19 +21,6 @@ export class WalletService implements IWalletService {
         return { balance, transactions }
     }
 
-    async purchaseCoins(userId: string, amount: number): Promise<IWalletData> {
-        if (amount <= 0) throw new Error('Amount must be positive')
-
-        await this.walletRepository.createTransaction({
-            userId,
-            amount,
-            type: 'PURCHASE',
-            description: `Purchased ${amount} coins`,
-        })
-
-        return this.getWallet(userId)
-    }
-
     async spendOnFeature(userId: string, amount: number, featureName: string): Promise<IWalletData> {
         if (amount <= 0) throw new Error('Amount must be positive')
 
