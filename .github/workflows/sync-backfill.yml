@@ -1,0 +1,35 @@
+name: Sync (backfill)
+
+on:
+    workflow_dispatch:
+        inputs:
+            max_requests:
+                description: Maximum API-Football requests for this run
+                default: '2000'
+                required: true
+
+permissions:
+    contents: read
+
+concurrency:
+    group: sync
+    cancel-in-progress: false
+
+jobs:
+    sync:
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        env:
+            STORAGE_DATABASE_URL: ${{ secrets.STORAGE_DATABASE_URL }}
+            FOOTBAL_API_KEY: ${{ secrets.FOOTBAL_API_KEY }}
+            FOOTBAL_API_BASE_URL: ${{ secrets.FOOTBAL_API_BASE_URL }}
+            MAX_REQUESTS: ${{ inputs.max_requests }}
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+            - run: npm ci
+            # The input goes through an env var, never straight into the shell command.
+            - run: npm run sync -- full --max-requests "$MAX_REQUESTS"

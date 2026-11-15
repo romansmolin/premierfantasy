@@ -151,6 +151,17 @@ Phase 2a interim: `PlayerSeasonPrice.seasonYear` is an `Int`. Phase 2b replaces 
 
 Paid features charge credits on the server, inside the service, after the result was generated successfully — never from the client. Use `IWalletService.spendOnFeature(userId, amount, featureName)`: it is atomic (one conditional update, no read-then-write) and throws `Errors.paymentRequired()` (402) when the balance is too low. Prices live in `src/entities/ai/model/ai-pricing.ts`. Check the balance before generating, charge after generating, and cache the result (`AiReport`) so re-opening it is free. See `AIInsightsService`.
 
+## 6.7. Sync jobs and their composition root
+
+Data sync (API-Football and FPL into our database) runs as plain Node scripts, not as HTTP routes: `npm run sync -- <fixtures|match-stats|fpl-bootstrap|fpl-fixtures|fpl-points|short|full> [--max-requests N]`, scheduled by GitHub Actions (`.github/workflows/sync-*.yml`).
+
+- Job services follow the usual Service → Repository split under `src/server/<entity>/`, but they are wired in a **second composition root**, `src/server/sync/sync.container.ts`. It must not import controllers, `next/*`, `server-only` or `@/shared/lib/http` (scripts cannot load them). `src/shared/lib/container.ts` stays the only root for HTTP.
+- Every job is wrapped by `runJob` (`src/server/sync/service/job-runner.ts`), which records a `SyncRun` row and never throws. A job returns `OK`, `PARTIAL` (stopped early on the request budget or daily quota) or throws (`FAILED`, exit code 1 so the workflow turns red).
+- Refuse before writing: empty, short or changed-shape upstream answers throw `SuspiciousResponseError` so good data is never overwritten. API-Football answers HTTP 200 with an `errors` payload when the quota is gone; `ApiFootballHttp` turns that into `ApiFootballError`.
+- Writes are idempotent upserts keyed on external ids, so a repeated or overlapping run does nothing new.
+- FPL code lives only in `src/server/fpl/` (adapter): prices, squad rules, event/fixture links, actual points for accuracy checks. If FPL has to be switched off, nothing outside that folder depends on it.
+- `src/server/fpl/lib/sanity.ts` holds the thresholds; admin review of player matches is at `/admin/fpl-mapping` (`Authorization: Bearer ${ADMIN_SECRET}` API under `/api/admin/fpl/mapping`).
+
 ## 7. Validation
 
 Zod schemas live next to the controller (top of file, or in `<entity>.schema.ts` if reused). Body parsing always goes through `parseJson`:
