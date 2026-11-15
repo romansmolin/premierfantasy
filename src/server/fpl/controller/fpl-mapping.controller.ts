@@ -6,9 +6,14 @@ import { parseJson, withController } from '@/shared/lib/http'
 
 import type { IFplMappingService } from '../service/fpl-mapping.service.interface'
 
+const fplId = z.number().int().positive()
+
+// Most specific first: a plain object schema would also accept (and strip) the extra keys of the others.
 const bodySchema = z.union([
-    z.object({ fplId: z.number().int().positive(), playerId: z.string().min(1) }),
-    z.object({ fplId: z.number().int().positive(), reject: z.literal(true) }),
+    z.object({ fplId, playerId: z.string().min(1), replace: z.literal(true) }),
+    z.object({ fplId, unmap: z.literal(true) }),
+    z.object({ fplId, reject: z.literal(true) }),
+    z.object({ fplId, playerId: z.string().min(1) }),
 ])
 
 export class FplMappingController {
@@ -29,7 +34,9 @@ export class FplMappingController {
 
         const body = await parseJson(req, bodySchema)
 
-        if ('reject' in body) await this.service.reject(body.fplId)
+        if ('replace' in body) await this.service.replace(body.fplId, body.playerId)
+        else if ('unmap' in body) await this.service.unmap(body.fplId)
+        else if ('reject' in body) await this.service.reject(body.fplId)
         else await this.service.confirm(body.fplId, body.playerId)
 
         return { ok: true }

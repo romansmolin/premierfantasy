@@ -39,7 +39,7 @@ export function FplMappingView() {
         }
     }
 
-    const act = async (fplId: number, action: () => Promise<void>) => {
+    const act = async (action: () => Promise<void>) => {
         try {
             await action()
             await load()
@@ -78,7 +78,100 @@ export function FplMappingView() {
                         <Badge variant="outline">Ambiguous {data.counts.ambiguous}</Badge>
                         <Badge variant="outline">No candidate {data.counts.unmatched}</Badge>
                         <Badge variant="outline">Rejected {data.counts.rejected}</Badge>
+                        <Badge variant="outline">To review {data.counts.autoToReview}</Badge>
                     </div>
+
+                    {data.review.length > 0 && (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Automatic matches to review</CardTitle>
+                                <CardDescription>
+                                    Matched by the sync with less than full confidence. A wrong match gives a
+                                    player another player&apos;s price: replace it or remove it.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>FPL player</TableHead>
+                                            <TableHead>Matched to</TableHead>
+                                            <TableHead>Replace with</TableHead>
+                                            <TableHead />
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {data.review.map((item) => (
+                                            <TableRow key={item.fplId}>
+                                                <TableCell>
+                                                    {item.fplName}
+                                                    <span className="ml-2 text-xs text-muted-foreground">
+                                                        {item.team}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell>
+                                                    {item.playerName}
+                                                    <span className="ml-2 text-xs text-muted-foreground">
+                                                        {item.confidence}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <select
+                                                        className="h-9 w-full rounded-md border bg-background px-2 text-sm"
+                                                        value={chosen[item.fplId] ?? ''}
+                                                        onChange={(event) =>
+                                                            setChosen((prev) => ({
+                                                                ...prev,
+                                                                [item.fplId]: event.target.value,
+                                                            }))
+                                                        }
+                                                    >
+                                                        <option value="">Keep this match</option>
+                                                        {item.candidates.map((candidate) => (
+                                                            <option
+                                                                key={candidate.playerId}
+                                                                value={candidate.playerId}
+                                                            >
+                                                                {candidate.name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </TableCell>
+                                                <TableCell className="space-x-2 whitespace-nowrap">
+                                                    <Button
+                                                        size="sm"
+                                                        disabled={!chosen[item.fplId]}
+                                                        onClick={() =>
+                                                            act(() =>
+                                                                fplMappingService.replace(
+                                                                    secret,
+                                                                    item.fplId,
+                                                                    chosen[item.fplId],
+                                                                ),
+                                                            )
+                                                        }
+                                                    >
+                                                        Replace
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={() =>
+                                                            act(() =>
+                                                                fplMappingService.unmap(secret, item.fplId),
+                                                            )
+                                                        }
+                                                    >
+                                                        Remove
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+                        </Card>
+                    )}
 
                     <Card>
                         <CardContent className="pt-6">
@@ -133,7 +226,7 @@ export function FplMappingView() {
                                                     size="sm"
                                                     disabled={!chosen[player.fplId]}
                                                     onClick={() =>
-                                                        act(player.fplId, () =>
+                                                        act(() =>
                                                             fplMappingService.confirm(
                                                                 secret,
                                                                 player.fplId,
@@ -148,7 +241,7 @@ export function FplMappingView() {
                                                     size="sm"
                                                     variant="outline"
                                                     onClick={() =>
-                                                        act(player.fplId, () =>
+                                                        act(() =>
                                                             fplMappingService.reject(secret, player.fplId),
                                                         )
                                                     }

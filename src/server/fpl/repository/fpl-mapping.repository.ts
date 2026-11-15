@@ -5,8 +5,10 @@ import type { IFplMappingRepository } from './fpl-mapping.repository.interface'
 import type { OurPlayer } from '../lib/player-matcher'
 
 export class FplMappingRepository implements IFplMappingRepository {
-    async findMappings(): Promise<{ fplId: number; playerId: string }[]> {
-        return prisma.fplPlayerMap.findMany({ select: { fplId: true, playerId: true } })
+    async findMappings(): Promise<{ fplId: number; playerId: string; method: string; confidence: number }[]> {
+        return prisma.fplPlayerMap.findMany({
+            select: { fplId: true, playerId: true, method: true, confidence: true },
+        })
     }
 
     async findRejectedFplIds(): Promise<Set<number>> {
@@ -43,6 +45,10 @@ export class FplMappingRepository implements IFplMappingRepository {
 
     async createManualMapping(fplId: number, playerId: string): Promise<void> {
         await prisma.fplPlayerMap.create({ data: { fplId, playerId, method: 'MANUAL', confidence: 1 } })
+    }
+
+    async deleteMapping(fplId: number): Promise<void> {
+        await prisma.fplPlayerMap.deleteMany({ where: { fplId } })
     }
 
     async createRejection(fplId: number): Promise<void> {

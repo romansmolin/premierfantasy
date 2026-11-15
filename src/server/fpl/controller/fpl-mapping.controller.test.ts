@@ -19,6 +19,8 @@ const makeController = () => {
         listUnmapped: vi.fn().mockResolvedValue({ unmapped: [], counts: {} }),
         confirm: vi.fn().mockResolvedValue(undefined),
         reject: vi.fn().mockResolvedValue(undefined),
+        replace: vi.fn().mockResolvedValue(undefined),
+        unmap: vi.fn().mockResolvedValue(undefined),
     } as unknown as IFplMappingService
 
     return { controller: new FplMappingController(service), service }
@@ -92,5 +94,28 @@ describe('FplMappingController admin auth', () => {
 
         expect(service.confirm).toHaveBeenCalledWith(1, 'p1')
         expect(service.reject).toHaveBeenCalledWith(2)
+    })
+
+    it('replaces and unmaps through the same endpoint', async () => {
+        vi.stubEnv('ADMIN_SECRET', 'top-secret')
+
+        const { controller, service } = makeController()
+
+        await controller.update(
+            request({
+                auth: 'Bearer top-secret',
+                method: 'POST',
+                body: { fplId: 1, playerId: 'p1', replace: true },
+            }),
+            ctx,
+        )
+        await controller.update(
+            request({ auth: 'Bearer top-secret', method: 'POST', body: { fplId: 2, unmap: true } }),
+            ctx,
+        )
+
+        expect(service.replace).toHaveBeenCalledWith(1, 'p1')
+        expect(service.unmap).toHaveBeenCalledWith(2)
+        expect(service.confirm).not.toHaveBeenCalled()
     })
 })

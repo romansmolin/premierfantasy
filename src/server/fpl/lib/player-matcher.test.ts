@@ -120,6 +120,27 @@ describe('matchPlayers', () => {
         expect(toOutfield.matched).toEqual([])
     })
 
+    it('does not cross-position match on a single-word surname alone', () => {
+        const result = matchPlayers(
+            [el(5, 'John', 'Smith', 'Smith', 1, 3)],
+            [our('departed', 'Smith', 'DEF', 't-ars')],
+            teamMap,
+        )
+
+        expect(result.matched).toEqual([])
+        expect(result.unmatched).toEqual([5])
+    })
+
+    it('still matches a single-word name in the same position', () => {
+        const result = matchPlayers(
+            [el(5, 'John', 'Smith', 'Smith', 1, 2)],
+            [our('same', 'Smith', 'DEF', 't-ars')],
+            teamMap,
+        )
+
+        expect(result.matched).toEqual([{ fplId: 5, playerId: 'same', confidence: 1 }])
+    })
+
     it('accepts a shortened first name such as Josh for Joshua', () => {
         const result = matchPlayers(
             [el(8, 'Josh', 'King', 'King', 1, 3)],

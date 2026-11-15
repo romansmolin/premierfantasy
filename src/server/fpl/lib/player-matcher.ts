@@ -101,7 +101,13 @@ export function matchPlayers(
         // Fallback for MID/FWD/DEF disagreements between the sources; goalkeepers are never mixed with outfield players.
         if (candidates.length === 0 && position !== 'GK') {
             candidates = scoreAll(
-                inClub.filter((player) => player.position !== position && player.position !== 'GK'),
+                // A one-word name carries no first-name evidence: too weak to cross positions on.
+                inClub.filter(
+                    (player) =>
+                        player.position !== position &&
+                        player.position !== 'GK' &&
+                        (ourNames.get(player.id) as string).includes(' '),
+                ),
                 CROSS_POSITION_FACTOR,
             )
         }

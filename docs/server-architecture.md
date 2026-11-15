@@ -160,6 +160,8 @@ Data sync (API-Football and FPL into our database) runs as plain Node scripts, n
 - Refuse before writing: empty, short or changed-shape upstream answers throw `SuspiciousResponseError` so good data is never overwritten. API-Football answers HTTP 200 with an `errors` payload when the quota is gone; `ApiFootballHttp` turns that into `ApiFootballError`.
 - Writes are idempotent upserts keyed on external ids, so a repeated or overlapping run does nothing new.
 - FPL code lives only in `src/server/fpl/` (adapter): prices, squad rules, event/fixture links, actual points for accuracy checks. If FPL has to be switched off, nothing outside that folder depends on it.
+- FPL owns player prices: every successful `fpl-bootstrap` deletes all non-FPL rows of `player_season_prices` for the season. The old admin CSV upload (`POST /api/admin/pricing/{seasonYear}`) still works but its rows disappear on the next sync, so do not use it for prices.
+- Wrong automatic player matches are reviewed at `/admin/fpl-mapping` («Automatic matches to review»: replace or remove). Removing rejects the FPL id so the sync does not bring the same wrong pair back.
 - `src/server/fpl/lib/sanity.ts` holds the thresholds; admin review of player matches is at `/admin/fpl-mapping` (`Authorization: Bearer ${ADMIN_SECRET}` API under `/api/admin/fpl/mapping`).
 
 ## 7. Validation

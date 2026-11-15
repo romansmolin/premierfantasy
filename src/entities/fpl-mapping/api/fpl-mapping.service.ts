@@ -32,4 +32,20 @@ export const fplMappingService = {
             throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to reject the match')
         }
     },
+
+    async replace(secret: string, fplId: number, playerId: string): Promise<void> {
+        try {
+            await httpClient.post(URL, { fplId, playerId, replace: true }, auth(secret))
+        } catch (error) {
+            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to replace the match')
+        }
+    },
+
+    async unmap(secret: string, fplId: number): Promise<void> {
+        try {
+            await httpClient.post(URL, { fplId, unmap: true }, auth(secret))
+        } catch (error) {
+            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to remove the match')
+        }
+    },
 }

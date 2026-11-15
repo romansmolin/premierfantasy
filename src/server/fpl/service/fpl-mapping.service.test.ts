@@ -34,14 +34,14 @@ const el = (
 
 interface State {
     elements?: FplElement[]
-    mappings?: { fplId: number; playerId: string }[]
+    mappings?: { fplId: number; playerId: string; method?: string; confidence?: number }[]
     rejected?: number[]
     players?: OurPlayer[]
     existingPlayerIds?: string[]
 }
 
 const make = (state: State = {}) => {
-    const mappings = [...(state.mappings ?? [])]
+    const mappings = (state.mappings ?? []).map((m) => ({ method: 'MANUAL', confidence: 1, ...m }))
     const rejected = new Set(state.rejected ?? [])
     const repo = {
         findMappings: vi.fn().mockImplementation(async () => mappings),
@@ -52,7 +52,12 @@ const make = (state: State = {}) => {
             .fn()
             .mockImplementation(async (id: string) => (state.existingPlayerIds ?? ['p1', 'p2']).includes(id)),
         createManualMapping: vi.fn().mockImplementation(async (fplId: number, playerId: string) => {
-            mappings.push({ fplId, playerId })
+            mappings.push({ fplId, playerId, method: 'MANUAL', confidence: 1 })
+        }),
+        deleteMapping: vi.fn().mockImplementation(async (fplId: number) => {
+            const index = mappings.findIndex((m) => m.fplId === fplId)
+
+            if (index >= 0) mappings.splice(index, 1)
         }),
         createRejection: vi.fn().mockImplementation(async (fplId: number) => {
             rejected.add(fplId)
@@ -100,11 +105,12 @@ describe('FplMappingService.listUnmapped', () => {
         expect(result.counts.rejected).toBe(1)
     })
 
-    it('offers our unmapped players of the same club and position as candidates', async () => {
+    it('offers our free players of the same club as candidates, same position first, no goalkeepers for outfield', async () => {
         const players: OurPlayer[] = [
             { id: 'c1', name: 'Someone', position: 'MID', teamId: 't-1' },
             { id: 'c2', name: 'Other Club', position: 'MID', teamId: 't-2' },
-            { id: 'c3', name: 'Wrong Position', position: 'DEF', teamId: 't-1' },
+            { id: 'c3', name: 'Other Position', position: 'DEF', teamId: 't-1' },
+            { id: 'c4', name: 'Keeper', position: 'GK', teamId: 't-1' },
             { id: 'p1', name: 'Already Mapped', position: 'MID', teamId: 't-1' },
         ]
         const { service } = make({
@@ -115,7 +121,55 @@ describe('FplMappingService.listUnmapped', () => {
 
         const result = await service.listUnmapped(2026)
 
-        expect(result.unmapped[0].candidates.map((c) => c.playerId)).toEqual(['c1'])
+        expect(result.unmapped[0].candidates.map((c) => c.playerId)).toEqual(['c1', 'c3'])
+    })
+
+    it('offers only goalkeepers as candidates for a goalkeeper', async () => {
+        const players: OurPlayer[] = [
+            { id: 'c1', name: 'Someone', position: 'MID', teamId: 't-1' },
+            { id: 'c4', name: 'Keeper', position: 'GK', teamId: 't-1' },
+        ]
+        const { service } = make({ elements: [el(5, 'X', 'Y', 1, 1, 900)], players })
+
+        const result = await service.listUnmapped(2026)
+
+        expect(result.unmapped[0].candidates.map((c) => c.playerId)).toEqual(['c4'])
+    })
+
+    it('lists AUTO mappings below full confidence for review, not MANUAL or exact ones', async () => {
+        const players: OurPlayer[] = [
+            { id: 'p1', name: 'B. Saka', position: 'FWD', teamId: 't-1' },
+            { id: 'p2', name: 'Exact Name', position: 'MID', teamId: 't-1' },
+            { id: 'p3', name: 'Manual One', position: 'MID', teamId: 't-1' },
+            { id: 'free', name: 'Free Player', position: 'MID', teamId: 't-1' },
+        ]
+        const { service } = make({
+            elements: [
+                el(1, 'Bukayo', 'Saka', 1, 3, 900),
+                el(2, 'Exact', 'Name', 1, 3, 900),
+                el(3, 'Manual', 'One', 1, 3, 900),
+            ],
+            players,
+            mappings: [
+                { fplId: 1, playerId: 'p1', method: 'AUTO', confidence: 0.6 },
+                { fplId: 2, playerId: 'p2', method: 'AUTO', confidence: 1 },
+                { fplId: 3, playerId: 'p3', method: 'MANUAL', confidence: 1 },
+            ],
+        })
+
+        const result = await service.listUnmapped(2026)
+
+        expect(result.review).toEqual([
+            expect.objectContaining({
+                fplId: 1,
+                fplName: 'Bukayo Saka',
+                playerId: 'p1',
+                playerName: 'B. Saka',
+                confidence: 0.6,
+            }),
+        ])
+        expect(result.review[0].candidates.map((c) => c.playerId)).toEqual(['free'])
+        expect(result.counts.autoToReview).toBe(1)
     })
 })
 
@@ -176,5 +230,53 @@ describe('FplMappingService.confirm and reject', () => {
         const { service } = make({ mappings: [{ fplId: 7, playerId: 'p1' }] })
 
         await expect(service.reject(7)).rejects.toMatchObject({ statusCode: 409 })
+    })
+})
+
+describe('FplMappingService.replace and unmap', () => {
+    it('replace swaps an existing mapping to the chosen player', async () => {
+        const { service, repo } = make({
+            mappings: [{ fplId: 7, playerId: 'p1', method: 'AUTO', confidence: 0.6 }],
+        })
+
+        await service.replace(7, 'p2')
+
+        expect(repo.deleteMapping).toHaveBeenCalledWith(7)
+        expect(repo.createManualMapping).toHaveBeenCalledWith(7, 'p2')
+    })
+
+    it('replace refuses a player mapped to another FPL player with 409 and changes nothing', async () => {
+        const { service, repo } = make({
+            mappings: [
+                { fplId: 7, playerId: 'p1', method: 'AUTO', confidence: 0.6 },
+                { fplId: 8, playerId: 'p2' },
+            ],
+        })
+
+        await expect(service.replace(7, 'p2')).rejects.toMatchObject({ statusCode: 409 })
+        expect(repo.deleteMapping).not.toHaveBeenCalled()
+    })
+
+    it('replace returns 404 for an unknown player', async () => {
+        const { service } = make({ mappings: [{ fplId: 7, playerId: 'p1' }] })
+
+        await expect(service.replace(7, 'nope')).rejects.toMatchObject({ statusCode: 404 })
+    })
+
+    it('unmap removes the mapping and rejects the fplId so the sync does not bring it back', async () => {
+        const { service, repo } = make({
+            mappings: [{ fplId: 7, playerId: 'p1', method: 'AUTO', confidence: 0.6 }],
+        })
+
+        await service.unmap(7)
+
+        expect(repo.deleteMapping).toHaveBeenCalledWith(7)
+        expect(repo.createRejection).toHaveBeenCalledWith(7)
+    })
+
+    it('unmap returns 404 when there is no mapping', async () => {
+        const { service } = make()
+
+        await expect(service.unmap(7)).rejects.toMatchObject({ statusCode: 404 })
     })
 })
