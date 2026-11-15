@@ -1,3 +1,4 @@
+import { revalidateTag } from 'next/cache'
 import { NextResponse } from 'next/server'
 
 import { assertCron } from '@/shared/lib/cron-auth'
@@ -37,6 +38,9 @@ export class SyncCronController {
         for (const name of FULL_JOBS) {
             results[name] = await runJob(name, this.syncRunRepository, jobs[name])
         }
+
+        // Public stats pages are cached for an hour; new data and a possibly switched-off forecast must show at once.
+        revalidateTag('stats', { expire: 0 })
 
         const failed = Object.values(results).some((result) => result.status === 'FAILED')
 

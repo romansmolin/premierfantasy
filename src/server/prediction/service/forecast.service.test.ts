@@ -76,13 +76,18 @@ function dataset(overrides: Partial<ForecastDataset> = {}): ForecastDataset {
     }
 }
 
-const make = (ds: ForecastDataset, latest: (Evaluation & { createdAt: Date }) | null = null) => {
+const make = (
+    ds: ForecastDataset,
+    latest: (Evaluation & { createdAt: Date }) | null = null,
+    predictions = 600,
+) => {
     const dataRepo = { loadDataset: vi.fn().mockResolvedValue(ds) } satisfies IForecastDataRepository
     const repo = {
         saveEvaluation: vi.fn().mockResolvedValue(undefined),
         replacePredictions: vi.fn().mockResolvedValue(undefined),
         findLatestEvaluation: vi.fn().mockResolvedValue(latest),
         findNextEventId: vi.fn().mockResolvedValue(4),
+        countPredictions: vi.fn().mockResolvedValue(predictions),
     } satisfies IForecastRepository
 
     return { service: new ForecastService(dataRepo, repo), repo }
@@ -166,6 +171,13 @@ describe('ForecastService.getStatus', () => {
     it('is enabled only when the latest evaluation passed', async () => {
         expect((await make(dataset(), evaluation(true)).service.getStatus()).enabled).toBe(true)
         expect((await make(dataset(), evaluation(false)).service.getStatus()).enabled).toBe(false)
+    })
+
+    it('is disabled while the next event has no predictions, even if the bar was passed', async () => {
+        const status = await make(dataset(), evaluation(true), 0).service.getStatus()
+
+        expect(status.enabled).toBe(false)
+        expect(status.nextEvent).toBe(4)
     })
 
     it('is disabled when there is no evaluation yet', async () => {

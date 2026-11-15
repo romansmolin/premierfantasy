@@ -6,6 +6,10 @@ import { SyncCronController } from './sync-cron.controller'
 import type { JobFn } from '../jobs'
 import type { ISyncRunRepository } from '../repository/sync-run.repository.interface'
 
+const revalidateTag = vi.hoisted(() => vi.fn())
+
+vi.mock('next/cache', () => ({ revalidateTag }))
+
 const ctx = { params: Promise.resolve({}) }
 
 const request = (auth?: string) =>
@@ -99,5 +103,14 @@ describe('SyncCronController', () => {
         expect(response.status).toBe(500)
         expect(body.fixtures.status).toBe('FAILED')
         expect(body['fpl-points'].status).toBe('OK')
+    })
+
+    it('purges the cached public stats after a run', async () => {
+        vi.stubEnv('CRON_SECRET', 'secret')
+        revalidateTag.mockClear()
+
+        await makeController(allOk).controller.run(request('Bearer secret'), ctx)
+
+        expect(revalidateTag).toHaveBeenCalledWith('stats', { expire: 0 })
     })
 })

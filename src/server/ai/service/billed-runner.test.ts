@@ -94,4 +94,46 @@ describe('BilledRunner.run', () => {
         expect(out.result).toEqual({ a: 1 })
         expect(wallet.spendOnFeature).toHaveBeenCalledTimes(1)
     })
+
+    it('identical concurrent requests share one generation and one charge (double click)', async () => {
+        const { runner, wallet } = make()
+        let release: () => void = () => undefined
+        const gate = new Promise<void>((resolve) => {
+            release = resolve
+        })
+        const generate = vi.fn().mockImplementation(async () => {
+            await gate
+
+            return { a: 1 }
+        })
+
+        const first = runner.run('u1', 'SQUAD_REVIEW', 'k', { refresh: true }, generate)
+        const second = runner.run('u1', 'SQUAD_REVIEW', 'k', { refresh: true }, generate)
+
+        release()
+
+        expect(await first).toEqual(await second)
+        expect(generate).toHaveBeenCalledTimes(1)
+        expect(wallet.spendOnFeature).toHaveBeenCalledTimes(1)
+    })
+
+    it('a request after the first one finished is a new request', async () => {
+        const { runner, wallet } = make()
+
+        await runner.run('u1', 'SQUAD_REVIEW', 'k', { refresh: true }, async () => 1)
+        await runner.run('u1', 'SQUAD_REVIEW', 'k', { refresh: true }, async () => 2)
+
+        expect(wallet.spendOnFeature).toHaveBeenCalledTimes(2)
+    })
+
+    it('different users with the same key do not share a run', async () => {
+        const { runner, wallet } = make()
+
+        await Promise.all([
+            runner.run('u1', 'SQUAD_REVIEW', 'k', { refresh: true }, async () => 1),
+            runner.run('u2', 'SQUAD_REVIEW', 'k', { refresh: true }, async () => 1),
+        ])
+
+        expect(wallet.spendOnFeature).toHaveBeenCalledTimes(2)
+    })
 })

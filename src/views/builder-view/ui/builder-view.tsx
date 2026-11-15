@@ -120,6 +120,7 @@ export function BuilderView() {
     }
 
     const load = (s: SavedSquad) => {
+        setLockedIds([])
         setStarters(s.starters)
         setBench(s.bench)
         setCaptainId(s.captainId)
@@ -368,6 +369,7 @@ export function BuilderView() {
                 </Card>
 
                 <SquadAiPanel
+                    key={editingId ?? 'new'}
                     players={byId}
                     lockedIds={lockedIds}
                     excludedIds={excludedIds}

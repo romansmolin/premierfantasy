@@ -132,6 +132,15 @@ describe('AutoBuildService.build', () => {
         expect(wallet.spendOnFeature).toHaveBeenCalledTimes(3)
     })
 
+    it('duplicate ids in the constraints change nothing: same squad, same cache key', async () => {
+        const { service, wallet } = make()
+
+        await service.build('u1', request({ lockedIds: ['p1', 'p1'], excludedIds: ['p2', 'p2'] }))
+        await service.build('u1', request({ lockedIds: ['p1'], excludedIds: ['p2'] }))
+
+        expect(wallet.spendOnFeature).toHaveBeenCalledTimes(1)
+    })
+
     it('honours locked and excluded players', async () => {
         const { service } = make()
         const result = await service.build(

@@ -14,6 +14,8 @@ import type { IWalletService } from '@/server/wallet/service/wallet.service.inte
 export class BilledRunner {
     private readonly reports: IAiReportRepository
     private readonly wallet: IWalletService
+    /** Runs in progress in this process: a double click or a retry joins the running request instead of paying twice. */
+    private readonly inFlight = new Map<string, Promise<{ result: unknown; cached: boolean }>>()
 
     constructor(reports: IAiReportRepository, wallet: IWalletService) {
         this.reports = reports
@@ -21,6 +23,29 @@ export class BilledRunner {
     }
 
     async run<T>(
+        userId: string,
+        kind: AiFeature,
+        subjectKey: string,
+        opts: { refresh?: boolean },
+        generate: () => Promise<T>,
+    ): Promise<{ result: T; cached: boolean }> {
+        const id = JSON.stringify([userId, kind, subjectKey])
+        const running = this.inFlight.get(id)
+
+        if (running) return (await running) as { result: T; cached: boolean }
+
+        const started = this.execute(userId, kind, subjectKey, opts, generate)
+
+        this.inFlight.set(id, started)
+
+        try {
+            return await started
+        } finally {
+            this.inFlight.delete(id)
+        }
+    }
+
+    private async execute<T>(
         userId: string,
         kind: AiFeature,
         subjectKey: string,

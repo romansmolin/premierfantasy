@@ -16,4 +16,5 @@ export interface IForecastRepository {
     findLatestEvaluation(modelVersion: string): Promise<(Evaluation & { createdAt: Date }) | null>
     /** The event flagged next, else the first unfinished one. */
     findNextEventId(): Promise<number | null>
+    countPredictions(fplEvent: number, modelVersion: string): Promise<number>
 }

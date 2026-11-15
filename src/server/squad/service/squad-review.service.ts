@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 
 import type { SquadReview } from '@/entities/squad/model/autobuild.types'
-import type { PoolPlayer } from '@/entities/squad/model/squad.types'
+import type { PoolPlayer, SavedSquad } from '@/entities/squad/model/squad.types'
 
 import { Errors } from '@/shared/lib/http'
 
@@ -77,13 +77,7 @@ export class SquadReviewService implements ISquadReviewService {
 
         const event = status.nextEvent
         const stamp = status.evaluation?.createdAt.toISOString() ?? ''
-        const key = this.key(
-            event,
-            squad.id,
-            [...squad.starters, ...squad.bench],
-            squad.captainId,
-            squad.viceCaptainId,
-        )
+        const key = this.key(event, squad)
         const { result } = await this.billed.run<Stored>(
             userId,
             'SQUAD_REVIEW',
@@ -121,13 +115,20 @@ export class SquadReviewService implements ISquadReviewService {
         return { ...rest, forecastUpdated: forecastStamp !== stamp }
     }
 
-    private key(event: number, squadId: string, ids: string[], captain: string, vice: string): string {
+    private key(event: number, squad: SavedSquad): string {
         const hash = createHash('sha1')
-            .update(JSON.stringify({ ids: [...ids].sort(), captain, vice }))
+            .update(
+                JSON.stringify({
+                    starters: [...squad.starters].sort(),
+                    bench: [...squad.bench].sort(),
+                    captain: squad.captainId,
+                    vice: squad.viceCaptainId,
+                }),
+            )
             .digest('hex')
             .slice(0, 16)
 
-        return `review:${event}:${squadId}:${hash}`
+        return `review:${event}:${squad.id}:${hash}`
     }
 
     private context(

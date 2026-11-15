@@ -157,6 +157,22 @@ describe('SquadReviewService.review', () => {
         expect(changed.wallet.spendOnFeature).toHaveBeenCalledTimes(1)
     })
 
+    it('moving a player between the XI and the bench is a new paid review', async () => {
+        const store = new Map<string, unknown>()
+
+        await make({ store }).service.review('u1', 's1')
+
+        const swapped = squad({
+            starters: ['p1', 'p5', 'p6', 'p7', 'p8', 'p13', 'p14', 'p15', 'p10', 'p21', 'p22'],
+            bench: ['p2', 'p9', 'p16', 'p17'],
+        })
+        const again = make({ store, current: swapped })
+
+        await again.service.review('u1', 's1')
+
+        expect(again.wallet.spendOnFeature).toHaveBeenCalledTimes(1)
+    })
+
     it('drops suggestions that point at players outside the pool or the wrong side of the squad', async () => {
         const generator = {
             review: vi.fn().mockResolvedValue({

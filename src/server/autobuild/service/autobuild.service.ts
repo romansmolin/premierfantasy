@@ -37,7 +37,12 @@ export class AutoBuildService implements IAutoBuildService {
         this.explainer = explainer
     }
 
-    async build(userId: string, request: AutoBuildRequest): Promise<AutoBuildResult> {
+    async build(userId: string, input: AutoBuildRequest): Promise<AutoBuildResult> {
+        const request = {
+            ...input,
+            lockedIds: [...new Set(input.lockedIds)],
+            excludedIds: [...new Set(input.excludedIds)],
+        }
         const status = await this.forecast.getStatus()
 
         if (!status.enabled || status.nextEvent === null) {

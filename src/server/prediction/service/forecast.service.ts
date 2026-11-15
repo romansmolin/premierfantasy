@@ -71,6 +71,9 @@ export class ForecastService implements IForecastService {
             this.repo.findNextEventId(),
         ])
 
-        return { enabled: evaluation?.passed === true, nextEvent, evaluation }
+        // Passing the bar is not enough: with nothing predicted for the next event (failed or late sync) every consumer would see empty forecasts.
+        const predicted = nextEvent === null ? 0 : await this.repo.countPredictions(nextEvent, MODEL_VERSION)
+
+        return { enabled: evaluation?.passed === true && predicted > 0, nextEvent, evaluation }
     }
 }

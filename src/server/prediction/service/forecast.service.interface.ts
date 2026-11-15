@@ -2,7 +2,7 @@ import type { Evaluation } from '../lib/evaluation'
 import type { JobOutcome } from '@/server/sync/lib/job.types'
 
 export interface ForecastStatus {
-    /** True when the latest stored evaluation of the current model passed the accuracy bar. */
+    /** True when the latest stored evaluation of the current model passed the accuracy bar and the next event has predictions. */
     enabled: boolean
     nextEvent: number | null
     evaluation: (Evaluation & { createdAt: Date }) | null

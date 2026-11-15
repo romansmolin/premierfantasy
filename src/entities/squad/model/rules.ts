@@ -129,7 +129,10 @@ export function validateSquad(
     const budgetChecked = prices.every((p) => p !== null)
     const totalTenths = budgetChecked ? (prices as number[]).reduce((a, b) => a + b, 0) : null
 
-    if (totalTenths !== null && totalTenths > rules.budgetTenths) {
+    // Unknown prices cannot rescue a squad whose known prices already break the budget.
+    const knownTenths = prices.reduce<number>((sum, p) => sum + (p ?? 0), 0)
+
+    if (knownTenths > rules.budgetTenths) {
         errors.push(`Over the budget of £${(rules.budgetTenths / 10).toFixed(1)}m`)
     }
 

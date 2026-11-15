@@ -50,7 +50,12 @@ export function SquadAiPanel(props: SquadAiPanelProps) {
         // The most expensive click on the site: always a deliberate second step.
         const label = refresh ? 'Recomputing with the current forecast' : 'Auto-build'
 
-        if (!window.confirm(`${label} costs ${cost} Credits. Go ahead?`)) return
+        if (
+            !window.confirm(
+                `${label} costs ${cost} Credits (free if you already have this result for the gameweek). Go ahead?`,
+            )
+        )
+            return
 
         setBuilding(true)
 
@@ -151,7 +156,12 @@ export function SquadAiPanel(props: SquadAiPanelProps) {
                                 <p>
                                     <Badge variant="outline">Forecast updated</Badge> This squad was built
                                     from an earlier forecast.{' '}
-                                    <Button size="xs" variant="outline" onClick={() => runBuild(true)}>
+                                    <Button
+                                        size="xs"
+                                        variant="outline"
+                                        disabled={building}
+                                        onClick={() => runBuild(true)}
+                                    >
                                         Recompute ({AI_FEATURE_PRICES.AUTO_BUILD} Credits)
                                     </Button>
                                 </p>
@@ -211,7 +221,12 @@ export function SquadAiPanel(props: SquadAiPanelProps) {
                             {review.forecastUpdated && (
                                 <p>
                                     <Badge variant="outline">Forecast updated</Badge>{' '}
-                                    <Button size="xs" variant="outline" onClick={() => runReview(true)}>
+                                    <Button
+                                        size="xs"
+                                        variant="outline"
+                                        disabled={reviewing}
+                                        onClick={() => runReview(true)}
+                                    >
                                         Review again ({AI_FEATURE_PRICES.SQUAD_REVIEW} Credits)
                                     </Button>
                                 </p>

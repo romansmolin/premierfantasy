@@ -76,4 +76,8 @@ export class ForecastRepository implements IForecastRepository {
 
         return open?.id ?? null
     }
+
+    async countPredictions(fplEvent: number, modelVersion: string): Promise<number> {
+        return prisma.prediction.count({ where: { fplEvent, modelVersion } })
+    }
 }

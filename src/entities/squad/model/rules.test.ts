@@ -111,6 +111,19 @@ describe('validateSquad', () => {
         expect(result.valid).toBe(true)
     })
 
+    it('rejects an over-budget squad even when another price is unknown', () => {
+        const p = pool()
+
+        p.set('p1', { ...(p.get('p1') as SquadPlayerInfo), priceTenths: null })
+        p.set('p2', { ...(p.get('p2') as SquadPlayerInfo), priceTenths: 1000 })
+
+        const result = validateSquad(draft(), p, rules)
+
+        expect(result.budgetChecked).toBe(false)
+        expect(result.valid).toBe(false)
+        expect(result.errors.join(' ')).toMatch(/budget/i)
+    })
+
     it('rejects starting XIs outside the formation limits', () => {
         const d: SquadDraft = {
             starters: ['p1', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9', 'p10', 'p11', 'p13'], // 5-4-1... p3-p7 DEF=5, MID 4 (p8-p11), FWD 1 -> valid 5-4-1
