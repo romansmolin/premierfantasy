@@ -24,7 +24,7 @@
 - Follow `CLAUDE.md` and `docs/server-architecture.md`: Controller → Service → Repository, `import type`, no `any`, no `console.log` (`console.warn`/`console.error` only), blank-line style enforced by lint, path alias `@/*`.
 - Exception to «`container.ts` is the only composition root» (documented in Task 11): `src/server/sync/sync.container.ts` wires job services for scripts. It must not import controllers, `next/*`, `server-only`, or `@/shared/lib/http`.
 - Never run any command that writes against the configured `STORAGE_DATABASE_URL` (remote, likely production). Local verification uses a throwaway Postgres in Docker with `STORAGE_DATABASE_URL` overridden on the command line.
-- Work on a new branch from `main` (`stage-2-part-1`), not on `stage-2-design`'s docs-only branch if it was already merged.
+- Work on a new branch `stage-2-part-1` created from the current `stage-2-design` branch (it carries the approved spec and this plan); never on `main`.
 
 ## Review Focus
 
@@ -181,7 +181,7 @@
     - `parseRoundNumber`: `"Regular Season - 11"` → 11, `"Regular Season - 1"` → 1, `"Quarter-finals"` → `null`.
     - `throws SuspiciousResponseError and writes nothing when the response is empty`.
     - `throws SuspiciousResponseError when the response has fewer than half of the stored fixtures` (stored 380, response 100).
-    - `inserts fixtures and a second identical run inserts 0 and updates 0 changes` (fake repo that counts calls).
+    - `a second identical run reports inserted 0` (fake repo keyed by externalId).
     - `keeps FPL link fields untouched on update` (repository fake: `upsertFixtures` receives rows without `fplEvent`/`fplFixtureId`).
     - `fails the whole season when a team is unknown`.
     - `stops with PARTIAL before the second season when the budget is exhausted`.
@@ -238,7 +238,7 @@
     export function assertSaneBootstrap(data: FplBootstrap): void // throws SuspiciousResponseError
     ```
 
-    `FplBootstrap` types only the fields we read: `elements[]` (`id`, `code`, `web_name`, `first_name`, `second_name`, `team`, `element_type` 1–4, `now_cost` tenths, `status`, `chance_of_playing_next_round`, `news`), `teams[]` (`id`, `code`, `name`, `short_name`), `events[]` (`id`, `name`, `deadline_time`, `finished`, `is_current`, `is_next`), `game_settings` (`squad_squadsize`, `squad_squadplay`, `squad_total_spend`, `squad_team_limit`), `element_types[]` (`id`, `squad_select`, `squad_min_play`, `squad_max_play`). `FplFixture`: `id`, `event` (nullable), `kickoff_time`, `team_h`, `team_a`, `finished`. `FplEventLive.elements[]`: `{ id, stats: { total_points, minutes } }`.
+    Also export `type FplElement = FplBootstrap['elements'][number]` and `type FplTeam = FplBootstrap['teams'][number]`. `FplBootstrap` types only the fields we read: `elements[]` (`id`, `code`, `web_name`, `first_name`, `second_name`, `team`, `element_type` 1–4, `now_cost` tenths, `status`, `chance_of_playing_next_round`, `news`), `teams[]` (`id`, `code`, `name`, `short_name`), `events[]` (`id`, `name`, `deadline_time`, `finished`, `is_current`, `is_next`), `game_settings` (`squad_squadsize`, `squad_squadplay`, `squad_total_spend`, `squad_team_limit`), `element_types[]` (`id`, `squad_select`, `squad_min_play`, `squad_max_play`). `FplFixture`: `id`, `event` (nullable), `kickoff_time`, `team_h`, `team_a`, `finished`. `FplEventLive.elements[]`: `{ id, stats: { total_points, minutes } }`.
 
 - [ ] **Step 1: Write failing tests:** `assertSaneBootstrap accepts a valid payload`; `rejects fewer than 400 elements`; `rejects a team count other than 20`; `rejects fewer than 30 events`; `rejects a missing game_settings`; client: `retries a 500 once and then succeeds`; `throws after two retries`; `returns null-safe typed data` (use a trimmed real-shape fixture). Put the trimmed fixture JSON in `src/server/fpl/lib/__fixtures__/bootstrap.sample.json` (a handful of real-shaped players, 20 teams, 38 events, real `game_settings`/`element_types` values: squad 15, play 11, spend 1000, team limit 3; positions 2/5/5/3 with min/max play 1/1, 3/5, 2/5, 1/3).
 - [ ] **Step 2:** run → FAIL. **Step 3:** implement. **Step 4:** tests, tsc, lint clean. **Step 5:** Commit `feat(fpl): FPL client with response sanity guard`.
@@ -384,7 +384,7 @@
 **Purpose:** prove the whole chain against the real APIs without touching production.
 
 - [ ] **Step 1:** Start Postgres 16 in Docker on port 55432, apply all migrations in order (as Task 2, Step 3). Export `STORAGE_DATABASE_URL=postgresql://postgres:x@localhost:55432/postgres` **in the command only**; confirm with `echo` of the host part that it is `localhost`.
-- [ ] **Step 2:** `npx tsx -r dotenv/config scripts/seed-leagues.ts` then `npx tsx -r dotenv/config scripts/sync-league-squads.ts 39 --season 2026` and again with `--season 2025` (about 40 API requests). `FOOTBAL_*` come from `.env`; the DB URL override must win over the one in `.env` (check order: command-line variable beats dotenv; if not, unset it in a temporary env file).
+- [ ] **Step 2:** `npx tsx -r dotenv/config scripts/seed-leagues.ts` then `npx tsx -r dotenv/config scripts/sync-league-squads.ts 39 --season 2026` and again with `--season 2025` (about 40 API requests). `FOOTBAL_*` come from `.env`. `dotenv` does not override variables already set in the process, so the command-line `STORAGE_DATABASE_URL` wins; print only the host of the URL before running anything that writes.
 - [ ] **Step 3:** `npm run sync -- full --max-requests 1000`. Expected: `fixtures` OK (≈380 per season), `match-stats` OK or PARTIAL with counts, `fpl-bootstrap` OK, `fpl-fixtures` OK, `fpl-points` OK; exit 0.
 - [ ] **Step 4:** Check by SQL (via `docker exec … psql`): fixtures per season ≈ 380; `player_match_stats` rows > 5000 for 2026; every `fixtures` row with `status = 'FT'` in 2026 has `fpl_event` set; `fpl_player_map` covers ≥ 90 % of FPL players with ≥ 90 minutes (record the exact number); `player_season_prices` has only `price_source = 'FPL'` rows for 2026; `fpl_event_points` has 10 finished events (the current season has played 10 events on 2026-11-15); `fpl_game_settings` row has squad 15, spend 1000, limit 3.
 - [ ] **Step 5:** Run `npm run sync -- short` a second time → every job OK, inserted counts 0. Record the daily remaining quota printed by the job.
