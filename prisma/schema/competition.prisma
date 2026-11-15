@@ -23,8 +23,9 @@ model LeagueSeason {
   isCurrent Boolean  @default(false) @map("is_current")
   createdAt DateTime @default(now()) @map("created_at")
 
-  league League             @relation(fields: [leagueId], references: [id], onDelete: Cascade)
-  teams  LeagueSeasonTeam[]
+  league   League             @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  teams    LeagueSeasonTeam[]
+  fixtures Fixture[]
 
   @@unique([leagueId, year])
   @@index([leagueId])

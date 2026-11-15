@@ -1,0 +1,13 @@
+model SyncRun {
+  id         String    @id @default(cuid())
+  job        String
+  /// RUNNING | OK | PARTIAL | FAILED
+  status     String
+  startedAt  DateTime  @default(now()) @map("started_at")
+  finishedAt DateTime? @map("finished_at")
+  stats      Json?
+  error      String?
+
+  @@index([job, startedAt])
+  @@map("sync_runs")
+}

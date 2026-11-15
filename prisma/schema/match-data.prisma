@@ -1,0 +1,77 @@
+model Fixture {
+  id             String    @id @default(uuid())
+  externalId     Int       @unique @map("external_id")
+  leagueSeasonId String    @map("league_season_id")
+  round          String
+  roundNumber    Int?      @map("round_number")
+  kickoff        DateTime
+  status         String
+  homeTeamId     String    @map("home_team_id")
+  awayTeamId     String    @map("away_team_id")
+  homeGoals      Int?      @map("home_goals")
+  awayGoals      Int?      @map("away_goals")
+  fplFixtureId   Int?      @unique @map("fpl_fixture_id")
+  fplEvent       Int?      @map("fpl_event")
+  statsSyncedAt  DateTime? @map("stats_synced_at")
+  statsAttempts  Int       @default(0) @map("stats_attempts")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  leagueSeason LeagueSeason       @relation(fields: [leagueSeasonId], references: [id], onDelete: Cascade)
+  homeTeam     Team               @relation("FixtureHomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam     Team               @relation("FixtureAwayTeam", fields: [awayTeamId], references: [id])
+  playerStats  PlayerMatchStats[]
+
+  @@index([leagueSeasonId, kickoff])
+  @@index([fplEvent])
+  @@index([status, statsSyncedAt])
+  @@map("fixtures")
+}
+
+model PlayerMatchStats {
+  id        String          @id @default(uuid())
+  fixtureId String          @map("fixture_id")
+  playerId  String          @map("player_id")
+  teamId    String          @map("team_id")
+  position  PlayerPosition?
+
+  isSubstitute Boolean @default(false) @map("is_substitute")
+  minutes      Int     @default(0)
+  rating       Float?
+
+  goals            Int  @default(0)
+  assists          Int  @default(0)
+  shotsTotal       Int  @default(0) @map("shots_total")
+  shotsOn          Int  @default(0) @map("shots_on")
+  passesTotal      Int  @default(0) @map("passes_total")
+  passesKey        Int  @default(0) @map("passes_key")
+  passAccuracy     Int? @map("pass_accuracy")
+  tackles          Int  @default(0)
+  blocks           Int  @default(0)
+  interceptions    Int  @default(0)
+  duelsTotal       Int  @default(0) @map("duels_total")
+  duelsWon         Int  @default(0) @map("duels_won")
+  dribblesAttempts Int  @default(0) @map("dribbles_attempts")
+  dribblesSuccess  Int  @default(0) @map("dribbles_success")
+  foulsDrawn       Int  @default(0) @map("fouls_drawn")
+  foulsCommitted   Int  @default(0) @map("fouls_committed")
+  yellowCards      Int  @default(0) @map("yellow_cards")
+  redCards         Int  @default(0) @map("red_cards")
+  saves            Int  @default(0)
+  goalsConceded    Int  @default(0) @map("goals_conceded")
+  penaltyWon       Int  @default(0) @map("penalty_won")
+  penaltyCommitted Int  @default(0) @map("penalty_committed")
+  penaltyScored    Int  @default(0) @map("penalty_scored")
+  penaltyMissed    Int  @default(0) @map("penalty_missed")
+  penaltySaved     Int  @default(0) @map("penalty_saved")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  fixture Fixture @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+  player  Player  @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  team    Team    @relation(fields: [teamId], references: [id])
+
+  @@unique([fixtureId, playerId])
+  @@index([playerId])
+  @@map("player_match_stats")
+}

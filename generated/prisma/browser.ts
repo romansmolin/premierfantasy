@@ -65,10 +65,50 @@ export type Gameweek = Prisma.GameweekModel
  */
 export type PlayerGameweekStats = Prisma.PlayerGameweekStatsModel
 /**
+ * Model FplPlayerMap
+ * Confirmed link between an FPL player and one of our players.
+ */
+export type FplPlayerMap = Prisma.FplPlayerMapModel
+/**
+ * Model FplPlayerMapRejection
+ * An FPL player an admin decided has no counterpart in our data; the sync never maps it again.
+ */
+export type FplPlayerMapRejection = Prisma.FplPlayerMapRejectionModel
+/**
+ * Model FplEvent
+ *
+ */
+export type FplEvent = Prisma.FplEventModel
+/**
+ * Model FplGameSettings
+ *
+ */
+export type FplGameSettings = Prisma.FplGameSettingsModel
+/**
+ * Model FplEventPoints
+ * Actual FPL points of a finished event; used only to check the accuracy of our forecast.
+ */
+export type FplEventPoints = Prisma.FplEventPointsModel
+/**
+ * Model Fixture
+ *
+ */
+export type Fixture = Prisma.FixtureModel
+/**
+ * Model PlayerMatchStats
+ *
+ */
+export type PlayerMatchStats = Prisma.PlayerMatchStatsModel
+/**
  * Model PaymentToken
  *
  */
 export type PaymentToken = Prisma.PaymentTokenModel
+/**
+ * Model SyncRun
+ *
+ */
+export type SyncRun = Prisma.SyncRunModel
 /**
  * Model User
  *

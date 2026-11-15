@@ -1,0 +1,62 @@
+/// Confirmed link between an FPL player and one of our players.
+model FplPlayerMap {
+  id         String   @id @default(uuid())
+  fplId      Int      @unique @map("fpl_id")
+  playerId   String   @unique @map("player_id")
+  /// AUTO (matched by the sync) or MANUAL (confirmed in the admin page; never overwritten)
+  method     String
+  confidence Float
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@map("fpl_player_maps")
+}
+
+/// An FPL player an admin decided has no counterpart in our data; the sync never maps it again.
+model FplPlayerMapRejection {
+  fplId     Int      @id @map("fpl_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("fpl_player_map_rejections")
+}
+
+model FplEvent {
+  id        Int      @id
+  name      String
+  deadline  DateTime
+  finished  Boolean  @default(false)
+  isCurrent Boolean  @default(false) @map("is_current")
+  isNext    Boolean  @default(false) @map("is_next")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("fpl_events")
+}
+
+model FplGameSettings {
+  seasonYear   Int      @id @map("season_year")
+  squadSize    Int      @map("squad_size")
+  startingSize Int      @map("starting_size")
+  budgetTenths Int      @map("budget_tenths")
+  teamLimit    Int      @map("team_limit")
+  /// [{ position: 'GK' | 'DEF' | 'MID' | 'FWD', squadSelect, minPlay, maxPlay }]
+  positions    Json
+  fetchedAt    DateTime @default(now()) @map("fetched_at")
+
+  @@map("fpl_game_settings")
+}
+
+/// Actual FPL points of a finished event; used only to check the accuracy of our forecast.
+model FplEventPoints {
+  id          String   @id @default(uuid())
+  fplPlayerId Int      @map("fpl_player_id")
+  event       Int
+  totalPoints Int      @map("total_points")
+  minutes     Int
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@unique([fplPlayerId, event])
+  @@index([event])
+  @@map("fpl_event_points")
+}

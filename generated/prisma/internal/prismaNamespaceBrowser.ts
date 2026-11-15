@@ -57,7 +57,15 @@ export const ModelName = {
     PlayerSeasonPrice: 'PlayerSeasonPrice',
     Gameweek: 'Gameweek',
     PlayerGameweekStats: 'PlayerGameweekStats',
+    FplPlayerMap: 'FplPlayerMap',
+    FplPlayerMapRejection: 'FplPlayerMapRejection',
+    FplEvent: 'FplEvent',
+    FplGameSettings: 'FplGameSettings',
+    FplEventPoints: 'FplEventPoints',
+    Fixture: 'Fixture',
+    PlayerMatchStats: 'PlayerMatchStats',
     PaymentToken: 'PaymentToken',
+    SyncRun: 'SyncRun',
     User: 'User',
     Session: 'Session',
     Account: 'Account',
@@ -135,6 +143,7 @@ export const TeamScalarFieldEnum = {
     name: 'name',
     shortName: 'shortName',
     logo: 'logo',
+    fplId: 'fplId',
     createdAt: 'createdAt',
 } as const
 
@@ -200,6 +209,126 @@ export const PlayerGameweekStatsScalarFieldEnum = {
 export type PlayerGameweekStatsScalarFieldEnum =
     (typeof PlayerGameweekStatsScalarFieldEnum)[keyof typeof PlayerGameweekStatsScalarFieldEnum]
 
+export const FplPlayerMapScalarFieldEnum = {
+    id: 'id',
+    fplId: 'fplId',
+    playerId: 'playerId',
+    method: 'method',
+    confidence: 'confidence',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+} as const
+
+export type FplPlayerMapScalarFieldEnum =
+    (typeof FplPlayerMapScalarFieldEnum)[keyof typeof FplPlayerMapScalarFieldEnum]
+
+export const FplPlayerMapRejectionScalarFieldEnum = {
+    fplId: 'fplId',
+    createdAt: 'createdAt',
+} as const
+
+export type FplPlayerMapRejectionScalarFieldEnum =
+    (typeof FplPlayerMapRejectionScalarFieldEnum)[keyof typeof FplPlayerMapRejectionScalarFieldEnum]
+
+export const FplEventScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    deadline: 'deadline',
+    finished: 'finished',
+    isCurrent: 'isCurrent',
+    isNext: 'isNext',
+    updatedAt: 'updatedAt',
+} as const
+
+export type FplEventScalarFieldEnum = (typeof FplEventScalarFieldEnum)[keyof typeof FplEventScalarFieldEnum]
+
+export const FplGameSettingsScalarFieldEnum = {
+    seasonYear: 'seasonYear',
+    squadSize: 'squadSize',
+    startingSize: 'startingSize',
+    budgetTenths: 'budgetTenths',
+    teamLimit: 'teamLimit',
+    positions: 'positions',
+    fetchedAt: 'fetchedAt',
+} as const
+
+export type FplGameSettingsScalarFieldEnum =
+    (typeof FplGameSettingsScalarFieldEnum)[keyof typeof FplGameSettingsScalarFieldEnum]
+
+export const FplEventPointsScalarFieldEnum = {
+    id: 'id',
+    fplPlayerId: 'fplPlayerId',
+    event: 'event',
+    totalPoints: 'totalPoints',
+    minutes: 'minutes',
+    updatedAt: 'updatedAt',
+} as const
+
+export type FplEventPointsScalarFieldEnum =
+    (typeof FplEventPointsScalarFieldEnum)[keyof typeof FplEventPointsScalarFieldEnum]
+
+export const FixtureScalarFieldEnum = {
+    id: 'id',
+    externalId: 'externalId',
+    leagueSeasonId: 'leagueSeasonId',
+    round: 'round',
+    roundNumber: 'roundNumber',
+    kickoff: 'kickoff',
+    status: 'status',
+    homeTeamId: 'homeTeamId',
+    awayTeamId: 'awayTeamId',
+    homeGoals: 'homeGoals',
+    awayGoals: 'awayGoals',
+    fplFixtureId: 'fplFixtureId',
+    fplEvent: 'fplEvent',
+    statsSyncedAt: 'statsSyncedAt',
+    statsAttempts: 'statsAttempts',
+    updatedAt: 'updatedAt',
+    createdAt: 'createdAt',
+} as const
+
+export type FixtureScalarFieldEnum = (typeof FixtureScalarFieldEnum)[keyof typeof FixtureScalarFieldEnum]
+
+export const PlayerMatchStatsScalarFieldEnum = {
+    id: 'id',
+    fixtureId: 'fixtureId',
+    playerId: 'playerId',
+    teamId: 'teamId',
+    position: 'position',
+    isSubstitute: 'isSubstitute',
+    minutes: 'minutes',
+    rating: 'rating',
+    goals: 'goals',
+    assists: 'assists',
+    shotsTotal: 'shotsTotal',
+    shotsOn: 'shotsOn',
+    passesTotal: 'passesTotal',
+    passesKey: 'passesKey',
+    passAccuracy: 'passAccuracy',
+    tackles: 'tackles',
+    blocks: 'blocks',
+    interceptions: 'interceptions',
+    duelsTotal: 'duelsTotal',
+    duelsWon: 'duelsWon',
+    dribblesAttempts: 'dribblesAttempts',
+    dribblesSuccess: 'dribblesSuccess',
+    foulsDrawn: 'foulsDrawn',
+    foulsCommitted: 'foulsCommitted',
+    yellowCards: 'yellowCards',
+    redCards: 'redCards',
+    saves: 'saves',
+    goalsConceded: 'goalsConceded',
+    penaltyWon: 'penaltyWon',
+    penaltyCommitted: 'penaltyCommitted',
+    penaltyScored: 'penaltyScored',
+    penaltyMissed: 'penaltyMissed',
+    penaltySaved: 'penaltySaved',
+    createdAt: 'createdAt',
+} as const
+
+export type PlayerMatchStatsScalarFieldEnum =
+    (typeof PlayerMatchStatsScalarFieldEnum)[keyof typeof PlayerMatchStatsScalarFieldEnum]
+
 export const PaymentTokenScalarFieldEnum = {
     id: 'id',
     userId: 'userId',
@@ -220,6 +349,18 @@ export const PaymentTokenScalarFieldEnum = {
 
 export type PaymentTokenScalarFieldEnum =
     (typeof PaymentTokenScalarFieldEnum)[keyof typeof PaymentTokenScalarFieldEnum]
+
+export const SyncRunScalarFieldEnum = {
+    id: 'id',
+    job: 'job',
+    status: 'status',
+    startedAt: 'startedAt',
+    finishedAt: 'finishedAt',
+    stats: 'stats',
+    error: 'error',
+} as const
+
+export type SyncRunScalarFieldEnum = (typeof SyncRunScalarFieldEnum)[keyof typeof SyncRunScalarFieldEnum]
 
 export const UserScalarFieldEnum = {
     id: 'id',
@@ -302,6 +443,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+export const NullableJsonNullValueInput = {
+    DbNull: DbNull,
+    JsonNull: JsonNull,
+} as const
+
+export type NullableJsonNullValueInput =
+    (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 export const QueryMode = {
     default: 'default',
