@@ -28,7 +28,7 @@ export const metadata: Metadata = {
         template: `%s — ${SITE.name}`,
     },
     description:
-        'Sign in or create your Premier Fantasy account to draft a squad, join rolling competitions, and compete in private leagues.',
+        'Sign in or create your Premier Fantasy account to explore player stats and use AI insights.',
     robots: { index: false, follow: false },
 }
 

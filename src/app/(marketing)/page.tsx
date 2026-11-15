@@ -15,7 +15,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
     title: SITE.tagline,
     description:
-        'Build a fantasy football squad from real Premier League players, compete in rolling 5-gameweek competitions, win Coins, climb private leagues, and get AI transfer and match insights.',
+        'Premier Fantasy is an analytics tool for fantasy football managers. Explore advanced player and team statistics and use AI-powered insights, paid with Credits, to plan the squad you enter on your favourite fantasy platform. Premier Fantasy does not run fantasy games, contests or prizes.',
     alternates: { canonical: '/' },
 }
 

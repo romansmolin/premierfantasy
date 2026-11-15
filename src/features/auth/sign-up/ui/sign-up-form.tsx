@@ -43,7 +43,7 @@ export const SignUpForm = () => {
                         Welcome To Premier Fantasy 🚀
                     </FieldLegend>
 
-                    <FieldDescription>Create you team, follow matches, analyze, and win.</FieldDescription>
+                    <FieldDescription>Follow matches and player stats, and use AI analysis.</FieldDescription>
 
                     <FieldGroup>
                         <Field data-invalid={!!errors.username}>

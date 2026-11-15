@@ -19,18 +19,18 @@ export function CtaSection() {
                 className="text-center space-y-6"
             >
                 <h2 className="font-heading text-2xl px-4 md:text-4xl lg:text-5xl font-bold text-foreground max-w-4xl leading-relaxed lg:leading-snug mx-auto">
-                    Join thousands of managers competing for
+                    Plan your next fantasy squad with
                     <br />
-                    <Highlight className="text-foreground">glory and rewards</Highlight>
+                    <Highlight className="text-foreground">better data</Highlight>
                 </h2>
                 <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-                    Build your squad, outsmart the competition, and earn coins every gameweek. Free to play,
-                    powered by real Premier League data.
+                    Explore Premier League stats for free and use AI insights with Credits. No games, no
+                    contests, no prizes — just analysis for the fantasy platform you already play.
                 </p>
                 <div className="flex items-center justify-center gap-3 pt-4">
                     <Link href="/sign-up" className={cn('w-40', buttonVariants({ size: 'lg' }))}>
                         <HugeiconsIcon icon={StartUp01Icon} />
-                        Get Started Free
+                        Create Free Account
                     </Link>
                     <Link
                         href="/sign-in"

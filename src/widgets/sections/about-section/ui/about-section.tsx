@@ -7,23 +7,16 @@ import { cn } from '@/shared/lib/utils'
 import { AnimateIn } from '@/shared/ui/animate-in'
 import { buttonVariants } from '@/shared/ui/button'
 
-const achievements = [
-    { label: 'Active Managers', value: '1,000+' },
-    { label: 'Competitions Completed', value: '200+' },
-    { label: 'AI Analyses Run', value: '5,000+' },
-    { label: 'Coins Awarded', value: '500K+' },
-]
-
 const contentSections = [
     {
         title: 'Our Vision',
         content:
-            'Fantasy football has always been about passion, strategy, and bragging rights. But most platforms lock you into a full-season commitment — punishing late joiners and rewarding those who got lucky in August.\n\nWe built this platform to change that. With rolling 5-gameweek competitions, anyone can jump in at any time and compete on equal footing. Add AI-powered insights and a coin economy, and you have a fantasy experience that rewards skill, not just luck.\n\nWe believe every Premier League fan deserves a shot at the top of the leaderboard.',
+            'Millions of people play fantasy football, and most of them decide on gut feeling and scattered spreadsheets.\n\nPremier Fantasy puts advanced statistics and AI analysis in one place, so you can prepare your squad with better information. We do not run a fantasy game ourselves: we help you play the one you already like.\n\nYou enter your squad on your fantasy platform yourself, and nothing you do here earns points or rewards.',
     },
     {
         title: 'How We Built It',
         content:
-            'Our platform is powered by real-time data from API-Football, covering every Premier League fixture, player stat, and match event. Scoring is calculated automatically using FPL-style rules.\n\nThe AI features use GPT to analyze squad composition, player form, and upcoming fixtures — giving you transfer suggestions and match predictions backed by data, not guesswork.\n\nEverything runs on a daily automated pipeline: gameweeks sync, scores calculate, competitions transition, and rewards distribute — all without manual intervention.',
+            'Our platform is powered by data from API-Football, covering Premier League fixtures, player statistics and match events.\n\nThe AI features use GPT to analyse player form and upcoming fixtures, giving you an assessment and a match prediction that are based on data, not guesswork. AI output is informational and does not guarantee any result on any platform.\n\nYou pay with Credits only for the AI features you use. Credits never expire.',
     },
 ]
 
@@ -38,8 +31,8 @@ export function AboutSection() {
                             About Us
                         </h1>
                         <p className="text-lg text-muted-foreground">
-                            We&apos;re building the fairest, smartest fantasy football platform for Premier
-                            League fans. Rolling competitions, real data, and AI analysis — all in one place.
+                            We&apos;re building an analytics tool for fantasy football managers: advanced
+                            statistics and AI analysis in one place.
                         </p>
                     </div>
                 </AnimateIn>
@@ -59,8 +52,8 @@ export function AboutSection() {
                                 <div>
                                     <p className="mb-2 text-lg font-semibold">Powered by Real Data</p>
                                     <p className="text-sm text-muted-foreground">
-                                        Every score, every stat, every prediction — driven by live Premier
-                                        League data from API-Football and analyzed by GPT.
+                                        Every stat and prediction is driven by Premier League data from
+                                        API-Football and analysed by GPT.
                                     </p>
                                 </div>
                                 <Link
@@ -77,34 +70,6 @@ export function AboutSection() {
                                 height={300}
                                 className="grow basis-0 rounded-xl object-cover md:w-1/2 lg:min-h-0 lg:w-auto"
                             />
-                        </div>
-                    </div>
-                </AnimateIn>
-
-                {/* Achievements */}
-                <AnimateIn variant="fadeUp" delay={0.1}>
-                    <div className="relative mt-16 overflow-hidden rounded-xl bg-muted p-7 md:p-16">
-                        <div className="flex flex-col gap-4 text-center md:text-left">
-                            <h2 className="font-heading text-3xl font-medium md:text-4xl">
-                                Platform in Numbers
-                            </h2>
-                            <p className="max-w-xl text-muted-foreground">
-                                Growing every gameweek as more managers discover a fairer way to play fantasy
-                                football.
-                            </p>
-                        </div>
-                        <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-8 md:flex md:flex-wrap md:justify-between">
-                            {achievements.map((item) => (
-                                <div
-                                    className="flex flex-col gap-2 text-center md:text-left"
-                                    key={item.label}
-                                >
-                                    <span className="font-heading text-4xl font-semibold md:text-5xl">
-                                        {item.value}
-                                    </span>
-                                    <p className="text-sm md:text-base">{item.label}</p>
-                                </div>
-                            ))}
                         </div>
                     </div>
                 </AnimateIn>

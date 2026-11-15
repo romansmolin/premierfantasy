@@ -3,12 +3,12 @@ import { LegalLayout } from '@/widgets/sections/legal-layout/ui/legal-layout'
 export const metadata = {
     title: 'Terms of Service',
     description:
-        'The rules for using Premier Fantasy — accounts, in-app Coins, competitions, payments, AI features, and acceptable use.',
+        'The rules for using Premier Fantasy — accounts, Credits, payments, AI features, and acceptable use.',
 }
 
 export default function TermsOfServicePage() {
     return (
-        <LegalLayout title="Terms of Service" lastUpdated="November 4, 2026">
+        <LegalLayout title="Terms of Service" lastUpdated="November 15, 2026">
             <h2>1. Acceptance of Terms</h2>
             <p>
                 By accessing or using the Premier Fantasy platform (&quot;Service&quot;), you agree to be
@@ -24,10 +24,10 @@ export default function TermsOfServicePage() {
 
             <h2>2. Description of Service</h2>
             <p>
-                Premier Fantasy is an online fantasy sports platform where users create virtual teams of real
-                Premier League players, compete in rolling 5-gameweek competitions, and earn in-app currency
-                (&quot;Coins&quot;) based on performance. The platform also offers AI-powered analysis
-                features available for Coin purchases.
+                Premier Fantasy is an online analytics tool for fantasy football managers. It provides
+                football statistics and AI-powered analysis that users may take into account when choosing a
+                squad on a third-party fantasy platform of their choice. Statistics are free. AI-powered
+                analysis features are paid for with prepaid units (&quot;Credits&quot;).
             </p>
 
             <h2>3. User Accounts</h2>
@@ -37,33 +37,40 @@ export default function TermsOfServicePage() {
                 account. You must provide accurate and complete information during registration.
             </p>
 
-            <h2>4. In-App Currency (Coins)</h2>
+            <h2>4. Credits</h2>
             <ul>
-                <li>Coins are a virtual currency used within the platform.</li>
-                <li>Coins can be earned through competition placement (1st: 500, 2nd: 300, 3rd: 100).</li>
-                <li>Coins can be purchased using real currency through our payment processor.</li>
-                <li>Coins have no real-world monetary value and cannot be exchanged for cash.</li>
-                <li>Coins are non-transferable between accounts.</li>
-                <li>We reserve the right to modify Coin pricing and reward amounts at any time.</li>
+                <li>Credits are a prepaid unit used to pay for AI features of the Service.</li>
+                <li>Credits are purchased with real currency through our payment processor.</li>
+                <li>Credits never expire.</li>
+                <li>Credits have no cash value and cannot be exchanged for cash.</li>
+                <li>Credits are non-transferable between accounts.</li>
+                <li>
+                    We may change the price of Credit packs and of AI features. A change does not affect
+                    Credits you have already purchased.
+                </li>
             </ul>
 
-            <h2>5. Competitions</h2>
+            <h2>5. What Premier Fantasy Is Not</h2>
             <p>
-                Competitions are automatically generated in rolling 5-gameweek cycles. Users may join an
-                active competition before the join deadline. Each user may have only one fantasy team per
-                competition. Points are calculated based on real Premier League match data.
+                Premier Fantasy does not operate fantasy games, contests, leagues or prizes, and does not
+                accept entry fees, stakes or wagers. Nothing you do on the Service earns points, rankings or
+                rewards. Any squad you choose is entered by you on a third-party platform, which has its own
+                rules. Premier Fantasy is independent and is not affiliated with, endorsed by, or connected to
+                the Premier League, Fantasy Premier League, UEFA or any fantasy game operator.
             </p>
 
             <h2>6. AI Features</h2>
             <p>
-                AI-powered features (Transfer Suggestions, Player Analytics, Match Predictions) are provided
-                as entertainment and informational tools. They are powered by third-party AI models and do not
-                guarantee accuracy. Coin costs for AI features are non-refundable once consumed.
+                AI-powered features (currently Player Analysis and Match Prediction) are provided as
+                informational tools. They are powered by third-party AI models and do not guarantee accuracy
+                or any result on any fantasy platform. Credits spent on AI features are not refundable once
+                the result has been delivered, without prejudice to your statutory rights. If you open a
+                result you already paid for again, no further Credits are charged.
             </p>
 
             <h2>7. Payments</h2>
             <p>
-                All payments for Coin purchases are processed through our third-party payment provider. By
+                All payments for Credit purchases are processed through our third-party payment provider. By
                 making a purchase, you agree to the payment processor&apos;s terms and conditions. Your
                 statutory consumer rights, including any applicable right of withdrawal, remain unaffected.
                 See our <a href="/return-policy">Return &amp; Refund Policy</a> for details.
@@ -71,9 +78,9 @@ export default function TermsOfServicePage() {
 
             <h2>8. Prohibited Conduct</h2>
             <ul>
-                <li>Creating multiple accounts to gain unfair advantage.</li>
+                <li>Creating multiple accounts to abuse the Service.</li>
                 <li>Using automated tools, bots, or scripts to interact with the Service.</li>
-                <li>Attempting to manipulate competition results or exploit bugs.</li>
+                <li>Attempting to obtain Credits or AI results without paying, or to exploit bugs.</li>
                 <li>Harassing, threatening, or abusing other users.</li>
                 <li>Reverse-engineering or attempting to extract source code from the Service.</li>
             </ul>
@@ -82,7 +89,8 @@ export default function TermsOfServicePage() {
             <p>
                 We reserve the right to suspend or terminate your account at any time for violation of these
                 terms or for any other reason at our sole discretion. Upon termination, your access to the
-                Service and any accumulated Coins will be forfeited.
+                Service and any unused Credits will be forfeited, unless we terminate your account without a
+                breach on your part, in which case we will refund your unused purchased Credits.
             </p>
 
             <h2>10. Disclaimer of Warranties</h2>
@@ -96,7 +104,7 @@ export default function TermsOfServicePage() {
             <p>
                 To the maximum extent permitted by law, we shall not be liable for any indirect, incidental,
                 special, or consequential damages arising from your use of the Service, including loss of
-                Coins, data, or profits.
+                Credits, data, or profits, or any result you obtain on a third-party fantasy platform.
             </p>
 
             <h2>12. Changes to Terms</h2>

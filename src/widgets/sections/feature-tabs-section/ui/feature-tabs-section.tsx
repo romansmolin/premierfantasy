@@ -35,9 +35,9 @@ const tabs: Tab[] = [
         label: 'AI Insights',
         content: {
             badge: 'Powered by GPT',
-            title: 'AI that gives you the edge.',
+            title: 'AI that explains the numbers.',
             description:
-                'Get transfer suggestions, deep player analytics, and match predictions — all powered by real Premier League data and GPT reasoning. Spend coins to unlock insights that help you climb the leaderboard.',
+                'Get an in-depth analysis of any player or a prediction for an upcoming match, built on real Premier League data. Each request costs Credits, and re-opening a report you already paid for is free.',
             buttonText: 'Get Started',
             buttonHref: '/sign-up',
             imageSrc: '/assets/aura1.png',
@@ -45,33 +45,33 @@ const tabs: Tab[] = [
         },
     },
     {
-        value: 'competitions',
+        value: 'stats',
         icon: ChartBarIncreasingIcon,
-        label: 'Rolling Competitions',
+        label: 'Player Stats',
         content: {
-            badge: '5-Gameweek Rounds',
-            title: 'Fresh competition every 5 weeks.',
+            badge: 'Real match data',
+            title: 'Stats, without the spreadsheet.',
             description:
-                'No season-long commitment. Join rolling 5-gameweek competitions at any time. Late to the party? No problem — the next round is always around the corner. Top 3 finishers earn coin rewards.',
-            buttonText: 'View Competitions',
+                'Browse clubs and players, filter by position and club, and open a player profile with season statistics. Free for every account.',
+            buttonText: 'Explore Players',
             buttonHref: '/sign-up',
             imageSrc: '/assets/holand.png',
-            imageAlt: 'Football competition leaderboard',
+            imageAlt: 'Football player statistics',
         },
     },
     {
-        value: 'transfers',
+        value: 'squad',
         icon: UserSwitchIcon,
-        label: 'Smart Transfers',
+        label: 'Squad Tools',
         content: {
-            badge: 'FPL-Style System',
-            title: 'Swap players between gameweeks.',
+            badge: 'Coming soon',
+            title: 'Plan your squad with confidence.',
             description:
-                'Get free transfers every round. Use the transfer modal to swap underperformers for in-form players. Pair it with AI suggestions to make data-driven decisions that maximize your points.',
-            buttonText: 'Start Building',
+                'We are building squad review and auto-build tools that suggest a squad within the rules of the fantasy platform you play. You always enter the squad yourself on that platform.',
+            buttonText: 'Create Free Account',
             buttonHref: '/sign-up',
             imageSrc: '/assets/player.png',
-            imageAlt: 'Football player transfer',
+            imageAlt: 'Football player',
         },
     },
 ]
@@ -91,8 +91,7 @@ export function FeatureTabsSection() {
                             Built for serious fantasy managers
                         </h2>
                         <p className="text-muted-foreground max-w-lg">
-                            Real data, AI analysis, and a fair competition system that rewards skill over
-                            luck.
+                            Real data and AI analysis to help you make better fantasy decisions.
                         </p>
                     </div>
                 </AnimateIn>

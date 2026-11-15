@@ -14,37 +14,38 @@ import { AnimateIn, StaggerChildren, StaggerItem } from '@/shared/ui/animate-in'
 
 const features = [
     {
-        icon: FlashIcon,
-        title: 'Real-Time Scoring',
-        description: 'Points calculated automatically from live Premier League match data via API-Football.',
-    },
-    {
         icon: ChartBarIncreasingIcon,
-        title: 'Rolling Competitions',
-        description: 'Fresh 5-gameweek competitions so new players can join anytime without disadvantage.',
-    },
-    {
-        icon: AiBrain01Icon,
-        title: 'AI-Powered Insights',
+        title: 'Advanced Player Stats',
         description:
-            'GPT-driven transfer suggestions, player analytics, and match predictions to sharpen your edge.',
-    },
-    {
-        icon: UserSwitchIcon,
-        title: 'Smart Transfers',
-        description:
-            'Swap players between gameweeks with free transfers. Extra swaps cost points — just like FPL.',
-    },
-    {
-        icon: Coins01Icon,
-        title: 'Earn & Spend Coins',
-        description: 'Top 3 finishers earn coins every round. Spend them on premium AI features or save up.',
+            'Browse clubs and players, filter by position and club, and open a profile with real season statistics from API-Football.',
     },
     {
         icon: Clock01Icon,
-        title: 'Daily Auto-Sync',
+        title: 'Fixtures Overview',
+        description: 'See the upcoming Premier League fixtures at a glance before you make your picks.',
+    },
+    {
+        icon: AiBrain01Icon,
+        title: 'AI Player Analysis',
         description:
-            'Automated pipeline scores gameweeks, transitions competitions, and keeps everything up to date.',
+            'A GPT-written assessment of a player’s form and fantasy value, built on real data. 10 Credits per analysis.',
+    },
+    {
+        icon: FlashIcon,
+        title: 'AI Match Predictions',
+        description: 'A predicted score and the fantasy picks to watch for an upcoming match. 10 Credits.',
+    },
+    {
+        icon: Coins01Icon,
+        title: 'Credits That Never Expire',
+        description:
+            'Buy Credits once and use them whenever you like. Re-opening a report you already paid for is free.',
+    },
+    {
+        icon: UserSwitchIcon,
+        title: 'Squad Tools (Coming Soon)',
+        description:
+            'Squad review and auto-build, to suggest a squad within the rules of the fantasy platform you play.',
     },
 ]
 
@@ -55,11 +56,11 @@ export function FeatureSection() {
                 <AnimateIn variant="fadeUp">
                     <div className="relative z-10 mx-auto max-w-xl space-y-6 text-center md:space-y-12">
                         <h2 className="font-heading text-balance text-4xl font-medium lg:text-5xl">
-                            Everything you need to dominate Premier Fantasy
+                            Everything you need to prepare your fantasy squad
                         </h2>
                         <p className="text-muted-foreground">
-                            Built for Premier League fans who want more than just picking a team. Real data,
-                            AI analysis, rolling competitions, and a coin economy that rewards skill.
+                            Built for fantasy managers who want more than a hunch. Real data and AI analysis,
+                            paid for only when you use it.
                         </p>
                     </div>
                 </AnimateIn>

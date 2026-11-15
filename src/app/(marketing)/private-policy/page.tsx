@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function PrivacyPolicyPage() {
     return (
-        <LegalLayout title="Privacy Policy" lastUpdated="November 4, 2026">
+        <LegalLayout title="Privacy Policy" lastUpdated="November 15, 2026">
             <p>
                 The data controller is DIGIDROP Sp. z o.o., KRS 0001185058, Aleja Jana Pawła II 27, 00-867
                 Warszawa, Poland. Contact:{' '}
@@ -22,8 +22,9 @@ export default function PrivacyPolicyPage() {
             </p>
             <h3>Usage Data</h3>
             <p>
-                We collect information about how you use the Service, including competition participation,
-                team selections, transfer activity, Coin transactions, and AI feature usage.
+                We collect information about how you use the Service, including Credit transactions and AI
+                feature usage. We store the AI results you requested (for example, a player analysis) so that
+                you can re-open them without paying again.
             </p>
             <h3>Payment Information</h3>
             <p>
@@ -36,8 +37,7 @@ export default function PrivacyPolicyPage() {
             <h2>2. How We Use Your Information</h2>
             <ul>
                 <li>To provide and maintain the Service.</li>
-                <li>To process competitions, scoring, and rewards.</li>
-                <li>To process Coin purchases and transactions.</li>
+                <li>To process Credit purchases and transactions.</li>
                 <li>To provide AI-powered analysis features.</li>
                 <li>To communicate with you about your account and the Service.</li>
                 <li>To improve the Service and develop new features.</li>
@@ -45,23 +45,24 @@ export default function PrivacyPolicyPage() {
 
             <h3>Legal bases</h3>
             <p>
-                We process account, competition, payment and requested AI service data to perform our contract
-                with you (GDPR Article 6(1)(b)); accounting records to comply with legal obligations (Article
-                6(1)(c)); and data needed for security, fraud prevention, support and service improvement
-                under our legitimate interests, subject to your rights (Article 6(1)(f)). Where consent is
-                required for optional processing, we rely on consent (Article 6(1)(a)); you may withdraw it at
-                any time without affecting earlier processing.
+                We process account, payment and requested AI service data to perform our contract with you
+                (GDPR Article 6(1)(b)); accounting records to comply with legal obligations (Article 6(1)(c));
+                and data needed for security, fraud prevention, support and service improvement under our
+                legitimate interests, subject to your rights (Article 6(1)(f)). Where consent is required for
+                optional processing, we rely on consent (Article 6(1)(a)); you may withdraw it at any time
+                without affecting earlier processing.
             </p>
 
             <h2>3. Data Sharing</h2>
             <p>We do not sell your personal information. We may share data with:</p>
             <ul>
                 <li>
-                    <strong>Payment Processors:</strong> To process Coin purchases securely.
+                    <strong>Payment Processors:</strong> To process Credit purchases securely.
                 </li>
                 <li>
-                    <strong>AI Providers:</strong> Squad selections and player data are sent to OpenAI for
-                    analysis. We do not intentionally send your name or email as part of these requests.
+                    <strong>AI Providers:</strong> Player and match data is sent to OpenAI to produce the
+                    analysis you request. We do not intentionally send your name or email as part of these
+                    requests.
                 </li>
                 <li>
                     <strong>Football Data Providers:</strong> We receive data from API-Football. No personal
