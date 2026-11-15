@@ -37,6 +37,7 @@ model Player {
   matchStats    PlayerMatchStats[]
   fplMap        FplPlayerMap?
   predictions   Prediction[]
+  squadPlayers  SquadPlayer[]
 
   @@index([teamId])
   @@map("players")

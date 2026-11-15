@@ -226,6 +226,7 @@ export type PlayerWhereInput = {
     matchStats?: Prisma.PlayerMatchStatsListRelationFilter
     fplMap?: Prisma.XOR<Prisma.FplPlayerMapNullableScalarRelationFilter, Prisma.FplPlayerMapWhereInput> | null
     predictions?: Prisma.PredictionListRelationFilter
+    squadPlayers?: Prisma.SquadPlayerListRelationFilter
 }
 
 export type PlayerOrderByWithRelationInput = {
@@ -241,6 +242,7 @@ export type PlayerOrderByWithRelationInput = {
     matchStats?: Prisma.PlayerMatchStatsOrderByRelationAggregateInput
     fplMap?: Prisma.FplPlayerMapOrderByWithRelationInput
     predictions?: Prisma.PredictionOrderByRelationAggregateInput
+    squadPlayers?: Prisma.SquadPlayerOrderByRelationAggregateInput
 }
 
 export type PlayerWhereUniqueInput = Prisma.AtLeast<
@@ -263,6 +265,7 @@ export type PlayerWhereUniqueInput = Prisma.AtLeast<
             Prisma.FplPlayerMapWhereInput
         > | null
         predictions?: Prisma.PredictionListRelationFilter
+        squadPlayers?: Prisma.SquadPlayerListRelationFilter
     },
     'id' | 'externalId'
 >
@@ -305,6 +308,7 @@ export type PlayerCreateInput = {
     matchStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapCreateNestedOneWithoutPlayerInput
     predictions?: Prisma.PredictionCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUncheckedCreateInput = {
@@ -319,6 +323,7 @@ export type PlayerUncheckedCreateInput = {
     matchStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapUncheckedCreateNestedOneWithoutPlayerInput
     predictions?: Prisma.PredictionUncheckedCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUpdateInput = {
@@ -333,6 +338,7 @@ export type PlayerUpdateInput = {
     matchStats?: Prisma.PlayerMatchStatsUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUpdateOneWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateInput = {
@@ -347,6 +353,7 @@ export type PlayerUncheckedUpdateInput = {
     matchStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUncheckedUpdateOneWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUncheckedUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerCreateManyInput = {
@@ -627,6 +634,32 @@ export type PlayerUpdateOneRequiredWithoutMatchStatsNestedInput = {
     >
 }
 
+export type PlayerCreateNestedOneWithoutSquadPlayersInput = {
+    create?: Prisma.XOR<
+        Prisma.PlayerCreateWithoutSquadPlayersInput,
+        Prisma.PlayerUncheckedCreateWithoutSquadPlayersInput
+    >
+    connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutSquadPlayersInput
+    connect?: Prisma.PlayerWhereUniqueInput
+}
+
+export type PlayerUpdateOneRequiredWithoutSquadPlayersNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.PlayerCreateWithoutSquadPlayersInput,
+        Prisma.PlayerUncheckedCreateWithoutSquadPlayersInput
+    >
+    connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutSquadPlayersInput
+    upsert?: Prisma.PlayerUpsertWithoutSquadPlayersInput
+    connect?: Prisma.PlayerWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.PlayerUpdateToOneWithWhereWithoutSquadPlayersInput,
+            Prisma.PlayerUpdateWithoutSquadPlayersInput
+        >,
+        Prisma.PlayerUncheckedUpdateWithoutSquadPlayersInput
+    >
+}
+
 export type PlayerCreateWithoutTeamInput = {
     id?: string
     externalId: number
@@ -638,6 +671,7 @@ export type PlayerCreateWithoutTeamInput = {
     matchStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapCreateNestedOneWithoutPlayerInput
     predictions?: Prisma.PredictionCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUncheckedCreateWithoutTeamInput = {
@@ -651,6 +685,7 @@ export type PlayerUncheckedCreateWithoutTeamInput = {
     matchStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapUncheckedCreateNestedOneWithoutPlayerInput
     predictions?: Prisma.PredictionUncheckedCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerCreateOrConnectWithoutTeamInput = {
@@ -702,6 +737,7 @@ export type PlayerCreateWithoutSeasonPricesInput = {
     matchStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapCreateNestedOneWithoutPlayerInput
     predictions?: Prisma.PredictionCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUncheckedCreateWithoutSeasonPricesInput = {
@@ -715,6 +751,7 @@ export type PlayerUncheckedCreateWithoutSeasonPricesInput = {
     matchStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapUncheckedCreateNestedOneWithoutPlayerInput
     predictions?: Prisma.PredictionUncheckedCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerCreateOrConnectWithoutSeasonPricesInput = {
@@ -756,6 +793,7 @@ export type PlayerUpdateWithoutSeasonPricesInput = {
     matchStats?: Prisma.PlayerMatchStatsUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUpdateOneWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateWithoutSeasonPricesInput = {
@@ -769,6 +807,7 @@ export type PlayerUncheckedUpdateWithoutSeasonPricesInput = {
     matchStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUncheckedUpdateOneWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUncheckedUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerCreateWithoutGameweekStatsInput = {
@@ -782,6 +821,7 @@ export type PlayerCreateWithoutGameweekStatsInput = {
     matchStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapCreateNestedOneWithoutPlayerInput
     predictions?: Prisma.PredictionCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUncheckedCreateWithoutGameweekStatsInput = {
@@ -795,6 +835,7 @@ export type PlayerUncheckedCreateWithoutGameweekStatsInput = {
     matchStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapUncheckedCreateNestedOneWithoutPlayerInput
     predictions?: Prisma.PredictionUncheckedCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerCreateOrConnectWithoutGameweekStatsInput = {
@@ -836,6 +877,7 @@ export type PlayerUpdateWithoutGameweekStatsInput = {
     matchStats?: Prisma.PlayerMatchStatsUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUpdateOneWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateWithoutGameweekStatsInput = {
@@ -849,6 +891,7 @@ export type PlayerUncheckedUpdateWithoutGameweekStatsInput = {
     matchStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUncheckedUpdateOneWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUncheckedUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerCreateWithoutPredictionsInput = {
@@ -862,6 +905,7 @@ export type PlayerCreateWithoutPredictionsInput = {
     seasonPrices?: Prisma.PlayerSeasonPriceCreateNestedManyWithoutPlayerInput
     matchStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapCreateNestedOneWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUncheckedCreateWithoutPredictionsInput = {
@@ -875,6 +919,7 @@ export type PlayerUncheckedCreateWithoutPredictionsInput = {
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedCreateNestedManyWithoutPlayerInput
     matchStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapUncheckedCreateNestedOneWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerCreateOrConnectWithoutPredictionsInput = {
@@ -916,6 +961,7 @@ export type PlayerUpdateWithoutPredictionsInput = {
     seasonPrices?: Prisma.PlayerSeasonPriceUpdateManyWithoutPlayerNestedInput
     matchStats?: Prisma.PlayerMatchStatsUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUpdateOneWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateWithoutPredictionsInput = {
@@ -929,6 +975,7 @@ export type PlayerUncheckedUpdateWithoutPredictionsInput = {
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedUpdateManyWithoutPlayerNestedInput
     matchStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUncheckedUpdateOneWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerCreateWithoutFplMapInput = {
@@ -942,6 +989,7 @@ export type PlayerCreateWithoutFplMapInput = {
     seasonPrices?: Prisma.PlayerSeasonPriceCreateNestedManyWithoutPlayerInput
     matchStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutPlayerInput
     predictions?: Prisma.PredictionCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUncheckedCreateWithoutFplMapInput = {
@@ -955,6 +1003,7 @@ export type PlayerUncheckedCreateWithoutFplMapInput = {
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedCreateNestedManyWithoutPlayerInput
     matchStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutPlayerInput
     predictions?: Prisma.PredictionUncheckedCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerCreateOrConnectWithoutFplMapInput = {
@@ -984,6 +1033,7 @@ export type PlayerUpdateWithoutFplMapInput = {
     seasonPrices?: Prisma.PlayerSeasonPriceUpdateManyWithoutPlayerNestedInput
     matchStats?: Prisma.PlayerMatchStatsUpdateManyWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateWithoutFplMapInput = {
@@ -997,6 +1047,7 @@ export type PlayerUncheckedUpdateWithoutFplMapInput = {
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedUpdateManyWithoutPlayerNestedInput
     matchStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUncheckedUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerCreateWithoutMatchStatsInput = {
@@ -1010,6 +1061,7 @@ export type PlayerCreateWithoutMatchStatsInput = {
     seasonPrices?: Prisma.PlayerSeasonPriceCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapCreateNestedOneWithoutPlayerInput
     predictions?: Prisma.PredictionCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUncheckedCreateWithoutMatchStatsInput = {
@@ -1023,6 +1075,7 @@ export type PlayerUncheckedCreateWithoutMatchStatsInput = {
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedCreateNestedManyWithoutPlayerInput
     fplMap?: Prisma.FplPlayerMapUncheckedCreateNestedOneWithoutPlayerInput
     predictions?: Prisma.PredictionUncheckedCreateNestedManyWithoutPlayerInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerCreateOrConnectWithoutMatchStatsInput = {
@@ -1064,6 +1117,7 @@ export type PlayerUpdateWithoutMatchStatsInput = {
     seasonPrices?: Prisma.PlayerSeasonPriceUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUpdateOneWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateWithoutMatchStatsInput = {
@@ -1075,6 +1129,91 @@ export type PlayerUncheckedUpdateWithoutMatchStatsInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     gameweekStats?: Prisma.PlayerGameweekStatsUncheckedUpdateManyWithoutPlayerNestedInput
     seasonPrices?: Prisma.PlayerSeasonPriceUncheckedUpdateManyWithoutPlayerNestedInput
+    fplMap?: Prisma.FplPlayerMapUncheckedUpdateOneWithoutPlayerNestedInput
+    predictions?: Prisma.PredictionUncheckedUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedUpdateManyWithoutPlayerNestedInput
+}
+
+export type PlayerCreateWithoutSquadPlayersInput = {
+    id?: string
+    externalId: number
+    name: string
+    position: $Enums.PlayerPosition
+    createdAt?: Date | string
+    team: Prisma.TeamCreateNestedOneWithoutPlayersInput
+    gameweekStats?: Prisma.PlayerGameweekStatsCreateNestedManyWithoutPlayerInput
+    seasonPrices?: Prisma.PlayerSeasonPriceCreateNestedManyWithoutPlayerInput
+    matchStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutPlayerInput
+    fplMap?: Prisma.FplPlayerMapCreateNestedOneWithoutPlayerInput
+    predictions?: Prisma.PredictionCreateNestedManyWithoutPlayerInput
+}
+
+export type PlayerUncheckedCreateWithoutSquadPlayersInput = {
+    id?: string
+    externalId: number
+    name: string
+    position: $Enums.PlayerPosition
+    teamId: string
+    createdAt?: Date | string
+    gameweekStats?: Prisma.PlayerGameweekStatsUncheckedCreateNestedManyWithoutPlayerInput
+    seasonPrices?: Prisma.PlayerSeasonPriceUncheckedCreateNestedManyWithoutPlayerInput
+    matchStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutPlayerInput
+    fplMap?: Prisma.FplPlayerMapUncheckedCreateNestedOneWithoutPlayerInput
+    predictions?: Prisma.PredictionUncheckedCreateNestedManyWithoutPlayerInput
+}
+
+export type PlayerCreateOrConnectWithoutSquadPlayersInput = {
+    where: Prisma.PlayerWhereUniqueInput
+    create: Prisma.XOR<
+        Prisma.PlayerCreateWithoutSquadPlayersInput,
+        Prisma.PlayerUncheckedCreateWithoutSquadPlayersInput
+    >
+}
+
+export type PlayerUpsertWithoutSquadPlayersInput = {
+    update: Prisma.XOR<
+        Prisma.PlayerUpdateWithoutSquadPlayersInput,
+        Prisma.PlayerUncheckedUpdateWithoutSquadPlayersInput
+    >
+    create: Prisma.XOR<
+        Prisma.PlayerCreateWithoutSquadPlayersInput,
+        Prisma.PlayerUncheckedCreateWithoutSquadPlayersInput
+    >
+    where?: Prisma.PlayerWhereInput
+}
+
+export type PlayerUpdateToOneWithWhereWithoutSquadPlayersInput = {
+    where?: Prisma.PlayerWhereInput
+    data: Prisma.XOR<
+        Prisma.PlayerUpdateWithoutSquadPlayersInput,
+        Prisma.PlayerUncheckedUpdateWithoutSquadPlayersInput
+    >
+}
+
+export type PlayerUpdateWithoutSquadPlayersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    externalId?: Prisma.IntFieldUpdateOperationsInput | number
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    team?: Prisma.TeamUpdateOneRequiredWithoutPlayersNestedInput
+    gameweekStats?: Prisma.PlayerGameweekStatsUpdateManyWithoutPlayerNestedInput
+    seasonPrices?: Prisma.PlayerSeasonPriceUpdateManyWithoutPlayerNestedInput
+    matchStats?: Prisma.PlayerMatchStatsUpdateManyWithoutPlayerNestedInput
+    fplMap?: Prisma.FplPlayerMapUpdateOneWithoutPlayerNestedInput
+    predictions?: Prisma.PredictionUpdateManyWithoutPlayerNestedInput
+}
+
+export type PlayerUncheckedUpdateWithoutSquadPlayersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    externalId?: Prisma.IntFieldUpdateOperationsInput | number
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    position?: Prisma.EnumPlayerPositionFieldUpdateOperationsInput | $Enums.PlayerPosition
+    teamId?: Prisma.StringFieldUpdateOperationsInput | string
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    gameweekStats?: Prisma.PlayerGameweekStatsUncheckedUpdateManyWithoutPlayerNestedInput
+    seasonPrices?: Prisma.PlayerSeasonPriceUncheckedUpdateManyWithoutPlayerNestedInput
+    matchStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUncheckedUpdateOneWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUncheckedUpdateManyWithoutPlayerNestedInput
 }
@@ -1098,6 +1237,7 @@ export type PlayerUpdateWithoutTeamInput = {
     matchStats?: Prisma.PlayerMatchStatsUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUpdateOneWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateWithoutTeamInput = {
@@ -1111,6 +1251,7 @@ export type PlayerUncheckedUpdateWithoutTeamInput = {
     matchStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutPlayerNestedInput
     fplMap?: Prisma.FplPlayerMapUncheckedUpdateOneWithoutPlayerNestedInput
     predictions?: Prisma.PredictionUncheckedUpdateManyWithoutPlayerNestedInput
+    squadPlayers?: Prisma.SquadPlayerUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateManyWithoutTeamInput = {
@@ -1130,6 +1271,7 @@ export type PlayerCountOutputType = {
     seasonPrices: number
     matchStats: number
     predictions: number
+    squadPlayers: number
 }
 
 export type PlayerCountOutputTypeSelect<
@@ -1139,6 +1281,7 @@ export type PlayerCountOutputTypeSelect<
     seasonPrices?: boolean | PlayerCountOutputTypeCountSeasonPricesArgs
     matchStats?: boolean | PlayerCountOutputTypeCountMatchStatsArgs
     predictions?: boolean | PlayerCountOutputTypeCountPredictionsArgs
+    squadPlayers?: boolean | PlayerCountOutputTypeCountSquadPlayersArgs
 }
 
 /**
@@ -1189,6 +1332,15 @@ export type PlayerCountOutputTypeCountPredictionsArgs<
     where?: Prisma.PredictionWhereInput
 }
 
+/**
+ * PlayerCountOutputType without action
+ */
+export type PlayerCountOutputTypeCountSquadPlayersArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    where?: Prisma.SquadPlayerWhereInput
+}
+
 export type PlayerSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
@@ -1205,6 +1357,7 @@ export type PlayerSelect<
         matchStats?: boolean | Prisma.Player$matchStatsArgs<ExtArgs>
         fplMap?: boolean | Prisma.Player$fplMapArgs<ExtArgs>
         predictions?: boolean | Prisma.Player$predictionsArgs<ExtArgs>
+        squadPlayers?: boolean | Prisma.Player$squadPlayersArgs<ExtArgs>
         _count?: boolean | Prisma.PlayerCountOutputTypeDefaultArgs<ExtArgs>
     },
     ExtArgs['result']['player']
@@ -1264,6 +1417,7 @@ export type PlayerInclude<
     matchStats?: boolean | Prisma.Player$matchStatsArgs<ExtArgs>
     fplMap?: boolean | Prisma.Player$fplMapArgs<ExtArgs>
     predictions?: boolean | Prisma.Player$predictionsArgs<ExtArgs>
+    squadPlayers?: boolean | Prisma.Player$squadPlayersArgs<ExtArgs>
     _count?: boolean | Prisma.PlayerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PlayerIncludeCreateManyAndReturn<
@@ -1288,6 +1442,7 @@ export type $PlayerPayload<
         matchStats: Prisma.$PlayerMatchStatsPayload<ExtArgs>[]
         fplMap: Prisma.$FplPlayerMapPayload<ExtArgs> | null
         predictions: Prisma.$PredictionPayload<ExtArgs>[]
+        squadPlayers: Prisma.$SquadPlayerPayload<ExtArgs>[]
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -1869,6 +2024,17 @@ export interface Prisma__PlayerClient<
         args?: Prisma.Subset<T, Prisma.Player$predictionsArgs<ExtArgs>>,
     ): Prisma.PrismaPromise<
         | runtime.Types.Result.GetResult<Prisma.$PredictionPayload<ExtArgs>, T, 'findMany', GlobalOmitOptions>
+        | Null
+    >
+    squadPlayers<T extends Prisma.Player$squadPlayersArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.Player$squadPlayersArgs<ExtArgs>>,
+    ): Prisma.PrismaPromise<
+        | runtime.Types.Result.GetResult<
+              Prisma.$SquadPlayerPayload<ExtArgs>,
+              T,
+              'findMany',
+              GlobalOmitOptions
+          >
         | Null
     >
     /**
@@ -2464,6 +2630,32 @@ export type Player$predictionsArgs<
     take?: number
     skip?: number
     distinct?: Prisma.PredictionScalarFieldEnum | Prisma.PredictionScalarFieldEnum[]
+}
+
+/**
+ * Player.squadPlayers
+ */
+export type Player$squadPlayersArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the SquadPlayer
+     */
+    select?: Prisma.SquadPlayerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SquadPlayer
+     */
+    omit?: Prisma.SquadPlayerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.SquadPlayerInclude<ExtArgs> | null
+    where?: Prisma.SquadPlayerWhereInput
+    orderBy?: Prisma.SquadPlayerOrderByWithRelationInput | Prisma.SquadPlayerOrderByWithRelationInput[]
+    cursor?: Prisma.SquadPlayerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Prisma.SquadPlayerScalarFieldEnum | Prisma.SquadPlayerScalarFieldEnum[]
 }
 
 /**

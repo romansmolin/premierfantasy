@@ -148,6 +148,16 @@ export type PlayerMatchStats = Prisma.PlayerMatchStatsModel
  */
 export type PaymentToken = Prisma.PaymentTokenModel
 /**
+ * Model Squad
+ * A squad a user planned in the builder. Nothing is scored: the user enters it on a fantasy platform themselves.
+ */
+export type Squad = Prisma.SquadModel
+/**
+ * Model SquadPlayer
+ *
+ */
+export type SquadPlayer = Prisma.SquadPlayerModel
+/**
  * Model SyncRun
  *
  */

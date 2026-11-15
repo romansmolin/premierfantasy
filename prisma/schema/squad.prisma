@@ -1,0 +1,34 @@
+/// A squad a user planned in the builder. Nothing is scored: the user enters it on a fantasy platform themselves.
+model Squad {
+  id                  String   @id @default(cuid())
+  userId              String   @map("user_id")
+  name                String
+  captainPlayerId     String   @map("captain_player_id")
+  viceCaptainPlayerId String   @map("vice_captain_player_id")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  players SquadPlayer[]
+
+  @@index([userId])
+  @@map("squads")
+}
+
+model SquadPlayer {
+  id                String @id @default(cuid())
+  squadId           String @map("squad_id")
+  playerId          String @map("player_id")
+  /// START or BENCH
+  slot              String
+  /// Order inside the slot (bench order matters).
+  position          Int
+  /// Price when the squad was saved; compared with the current price to show drift.
+  priceTenthsAtSave Int?   @map("price_tenths_at_save")
+
+  squad  Squad  @relation(fields: [squadId], references: [id], onDelete: Cascade)
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([squadId, playerId])
+  @@map("squad_players")
+}

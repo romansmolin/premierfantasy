@@ -241,6 +241,7 @@ export type UserWhereInput = {
     coinTransactions?: Prisma.CoinTransactionListRelationFilter
     paymentTokens?: Prisma.PaymentTokenListRelationFilter
     aiReports?: Prisma.AiReportListRelationFilter
+    squads?: Prisma.SquadListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -257,6 +258,7 @@ export type UserOrderByWithRelationInput = {
     coinTransactions?: Prisma.CoinTransactionOrderByRelationAggregateInput
     paymentTokens?: Prisma.PaymentTokenOrderByRelationAggregateInput
     aiReports?: Prisma.AiReportOrderByRelationAggregateInput
+    squads?: Prisma.SquadOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<
@@ -277,6 +279,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<
         coinTransactions?: Prisma.CoinTransactionListRelationFilter
         paymentTokens?: Prisma.PaymentTokenListRelationFilter
         aiReports?: Prisma.AiReportListRelationFilter
+        squads?: Prisma.SquadListRelationFilter
     },
     'id' | 'email'
 >
@@ -325,6 +328,7 @@ export type UserCreateInput = {
     coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
     aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -341,6 +345,7 @@ export type UserUncheckedCreateInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
     aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -357,6 +362,7 @@ export type UserUpdateInput = {
     coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
     aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -373,6 +379,7 @@ export type UserUncheckedUpdateInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
     aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -506,6 +513,23 @@ export type UserUpdateOneRequiredWithoutPaymentTokensNestedInput = {
     >
 }
 
+export type UserCreateNestedOneWithoutSquadsInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutSquadsInput, Prisma.UserUncheckedCreateWithoutSquadsInput>
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutSquadsInput
+    connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSquadsNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutSquadsInput, Prisma.UserUncheckedCreateWithoutSquadsInput>
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutSquadsInput
+    upsert?: Prisma.UserUpsertWithoutSquadsInput
+    connect?: Prisma.UserWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSquadsInput, Prisma.UserUpdateWithoutSquadsInput>,
+        Prisma.UserUncheckedUpdateWithoutSquadsInput
+    >
+}
+
 export type UserCreateNestedOneWithoutSessionsInput = {
     create?: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
     connectOrCreate?: Prisma.UserCreateOrConnectWithoutSessionsInput
@@ -585,6 +609,7 @@ export type UserCreateWithoutAiReportsInput = {
     accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
     coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAiReportsInput = {
@@ -600,6 +625,7 @@ export type UserUncheckedCreateWithoutAiReportsInput = {
     accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
     coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAiReportsInput = {
@@ -640,6 +666,7 @@ export type UserUpdateWithoutAiReportsInput = {
     accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
     coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiReportsInput = {
@@ -655,6 +682,7 @@ export type UserUncheckedUpdateWithoutAiReportsInput = {
     accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
     coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentTokensInput = {
@@ -670,6 +698,7 @@ export type UserCreateWithoutPaymentTokensInput = {
     accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
     coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
     aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentTokensInput = {
@@ -685,6 +714,7 @@ export type UserUncheckedCreateWithoutPaymentTokensInput = {
     accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
     coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
     aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentTokensInput = {
@@ -728,6 +758,7 @@ export type UserUpdateWithoutPaymentTokensInput = {
     accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
     coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
     aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentTokensInput = {
@@ -742,6 +773,87 @@ export type UserUncheckedUpdateWithoutPaymentTokensInput = {
     sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
     coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSquadsInput = {
+    id?: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    coinBalance?: number
+    sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+    accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
+    paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSquadsInput = {
+    id?: string
+    name: string
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    coinBalance?: number
+    sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
+    paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSquadsInput = {
+    where: Prisma.UserWhereUniqueInput
+    create: Prisma.XOR<Prisma.UserCreateWithoutSquadsInput, Prisma.UserUncheckedCreateWithoutSquadsInput>
+}
+
+export type UserUpsertWithoutSquadsInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutSquadsInput, Prisma.UserUncheckedUpdateWithoutSquadsInput>
+    create: Prisma.XOR<Prisma.UserCreateWithoutSquadsInput, Prisma.UserUncheckedCreateWithoutSquadsInput>
+    where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSquadsInput = {
+    where?: Prisma.UserWhereInput
+    data: Prisma.XOR<Prisma.UserUpdateWithoutSquadsInput, Prisma.UserUncheckedUpdateWithoutSquadsInput>
+}
+
+export type UserUpdateWithoutSquadsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    email?: Prisma.StringFieldUpdateOperationsInput | string
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
+    sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+    accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
+    paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
+    aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSquadsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    name?: Prisma.StringFieldUpdateOperationsInput | string
+    email?: Prisma.StringFieldUpdateOperationsInput | string
+    emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+    image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    coinBalance?: Prisma.IntFieldUpdateOperationsInput | number
+    sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+    coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
+    paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
     aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -758,6 +870,7 @@ export type UserCreateWithoutSessionsInput = {
     coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
     aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -773,6 +886,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
     aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -804,6 +918,7 @@ export type UserUpdateWithoutSessionsInput = {
     coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
     aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -819,6 +934,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
     aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -834,6 +950,7 @@ export type UserCreateWithoutAccountsInput = {
     coinTransactions?: Prisma.CoinTransactionCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
     aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -849,6 +966,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
     aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -880,6 +998,7 @@ export type UserUpdateWithoutAccountsInput = {
     coinTransactions?: Prisma.CoinTransactionUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
     aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -895,6 +1014,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
     coinTransactions?: Prisma.CoinTransactionUncheckedUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
     aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCoinTransactionsInput = {
@@ -910,6 +1030,7 @@ export type UserCreateWithoutCoinTransactionsInput = {
     accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenCreateNestedManyWithoutUserInput
     aiReports?: Prisma.AiReportCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCoinTransactionsInput = {
@@ -925,6 +1046,7 @@ export type UserUncheckedCreateWithoutCoinTransactionsInput = {
     accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
     paymentTokens?: Prisma.PaymentTokenUncheckedCreateNestedManyWithoutUserInput
     aiReports?: Prisma.AiReportUncheckedCreateNestedManyWithoutUserInput
+    squads?: Prisma.SquadUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCoinTransactionsInput = {
@@ -968,6 +1090,7 @@ export type UserUpdateWithoutCoinTransactionsInput = {
     accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUpdateManyWithoutUserNestedInput
     aiReports?: Prisma.AiReportUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCoinTransactionsInput = {
@@ -983,6 +1106,7 @@ export type UserUncheckedUpdateWithoutCoinTransactionsInput = {
     accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
     paymentTokens?: Prisma.PaymentTokenUncheckedUpdateManyWithoutUserNestedInput
     aiReports?: Prisma.AiReportUncheckedUpdateManyWithoutUserNestedInput
+    squads?: Prisma.SquadUncheckedUpdateManyWithoutUserNestedInput
 }
 
 /**
@@ -995,6 +1119,7 @@ export type UserCountOutputType = {
     coinTransactions: number
     paymentTokens: number
     aiReports: number
+    squads: number
 }
 
 export type UserCountOutputTypeSelect<
@@ -1005,6 +1130,7 @@ export type UserCountOutputTypeSelect<
     coinTransactions?: boolean | UserCountOutputTypeCountCoinTransactionsArgs
     paymentTokens?: boolean | UserCountOutputTypeCountPaymentTokensArgs
     aiReports?: boolean | UserCountOutputTypeCountAiReportsArgs
+    squads?: boolean | UserCountOutputTypeCountSquadsArgs
 }
 
 /**
@@ -1064,6 +1190,15 @@ export type UserCountOutputTypeCountAiReportsArgs<
     where?: Prisma.AiReportWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSquadsArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    where?: Prisma.SquadWhereInput
+}
+
 export type UserSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetSelect<
@@ -1081,6 +1216,7 @@ export type UserSelect<
         coinTransactions?: boolean | Prisma.User$coinTransactionsArgs<ExtArgs>
         paymentTokens?: boolean | Prisma.User$paymentTokensArgs<ExtArgs>
         aiReports?: boolean | Prisma.User$aiReportsArgs<ExtArgs>
+        squads?: boolean | Prisma.User$squadsArgs<ExtArgs>
         _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
     },
     ExtArgs['result']['user']
@@ -1143,6 +1279,7 @@ export type UserInclude<
     coinTransactions?: boolean | Prisma.User$coinTransactionsArgs<ExtArgs>
     paymentTokens?: boolean | Prisma.User$paymentTokensArgs<ExtArgs>
     aiReports?: boolean | Prisma.User$aiReportsArgs<ExtArgs>
+    squads?: boolean | Prisma.User$squadsArgs<ExtArgs>
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<
@@ -1162,6 +1299,7 @@ export type $UserPayload<
         coinTransactions: Prisma.$CoinTransactionPayload<ExtArgs>[]
         paymentTokens: Prisma.$PaymentTokenPayload<ExtArgs>[]
         aiReports: Prisma.$AiReportPayload<ExtArgs>[]
+        squads: Prisma.$SquadPayload<ExtArgs>[]
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -1720,6 +1858,11 @@ export interface Prisma__UserClient<
     ): Prisma.PrismaPromise<
         | runtime.Types.Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, 'findMany', GlobalOmitOptions>
         | Null
+    >
+    squads<T extends Prisma.User$squadsArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.User$squadsArgs<ExtArgs>>,
+    ): Prisma.PrismaPromise<
+        runtime.Types.Result.GetResult<Prisma.$SquadPayload<ExtArgs>, T, 'findMany', GlobalOmitOptions> | Null
     >
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2309,6 +2452,32 @@ export type User$aiReportsArgs<
     take?: number
     skip?: number
     distinct?: Prisma.AiReportScalarFieldEnum | Prisma.AiReportScalarFieldEnum[]
+}
+
+/**
+ * User.squads
+ */
+export type User$squadsArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the Squad
+     */
+    select?: Prisma.SquadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Squad
+     */
+    omit?: Prisma.SquadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.SquadInclude<ExtArgs> | null
+    where?: Prisma.SquadWhereInput
+    orderBy?: Prisma.SquadOrderByWithRelationInput | Prisma.SquadOrderByWithRelationInput[]
+    cursor?: Prisma.SquadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Prisma.SquadScalarFieldEnum | Prisma.SquadScalarFieldEnum[]
 }
 
 /**

@@ -68,6 +68,8 @@ export const ModelName = {
     Fixture: 'Fixture',
     PlayerMatchStats: 'PlayerMatchStats',
     PaymentToken: 'PaymentToken',
+    Squad: 'Squad',
+    SquadPlayer: 'SquadPlayer',
     SyncRun: 'SyncRun',
     User: 'User',
     Session: 'Session',
@@ -396,6 +398,30 @@ export const PaymentTokenScalarFieldEnum = {
 
 export type PaymentTokenScalarFieldEnum =
     (typeof PaymentTokenScalarFieldEnum)[keyof typeof PaymentTokenScalarFieldEnum]
+
+export const SquadScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    name: 'name',
+    captainPlayerId: 'captainPlayerId',
+    viceCaptainPlayerId: 'viceCaptainPlayerId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+} as const
+
+export type SquadScalarFieldEnum = (typeof SquadScalarFieldEnum)[keyof typeof SquadScalarFieldEnum]
+
+export const SquadPlayerScalarFieldEnum = {
+    id: 'id',
+    squadId: 'squadId',
+    playerId: 'playerId',
+    slot: 'slot',
+    position: 'position',
+    priceTenthsAtSave: 'priceTenthsAtSave',
+} as const
+
+export type SquadPlayerScalarFieldEnum =
+    (typeof SquadPlayerScalarFieldEnum)[keyof typeof SquadPlayerScalarFieldEnum]
 
 export const SyncRunScalarFieldEnum = {
     id: 'id',

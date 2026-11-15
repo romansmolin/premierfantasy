@@ -392,6 +392,8 @@ export const ModelName = {
     Fixture: 'Fixture',
     PlayerMatchStats: 'PlayerMatchStats',
     PaymentToken: 'PaymentToken',
+    Squad: 'Squad',
+    SquadPlayer: 'SquadPlayer',
     SyncRun: 'SyncRun',
     User: 'User',
     Session: 'Session',
@@ -438,6 +440,8 @@ export type TypeMap<
             | 'fixture'
             | 'playerMatchStats'
             | 'paymentToken'
+            | 'squad'
+            | 'squadPlayer'
             | 'syncRun'
             | 'user'
             | 'session'
@@ -1945,6 +1949,154 @@ export type TypeMap<
                 }
             }
         }
+        Squad: {
+            payload: Prisma.$SquadPayload<ExtArgs>
+            fields: Prisma.SquadFieldRefs
+            operations: {
+                findUnique: {
+                    args: Prisma.SquadFindUniqueArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPayload> | null
+                }
+                findUniqueOrThrow: {
+                    args: Prisma.SquadFindUniqueOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPayload>
+                }
+                findFirst: {
+                    args: Prisma.SquadFindFirstArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPayload> | null
+                }
+                findFirstOrThrow: {
+                    args: Prisma.SquadFindFirstOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPayload>
+                }
+                findMany: {
+                    args: Prisma.SquadFindManyArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPayload>[]
+                }
+                create: {
+                    args: Prisma.SquadCreateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPayload>
+                }
+                createMany: {
+                    args: Prisma.SquadCreateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                createManyAndReturn: {
+                    args: Prisma.SquadCreateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPayload>[]
+                }
+                delete: {
+                    args: Prisma.SquadDeleteArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPayload>
+                }
+                update: {
+                    args: Prisma.SquadUpdateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPayload>
+                }
+                deleteMany: {
+                    args: Prisma.SquadDeleteManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateMany: {
+                    args: Prisma.SquadUpdateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateManyAndReturn: {
+                    args: Prisma.SquadUpdateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPayload>[]
+                }
+                upsert: {
+                    args: Prisma.SquadUpsertArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPayload>
+                }
+                aggregate: {
+                    args: Prisma.SquadAggregateArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateSquad>
+                }
+                groupBy: {
+                    args: Prisma.SquadGroupByArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.SquadGroupByOutputType>[]
+                }
+                count: {
+                    args: Prisma.SquadCountArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.SquadCountAggregateOutputType> | number
+                }
+            }
+        }
+        SquadPlayer: {
+            payload: Prisma.$SquadPlayerPayload<ExtArgs>
+            fields: Prisma.SquadPlayerFieldRefs
+            operations: {
+                findUnique: {
+                    args: Prisma.SquadPlayerFindUniqueArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPlayerPayload> | null
+                }
+                findUniqueOrThrow: {
+                    args: Prisma.SquadPlayerFindUniqueOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPlayerPayload>
+                }
+                findFirst: {
+                    args: Prisma.SquadPlayerFindFirstArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPlayerPayload> | null
+                }
+                findFirstOrThrow: {
+                    args: Prisma.SquadPlayerFindFirstOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPlayerPayload>
+                }
+                findMany: {
+                    args: Prisma.SquadPlayerFindManyArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPlayerPayload>[]
+                }
+                create: {
+                    args: Prisma.SquadPlayerCreateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPlayerPayload>
+                }
+                createMany: {
+                    args: Prisma.SquadPlayerCreateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                createManyAndReturn: {
+                    args: Prisma.SquadPlayerCreateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPlayerPayload>[]
+                }
+                delete: {
+                    args: Prisma.SquadPlayerDeleteArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPlayerPayload>
+                }
+                update: {
+                    args: Prisma.SquadPlayerUpdateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPlayerPayload>
+                }
+                deleteMany: {
+                    args: Prisma.SquadPlayerDeleteManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateMany: {
+                    args: Prisma.SquadPlayerUpdateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateManyAndReturn: {
+                    args: Prisma.SquadPlayerUpdateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPlayerPayload>[]
+                }
+                upsert: {
+                    args: Prisma.SquadPlayerUpsertArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SquadPlayerPayload>
+                }
+                aggregate: {
+                    args: Prisma.SquadPlayerAggregateArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateSquadPlayer>
+                }
+                groupBy: {
+                    args: Prisma.SquadPlayerGroupByArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.SquadPlayerGroupByOutputType>[]
+                }
+                count: {
+                    args: Prisma.SquadPlayerCountArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.SquadPlayerCountAggregateOutputType> | number
+                }
+            }
+        }
         SyncRun: {
             payload: Prisma.$SyncRunPayload<ExtArgs>
             fields: Prisma.SyncRunFieldRefs
@@ -2735,6 +2887,30 @@ export const PaymentTokenScalarFieldEnum = {
 export type PaymentTokenScalarFieldEnum =
     (typeof PaymentTokenScalarFieldEnum)[keyof typeof PaymentTokenScalarFieldEnum]
 
+export const SquadScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    name: 'name',
+    captainPlayerId: 'captainPlayerId',
+    viceCaptainPlayerId: 'viceCaptainPlayerId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+} as const
+
+export type SquadScalarFieldEnum = (typeof SquadScalarFieldEnum)[keyof typeof SquadScalarFieldEnum]
+
+export const SquadPlayerScalarFieldEnum = {
+    id: 'id',
+    squadId: 'squadId',
+    playerId: 'playerId',
+    slot: 'slot',
+    position: 'position',
+    priceTenthsAtSave: 'priceTenthsAtSave',
+} as const
+
+export type SquadPlayerScalarFieldEnum =
+    (typeof SquadPlayerScalarFieldEnum)[keyof typeof SquadPlayerScalarFieldEnum]
+
 export const SyncRunScalarFieldEnum = {
     id: 'id',
     job: 'job',
@@ -3083,6 +3259,8 @@ export type GlobalOmitConfig = {
     fixture?: Prisma.FixtureOmit
     playerMatchStats?: Prisma.PlayerMatchStatsOmit
     paymentToken?: Prisma.PaymentTokenOmit
+    squad?: Prisma.SquadOmit
+    squadPlayer?: Prisma.SquadPlayerOmit
     syncRun?: Prisma.SyncRunOmit
     user?: Prisma.UserOmit
     session?: Prisma.SessionOmit
