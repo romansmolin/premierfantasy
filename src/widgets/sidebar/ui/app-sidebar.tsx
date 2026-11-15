@@ -5,6 +5,7 @@ import {
     Coins01Icon,
     DashboardSquare01Icon,
     FootballPitchIcon,
+    NoteEditIcon,
     UserGroupIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -34,7 +35,10 @@ const navGroups = [
     },
     {
         label: 'Stats',
-        items: [{ title: 'Players', icon: UserGroupIcon, href: '/players' }],
+        items: [
+            { title: 'Players', icon: UserGroupIcon, href: '/players' },
+            { title: 'Builder', icon: NoteEditIcon, href: '/builder' },
+        ],
     },
     {
         label: 'Account',

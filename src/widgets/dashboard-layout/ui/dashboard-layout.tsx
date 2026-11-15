@@ -15,6 +15,7 @@ import { TooltipProvider } from '@/shared/ui/tooltip'
 const pageTitles: Record<string, string> = {
     '/dashboard': 'Dashboard',
     '/players': 'Players',
+    '/builder': 'Squad builder',
     '/wallet': 'Credits',
     '/profile': 'Profile',
 }
