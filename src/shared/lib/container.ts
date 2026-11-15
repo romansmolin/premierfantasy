@@ -15,9 +15,14 @@ import { GameweekService } from '@/server/gameweek/service/gameweek.service'
 import { PaymentController } from '@/server/payment/controller/payment.controller'
 import { PaymentRepository } from '@/server/payment/repository/payment.repository'
 import { PaymentService } from '@/server/payment/service/payment.service'
+import { ForecastDataRepository } from '@/server/prediction/repository/forecast-data.repository'
+import { ForecastRepository } from '@/server/prediction/repository/forecast.repository'
+import { ForecastService } from '@/server/prediction/service/forecast.service'
 import { PricingController } from '@/server/pricing/controller/pricing.controller'
 import { PricingRepository } from '@/server/pricing/repository/pricing.repository'
 import { PricingService } from '@/server/pricing/service/pricing.service'
+import { StatsRepository } from '@/server/stats/repository/stats.repository'
+import { StatsService } from '@/server/stats/service/stats.service'
 import { SyncCronController } from '@/server/sync/controller/sync-cron.controller'
 import { buildJobs } from '@/server/sync/jobs'
 import { createSyncContainer } from '@/server/sync/sync.container'
@@ -54,6 +59,8 @@ const aiInsightsService = new AIInsightsService(aiGeneratorService, aiReportRepo
 const paymentService = new PaymentService(paymentRepository, walletRepository)
 const fplMappingService = new FplMappingService(fplMappingRepository, createFplClient())
 const syncContainer = createSyncContainer()
+const forecastService = new ForecastService(new ForecastDataRepository(), new ForecastRepository())
+const statsService = new StatsService(new StatsRepository(), forecastService)
 
 // Controllers
 const aiController = new AIController(aiInsightsService)
@@ -74,6 +81,8 @@ export const container = {
     fixtureController,
     fplMappingController,
     syncCronController,
+    statsService,
+    forecastService,
     gameweekController,
     paymentController,
     pricingController,
