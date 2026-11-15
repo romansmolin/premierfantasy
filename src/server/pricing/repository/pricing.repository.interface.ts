@@ -8,7 +8,7 @@ export interface IUpsertPriceInput {
     seasonYear: number
     basePrice: number
     currentPrice: number
-    priceSource: 'MANUAL' | 'DERIVED' | 'BACKFILL_HASH'
+    priceSource: 'MANUAL' | 'DERIVED' | 'BACKFILL_HASH' | 'FPL'
 }
 
 export interface IPriceLookup {

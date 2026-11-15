@@ -13,6 +13,9 @@ export function buildJobs(container: SyncContainer, budget: RequestBudget): Reco
     return {
         fixtures: () => container.fixtureSyncService.syncFixtures(SEASONS, budget),
         'match-stats': () => container.matchStatsSyncService.syncMatchStats(SEASONS, budget),
+        'fpl-bootstrap': () => container.fplSyncService.syncBootstrap(SEASON),
+        'fpl-fixtures': () => container.fplSyncService.linkFixtures(SEASON),
+        'fpl-points': () => container.fplSyncService.syncPoints(),
     }
 }
 
