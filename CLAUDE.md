@@ -133,4 +133,3 @@ Routes do not import controllers, services, repositories, or `auth.api.getSessio
 - `npx prisma db push` — push schema to DB
 - `npm run lint` — run ESLint
 - `npm test` — run the Vitest suite (`npm run test:watch` to watch)
-- `npm run seed:demo` — seed demo competitors into competitions (see [docs/demo-competitors.md](./docs/demo-competitors.md))
