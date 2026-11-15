@@ -9,6 +9,9 @@ import { createApiFootballHttpFromEnv } from '@/shared/api/api-football-http'
 
 import { SyncRunRepository } from './repository/sync-run.repository'
 
+/** 4 requests per second stays under the plan's 300 per minute. */
+const API_MIN_INTERVAL_MS = 250
+
 /**
  * Composition root for sync jobs (scripts and GitHub Actions). Second root next to
  * `src/shared/lib/container.ts`: it wires job services only, so it must not import controllers,
@@ -22,7 +25,7 @@ export function createSyncContainer() {
     let apiFootballHttp: ReturnType<typeof createApiFootballHttpFromEnv> | null = null
     const apiFootball = {
         get: <T>(endpoint: string, params?: Record<string, string | number>) => {
-            apiFootballHttp ??= createApiFootballHttpFromEnv()
+            apiFootballHttp ??= createApiFootballHttpFromEnv({ minIntervalMs: API_MIN_INTERVAL_MS })
 
             return apiFootballHttp.get<T>(endpoint, params)
         },

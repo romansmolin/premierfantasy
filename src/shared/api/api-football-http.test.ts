@@ -64,6 +64,52 @@ describe('ApiFootballHttp.get', () => {
         expect((init as RequestInit).headers).toMatchObject({ 'x-apisports-key': 'secret-key' })
     })
 
+    it('spaces requests by minIntervalMs', async () => {
+        const sleep = vi.fn().mockResolvedValue(undefined)
+        const fetchImpl = vi.fn().mockImplementation(async () => jsonResponse({ errors: [], response: [] }))
+        const http = new ApiFootballHttp({
+            baseUrl: 'https://api.test',
+            apiKey: 'k',
+            fetchImpl,
+            minIntervalMs: 250,
+            sleep,
+            now: () => 1000,
+        })
+
+        await http.get('/a')
+        await http.get('/b')
+
+        expect(sleep).toHaveBeenCalledTimes(1)
+        expect(sleep).toHaveBeenCalledWith(250)
+    })
+
+    it('retries a 429 after waiting and then succeeds', async () => {
+        const sleep = vi.fn().mockResolvedValue(undefined)
+        const fetchImpl = vi
+            .fn()
+            .mockResolvedValueOnce(
+                new Response('slow down', { status: 429, statusText: 'Too Many Requests' }),
+            )
+            .mockResolvedValueOnce(jsonResponse({ errors: [], response: [1] }))
+        const http = new ApiFootballHttp({ baseUrl: 'https://api.test', apiKey: 'k', fetchImpl, sleep })
+
+        await expect(http.get('/a')).resolves.toMatchObject({ data: [1] })
+        expect(fetchImpl).toHaveBeenCalledTimes(2)
+        expect(sleep.mock.calls[0][0]).toBeGreaterThanOrEqual(10_000)
+    })
+
+    it('gives up after repeated 429 answers with an ApiFootballError', async () => {
+        const sleep = vi.fn().mockResolvedValue(undefined)
+        const fetchImpl = vi
+            .fn()
+            .mockResolvedValue(new Response('no', { status: 429, statusText: 'Too Many Requests' }))
+        const http = new ApiFootballHttp({ baseUrl: 'https://api.test', apiKey: 'k', fetchImpl, sleep })
+
+        await expect(http.get('/a')).rejects.toBeInstanceOf(ApiFootballError)
+        await expect(http.get('/a')).rejects.toThrow(/429/)
+        expect(fetchImpl).toHaveBeenCalledTimes(6)
+    })
+
     it('never puts the api key into an error message', async () => {
         const { http } = make(jsonResponse({ errors: { token: 'bad key secret-key' }, response: [] }))
 
