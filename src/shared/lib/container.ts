@@ -2,6 +2,10 @@ import { AIController } from '@/server/ai/controller/ai.controller'
 import { AiReportRepository } from '@/server/ai/repository/ai-report.repository'
 import { AIGeneratorService } from '@/server/ai/service/ai-generator.service'
 import { AIInsightsService } from '@/server/ai/service/ai-insights.service'
+import { BilledRunner } from '@/server/ai/service/billed-runner'
+import { AutoBuildController } from '@/server/autobuild/controller/autobuild.controller'
+import { AutoBuildExplainer } from '@/server/autobuild/service/autobuild-explainer'
+import { AutoBuildService } from '@/server/autobuild/service/autobuild.service'
 import { FixtureController } from '@/server/fixtures/controller/fixture.controller'
 import { FixtureRepository } from '@/server/fixtures/repository/fixture.repository'
 import { FixtureService } from '@/server/fixtures/service/fixture.service'
@@ -25,6 +29,8 @@ import { BuilderController } from '@/server/squad/controller/builder.controller'
 import { SquadController } from '@/server/squad/controller/squad.controller'
 import { SquadRepository } from '@/server/squad/repository/squad.repository'
 import { BuilderService } from '@/server/squad/service/builder.service'
+import { SquadReviewGenerator } from '@/server/squad/service/squad-review.generator'
+import { SquadReviewService } from '@/server/squad/service/squad-review.service'
 import { SquadService } from '@/server/squad/service/squad.service'
 import { StatsRepository } from '@/server/stats/repository/stats.repository'
 import { StatsService } from '@/server/stats/service/stats.service'
@@ -68,11 +74,27 @@ const forecastService = new ForecastService(new ForecastDataRepository(), new Fo
 const statsService = new StatsService(new StatsRepository(), forecastService)
 const squadRepository = new SquadRepository()
 const squadService = new SquadService(squadRepository)
-const builderController = new BuilderController(new BuilderService(statsService, squadRepository))
+const builderService = new BuilderService(statsService, squadRepository)
+const builderController = new BuilderController(builderService)
+const billedRunner = new BilledRunner(aiReportRepository, walletService)
+const autoBuildService = new AutoBuildService(
+    builderService,
+    forecastService,
+    billedRunner,
+    new AutoBuildExplainer(),
+)
+const squadReviewService = new SquadReviewService(
+    squadService,
+    builderService,
+    forecastService,
+    billedRunner,
+    new SquadReviewGenerator(),
+)
 const squadController = new SquadController(squadService)
 
 // Controllers
 const aiController = new AIController(aiInsightsService)
+const autoBuildController = new AutoBuildController(autoBuildService, squadReviewService)
 const fixtureController = new FixtureController(fixtureService)
 const fplMappingController = new FplMappingController(fplMappingService)
 const syncCronController = new SyncCronController(syncContainer.syncRunRepository, (budget) =>
@@ -87,6 +109,7 @@ const walletController = new WalletController(walletService)
 
 export const container = {
     aiController,
+    autoBuildController,
     fixtureController,
     fplMappingController,
     syncCronController,
