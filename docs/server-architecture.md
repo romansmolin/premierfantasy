@@ -153,7 +153,7 @@ Paid features charge credits on the server, inside the service, after the result
 
 ## 6.7. Sync jobs and their composition root
 
-Data sync (API-Football and FPL into our database) runs as plain Node scripts, not as HTTP routes: `npm run sync -- <fixtures|match-stats|fpl-bootstrap|fpl-fixtures|fpl-points|short|full> [--max-requests N]`, scheduled by GitHub Actions (`.github/workflows/sync-*.yml`).
+Data sync (API-Football and FPL into our database) runs as plain Node scripts, not as HTTP routes: `npm run sync -- <fixtures|match-stats|fpl-bootstrap|fpl-fixtures|fpl-points|short|full> [--max-requests N]`, scheduled by Vercel Cron: `vercel.json` calls `GET /api/cron/sync` daily (06:00 UTC), which runs the `full` group with a 45 s / 300-request budget (`SyncCronController`, auth `Authorization: Bearer ${CRON_SECRET}`; Vercel sends it when the `CRON_SECRET` env var is set on the project). The first big load is run by hand from a machine with `npm run sync -- full --max-requests 1000`.
 
 - Job services follow the usual Service → Repository split under `src/server/<entity>/`, but they are wired in a **second composition root**, `src/server/sync/sync.container.ts`. It must not import controllers, `next/*`, `server-only` or `@/shared/lib/http` (scripts cannot load them). `src/shared/lib/container.ts` stays the only root for HTTP.
 - Every job is wrapped by `runJob` (`src/server/sync/service/job-runner.ts`), which records a `SyncRun` row and never throws. A job returns `OK`, `PARTIAL` (stopped early on the request budget or daily quota) or throws (`FAILED`, exit code 1 so the workflow turns red).

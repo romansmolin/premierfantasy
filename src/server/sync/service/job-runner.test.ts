@@ -92,4 +92,18 @@ describe('RequestBudget', () => {
 
         expect(budget.take(null)).toBe(true)
     })
+
+    it('stops when the time limit has passed', () => {
+        let now = 1_000
+        const budget = new RequestBudget(100, 1500, { maxMillis: 45_000, now: () => now })
+
+        expect(budget.take(null)).toBe(true)
+
+        now += 44_999
+        expect(budget.take(null)).toBe(true)
+
+        now += 1
+        expect(budget.take(null)).toBe(false)
+        expect(budget.used).toBe(2)
+    })
 })

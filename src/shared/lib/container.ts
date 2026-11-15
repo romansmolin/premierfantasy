@@ -18,6 +18,9 @@ import { PaymentService } from '@/server/payment/service/payment.service'
 import { PricingController } from '@/server/pricing/controller/pricing.controller'
 import { PricingRepository } from '@/server/pricing/repository/pricing.repository'
 import { PricingService } from '@/server/pricing/service/pricing.service'
+import { SyncCronController } from '@/server/sync/controller/sync-cron.controller'
+import { buildJobs } from '@/server/sync/jobs'
+import { createSyncContainer } from '@/server/sync/sync.container'
 import { TeamController } from '@/server/teams/controller/team.controller'
 import { TeamRepository } from '@/server/teams/repository/team.repository'
 import { TeamService } from '@/server/teams/service/team.service'
@@ -50,11 +53,15 @@ const aiGeneratorService = new AIGeneratorService()
 const aiInsightsService = new AIInsightsService(aiGeneratorService, aiReportRepository, walletService)
 const paymentService = new PaymentService(paymentRepository, walletRepository)
 const fplMappingService = new FplMappingService(fplMappingRepository, createFplClient())
+const syncContainer = createSyncContainer()
 
 // Controllers
 const aiController = new AIController(aiInsightsService)
 const fixtureController = new FixtureController(fixtureService)
 const fplMappingController = new FplMappingController(fplMappingService)
+const syncCronController = new SyncCronController(syncContainer.syncRunRepository, (budget) =>
+    buildJobs(syncContainer, budget),
+)
 const gameweekController = new GameweekController(gameweekService)
 const paymentController = new PaymentController(paymentService)
 const pricingController = new PricingController(pricingService)
@@ -66,6 +73,7 @@ export const container = {
     aiController,
     fixtureController,
     fplMappingController,
+    syncCronController,
     gameweekController,
     paymentController,
     pricingController,
