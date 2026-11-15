@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AiBrain01Icon, Coins01Icon, GoldBuyIcon } from '@hugeicons/core-free-icons'
+import { Coins01Icon, GoldBuyIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -9,10 +9,9 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 
-import { useTransferSuggestions, TransferSuggestionsModal } from '@/features/ai'
 import { CustomTopupCard } from '@/features/wallet'
 
-import { useFantasyTeams } from '@/entities/fantasy-team'
+import { AI_FEATURE_LABELS, AI_FEATURE_PRICES } from '@/entities/ai'
 import { useWallet, walletService, WITHDRAWAL_CONSENT_TEXT, checkoutCustomerSchema } from '@/entities/wallet'
 import type { CheckoutCustomer, ICoinPack, TransactionType } from '@/entities/wallet'
 
@@ -36,10 +35,10 @@ const CUSTOMER_FIELDS = [
     { name: 'birthDate', label: 'Date of birth (optional)', type: 'date', autoComplete: 'bday' },
 ] as const
 
-const AI_FEATURES = [
-    { name: 'Advanced Player Analytics', cost: 300 },
-    { name: 'Match Prediction Insights', cost: 300 },
-] as const
+const AI_FEATURES = (['PLAYER_ANALYSIS', 'MATCH_PREDICTION'] as const).map((feature) => ({
+    name: AI_FEATURE_LABELS[feature],
+    cost: AI_FEATURE_PRICES[feature],
+}))
 
 const typeBadgeVariant: Record<TransactionType, 'default' | 'secondary' | 'outline'> = {
     COMPETITION_REWARD: 'default',
@@ -55,7 +54,6 @@ const typeLabel: Record<TransactionType, string> = {
 
 export const WalletView = () => {
     const { balance, transactions, isLoading, mutate } = useWallet()
-    const { fantasyTeams } = useFantasyTeams()
     const [withdrawalConsent, setWithdrawalConsent] = useState(false)
     const [loadingAction, setLoadingAction] = useState<string | null>(null)
     const searchParams = useSearchParams()
@@ -73,9 +71,6 @@ export const WalletView = () => {
             birthDate: '',
         },
     })
-
-    const fantasyTeamId = fantasyTeams?.[0]?.id
-    const transferSuggestions = useTransferSuggestions(fantasyTeamId)
 
     const { data: coinPacks, isLoading: isPacksLoading } = useSWR<ICoinPack[]>('/api/wallet/packs', () =>
         walletService.getCoinPacks(),
@@ -256,24 +251,6 @@ export const WalletView = () => {
                         <CardTitle>AI Features</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium">AI Transfer Suggestions</p>
-                                <p className="text-xs text-muted-foreground">
-                                    {transferSuggestions.cost} coins
-                                </p>
-                            </div>
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                disabled={!transferSuggestions.canAfford || transferSuggestions.isLoading}
-                                onClick={transferSuggestions.requestAnalysis}
-                            >
-                                <HugeiconsIcon icon={AiBrain01Icon} />
-                                {transferSuggestions.isLoading ? 'Analyzing...' : 'Use'}
-                            </Button>
-                        </div>
-
                         {AI_FEATURES.map((feature) => (
                             <div key={feature.name} className="flex items-center justify-between">
                                 <div>
@@ -344,13 +321,6 @@ export const WalletView = () => {
                     )}
                 </CardContent>
             </Card>
-
-            <TransferSuggestionsModal
-                open={transferSuggestions.isOpen}
-                onClose={transferSuggestions.closeModal}
-                analysis={transferSuggestions.analysis}
-                isLoading={transferSuggestions.isLoading}
-            />
         </div>
     )
 }

@@ -27,7 +27,6 @@ function setup(overrides: { cached?: unknown; balance?: number } = {}) {
         getBalance: vi.fn().mockResolvedValue(overrides.balance ?? 100),
         spendOnFeature: vi.fn().mockResolvedValue(undefined),
         getWallet: vi.fn(),
-        awardCompetitionReward: vi.fn(),
     } satisfies IWalletService
     const service = new AIInsightsService(generator, reports, wallet, () => NOW)
 
