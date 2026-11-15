@@ -1,3 +1,5 @@
+import { chunk, WRITE_CHUNK_SIZE } from '@/server/sync/lib/chunk'
+
 import type { PlayerPosition } from '@/entities/players/model/player.types'
 
 import { prisma } from '@/shared/lib/prisma'
@@ -40,24 +42,26 @@ export class MatchDataRepository implements IMatchDataRepository {
         })
         const existingIds = new Set(existing.map((fixture) => fixture.externalId))
 
-        await prisma.$transaction(
-            rows.map((row) =>
-                prisma.fixture.upsert({
-                    where: { externalId: row.externalId },
-                    create: row,
-                    update: {
-                        round: row.round,
-                        roundNumber: row.roundNumber,
-                        kickoff: row.kickoff,
-                        status: row.status,
-                        homeTeamId: row.homeTeamId,
-                        awayTeamId: row.awayTeamId,
-                        homeGoals: row.homeGoals,
-                        awayGoals: row.awayGoals,
-                    },
-                }),
-            ),
-        )
+        for (const group of chunk(rows, WRITE_CHUNK_SIZE)) {
+            await prisma.$transaction(
+                group.map((row) =>
+                    prisma.fixture.upsert({
+                        where: { externalId: row.externalId },
+                        create: row,
+                        update: {
+                            round: row.round,
+                            roundNumber: row.roundNumber,
+                            kickoff: row.kickoff,
+                            status: row.status,
+                            homeTeamId: row.homeTeamId,
+                            awayTeamId: row.awayTeamId,
+                            homeGoals: row.homeGoals,
+                            awayGoals: row.awayGoals,
+                        },
+                    }),
+                ),
+            )
+        }
 
         const updated = rows.filter((row) => existingIds.has(row.externalId)).length
 

@@ -1,10 +1,9 @@
-import type { Prisma } from '../../../../generated/prisma/client'
-
 import type { AiFeature } from '@/entities/ai/model/ai-pricing'
 
 import { prisma } from '@/shared/lib/prisma'
 
 import type { IAiReportRepository } from './ai-report.repository.interface'
+import type { Prisma } from '../../../../generated/prisma/client'
 
 export class AiReportRepository implements IAiReportRepository {
     async findLatest(

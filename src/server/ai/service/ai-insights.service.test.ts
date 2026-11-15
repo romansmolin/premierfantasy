@@ -4,8 +4,8 @@ import type { MatchPrediction, PlayerAnalysis } from '@/entities/ai/model/ai.typ
 
 import { AIInsightsService } from './ai-insights.service'
 
-import type { IAiReportRepository } from '../repository/ai-report.repository.interface'
 import type { IAIGenerator } from './ai-generator.service.interface'
+import type { IAiReportRepository } from '../repository/ai-report.repository.interface'
 import type { IWalletService } from '@/server/wallet/service/wallet.service.interface'
 
 const NOW = new Date('2026-11-15T12:00:00Z')

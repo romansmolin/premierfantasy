@@ -1,3 +1,5 @@
+import { chunk, WRITE_CHUNK_SIZE } from '@/server/sync/lib/chunk'
+
 import { LEAGUE_ID } from '@/shared/config/league'
 import { prisma } from '@/shared/lib/prisma'
 
@@ -123,27 +125,29 @@ export class FplRepository implements IFplRepository {
         })
         const sourceByPlayer = new Map(existing.map((e) => [e.playerId, e.priceSource]))
 
-        await prisma.$transaction(
-            rows.map((row) =>
-                prisma.playerSeasonPrice.upsert({
-                    where: { playerId_seasonYear: { playerId: row.playerId, seasonYear } },
-                    create: {
-                        playerId: row.playerId,
-                        seasonYear,
-                        basePrice: row.price,
-                        currentPrice: row.price,
-                        priceSource: 'FPL',
-                    },
-                    update: {
-                        currentPrice: row.price,
-                        priceSource: 'FPL',
-                        updatedAt: new Date(),
-                        // A placeholder row has a made-up base price: replace it the first time FPL owns the row.
-                        ...(sourceByPlayer.get(row.playerId) !== 'FPL' ? { basePrice: row.price } : {}),
-                    },
-                }),
-            ),
-        )
+        for (const group of chunk(rows, WRITE_CHUNK_SIZE)) {
+            await prisma.$transaction(
+                group.map((row) =>
+                    prisma.playerSeasonPrice.upsert({
+                        where: { playerId_seasonYear: { playerId: row.playerId, seasonYear } },
+                        create: {
+                            playerId: row.playerId,
+                            seasonYear,
+                            basePrice: row.price,
+                            currentPrice: row.price,
+                            priceSource: 'FPL',
+                        },
+                        update: {
+                            currentPrice: row.price,
+                            priceSource: 'FPL',
+                            updatedAt: new Date(),
+                            // A placeholder row has a made-up base price: replace it the first time FPL owns the row.
+                            ...(sourceByPlayer.get(row.playerId) !== 'FPL' ? { basePrice: row.price } : {}),
+                        },
+                    }),
+                ),
+            )
+        }
 
         const updated = rows.filter((row) => sourceByPlayer.has(row.playerId)).length
 
@@ -178,19 +182,22 @@ export class FplRepository implements IFplRepository {
     }
 
     async setFixtureFplLinks(links: FixtureFplLink[]): Promise<void> {
-        await prisma.$transaction([
-            // fpl_fixture_id is unique: release ids that are about to move to another fixture.
-            prisma.fixture.updateMany({
-                where: { fplFixtureId: { in: links.map((l) => l.fplFixtureId) } },
-                data: { fplFixtureId: null, fplEvent: null },
-            }),
-            ...links.map((link) =>
-                prisma.fixture.update({
-                    where: { id: link.fixtureId },
-                    data: { fplFixtureId: link.fplFixtureId, fplEvent: link.fplEvent },
-                }),
-            ),
-        ])
+        // fpl_fixture_id is unique: release ids that are about to move to another fixture.
+        await prisma.fixture.updateMany({
+            where: { fplFixtureId: { in: links.map((l) => l.fplFixtureId) } },
+            data: { fplFixtureId: null, fplEvent: null },
+        })
+
+        for (const group of chunk(links, WRITE_CHUNK_SIZE)) {
+            await prisma.$transaction(
+                group.map((link) =>
+                    prisma.fixture.update({
+                        where: { id: link.fixtureId },
+                        data: { fplFixtureId: link.fplFixtureId, fplEvent: link.fplEvent },
+                    }),
+                ),
+            )
+        }
     }
 
     async findEvents(): Promise<{ id: number; finished: boolean; isCurrent: boolean }[]> {
