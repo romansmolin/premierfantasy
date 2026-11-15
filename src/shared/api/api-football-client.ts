@@ -1,48 +1,18 @@
 import 'server-only'
 
-interface ApiFootballResponse<T> {
-    response: T
-}
+import { createApiFootballHttpFromEnv } from './api-football-http'
+
+import type { ApiFootballHttp } from './api-football-http'
 
 class ApiFootballClient {
-    private readonly baseUrl: string
-    private readonly apiKey: string
+    private readonly http: ApiFootballHttp
 
     constructor() {
-        const baseUrl = process.env.FOOTBAL_API_BASE_URL
-
-        if (!baseUrl) throw new Error('FOOTBAL_API_BASE_URL is not defined')
-
-        const apiKey = process.env.FOOTBAL_API_KEY
-
-        if (!apiKey) throw new Error('FOOTBAL_API_KEY is not defined')
-
-        this.baseUrl = baseUrl
-        this.apiKey = apiKey
+        this.http = createApiFootballHttpFromEnv()
     }
 
     async get<T>(endpoint: string, params?: Record<string, string | number>): Promise<T> {
-        const url = new URL(`${this.baseUrl}${endpoint}`)
-
-        if (params) {
-            Object.entries(params).forEach(([key, value]) => {
-                url.searchParams.set(key, String(value))
-            })
-        }
-
-        const response = await fetch(url.toString(), {
-            headers: {
-                'x-apisports-key': this.apiKey,
-            },
-        })
-
-        if (!response.ok) {
-            throw new Error(`API-Football request failed: ${response.status} ${response.statusText}`)
-        }
-
-        const json = (await response.json()) as ApiFootballResponse<T>
-
-        return json.response
+        return (await this.http.get<T>(endpoint, params)).data
     }
 }
 
