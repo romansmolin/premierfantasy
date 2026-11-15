@@ -94,10 +94,20 @@ export class FplRepository implements IFplRepository {
     }
 
     async findLeaguePlayers(seasonYear: number): Promise<OurPlayer[]> {
-        return prisma.player.findMany({
-            where: { team: { leagueSeasons: { some: { leagueSeason: inLeagueSeason(seasonYear) } } } },
-            select: { id: true, name: true, position: true, teamId: true },
-        })
+        return prisma.player
+            .findMany({
+                where: { team: { leagueSeasons: { some: { leagueSeason: inLeagueSeason(seasonYear) } } } },
+                select: {
+                    id: true,
+                    name: true,
+                    position: true,
+                    teamId: true,
+                    _count: { select: { matchStats: true } },
+                },
+            })
+            .then((rows) =>
+                rows.map(({ _count, ...player }) => ({ ...player, active: _count.matchStats > 0 })),
+            )
     }
 
     async loadMappingState() {

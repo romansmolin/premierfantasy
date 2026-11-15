@@ -141,6 +141,43 @@ describe('matchPlayers', () => {
         expect(result.matched).toEqual([{ fplId: 5, playerId: 'same', confidence: 1 }])
     })
 
+    it('prefers an active player over an idle duplicate with the same name', () => {
+        const result = matchPlayers(
+            [el(46, 'Erling', 'Haaland', 'Haaland', 2, 4)],
+            [
+                { ...our('legacy', 'E. Haaland', 'FWD', 't-mci'), active: false },
+                { ...our('real', 'E. Haaland', 'FWD', 't-mci'), active: true },
+            ],
+            teamMap,
+        )
+
+        expect(result.matched).toEqual([{ fplId: 46, playerId: 'real', confidence: 0.8 }])
+    })
+
+    it('still matches an idle player when there is no active candidate (a new signing)', () => {
+        const result = matchPlayers(
+            [el(47, 'New', 'Signing', 'Signing', 2, 3)],
+            [{ ...our('new', 'N. Signing', 'MID', 't-mci'), active: false }],
+            teamMap,
+        )
+
+        expect(result.matched).toEqual([{ fplId: 47, playerId: 'new', confidence: 0.8 }])
+    })
+
+    it('two active players with the same name are still ambiguous', () => {
+        const result = matchPlayers(
+            [el(48, 'Joao', 'Silva', 'Silva', 1, 3)],
+            [
+                { ...our('a', 'J. Silva', 'MID', 't-ars'), active: true },
+                { ...our('b', 'J. Silva', 'MID', 't-ars'), active: true },
+            ],
+            teamMap,
+        )
+
+        expect(result.matched).toEqual([])
+        expect(result.ambiguous).toHaveLength(1)
+    })
+
     it('accepts a shortened first name such as Josh for Joshua', () => {
         const result = matchPlayers(
             [el(8, 'Josh', 'King', 'King', 1, 3)],

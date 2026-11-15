@@ -9,6 +9,8 @@ export interface OurPlayer {
     name: string
     position: PlayerPosition
     teamId: string
+    /** Has match statistics. Idle duplicates (legacy rows) lose against active players with the same name. */
+    active?: boolean
 }
 
 export interface PlayerMatch {
@@ -81,6 +83,7 @@ export function matchPlayers(
         candidates: PlayerCandidates['candidates']
     }[] = []
     const ourNames = new Map(ours.map((player) => [player.id, normalizeName(player.name)]))
+    const activeIds = new Set(ours.filter((player) => player.active).map((player) => player.id))
 
     for (const element of fpl) {
         const teamId = teamMap.get(element.team)
@@ -110,6 +113,11 @@ export function matchPlayers(
                 ),
                 CROSS_POSITION_FACTOR,
             )
+        }
+
+        // An active player beats an idle one with the same name (legacy duplicates); idle players still match when alone.
+        if (candidates.some((c) => activeIds.has(c.playerId))) {
+            candidates = candidates.filter((c) => activeIds.has(c.playerId))
         }
 
         candidates.sort((a, b) => b.score - a.score)

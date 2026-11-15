@@ -27,7 +27,8 @@ export class StatsRepository implements IStatsRepository {
         const clubs = new Map<string, ClubRef>(leagueTeams.map((t) => [t.team.id, t.team]))
         const [players, statuses] = await Promise.all([
             prisma.player.findMany({
-                where: { OR: [{ teamId: { in: [...clubs.keys()] } }, { fplMap: { isNot: null } }] },
+                // Idle legacy rows (no mapping, no match lines) are not players of this season.
+                where: { OR: [{ fplMap: { isNot: null } }, { matchStats: { some: {} } }] },
                 select: {
                     id: true,
                     externalId: true,
