@@ -1,5 +1,6 @@
 import { MatchDataRepository } from '@/server/match-data/repository/match-data.repository'
 import { FixtureSyncService } from '@/server/match-data/service/fixture-sync.service'
+import { MatchStatsSyncService } from '@/server/match-data/service/match-stats-sync.service'
 
 import { createApiFootballHttpFromEnv } from '@/shared/api/api-football-http'
 
@@ -25,8 +26,9 @@ export function createSyncContainer() {
     }
 
     const fixtureSyncService = new FixtureSyncService(matchDataRepository, apiFootball)
+    const matchStatsSyncService = new MatchStatsSyncService(matchDataRepository, apiFootball)
 
-    return { syncRunRepository, matchDataRepository, apiFootball, fixtureSyncService }
+    return { syncRunRepository, matchDataRepository, apiFootball, fixtureSyncService, matchStatsSyncService }
 }
 
 export type SyncContainer = ReturnType<typeof createSyncContainer>

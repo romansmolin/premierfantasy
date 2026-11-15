@@ -12,6 +12,7 @@ const SEASONS = [SEASON, SEASON - 1]
 export function buildJobs(container: SyncContainer, budget: RequestBudget): Record<string, JobFn> {
     return {
         fixtures: () => container.fixtureSyncService.syncFixtures(SEASONS, budget),
+        'match-stats': () => container.matchStatsSyncService.syncMatchStats(SEASONS, budget),
     }
 }
 
