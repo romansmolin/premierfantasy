@@ -21,8 +21,10 @@ import { ForecastService } from '@/server/prediction/service/forecast.service'
 import { PricingController } from '@/server/pricing/controller/pricing.controller'
 import { PricingRepository } from '@/server/pricing/repository/pricing.repository'
 import { PricingService } from '@/server/pricing/service/pricing.service'
+import { BuilderController } from '@/server/squad/controller/builder.controller'
 import { SquadController } from '@/server/squad/controller/squad.controller'
 import { SquadRepository } from '@/server/squad/repository/squad.repository'
+import { BuilderService } from '@/server/squad/service/builder.service'
 import { SquadService } from '@/server/squad/service/squad.service'
 import { StatsRepository } from '@/server/stats/repository/stats.repository'
 import { StatsService } from '@/server/stats/service/stats.service'
@@ -64,7 +66,9 @@ const fplMappingService = new FplMappingService(fplMappingRepository, createFplC
 const syncContainer = createSyncContainer()
 const forecastService = new ForecastService(new ForecastDataRepository(), new ForecastRepository())
 const statsService = new StatsService(new StatsRepository(), forecastService)
-const squadService = new SquadService(new SquadRepository())
+const squadRepository = new SquadRepository()
+const squadService = new SquadService(squadRepository)
+const builderController = new BuilderController(new BuilderService(statsService, squadRepository))
 const squadController = new SquadController(squadService)
 
 // Controllers
@@ -89,6 +93,7 @@ export const container = {
     statsService,
     forecastService,
     squadController,
+    builderController,
     squadService,
     gameweekController,
     paymentController,

@@ -65,6 +65,8 @@ export interface PlayerProfile {
 export interface IStatsService {
     getPlayers(query: PlayerListQuery): Promise<PlayerListResult>
     getPlayer(id: string): Promise<PlayerProfile | null>
+    /** Every listed player with form and forecast, unpaged (the builder pool). */
+    getAllPlayers(): Promise<{ items: PlayerListItem[]; forecastEnabled: boolean; nextEvent: number | null }>
     getFixtures(): Promise<{ event: number | null; fixtures: StatsFixture[]; forecastEnabled: boolean }>
     getForecastStatus(): Promise<ForecastStatus>
     listPlayerIds(): Promise<string[]>

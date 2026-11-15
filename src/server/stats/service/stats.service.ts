@@ -8,8 +8,8 @@ import type {
     PlayerProfile,
     PlayerSort,
 } from './stats.service.interface'
-import type { IStatsRepository, StatsLineRow } from '../repository/stats.repository.interface'
-import type { IForecastService } from '@/server/prediction/service/forecast.service.interface'
+import type { IStatsRepository, StatsLineRow, StatsPlayer } from '../repository/stats.repository.interface'
+import type { ForecastStatus, IForecastService } from '@/server/prediction/service/forecast.service.interface'
 
 const PAGE_SIZE = 50
 const RECENT_MATCHES = 8
@@ -33,7 +33,11 @@ export class StatsService implements IStatsService {
         this.forecast = forecast
     }
 
-    async getPlayers(query: PlayerListQuery): Promise<PlayerListResult> {
+    private async buildItems(): Promise<{
+        players: StatsPlayer[]
+        items: PlayerListItem[]
+        status: ForecastStatus
+    }> {
         const [players, lines, status] = await Promise.all([
             this.repo.findPlayers(),
             this.repo.findLines(),
@@ -63,6 +67,18 @@ export class StatsService implements IStatsService {
                 availability: p.availability,
             }
         })
+
+        return { players, items, status }
+    }
+
+    async getAllPlayers() {
+        const { items, status } = await this.buildItems()
+
+        return { items, forecastEnabled: status.enabled, nextEvent: status.nextEvent }
+    }
+
+    async getPlayers(query: PlayerListQuery): Promise<PlayerListResult> {
+        const { players, items, status } = await this.buildItems()
         const sort: PlayerSort =
             query.sort && !(query.sort === 'forecast' && !status.enabled)
                 ? query.sort
