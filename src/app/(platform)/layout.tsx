@@ -29,8 +29,7 @@ export const metadata: Metadata = {
         default: `Dashboard — ${SITE.name}`,
         template: `%s — ${SITE.name}`,
     },
-    description:
-        'Manage your fantasy squad, track live gameweek scores, run transfers, and follow your competition and league standings.',
+    description: 'Explore fixtures and player stats, and use AI insights paid with Credits.',
     robots: { index: false, follow: false },
 }
 
