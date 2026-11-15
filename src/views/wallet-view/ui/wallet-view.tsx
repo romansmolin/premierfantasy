@@ -47,7 +47,7 @@ const typeBadgeVariant: Record<TransactionType, 'default' | 'secondary' | 'outli
 }
 
 const typeLabel: Record<TransactionType, string> = {
-    COMPETITION_REWARD: 'Reward',
+    COMPETITION_REWARD: 'Bonus',
     PURCHASE: 'Purchase',
     AI_FEATURE_SPEND: 'AI Feature',
 }
@@ -80,7 +80,7 @@ export const WalletView = () => {
         const payment = searchParams.get('payment')
 
         if (payment === 'success') {
-            toast.success('Payment successful! Coins have been added to your wallet.')
+            toast.success('Payment successful! Credits have been added to your balance.')
             mutate()
         } else if (payment === 'declined') {
             toast.error('Payment was declined. Please try again.')
@@ -129,7 +129,7 @@ export const WalletView = () => {
     return (
         <div className="space-y-6">
             <div>
-                <p className="text-sm text-muted-foreground">Manage your coins</p>
+                <p className="text-sm text-muted-foreground">Manage your Credits</p>
             </div>
 
             <Card>
@@ -137,7 +137,7 @@ export const WalletView = () => {
                     <CardTitle className="text-sm text-muted-foreground">Your Balance</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p className="text-4xl font-bold">{balance.toLocaleString()} coins</p>
+                    <p className="text-4xl font-bold">{balance.toLocaleString()} Credits</p>
                 </CardContent>
             </Card>
 
@@ -152,11 +152,10 @@ export const WalletView = () => {
                             />
                         </div>
                         <div>
-                            <p className="text-sm font-medium mb-1">Start earning coins</p>
+                            <p className="text-sm font-medium mb-1">Get started with Credits</p>
                             <p className="text-xs text-muted-foreground">
-                                Place in the top 3 of any competition to earn coins (1st: 500, 2nd: 300, 3rd:
-                                100). You can also purchase coins to unlock AI-powered features like transfer
-                                suggestions and match predictions.
+                                Buy Credits to unlock AI-powered features like player analysis and match
+                                predictions. Credits never expire.
                             </p>
                         </div>
                     </CardContent>
@@ -216,7 +215,7 @@ export const WalletView = () => {
             <div className="grid gap-4 sm:grid-cols-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Coin Packs</CardTitle>
+                        <CardTitle>Credit Packs</CardTitle>
                         <CardDescription>Fixed bundles at the same rate as a custom top-up.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-2">
@@ -226,7 +225,7 @@ export const WalletView = () => {
                             coinPacks?.map((pack) => (
                                 <div key={pack.coins} className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium">{pack.coins} coins</p>
+                                        <p className="text-sm font-medium">{pack.coins} Credits</p>
                                         <p className="text-xs text-muted-foreground">
                                             &euro;{(pack.priceCents / 100).toFixed(2)}
                                         </p>
@@ -255,7 +254,7 @@ export const WalletView = () => {
                             <div key={feature.name} className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm font-medium">{feature.name}</p>
-                                    <p className="text-xs text-muted-foreground">{feature.cost} coins</p>
+                                    <p className="text-xs text-muted-foreground">{feature.cost} Credits</p>
                                 </div>
                             </div>
                         ))}

@@ -69,14 +69,14 @@ export class PaymentService implements IPaymentService {
             amountCents: pack.priceCents,
             currency: pack.currency,
             coinAmount: pack.coins,
-            description: `Purchase ${pack.coins} coins`,
+            description: `Purchase ${pack.coins} credits`,
         })
 
         try {
             const checkout = await secureProcessorClient.createCheckout({
                 amountCents: pack.priceCents,
                 currency: pack.currency,
-                description: `Purchase ${pack.coins} Premier Fantasy coins`,
+                description: `Purchase ${pack.coins} Premier Fantasy credits`,
                 trackingId: payment.id,
                 userId,
                 customer,
@@ -115,10 +115,10 @@ export class PaymentService implements IPaymentService {
 
         const coins = coinsForAmountCents(amountCents)
 
-        if (coins <= 0) throw Errors.badRequest('Amount is too small to buy any coins')
+        if (coins <= 0) throw Errors.badRequest('Amount is too small to buy any Credits')
 
         const trackingId = crypto.randomUUID()
-        const description = `Purchase ${coins} coins`
+        const description = `Purchase ${coins} credits`
 
         const payment = await this.paymentRepository.create({
             userId,
@@ -135,7 +135,7 @@ export class PaymentService implements IPaymentService {
             const checkout = await secureProcessorClient.createCheckout({
                 amountCents,
                 currency: TOPUP_CURRENCY,
-                description: `Purchase ${coins} Premier Fantasy coins`,
+                description: `Purchase ${coins} Premier Fantasy credits`,
                 trackingId: payment.id,
                 userId,
                 customer,

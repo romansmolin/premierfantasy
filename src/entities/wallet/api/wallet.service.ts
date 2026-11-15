@@ -44,7 +44,7 @@ export const walletService = {
         try {
             return await httpClient.get<ICoinPack[]>('/api/wallet/packs')
         } catch (error) {
-            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to fetch coin packs')
+            throw ApiError.isApiError(error) ? error : new ApiError(500, 'Failed to fetch Credit packs')
         }
     },
 }

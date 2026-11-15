@@ -199,7 +199,7 @@ export const PlayerDetailsModal = ({
                                         <HugeiconsIcon icon={AiBrain01Icon} size={14} />
                                         {isAnalysisLoading
                                             ? 'Analyzing...'
-                                            : `AI Analysis (${analysisCost ?? 100} coins)`}
+                                            : `AI Analysis (${analysisCost ?? 10} Credits)`}
                                     </Button>
                                 </div>
                             )}

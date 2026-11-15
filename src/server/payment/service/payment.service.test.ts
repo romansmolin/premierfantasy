@@ -101,6 +101,17 @@ describe('PaymentService.createCustomCheckout', () => {
         )
     })
 
+    it('describes the purchase as Credits to the payment provider and in the stored record', async () => {
+        await deps.service.createCustomCheckout('user-1', 4365, customer)
+
+        expect(deps.paymentRepository.create).toHaveBeenCalledWith(
+            expect.objectContaining({ description: 'Purchase 3470 credits' }),
+        )
+        expect(createCheckoutMock).toHaveBeenCalledWith(
+            expect.objectContaining({ description: 'Purchase 3470 Premier Fantasy credits' }),
+        )
+    })
+
     it('quotes a custom amount identically to the equivalent coin pack', async () => {
         await deps.service.createCustomCheckout('user-1', 800, customer)
 

@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
     title: 'Payment Failed',
-    description: 'Your Coin purchase could not be completed.',
+    description: 'Your Credit purchase could not be completed.',
     robots: { index: false, follow: false },
 }
 

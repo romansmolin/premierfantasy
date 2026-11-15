@@ -31,13 +31,13 @@ const statusCopy: Record<
 > = {
     success: {
         title: 'Payment successful',
-        description: 'Thanks for your payment! Your coin balance will reflect the purchase shortly.',
+        description: 'Thanks for your payment! Your Credit balance will reflect the purchase shortly.',
         accent: 'text-green-600 bg-green-50 border-green-100 dark:bg-green-950/40 dark:border-green-900',
         icon: CheckmarkCircle02Icon,
     },
     pending: {
         title: 'Payment pending',
-        description: 'Your payment is being confirmed. We will update your coin balance once it clears.',
+        description: 'Your payment is being confirmed. We will update your Credit balance once it clears.',
         accent: 'text-amber-600 bg-amber-50 border-amber-100 dark:bg-amber-950/40 dark:border-amber-900',
         icon: Clock01Icon,
     },

@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
     title: 'Payment Successful',
-    description: 'Your Coin purchase is complete and your balance has been updated.',
+    description: 'Your Credit purchase is complete and your balance has been updated.',
     robots: { index: false, follow: false },
 }
 
