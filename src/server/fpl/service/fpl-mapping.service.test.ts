@@ -30,6 +30,7 @@ const el = (
     chance_of_playing_next_round: null,
     news: '',
     minutes,
+    penalties_order: null,
 })
 
 interface State {

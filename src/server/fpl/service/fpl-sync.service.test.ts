@@ -8,7 +8,7 @@ import { FplNotFoundError } from '../lib/fpl-client'
 import { FplSyncService } from './fpl-sync.service'
 
 import type { IFplClient } from '../lib/fpl-client'
-import type { FplBootstrap, FplElement, FplFixture } from '../lib/fpl.types'
+import type { FplBootstrap, FplElement, FplElementSummary, FplFixture } from '../lib/fpl.types'
 import type { OurPlayer } from '../lib/player-matcher'
 import type { FixtureForLinking, IFplRepository } from '../repository/fpl.repository.interface'
 
@@ -34,6 +34,7 @@ const el = (
     chance_of_playing_next_round: null,
     news: '',
     minutes: 900,
+    penalties_order: null,
 })
 
 /** 440 filler players (unmatched) plus the controlled ones, so the sanity guard passes. */
@@ -107,6 +108,8 @@ const makeRepo = (state: RepoState = {}, overrides: Partial<IFplRepository> = {}
         findEvents: vi.fn().mockResolvedValue([]),
         findEventsWithPoints: vi.fn().mockResolvedValue(new Set<number>()),
         saveEventPoints: vi.fn().mockResolvedValue(undefined),
+        findPlayersNeedingMatches: vi.fn().mockResolvedValue([]),
+        savePlayerMatches: vi.fn().mockResolvedValue(undefined),
         ...overrides,
     } as unknown as IFplRepository
 
@@ -118,10 +121,12 @@ const makeClient = (overrides: Partial<IFplClient> = {}) =>
         getBootstrap: vi.fn().mockResolvedValue(bootstrapWith([])),
         getFixtures: vi.fn().mockResolvedValue([]),
         getEventLive: vi.fn().mockResolvedValue({ elements: [] }),
+        getElementSummary: vi.fn().mockResolvedValue({ history: [] }),
         ...overrides,
     }) as unknown as IFplClient & {
         getBootstrap: ReturnType<typeof vi.fn>
         getEventLive: ReturnType<typeof vi.fn>
+        getElementSummary: ReturnType<typeof vi.fn>
     }
 
 describe('FplSyncService.syncBootstrap', () => {
@@ -238,7 +243,24 @@ describe('FplSyncService.syncBootstrap', () => {
             status: 'i',
             chanceOfPlaying: 25,
             news: 'Knee',
+            penaltiesOrder: null,
         })
+    })
+
+    it('saves penalties_order with the availability', async () => {
+        const { repo } = makeRepo()
+        const bootstrap = bootstrapWith([
+            { ...el(7, 'Erling', 'Haaland', 'Haaland', 13, 4), penalties_order: 1 },
+        ])
+
+        await new FplSyncService(
+            repo,
+            makeClient({ getBootstrap: vi.fn().mockResolvedValue(bootstrap) }),
+        ).syncBootstrap(2026)
+
+        const rows = (repo.saveAvailability as ReturnType<typeof vi.fn>).mock.calls[0][0]
+
+        expect(rows.find((r: { fplId: number }) => r.fplId === 7)).toMatchObject({ penaltiesOrder: 1 })
     })
 
     it('converts now_cost tenths to millions', async () => {
@@ -484,5 +506,106 @@ describe('FplSyncService.syncPoints', () => {
         const { repo } = makeRepo()
 
         await expect(new FplSyncService(repo, makeClient()).syncPoints()).rejects.toThrow(/fpl-bootstrap/)
+    })
+})
+
+describe('FplSyncService.syncPlayerMatches', () => {
+    const entry = (
+        fixture: number,
+        round: number,
+        over: Partial<FplElementSummary['history'][number]> = {},
+    ) => ({
+        fixture,
+        round,
+        minutes: 90,
+        starts: 1,
+        goals_scored: 1,
+        assists: 0,
+        expected_goals: '0.45',
+        expected_assists: '0.10',
+        total_points: 8,
+        was_home: true,
+        ...over,
+    })
+    const savedRows = (repo: IFplRepository) =>
+        (repo.savePlayerMatches as ReturnType<typeof vi.fn>).mock.calls.flatMap((call) => call[0])
+
+    it('stores one row per fixture, two for a double gameweek', async () => {
+        const { repo } = makeRepo({}, { findPlayersNeedingMatches: vi.fn().mockResolvedValue([5]) })
+        const client = makeClient({
+            getElementSummary: vi.fn().mockResolvedValue({ history: [entry(101, 12), entry(102, 12)] }),
+        })
+
+        await new FplSyncService(repo, client).syncPlayerMatches()
+
+        expect(savedRows(repo)).toEqual([
+            expect.objectContaining({ fplPlayerId: 5, fplFixtureId: 101, event: 12 }),
+            expect.objectContaining({ fplPlayerId: 5, fplFixtureId: 102, event: 12 }),
+        ])
+    })
+
+    it('parses xG strings and keeps null for unparseable', async () => {
+        const { repo } = makeRepo({}, { findPlayersNeedingMatches: vi.fn().mockResolvedValue([5]) })
+        const client = makeClient({
+            getElementSummary: vi.fn().mockResolvedValue({
+                history: [entry(1, 1), entry(2, 2, { expected_goals: '', expected_assists: 'abc' })],
+            }),
+        })
+
+        await new FplSyncService(repo, client).syncPlayerMatches()
+
+        const rows = savedRows(repo)
+
+        expect(rows[0]).toMatchObject({
+            xg: 0.45,
+            xa: 0.1,
+            goals: 1,
+            assists: 0,
+            starts: 1,
+            minutes: 90,
+            totalPoints: 8,
+            wasHome: true,
+        })
+        expect(rows[1]).toMatchObject({ xg: null, xa: null })
+    })
+
+    it('skips a player whose summary fails and stores nothing for them', async () => {
+        const { repo } = makeRepo({}, { findPlayersNeedingMatches: vi.fn().mockResolvedValue([1, 2]) })
+        const client = makeClient({
+            getElementSummary: vi.fn().mockImplementation(async (id: number) => {
+                if (id === 2) throw new Error('boom')
+
+                return { history: [entry(101, 12)] }
+            }),
+        })
+
+        const result = await new FplSyncService(repo, client).syncPlayerMatches()
+
+        expect(savedRows(repo).map((r: { fplPlayerId: number }) => r.fplPlayerId)).toEqual([1])
+        expect(result.stats).toMatchObject({ players: 1, failed: 1, rows: 1 })
+    })
+
+    it('throws SuspiciousResponseError when more than half of the attempted players fail', async () => {
+        const { repo } = makeRepo({}, { findPlayersNeedingMatches: vi.fn().mockResolvedValue([1, 2, 3, 4]) })
+        const client = makeClient({
+            getElementSummary: vi.fn().mockImplementation(async (id: number) => {
+                if (id !== 1) throw new Error('boom')
+
+                return { history: [entry(101, 12)] }
+            }),
+        })
+
+        await expect(new FplSyncService(repo, client).syncPlayerMatches()).rejects.toBeInstanceOf(
+            SuspiciousResponseError,
+        )
+    })
+
+    it('passes maxPlayers to the repository and resumes where it stopped', async () => {
+        const find = vi.fn().mockResolvedValue([])
+        const { repo } = makeRepo({}, { findPlayersNeedingMatches: find })
+
+        await new FplSyncService(repo, makeClient()).syncPlayerMatches(40)
+
+        expect(find).toHaveBeenCalledWith(40, expect.any(Date))
     })
 })

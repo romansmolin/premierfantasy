@@ -10,11 +10,14 @@ import type {
     FplEventPointRow,
     FplEventRow,
     FplGameSettingsRow,
+    FplPlayerMatchRow,
     FplPriceRow,
     IFplRepository,
 } from './fpl.repository.interface'
 import type { OurPlayer, PlayerMatch } from '../lib/player-matcher'
 import type { OurTeam } from '../lib/team-matcher'
+
+const STALE_AFTER_MS = 12 * 60 * 60 * 1000
 
 const inLeagueSeason = (seasonYear: number) => ({ year: seasonYear, league: { externalId: LEAGUE_ID } })
 
@@ -86,6 +89,7 @@ export class FplRepository implements IFplRepository {
                             status: row.status,
                             chanceOfPlaying: row.chanceOfPlaying,
                             news: row.news,
+                            penaltiesOrder: row.penaltiesOrder,
                         },
                     }),
                 ),
@@ -248,5 +252,70 @@ export class FplRepository implements IFplRepository {
             prisma.fplEventPoints.deleteMany({ where: { event } }),
             prisma.fplEventPoints.createMany({ data: rows.map((row) => ({ event, ...row })) }),
         ])
+    }
+
+    async findPlayersNeedingMatches(limit: number, now: Date): Promise<number[]> {
+        const staleBefore = now.getTime() - STALE_AFTER_MS
+        const [events, maps, played, stored] = await Promise.all([
+            prisma.fplEvent.findMany({ select: { id: true, finished: true, isCurrent: true } }),
+            prisma.fplPlayerMap.findMany({ select: { fplId: true } }),
+            prisma.fplEventPoints.findMany({
+                where: { minutes: { gt: 0 } },
+                select: { fplPlayerId: true, event: true, minutes: true },
+            }),
+            prisma.fplPlayerMatch.findMany({ select: { fplPlayerId: true, event: true, updatedAt: true } }),
+        ])
+        const mapped = new Set(maps.map((m) => m.fplId))
+        const finished = new Set(events.filter((e) => e.finished).map((e) => e.id))
+        const current = events.find((e) => e.isCurrent)
+        const recent = new Set(current ? [current.id, current.id - 1] : [])
+        const storedKeys = new Set(stored.map((s) => `${s.fplPlayerId}:${s.event}`))
+        const newest = new Map<number, number>()
+
+        for (const s of stored) {
+            newest.set(s.fplPlayerId, Math.max(newest.get(s.fplPlayerId) ?? 0, s.updatedAt.getTime()))
+        }
+
+        const missing = new Set<number>()
+        const stale = new Set<number>()
+        const minutes = new Map<number, number>()
+
+        for (const row of played) {
+            if (!mapped.has(row.fplPlayerId)) continue
+
+            minutes.set(row.fplPlayerId, (minutes.get(row.fplPlayerId) ?? 0) + row.minutes)
+
+            if (finished.has(row.event) && !storedKeys.has(`${row.fplPlayerId}:${row.event}`)) {
+                missing.add(row.fplPlayerId)
+            } else if (recent.has(row.event) && (newest.get(row.fplPlayerId) ?? 0) < staleBefore) {
+                stale.add(row.fplPlayerId)
+            }
+        }
+
+        const byMinutes = (a: number, b: number) => (minutes.get(b) ?? 0) - (minutes.get(a) ?? 0)
+
+        return [
+            ...[...missing].sort(byMinutes),
+            ...[...stale].filter((id) => !missing.has(id)).sort(byMinutes),
+        ].slice(0, limit)
+    }
+
+    async savePlayerMatches(rows: FplPlayerMatchRow[]): Promise<void> {
+        for (const group of chunk(rows, WRITE_CHUNK_SIZE)) {
+            await prisma.$transaction(
+                group.map((row) =>
+                    prisma.fplPlayerMatch.upsert({
+                        where: {
+                            fplPlayerId_fplFixtureId: {
+                                fplPlayerId: row.fplPlayerId,
+                                fplFixtureId: row.fplFixtureId,
+                            },
+                        },
+                        create: row,
+                        update: row,
+                    }),
+                ),
+            )
+        }
     }
 }

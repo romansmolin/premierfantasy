@@ -33,6 +33,7 @@ const allOk = {
     'match-stats': ok,
     'fpl-fixtures': ok,
     'fpl-points': ok,
+    'fpl-matches': ok,
     forecast: ok,
 }
 
@@ -70,6 +71,7 @@ describe('SyncCronController', () => {
             'match-stats': track('match-stats'),
             'fpl-fixtures': track('fpl-fixtures'),
             'fpl-points': track('fpl-points'),
+            'fpl-matches': track('fpl-matches'),
             forecast: track('forecast'),
         })
 
@@ -82,6 +84,7 @@ describe('SyncCronController', () => {
             'match-stats',
             'fpl-fixtures',
             'fpl-points',
+            'fpl-matches',
             'forecast',
         ])
         expect(Object.keys(await response.json())).toEqual(order)

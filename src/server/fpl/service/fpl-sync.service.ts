@@ -12,6 +12,7 @@ import type {
     FixtureFplLink,
     FixtureForLinking,
     FplGameSettingsRow,
+    FplPlayerMatchRow,
     IFplRepository,
 } from '../repository/fpl.repository.interface'
 import type { JobOutcome } from '@/server/sync/lib/job.types'
@@ -19,6 +20,7 @@ import type { JobOutcome } from '@/server/sync/lib/job.types'
 const POSITIONS = { 1: 'GK', 2: 'DEF', 3: 'MID', 4: 'FWD' } as const
 const MIN_FPL_FIXTURES = 100
 const MIN_LIVE_ELEMENTS = 100
+const MAX_PLAYERS_PER_RUN = 350
 const MAX_KICKOFF_DIFF_MS = 36 * 60 * 60 * 1000
 
 export class FplSyncService implements IFplSyncService {
@@ -63,6 +65,7 @@ export class FplSyncService implements IFplSyncService {
                 status: e.status,
                 chanceOfPlaying: e.chance_of_playing_next_round,
                 news: e.news,
+                penaltiesOrder: e.penalties_order,
             })),
         )
 
@@ -177,6 +180,52 @@ export class FplSyncService implements IFplSyncService {
         return { status: 'OK', stats }
     }
 
+    async syncPlayerMatches(maxPlayers = MAX_PLAYERS_PER_RUN): Promise<JobOutcome> {
+        const ids = await this.repo.findPlayersNeedingMatches(maxPlayers, new Date())
+        const stats = { players: 0, rows: 0, failed: 0 }
+
+        for (const fplId of ids) {
+            let rows: FplPlayerMatchRow[]
+
+            try {
+                const summary = await this.client.getElementSummary(fplId)
+
+                if (!Array.isArray(summary?.history)) throw new Error(`FPL player ${fplId} has no history`)
+
+                rows = summary.history.map((h) => ({
+                    fplPlayerId: fplId,
+                    fplFixtureId: h.fixture,
+                    event: h.round,
+                    minutes: h.minutes,
+                    starts: h.starts,
+                    goals: h.goals_scored,
+                    assists: h.assists,
+                    xg: parseDecimal(h.expected_goals),
+                    xa: parseDecimal(h.expected_assists),
+                    totalPoints: h.total_points,
+                    wasHome: h.was_home,
+                }))
+            } catch {
+                stats.failed += 1
+
+                continue
+            }
+
+            await this.repo.savePlayerMatches(rows)
+            stats.players += 1
+            stats.rows += rows.length
+        }
+
+        // One broken player is normal; most of them failing means FPL is blocking or changed the answer.
+        if (stats.failed * 2 > ids.length) {
+            throw new SuspiciousResponseError(
+                `FPL player summaries failed for ${stats.failed} of ${ids.length} players`,
+            )
+        }
+
+        return { status: 'OK', stats }
+    }
+
     private pickFixture(candidates: FixtureForLinking[], kickoff: string | null): FixtureForLinking | null {
         if (candidates.length === 0) return null
 
@@ -214,4 +263,11 @@ export class FplSyncService implements IFplSyncService {
                 ),
         }
     }
+}
+
+/** FPL sends xG as a string; anything that is not a number becomes null. */
+function parseDecimal(value: string): number | null {
+    const n = Number.parseFloat(value)
+
+    return Number.isFinite(n) ? n : null
 }

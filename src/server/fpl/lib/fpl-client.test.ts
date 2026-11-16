@@ -51,4 +51,15 @@ describe('createFplClient', () => {
             'https://fantasy.premierleague.com/api/event/50/live/',
         )
     })
+
+    it('fetches a player summary from the element-summary endpoint', async () => {
+        const fetchImpl = vi.fn().mockResolvedValue(ok({ history: [] }))
+
+        await expect(createFplClient({ fetchImpl, sleep: noSleep }).getElementSummary(7)).resolves.toEqual({
+            history: [],
+        })
+        expect(String(fetchImpl.mock.calls[0][0])).toBe(
+            'https://fantasy.premierleague.com/api/element-summary/7/',
+        )
+    })
 })

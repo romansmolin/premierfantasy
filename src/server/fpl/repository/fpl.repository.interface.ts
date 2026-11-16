@@ -55,6 +55,21 @@ export interface FplAvailabilityRow {
     status: string
     chanceOfPlaying: number | null
     news: string
+    penaltiesOrder: number | null
+}
+
+export interface FplPlayerMatchRow {
+    fplPlayerId: number
+    fplFixtureId: number
+    event: number
+    minutes: number
+    starts: number
+    goals: number
+    assists: number
+    xg: number | null
+    xa: number | null
+    totalPoints: number
+    wasHome: boolean
 }
 
 export interface IFplRepository {
@@ -83,4 +98,12 @@ export interface IFplRepository {
     findEvents(): Promise<{ id: number; finished: boolean; isCurrent: boolean }[]>
     findEventsWithPoints(): Promise<Set<number>>
     saveEventPoints(event: number, rows: FplEventPointRow[]): Promise<void>
+    /**
+     * FPL ids of mapped players whose per-match rows are missing (minutes > 0 in a finished event without a row)
+     * or stale (minutes > 0 in the current or previous event, newest row older than 12 hours).
+     * Missing first, then by season minutes descending.
+     */
+    findPlayersNeedingMatches(limit: number, now: Date): Promise<number[]>
+    /** Upserts on (fplPlayerId, fplFixtureId). */
+    savePlayerMatches(rows: FplPlayerMatchRow[]): Promise<void>
 }

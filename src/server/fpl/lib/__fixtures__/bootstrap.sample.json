@@ -12,7 +12,8 @@
             "status": "a",
             "chance_of_playing_next_round": null,
             "news": "",
-            "minutes": 900
+            "minutes": 900,
+            "penalties_order": null
         },
         {
             "id": 2,
@@ -26,7 +27,8 @@
             "status": "a",
             "chance_of_playing_next_round": null,
             "news": "",
-            "minutes": 0
+            "minutes": 0,
+            "penalties_order": null
         },
         {
             "id": 3,
@@ -40,7 +42,8 @@
             "status": "a",
             "chance_of_playing_next_round": null,
             "news": "",
-            "minutes": 0
+            "minutes": 0,
+            "penalties_order": null
         },
         {
             "id": 4,
@@ -54,7 +57,8 @@
             "status": "a",
             "chance_of_playing_next_round": null,
             "news": "",
-            "minutes": 900
+            "minutes": 900,
+            "penalties_order": null
         },
         {
             "id": 12,
@@ -68,7 +72,8 @@
             "status": "i",
             "chance_of_playing_next_round": 0,
             "news": "Thigh injury - Unknown return date",
-            "minutes": 596
+            "minutes": 596,
+            "penalties_order": null
         },
         {
             "id": 15,
@@ -82,7 +87,8 @@
             "status": "a",
             "chance_of_playing_next_round": null,
             "news": "",
-            "minutes": 823
+            "minutes": 823,
+            "penalties_order": null
         },
         {
             "id": 27,
@@ -96,7 +102,8 @@
             "status": "u",
             "chance_of_playing_next_round": 0,
             "news": "Has joined FC Barcelona permanently",
-            "minutes": 0
+            "minutes": 0,
+            "penalties_order": null
         },
         {
             "id": 411,
@@ -110,7 +117,8 @@
             "status": "a",
             "chance_of_playing_next_round": 100,
             "news": "",
-            "minutes": 889
+            "minutes": 889,
+            "penalties_order": null
         },
         {
             "id": 426,
@@ -124,7 +132,8 @@
             "status": "a",
             "chance_of_playing_next_round": null,
             "news": "",
-            "minutes": 810
+            "minutes": 810,
+            "penalties_order": null
         }
     ],
     "teams": [

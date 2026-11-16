@@ -15,6 +15,8 @@ export interface FplBootstrap {
         chance_of_playing_next_round: number | null
         news: string
         minutes: number
+        /** 1 = first penalty taker. */
+        penalties_order: number | null
     }[]
     teams: { id: number; code: number; name: string; short_name: string }[]
     events: {
@@ -49,4 +51,21 @@ export interface FplFixture {
 
 export interface FplEventLive {
     elements: { id: number; stats: { total_points: number; minutes: number } }[]
+}
+
+/** `/element-summary/{id}/`: one history entry per fixture the player's team played. */
+export interface FplElementSummary {
+    history: {
+        fixture: number
+        round: number
+        minutes: number
+        starts: number
+        goals_scored: number
+        assists: number
+        /** Decimal as a string, e.g. "0.45". */
+        expected_goals: string
+        expected_assists: string
+        total_points: number
+        was_home: boolean
+    }[]
 }

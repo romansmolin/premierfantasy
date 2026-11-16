@@ -25,6 +25,7 @@ const el = (
     chance_of_playing_next_round: null,
     news: '',
     minutes: 900,
+    penalties_order: null,
 })
 
 const our = (id: string, name: string, position: OurPlayer['position'], teamId: string): OurPlayer => ({

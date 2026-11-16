@@ -1,4 +1,4 @@
-import type { FplBootstrap, FplEventLive, FplFixture } from './fpl.types'
+import type { FplBootstrap, FplElementSummary, FplEventLive, FplFixture } from './fpl.types'
 
 const BASE_URL = 'https://fantasy.premierleague.com/api'
 const USER_AGENT = 'Mozilla/5.0 (compatible; premierfantasy-sync)'
@@ -17,6 +17,8 @@ export interface IFplClient {
     getFixtures(): Promise<FplFixture[]>
     /** Throws FplNotFoundError for an event that does not exist (yet). */
     getEventLive(event: number): Promise<FplEventLive>
+    /** Per-fixture history of one player. Throws FplNotFoundError for an unknown player. */
+    getElementSummary(fplId: number): Promise<FplElementSummary>
 }
 
 interface FplClientOptions {
@@ -59,6 +61,7 @@ export function createFplClient({
         getBootstrap: () => get<FplBootstrap>('/bootstrap-static/'),
         getFixtures: () => get<FplFixture[]>('/fixtures/'),
         getEventLive: (event) => get<FplEventLive>(`/event/${event}/live/`),
+        getElementSummary: (fplId) => get<FplElementSummary>(`/element-summary/${fplId}/`),
     }
 }
 
