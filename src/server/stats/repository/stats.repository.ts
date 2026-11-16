@@ -26,6 +26,7 @@ const fixtureSelect = {
     id: true,
     kickoff: true,
     status: true,
+    fplEvent: true,
     homeTeam: { select: { id: true, name: true, logo: true } },
     awayTeam: { select: { id: true, name: true, logo: true } },
 } as const
@@ -34,9 +35,17 @@ const toFixture = (f: {
     id: string
     kickoff: Date
     status: string
+    fplEvent: number | null
     homeTeam: ClubRef
     awayTeam: ClubRef
-}): StatsFixture => ({ id: f.id, kickoff: f.kickoff, status: f.status, home: f.homeTeam, away: f.awayTeam })
+}): StatsFixture => ({
+    id: f.id,
+    kickoff: f.kickoff,
+    status: f.status,
+    fplEvent: f.fplEvent,
+    home: f.homeTeam,
+    away: f.awayTeam,
+})
 
 export class StatsRepository implements IStatsRepository {
     async findPlayers(): Promise<StatsPlayer[]> {
@@ -188,7 +197,7 @@ export class StatsRepository implements IStatsRepository {
         const rows = await prisma.fixture.findMany({
             where: { fplEvent: { gte: first, lt: first + events } },
             orderBy: { kickoff: 'asc' },
-            select: { ...fixtureSelect, fplEvent: true },
+            select: fixtureSelect,
         })
 
         return rows.flatMap((r) => (r.fplEvent === null ? [] : [{ ...toFixture(r), event: r.fplEvent }]))

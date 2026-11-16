@@ -29,6 +29,8 @@ export interface StatsFixture {
     id: string
     kickoff: Date
     status: string
+    /** FPL gameweek of the fixture; null when unscheduled. */
+    fplEvent: number | null
     home: ClubRef
     away: ClubRef
 }

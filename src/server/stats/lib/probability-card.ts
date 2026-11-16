@@ -38,6 +38,8 @@ export interface CardInput {
     lowData: boolean
     /** Expected points of the v1 forecast for the next event; null when v1 is off. */
     v1Points: number | null
+    /** The gameweek the v1 forecast covers; null when v1 is off. v1 points are a whole-gameweek total. */
+    v1Event: number | null
     facts: ExplainFacts
     now: Date
 }
@@ -66,6 +68,11 @@ export function buildProbabilityCard(input: CardInput): PlayerProbabilityCard | 
     if (shown.length === 0 && !lowData) return null
 
     const off = new Set<string>()
+    // v1 points are per gameweek: usable for match 1 only when it is the player's single match of v1's event.
+    const inV1Event = (id: string) =>
+        input.v1Event !== null && input.fixtures.get(id)?.fplEvent === input.v1Event
+    const doubleGameweek = shown.filter((r) => inV1Event(r.fixtureId)).length > 1
+    const v1Usable = (id: string) => input.v1Points !== null && inV1Event(id) && !doubleGameweek
 
     const on = (metric: Metric, horizon: number): boolean => {
         const h = gateHorizon(horizon)
@@ -74,6 +81,16 @@ export function buildProbabilityCard(input: CardInput): PlayerProbabilityCard | 
         if (!ok) off.add(reasonOf(gates, metric, h, metric === 'outcome' ? undefined : position))
 
         return ok
+    }
+
+    const v1Fallback = (id: string): number | null => {
+        if (v1Usable(id)) return input.v1Points
+
+        if (doubleGameweek) {
+            off.add('Points for a double gameweek are hidden until the v2 points forecast passes its check')
+        }
+
+        return null
     }
 
     const matches = shown.map((r): PlayerProbabilityCard['matches'][number] => {
@@ -104,7 +121,7 @@ export function buildProbabilityCard(input: CardInput): PlayerProbabilityCard | 
                 : r.horizon === 1
                   ? pointsMeanOn
                       ? r.expectedPoints
-                      : input.v1Points
+                      : v1Fallback(r.fixtureId)
                   : gated(r.expectedPoints, pointsOn),
             pointsBuckets: pointsOn ? r.pointsBuckets : null,
             pWin: fp ? gated(isHome ? fp.pHome : fp.pAway, outcome) : null,

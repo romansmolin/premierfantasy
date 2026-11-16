@@ -115,10 +115,18 @@ const allGates = (off: string[] = []): GateResult[] =>
 
 const future = (day: number) => new Date(Date.UTC(2099, 0, day))
 
-const fixture = (id: string, day: number, home = 'LIV', away = 'ARS', status = 'NS'): StatsFixture => ({
+const fixture = (
+    id: string,
+    day: number,
+    home = 'LIV',
+    away = 'ARS',
+    status = 'NS',
+    fplEvent: number | null = 11,
+): StatsFixture => ({
     id,
     kickoff: future(day),
     status,
+    fplEvent,
     home: club(home),
     away: club(away),
 })
@@ -369,7 +377,7 @@ describe('StatsService probabilities', () => {
                 updatedAt: future(1),
             },
             rows: { p1: [prob('p1', 'fx1', 1), prob('p1', 'fx2', 2)] },
-            fixtures: [f1, f2],
+            fixtures: [f1, fixture('fx2', 12, 'ARS', 'LIV', 'NS', 12)],
         })
         const [first, second] = (await make(true, setup).getPlayer('p1'))?.probabilities?.matches ?? []
 
@@ -377,6 +385,35 @@ describe('StatsService probabilities', () => {
         expect(first.expectedPoints).toBe(7)
         expect(second.pointsBuckets).toBeNull()
         expect(second.expectedPoints).toBeNull()
+    })
+
+    const meanOff = { evaluatedAt: future(1), eventsEvaluated: 10, pointsMeanOn: false, updatedAt: future(1) }
+
+    it('a double gameweek hides the v1 points of match 1 when pointsMeanOn is false', async () => {
+        const setup = evaluated({
+            status: meanOff,
+            rows: { p1: [prob('p1', 'fx1', 1), prob('p1', 'fx2', 2)] },
+            fixtures: [f1, f2],
+        })
+        const card = (await make(true, setup).getPlayer('p1'))?.probabilities
+
+        expect(card?.matches.map((m) => m.expectedPoints)).toEqual([null, null])
+        expect(card?.offReasons.some((r) => r.includes('double gameweek'))).toBe(true)
+    })
+
+    it('a single-gameweek player still gets the v1 points of match 1 when pointsMeanOn is false', async () => {
+        const setup = evaluated({ status: meanOff, rows: { p1: [prob('p1', 'fx1', 1)] }, fixtures: [f1] })
+        const card = (await make(true, setup).getPlayer('p1'))?.probabilities
+
+        expect(card?.matches[0].expectedPoints).toBe(7)
+        expect(card?.offReasons.some((r) => r.includes('double gameweek'))).toBe(false)
+    })
+
+    it('v1 points are not used for a horizon 1 fixture outside the v1 forecast event', async () => {
+        const later = fixture('fx9', 5, 'LIV', 'ARS', 'NS', 12)
+        const setup = evaluated({ status: meanOff, rows: { p1: [prob('p1', 'fx9', 1)] }, fixtures: [later] })
+
+        expect((await make(true, setup).getPlayer('p1'))?.probabilities?.matches[0].expectedPoints).toBeNull()
     })
 
     it('without v1 the horizon 1 points are null when pointsMeanOn is false', async () => {

@@ -210,6 +210,7 @@ export class StatsService implements IStatsService {
             penaltyOrder,
             appearances,
             status.enabled ? (prediction?.expectedPoints ?? null) : null,
+            status.enabled ? status.nextEvent : null,
         )
 
         return {
@@ -250,6 +251,7 @@ export class StatsService implements IStatsService {
         penaltyOrder: number | null,
         appearances: number,
         v1Points: number | null,
+        v1Event: number | null,
     ) {
         const [status, rows] = await Promise.all([
             this.probabilities.getStatus(),
@@ -272,6 +274,7 @@ export class StatsService implements IStatsService {
             status,
             lowData: appearances < MIN_APPEARANCES,
             v1Points,
+            v1Event,
             facts: explainFactsOf(player, form, penaltyOrder),
             now: new Date(),
         })
