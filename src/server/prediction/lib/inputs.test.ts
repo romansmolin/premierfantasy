@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { availabilityFactor, buildInputsForEvent, positionPriors } from './inputs'
+import { availabilityFactor, buildInputsForEvent, positionPriors, prepareEvent } from './inputs'
 
 import type { DatasetFixture, ForecastDataset, StoredMatch } from './inputs'
 
@@ -45,6 +45,7 @@ const line = (
     tackles: 1,
     blocks: 1,
     interceptions: 1,
+    isStarter: true,
     position: 'MID',
     ...extra,
 })
@@ -54,6 +55,7 @@ const dataset = (overrides: Partial<ForecastDataset> = {}): ForecastDataset => (
     fixtures: [],
     players: [{ playerId: 'p1', fplId: 101, position: 'MID', currentTeamId: 'A' }],
     fplPoints: new Map(),
+    fplMatches: new Map(),
     availability: new Map(),
     events: [
         { id: 2, finished: true, isNext: false, isCurrent: false },
@@ -198,5 +200,30 @@ describe('positionPriors', () => {
 
         expect(priors.GK.saves).toBeGreaterThan(1)
         expect(priors.FWD.goals).toBeGreaterThan(priors.DEF.goals)
+    })
+})
+
+describe('prepareEvent', () => {
+    it('returns null prepared for an event without fixtures', () => {
+        const result = prepareEvent(dataset(base()), 9)
+
+        expect(result).toEqual({ event: 9, prepared: null })
+    })
+
+    it('cutoff is the earliest kickoff of the event', () => {
+        const fixtures = [fixture('f1', 5, 'A', 'B', 3, false), fixture('f2', 3, 'C', 'D', 3, false)]
+        const { prepared } = prepareEvent(dataset({ fixtures }), 3)
+
+        expect(prepared?.cutoff).toEqual(day(3))
+        expect(prepared?.eventFixtures).toHaveLength(2)
+    })
+
+    it("resolves 'next' to the event flagged isNext", () => {
+        const result = prepareEvent(dataset(base()), 'next')
+
+        expect(result.event).toBe(3)
+        expect(result.prepared?.eventFixtures.map((f) => f.fixtureId)).toEqual(['f3'])
+        expect(result.prepared?.finished.map((f) => f.fixtureId)).toEqual(['f2', 'f1'])
+        expect(result.prepared?.byPlayer.get('p1')).toHaveLength(2)
     })
 })

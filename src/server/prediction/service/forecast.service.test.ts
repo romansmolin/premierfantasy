@@ -48,6 +48,7 @@ function dataset(overrides: Partial<ForecastDataset> = {}): ForecastDataset {
         tackles: 2,
         blocks: 1,
         interceptions: 1,
+        isStarter: true,
         position: 'MID',
     }))
 
@@ -65,6 +66,7 @@ function dataset(overrides: Partial<ForecastDataset> = {}): ForecastDataset {
                 ]),
             ],
         ]),
+        fplMatches: new Map(),
         availability: new Map(),
         events: [
             { id: 1, finished: true, isNext: false, isCurrent: false },

@@ -2,7 +2,7 @@ import { computeTeamStrengths, expectedGoals } from './team-strength'
 
 import type { FixtureContext, MatchLine, PlayerInput, PositionPrior } from './model'
 import type { Position } from './scoring-rules'
-import type { FinishedMatch } from './team-strength'
+import type { FinishedMatch, TeamStrengths } from './team-strength'
 
 export interface StoredMatch {
     kickoff: Date
@@ -18,6 +18,8 @@ export interface StoredMatch {
     tackles: number
     blocks: number
     interceptions: number
+    /** False when the player came off the bench. */
+    isStarter: boolean
     position: Position | null
 }
 
@@ -32,6 +34,20 @@ export interface DatasetFixture {
     status: string
 }
 
+/** One FPL per-match line of a player. `fixtureId` is our `Fixture.id`, matched through `Fixture.fplFixtureId`. */
+export interface FplMatchRow {
+    fixtureId: string
+    event: number
+    minutes: number
+    started: boolean
+    goals: number
+    assists: number
+    xg: number | null
+    xa: number | null
+    totalPoints: number
+    wasHome: boolean
+}
+
 export interface ForecastDataset {
     /** Every player line of the stored seasons, any order. */
     matches: StoredMatch[]
@@ -40,6 +56,8 @@ export interface ForecastDataset {
     players: { playerId: string; fplId: number; position: Position; currentTeamId: string | null }[]
     /** playerId → event → FPL actual points. */
     fplPoints: Map<string, Map<number, { totalPoints: number; minutes: number }>>
+    /** playerId → FPL per-match rows, any order; rows whose FPL fixture is not in our table are dropped. */
+    fplMatches: Map<string, FplMatchRow[]>
     availability: Map<string, { status: string; chanceOfPlaying: number | null }>
     events: { id: number; finished: boolean; isNext: boolean; isCurrent: boolean }[]
 }
@@ -115,16 +133,26 @@ export interface BuiltInput {
     input: PlayerInput
 }
 
+export interface PreparedEvent {
+    cutoff: Date
+    strengths: TeamStrengths
+    /** Finished fixtures before the cutoff, newest first. */
+    finished: DatasetFixture[]
+    /** Player lines before the cutoff. */
+    before: StoredMatch[]
+    priors: Record<Position, PositionPrior>
+    byPlayer: Map<string, StoredMatch[]>
+    eventFixtures: DatasetFixture[]
+}
+
 /**
- * Model inputs for every FPL-mapped player for one event, using only what was known before the event's
- * first kickoff. With `useAvailability` (forecasting the upcoming event) the player's current FPL club and
- * availability are used; without it (backtesting) the club is the one of the latest match before the cutoff.
+ * What is known before the first kickoff of an event, shared by every model. `prepared` is null when the event
+ * has no fixtures; `event` is null when `'next'` cannot be resolved.
  */
-export function buildInputsForEvent(
+export function prepareEvent(
     data: ForecastDataset,
     event: number | 'next',
-    opts: { useAvailability: boolean },
-): { event: number | null; cutoff: Date | null; inputs: BuiltInput[] } {
+): { event: number | null; prepared: PreparedEvent | null } {
     const eventId =
         event === 'next'
             ? (data.events.find((e) => e.isNext)?.id ??
@@ -132,11 +160,11 @@ export function buildInputsForEvent(
               null)
             : event
 
-    if (eventId === null) return { event: null, cutoff: null, inputs: [] }
+    if (eventId === null) return { event: null, prepared: null }
 
     const eventFixtures = data.fixtures.filter((f) => f.fplEvent === eventId)
 
-    if (eventFixtures.length === 0) return { event: eventId, cutoff: null, inputs: [] }
+    if (eventFixtures.length === 0) return { event: eventId, prepared: null }
 
     const cutoff = new Date(Math.min(...eventFixtures.map((f) => f.kickoff.getTime())))
     const finished = data.fixtures
@@ -162,6 +190,28 @@ export function buildInputsForEvent(
     const byPlayer = new Map<string, StoredMatch[]>()
 
     for (const m of before) byPlayer.set(m.playerId, [...(byPlayer.get(m.playerId) ?? []), m])
+
+    return {
+        event: eventId,
+        prepared: { cutoff, strengths, finished, before, priors, byPlayer, eventFixtures },
+    }
+}
+
+/**
+ * Model inputs for every FPL-mapped player for one event, using only what was known before the event's
+ * first kickoff. With `useAvailability` (forecasting the upcoming event) the player's current FPL club and
+ * availability are used; without it (backtesting) the club is the one of the latest match before the cutoff.
+ */
+export function buildInputsForEvent(
+    data: ForecastDataset,
+    event: number | 'next',
+    opts: { useAvailability: boolean },
+): { event: number | null; cutoff: Date | null; inputs: BuiltInput[] } {
+    const { event: eventId, prepared } = prepareEvent(data, event)
+
+    if (!prepared) return { event: eventId, cutoff: null, inputs: [] }
+
+    const { cutoff, strengths, finished, priors, byPlayer, eventFixtures } = prepared
 
     const inputs: BuiltInput[] = []
 

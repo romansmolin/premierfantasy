@@ -138,6 +138,7 @@ function world(events: number): ForecastDataset {
                 tackles: 2,
                 blocks: 1,
                 interceptions: 1,
+                isStarter: true,
                 position: 'MID',
             })
         }
@@ -157,6 +158,7 @@ function world(events: number): ForecastDataset {
             { playerId: 'p4', fplId: 4, position: 'MID', currentTeamId: 'E' },
         ],
         fplPoints,
+        fplMatches: new Map(),
         availability: new Map(),
         events: Array.from({ length: events }, (_, i) => ({
             id: i + 1,

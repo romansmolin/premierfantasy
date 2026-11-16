@@ -7,7 +7,7 @@ import type { Position } from '../lib/scoring-rules'
 
 export class ForecastDataRepository implements IForecastDataRepository {
     async loadDataset(): Promise<ForecastDataset> {
-        const [stats, fixtures, maps, statuses, points, events] = await Promise.all([
+        const [stats, fixtures, maps, statuses, points, events, fplRows] = await Promise.all([
             prisma.playerMatchStats.findMany({
                 where: {
                     fixture: {
@@ -31,6 +31,7 @@ export class ForecastDataRepository implements IForecastDataRepository {
                     tackles: true,
                     blocks: true,
                     interceptions: true,
+                    isSubstitute: true,
                     fixture: { select: { kickoff: true } },
                 },
             }),
@@ -47,6 +48,7 @@ export class ForecastDataRepository implements IForecastDataRepository {
                     awayGoals: true,
                     fplEvent: true,
                     status: true,
+                    fplFixtureId: true,
                 },
             }),
             prisma.fplPlayerMap.findMany({
@@ -57,6 +59,7 @@ export class ForecastDataRepository implements IForecastDataRepository {
                 select: { fplPlayerId: true, event: true, totalPoints: true, minutes: true },
             }),
             prisma.fplEvent.findMany({ select: { id: true, finished: true, isNext: true, isCurrent: true } }),
+            prisma.fplPlayerMatch.findMany(),
         ])
 
         const statusByFpl = new Map(statuses.map((s) => [s.fplId, s]))
@@ -74,6 +77,34 @@ export class ForecastDataRepository implements IForecastDataRepository {
             fplPoints.set(playerId, perEvent)
         }
 
+        const fixtureByFpl = new Map(
+            fixtures.flatMap((f) => (f.fplFixtureId === null ? [] : [[f.fplFixtureId, f.id] as const])),
+        )
+        const fplMatches: ForecastDataset['fplMatches'] = new Map()
+
+        for (const row of fplRows) {
+            const playerId = playerByFpl.get(row.fplPlayerId)
+            const fixtureId = fixtureByFpl.get(row.fplFixtureId)
+
+            if (!playerId || !fixtureId) continue
+
+            fplMatches.set(playerId, [
+                ...(fplMatches.get(playerId) ?? []),
+                {
+                    fixtureId,
+                    event: row.event,
+                    minutes: row.minutes,
+                    started: row.starts > 0,
+                    goals: row.goals,
+                    assists: row.assists,
+                    xg: row.xg,
+                    xa: row.xa,
+                    totalPoints: row.totalPoints,
+                    wasHome: row.wasHome,
+                },
+            ])
+        }
+
         return {
             matches: stats.map((s) => ({
                 kickoff: s.fixture.kickoff,
@@ -89,6 +120,7 @@ export class ForecastDataRepository implements IForecastDataRepository {
                 tackles: s.tackles,
                 blocks: s.blocks,
                 interceptions: s.interceptions,
+                isStarter: !s.isSubstitute,
                 position: s.position as Position | null,
             })),
             fixtures: fixtures.map((f) => ({
@@ -108,6 +140,7 @@ export class ForecastDataRepository implements IForecastDataRepository {
                 currentTeamId: statusByFpl.get(m.fplId)?.teamId ?? m.player.teamId,
             })),
             fplPoints,
+            fplMatches,
             availability: new Map(
                 maps
                     .filter((m) => statusByFpl.has(m.fplId))
