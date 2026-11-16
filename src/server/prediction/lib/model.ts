@@ -71,9 +71,13 @@ export interface PlayerForecast {
     components: Record<string, number>
 }
 
-type RateKey = keyof PositionPrior
+export type RateKey = keyof PositionPrior
 
-function rates(appearances: MatchLine[], prior: PositionPrior, params: ModelParams): Record<RateKey, number> {
+export function rates(
+    appearances: MatchLine[],
+    prior: PositionPrior,
+    params: ModelParams,
+): Record<RateKey, number> {
     const w = decayWeights(appearances.length, params.decay)
     const exposure = appearances.reduce((sum, a, i) => sum + (w[i] * a.minutes) / 90, 0)
     const keys: RateKey[] = ['goals', 'assists', 'saves', 'yellowCards', 'redCards', 'defensiveActions']

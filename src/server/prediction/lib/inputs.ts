@@ -63,8 +63,10 @@ export interface ForecastDataset {
 }
 
 const FINISHED = new Set(['FT', 'AET', 'PEN'])
-const TEAM_MATCHES = 6
-const MAX_APPEARANCES = 10
+
+export const TEAM_MATCHES = 6
+export const MAX_APPEARANCES = 10
+
 const POSITIONS: Position[] = ['GK', 'DEF', 'MID', 'FWD']
 
 /** FPL status and chance of playing as a 0..1 multiplier on expected minutes. */
@@ -117,7 +119,7 @@ export function positionPriors(matches: StoredMatch[], cutoff: Date): Record<Pos
     return result
 }
 
-const toLine = (m: StoredMatch): MatchLine => ({
+export const toLine = (m: StoredMatch): MatchLine => ({
     minutes: m.minutes,
     goals: m.goals,
     assists: m.assists,
