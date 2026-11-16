@@ -7,6 +7,7 @@ import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/shared/ui/dialog'
 import { Input } from '@/shared/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
 import { POSITION_NAMES, priceLabel } from './player-card'
 import { PlayerPhoto } from './player-photo'
@@ -29,13 +30,14 @@ interface PlayerPickerProps {
     onPick: (player: PoolPlayer) => void
 }
 
+const ALL_CLUBS = 'all'
 const SORTS = { forecast: 'Expected points', form: 'Form', price: 'Price' } as const
 
 type Sort = keyof typeof SORTS
 
 export function PlayerPicker(props: PlayerPickerProps) {
     const [position, setPosition] = useState<Position>(props.positions[0])
-    const [club, setClub] = useState('')
+    const [club, setClub] = useState(ALL_CLUBS)
     const [q, setQ] = useState('')
     const [sort, setSort] = useState<Sort>(props.showForecast ? 'forecast' : 'form')
     const [affordable, setAffordable] = useState(false)
@@ -47,10 +49,17 @@ export function PlayerPicker(props: PlayerPickerProps) {
             ),
         [props.players],
     )
+    const clubItems = [
+        { value: ALL_CLUBS, label: 'All clubs' },
+        ...clubs.map(([value, label]) => ({ value, label })),
+    ]
+    const sortItems = Object.entries(SORTS)
+        .filter(([k]) => k !== 'forecast' || props.showForecast)
+        .map(([value, label]) => ({ value, label }))
     const key = sort === 'price' ? 'priceTenths' : sort
     const list = props.players
         .filter((p) => p.position === position)
-        .filter((p) => !club || p.clubId === club)
+        .filter((p) => club === ALL_CLUBS || p.clubId === club)
         .filter((p) => !q || p.name.toLowerCase().includes(q.toLowerCase()))
         .filter((p) => !affordable || (p.priceTenths ?? 0) <= props.bankTenths)
         .sort((a, b) => (b[key] ?? -1) - (a[key] ?? -1) || a.name.localeCompare(b.name))
@@ -87,33 +96,34 @@ export function PlayerPicker(props: PlayerPickerProps) {
                         value={q}
                         onChange={(e) => setQ(e.target.value)}
                     />
-                    <select
-                        className="h-8 rounded-md border bg-background px-2"
-                        aria-label="Club"
-                        value={club}
-                        onChange={(e) => setClub(e.target.value)}
-                    >
-                        <option value="">All clubs</option>
-                        {clubs.map(([id, name]) => (
-                            <option key={id} value={id}>
-                                {name}
-                            </option>
-                        ))}
-                    </select>
-                    <select
-                        className="h-8 rounded-md border bg-background px-2"
-                        aria-label="Sort by"
-                        value={sort}
-                        onChange={(e) => setSort(e.target.value as Sort)}
-                    >
-                        {Object.entries(SORTS)
-                            .filter(([k]) => k !== 'forecast' || props.showForecast)
-                            .map(([k, label]) => (
-                                <option key={k} value={k}>
-                                    {label}
-                                </option>
+                    <Select items={clubItems} value={club} onValueChange={(value) => value && setClub(value)}>
+                        <SelectTrigger aria-label="Club" className="w-44">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {clubItems.map((item) => (
+                                <SelectItem key={item.value} value={item.value}>
+                                    {item.label}
+                                </SelectItem>
                             ))}
-                    </select>
+                        </SelectContent>
+                    </Select>
+                    <Select
+                        items={sortItems}
+                        value={sort}
+                        onValueChange={(value) => value && setSort(value as Sort)}
+                    >
+                        <SelectTrigger aria-label="Sort by" className="w-40">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {sortItems.map((item) => (
+                                <SelectItem key={item.value} value={item.value}>
+                                    {item.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                     <label className="flex items-center gap-1.5 text-xs">
                         <input
                             type="checkbox"

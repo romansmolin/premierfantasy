@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import { clearSquads, fillSlot, fillWholeSquad, openBuilder, pickFromDialog } from './helpers'
+import { choose, clearSquads, fillSlot, fillWholeSquad, openBuilder, pickFromDialog } from './helpers'
 import { RICH_STATE } from './users'
 
 test.use({ storageState: RICH_STATE })
@@ -15,7 +15,7 @@ const slotsIn = (page: import('@playwright/test').Page, row: string) =>
 
 test.describe('building a squad by hand', () => {
     test('starts with an empty pitch: 11 slots, 4 bench slots, 4-4-2', async ({ page }) => {
-        await expect(page.getByRole('combobox', { name: 'Formation' })).toHaveValue('4-4-2')
+        await expect(page.getByRole('combobox', { name: 'Formation' })).toHaveText('4-4-2')
         await expect(slotsIn(page, 'FWD')).toHaveCount(2)
         await expect(slotsIn(page, 'MID')).toHaveCount(4)
         await expect(slotsIn(page, 'DEF')).toHaveCount(4)
@@ -26,7 +26,7 @@ test.describe('building a squad by hand', () => {
     })
 
     test('changing the formation redraws the rows', async ({ page }) => {
-        await page.getByRole('combobox', { name: 'Formation' }).selectOption('3-5-2')
+        await choose(page, 'Formation', '3-5-2')
 
         await expect(slotsIn(page, 'DEF')).toHaveCount(3)
         await expect(slotsIn(page, 'MID')).toHaveCount(5)
@@ -96,7 +96,7 @@ test.describe('building a squad by hand', () => {
 
         const dialog = page.getByRole('dialog')
 
-        await dialog.getByLabel('Sort by').selectOption('price')
+        await choose(dialog, 'Sort by', 'Price')
         await expect(dialog.getByRole('button', { name: 'In squad' })).toBeDisabled()
     })
 
@@ -107,7 +107,7 @@ test.describe('building a squad by hand', () => {
 
             const dialog = page.getByRole('dialog')
 
-            await dialog.getByLabel('Club').selectOption({ label: 'Arsenal' })
+            await choose(dialog, 'Club', 'Arsenal')
             await dialog.getByRole('button', { name: 'Add', exact: true }).first().click()
             await expect(dialog).toBeHidden()
         }
@@ -116,7 +116,7 @@ test.describe('building a squad by hand', () => {
 
         const dialog = page.getByRole('dialog')
 
-        await dialog.getByLabel('Club').selectOption({ label: 'Arsenal' })
+        await choose(dialog, 'Club', 'Arsenal')
         await expect(dialog.getByRole('button', { name: 'Club limit' }).first()).toBeDisabled()
         await expect(dialog.getByRole('button', { name: 'Add', exact: true })).toHaveCount(0)
     })
@@ -232,7 +232,7 @@ test.describe('building a squad by hand', () => {
         page,
     }) => {
         await fillWholeSquad(page, 'cheapest')
-        await page.getByRole('combobox', { name: 'Formation' }).selectOption('3-5-2')
+        await choose(page, 'Formation', '3-5-2')
 
         await expect(page.getByRole('button', { name: /open actions/ })).toHaveCount(15)
         await expect(slotsIn(page, 'DEF')).toHaveCount(3)

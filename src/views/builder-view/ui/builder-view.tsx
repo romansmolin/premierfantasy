@@ -36,6 +36,7 @@ import {
     DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
 import { Input } from '@/shared/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 import { Skeleton } from '@/shared/ui/skeleton'
 
 import { Pitch } from './pitch'
@@ -356,19 +357,27 @@ export function BuilderView() {
             <div className="space-y-3">
                 <div className="space-y-3 rounded-2xl border bg-card p-4">
                     <div className="grid grid-cols-3 gap-3">
-                        <label className="flex flex-col gap-1">
+                        <div className="flex flex-col gap-1">
                             <span className="text-xs text-muted-foreground">Formation</span>
-                            <select
-                                className="h-9 rounded-lg border bg-background px-2 text-sm font-semibold"
+                            <Select
                                 value={formationLabel(formation)}
-                                onChange={(e) => changeFormation(e.target.value)}
-                                aria-label="Formation"
+                                onValueChange={(value) => value && changeFormation(value)}
                             >
-                                {options.map((f) => (
-                                    <option key={formationLabel(f)}>{formationLabel(f)}</option>
-                                ))}
-                            </select>
-                        </label>
+                                <SelectTrigger
+                                    aria-label="Formation"
+                                    className="w-full text-sm font-semibold data-[size=default]:h-9"
+                                >
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {options.map((f) => (
+                                        <SelectItem key={formationLabel(f)} value={formationLabel(f)}>
+                                            {formationLabel(f)}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
                         <div className="flex flex-col gap-1">
                             <span className="text-xs text-muted-foreground">Players</span>
                             <span className="text-lg font-semibold leading-9" data-testid="player-count">

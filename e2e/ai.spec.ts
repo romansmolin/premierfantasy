@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import { balanceOf, clearSquads, fillWholeSquad, openBuilder } from './helpers'
+import { balanceOf, choose, clearSquads, fillWholeSquad, openBuilder } from './helpers'
 import { POOR_STATE, RICH_STATE } from './users'
 
 test.describe.configure({ mode: 'serial' })
@@ -43,7 +43,7 @@ test.describe('auto-build and squad review (rich user, 1000 credits)', () => {
         await dialog.getByRole('button', { name: 'Close' }).click()
 
         await page.getByRole('button', { name: 'Add DEF', exact: true }).first().click()
-        await page.getByRole('dialog').getByLabel('Sort by').selectOption('price')
+        await choose(page.getByRole('dialog'), 'Sort by', 'Price')
         await page.getByRole('dialog').getByRole('button', { name: 'Add', exact: true }).last().click()
 
         const defender = page.getByRole('button', { name: /open actions/ }).first()

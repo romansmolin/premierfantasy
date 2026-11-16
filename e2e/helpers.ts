@@ -1,6 +1,14 @@
 import { expect } from '@playwright/test'
 
-import type { Page } from '@playwright/test'
+import type { Locator, Page } from '@playwright/test'
+
+/** Chooses an option of a shadcn select (a combobox button with a popup list). */
+export async function choose(scope: Page | Locator, label: string, option: string) {
+    const page = 'page' in scope ? scope.page() : scope
+
+    await scope.getByRole('combobox', { name: label }).click()
+    await page.getByRole('option', { name: option, exact: true }).click()
+}
 
 export async function balanceOf(page: Page): Promise<number> {
     const response = await page.request.get('/api/wallet')
@@ -33,7 +41,7 @@ export async function pickFromDialog(page: Page, which: 'priciest' | 'cheapest')
     const dialog = page.getByRole('dialog')
 
     await expect(dialog).toBeVisible()
-    await dialog.getByLabel('Sort by').selectOption('price')
+    await choose(dialog, 'Sort by', 'Price')
 
     // Disabled rows say why ("In squad", "Club limit") instead of "Add", so this only sees allowed players.
     const add = dialog.getByRole('button', { name: 'Add', exact: true })
