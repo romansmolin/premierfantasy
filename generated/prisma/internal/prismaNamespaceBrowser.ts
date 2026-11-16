@@ -59,12 +59,15 @@ export const ModelName = {
     PlayerGameweekStats: 'PlayerGameweekStats',
     Prediction: 'Prediction',
     ModelEvaluation: 'ModelEvaluation',
+    MatchProbability: 'MatchProbability',
+    FixtureProbability: 'FixtureProbability',
     FplPlayerMap: 'FplPlayerMap',
     FplPlayerMapRejection: 'FplPlayerMapRejection',
     FplEvent: 'FplEvent',
     FplGameSettings: 'FplGameSettings',
     FplEventPoints: 'FplEventPoints',
     FplPlayerStatus: 'FplPlayerStatus',
+    FplPlayerMatch: 'FplPlayerMatch',
     Fixture: 'Fixture',
     PlayerMatchStats: 'PlayerMatchStats',
     PaymentToken: 'PaymentToken',
@@ -246,6 +249,40 @@ export const ModelEvaluationScalarFieldEnum = {
 export type ModelEvaluationScalarFieldEnum =
     (typeof ModelEvaluationScalarFieldEnum)[keyof typeof ModelEvaluationScalarFieldEnum]
 
+export const MatchProbabilityScalarFieldEnum = {
+    id: 'id',
+    modelVersion: 'modelVersion',
+    fixtureId: 'fixtureId',
+    playerId: 'playerId',
+    horizon: 'horizon',
+    pGoal: 'pGoal',
+    pAssist: 'pAssist',
+    pStart: 'pStart',
+    expectedMinutes: 'expectedMinutes',
+    expectedPoints: 'expectedPoints',
+    pointsBuckets: 'pointsBuckets',
+    createdAt: 'createdAt',
+} as const
+
+export type MatchProbabilityScalarFieldEnum =
+    (typeof MatchProbabilityScalarFieldEnum)[keyof typeof MatchProbabilityScalarFieldEnum]
+
+export const FixtureProbabilityScalarFieldEnum = {
+    id: 'id',
+    modelVersion: 'modelVersion',
+    fixtureId: 'fixtureId',
+    pHome: 'pHome',
+    pDraw: 'pDraw',
+    pAway: 'pAway',
+    xgHome: 'xgHome',
+    xgAway: 'xgAway',
+    leagueGoals: 'leagueGoals',
+    createdAt: 'createdAt',
+} as const
+
+export type FixtureProbabilityScalarFieldEnum =
+    (typeof FixtureProbabilityScalarFieldEnum)[keyof typeof FixtureProbabilityScalarFieldEnum]
+
 export const FplPlayerMapScalarFieldEnum = {
     id: 'id',
     fplId: 'fplId',
@@ -310,11 +347,31 @@ export const FplPlayerStatusScalarFieldEnum = {
     status: 'status',
     chanceOfPlaying: 'chanceOfPlaying',
     news: 'news',
+    penaltiesOrder: 'penaltiesOrder',
     updatedAt: 'updatedAt',
 } as const
 
 export type FplPlayerStatusScalarFieldEnum =
     (typeof FplPlayerStatusScalarFieldEnum)[keyof typeof FplPlayerStatusScalarFieldEnum]
+
+export const FplPlayerMatchScalarFieldEnum = {
+    id: 'id',
+    fplPlayerId: 'fplPlayerId',
+    fplFixtureId: 'fplFixtureId',
+    event: 'event',
+    minutes: 'minutes',
+    starts: 'starts',
+    goals: 'goals',
+    assists: 'assists',
+    xg: 'xg',
+    xa: 'xa',
+    totalPoints: 'totalPoints',
+    wasHome: 'wasHome',
+    updatedAt: 'updatedAt',
+} as const
+
+export type FplPlayerMatchScalarFieldEnum =
+    (typeof FplPlayerMatchScalarFieldEnum)[keyof typeof FplPlayerMatchScalarFieldEnum]
 
 export const FixtureScalarFieldEnum = {
     id: 'id',

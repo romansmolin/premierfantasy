@@ -301,13 +301,6 @@ export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
 }
 
-export type EnumPlayerPositionNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.PlayerPosition | Prisma.EnumPlayerPositionFieldRefInput<$PrismaModel> | null
-    in?: $Enums.PlayerPosition[] | Prisma.ListEnumPlayerPositionFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.PlayerPosition[] | Prisma.ListEnumPlayerPositionFieldRefInput<$PrismaModel> | null
-    not?: Prisma.NestedEnumPlayerPositionNullableFilter<$PrismaModel> | $Enums.PlayerPosition | null
-}
-
 export type FloatNullableFilter<$PrismaModel = never> = {
     equals?: number | Prisma.FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null
@@ -317,19 +310,6 @@ export type FloatNullableFilter<$PrismaModel = never> = {
     gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
     gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
     not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
-}
-
-export type EnumPlayerPositionNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PlayerPosition | Prisma.EnumPlayerPositionFieldRefInput<$PrismaModel> | null
-    in?: $Enums.PlayerPosition[] | Prisma.ListEnumPlayerPositionFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.PlayerPosition[] | Prisma.ListEnumPlayerPositionFieldRefInput<$PrismaModel> | null
-    not?:
-        | Prisma.NestedEnumPlayerPositionNullableWithAggregatesFilter<$PrismaModel>
-        | $Enums.PlayerPosition
-        | null
-    _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-    _min?: Prisma.NestedEnumPlayerPositionNullableFilter<$PrismaModel>
-    _max?: Prisma.NestedEnumPlayerPositionNullableFilter<$PrismaModel>
 }
 
 export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -346,6 +326,26 @@ export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
     _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
     _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
+export type EnumPlayerPositionNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.PlayerPosition | Prisma.EnumPlayerPositionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.PlayerPosition[] | Prisma.ListEnumPlayerPositionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.PlayerPosition[] | Prisma.ListEnumPlayerPositionFieldRefInput<$PrismaModel> | null
+    not?: Prisma.NestedEnumPlayerPositionNullableFilter<$PrismaModel> | $Enums.PlayerPosition | null
+}
+
+export type EnumPlayerPositionNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PlayerPosition | Prisma.EnumPlayerPositionFieldRefInput<$PrismaModel> | null
+    in?: $Enums.PlayerPosition[] | Prisma.ListEnumPlayerPositionFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.PlayerPosition[] | Prisma.ListEnumPlayerPositionFieldRefInput<$PrismaModel> | null
+    not?:
+        | Prisma.NestedEnumPlayerPositionNullableWithAggregatesFilter<$PrismaModel>
+        | $Enums.PlayerPosition
+        | null
+    _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+    _min?: Prisma.NestedEnumPlayerPositionNullableFilter<$PrismaModel>
+    _max?: Prisma.NestedEnumPlayerPositionNullableFilter<$PrismaModel>
 }
 
 export type EnumPaymentStatusFilter<$PrismaModel = never> = {
@@ -700,6 +700,22 @@ export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     _max?: Prisma.NestedDateTimeNullableFilter<$PrismaModel>
 }
 
+export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | Prisma.FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+    lte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+    gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+    gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+    not?: Prisma.NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+    _avg?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+    _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+    _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+    _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
 export type NestedEnumPlayerPositionNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.PlayerPosition | Prisma.EnumPlayerPositionFieldRefInput<$PrismaModel> | null
     in?: $Enums.PlayerPosition[] | Prisma.ListEnumPlayerPositionFieldRefInput<$PrismaModel> | null
@@ -718,22 +734,6 @@ export type NestedEnumPlayerPositionNullableWithAggregatesFilter<$PrismaModel = 
     _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
     _min?: Prisma.NestedEnumPlayerPositionNullableFilter<$PrismaModel>
     _max?: Prisma.NestedEnumPlayerPositionNullableFilter<$PrismaModel>
-}
-
-export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | Prisma.FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-    lte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-    gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-    gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-    not?: Prisma.NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
-    _avg?: Prisma.NestedFloatNullableFilter<$PrismaModel>
-    _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
-    _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
-    _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumPaymentStatusFilter<$PrismaModel = never> = {

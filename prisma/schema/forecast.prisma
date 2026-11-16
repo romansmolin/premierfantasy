@@ -34,3 +34,45 @@ model ModelEvaluation {
   @@index([modelVersion, createdAt])
   @@map("model_evaluations")
 }
+
+/// Per-match player probabilities for the next horizon (1..5) fixtures.
+model MatchProbability {
+  id              String   @id @default(uuid())
+  modelVersion    String   @map("model_version")
+  fixtureId       String   @map("fixture_id")
+  playerId        String   @map("player_id")
+  horizon         Int
+  pGoal           Float    @map("p_goal")
+  pAssist         Float    @map("p_assist")
+  pStart          Float    @map("p_start")
+  expectedMinutes Float    @map("expected_minutes")
+  expectedPoints  Float    @map("expected_points")
+  /// Four probabilities: 0-2, 3-5, 6-9, 10+ points.
+  pointsBuckets   Json     @map("points_buckets")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([modelVersion, fixtureId, playerId])
+  @@index([playerId])
+  @@map("match_probabilities")
+}
+
+/// Match outcome probabilities and expected goals of one fixture.
+model FixtureProbability {
+  id           String   @id @default(uuid())
+  modelVersion String   @map("model_version")
+  fixtureId    String   @map("fixture_id")
+  pHome        Float    @map("p_home")
+  pDraw        Float    @map("p_draw")
+  pAway        Float    @map("p_away")
+  xgHome       Float    @map("xg_home")
+  xgAway       Float    @map("xg_away")
+  leagueGoals  Float    @map("league_goals")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  fixture Fixture @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+
+  @@unique([modelVersion, fixtureId])
+  @@map("fixture_probabilities")
+}

@@ -383,12 +383,15 @@ export const ModelName = {
     PlayerGameweekStats: 'PlayerGameweekStats',
     Prediction: 'Prediction',
     ModelEvaluation: 'ModelEvaluation',
+    MatchProbability: 'MatchProbability',
+    FixtureProbability: 'FixtureProbability',
     FplPlayerMap: 'FplPlayerMap',
     FplPlayerMapRejection: 'FplPlayerMapRejection',
     FplEvent: 'FplEvent',
     FplGameSettings: 'FplGameSettings',
     FplEventPoints: 'FplEventPoints',
     FplPlayerStatus: 'FplPlayerStatus',
+    FplPlayerMatch: 'FplPlayerMatch',
     Fixture: 'Fixture',
     PlayerMatchStats: 'PlayerMatchStats',
     PaymentToken: 'PaymentToken',
@@ -431,12 +434,15 @@ export type TypeMap<
             | 'playerGameweekStats'
             | 'prediction'
             | 'modelEvaluation'
+            | 'matchProbability'
+            | 'fixtureProbability'
             | 'fplPlayerMap'
             | 'fplPlayerMapRejection'
             | 'fplEvent'
             | 'fplGameSettings'
             | 'fplEventPoints'
             | 'fplPlayerStatus'
+            | 'fplPlayerMatch'
             | 'fixture'
             | 'playerMatchStats'
             | 'paymentToken'
@@ -1273,6 +1279,158 @@ export type TypeMap<
                 }
             }
         }
+        MatchProbability: {
+            payload: Prisma.$MatchProbabilityPayload<ExtArgs>
+            fields: Prisma.MatchProbabilityFieldRefs
+            operations: {
+                findUnique: {
+                    args: Prisma.MatchProbabilityFindUniqueArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchProbabilityPayload> | null
+                }
+                findUniqueOrThrow: {
+                    args: Prisma.MatchProbabilityFindUniqueOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchProbabilityPayload>
+                }
+                findFirst: {
+                    args: Prisma.MatchProbabilityFindFirstArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchProbabilityPayload> | null
+                }
+                findFirstOrThrow: {
+                    args: Prisma.MatchProbabilityFindFirstOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchProbabilityPayload>
+                }
+                findMany: {
+                    args: Prisma.MatchProbabilityFindManyArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchProbabilityPayload>[]
+                }
+                create: {
+                    args: Prisma.MatchProbabilityCreateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchProbabilityPayload>
+                }
+                createMany: {
+                    args: Prisma.MatchProbabilityCreateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                createManyAndReturn: {
+                    args: Prisma.MatchProbabilityCreateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchProbabilityPayload>[]
+                }
+                delete: {
+                    args: Prisma.MatchProbabilityDeleteArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchProbabilityPayload>
+                }
+                update: {
+                    args: Prisma.MatchProbabilityUpdateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchProbabilityPayload>
+                }
+                deleteMany: {
+                    args: Prisma.MatchProbabilityDeleteManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateMany: {
+                    args: Prisma.MatchProbabilityUpdateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateManyAndReturn: {
+                    args: Prisma.MatchProbabilityUpdateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchProbabilityPayload>[]
+                }
+                upsert: {
+                    args: Prisma.MatchProbabilityUpsertArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$MatchProbabilityPayload>
+                }
+                aggregate: {
+                    args: Prisma.MatchProbabilityAggregateArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateMatchProbability>
+                }
+                groupBy: {
+                    args: Prisma.MatchProbabilityGroupByArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.MatchProbabilityGroupByOutputType>[]
+                }
+                count: {
+                    args: Prisma.MatchProbabilityCountArgs<ExtArgs>
+                    result:
+                        | runtime.Types.Utils.Optional<Prisma.MatchProbabilityCountAggregateOutputType>
+                        | number
+                }
+            }
+        }
+        FixtureProbability: {
+            payload: Prisma.$FixtureProbabilityPayload<ExtArgs>
+            fields: Prisma.FixtureProbabilityFieldRefs
+            operations: {
+                findUnique: {
+                    args: Prisma.FixtureProbabilityFindUniqueArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FixtureProbabilityPayload> | null
+                }
+                findUniqueOrThrow: {
+                    args: Prisma.FixtureProbabilityFindUniqueOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FixtureProbabilityPayload>
+                }
+                findFirst: {
+                    args: Prisma.FixtureProbabilityFindFirstArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FixtureProbabilityPayload> | null
+                }
+                findFirstOrThrow: {
+                    args: Prisma.FixtureProbabilityFindFirstOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FixtureProbabilityPayload>
+                }
+                findMany: {
+                    args: Prisma.FixtureProbabilityFindManyArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FixtureProbabilityPayload>[]
+                }
+                create: {
+                    args: Prisma.FixtureProbabilityCreateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FixtureProbabilityPayload>
+                }
+                createMany: {
+                    args: Prisma.FixtureProbabilityCreateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                createManyAndReturn: {
+                    args: Prisma.FixtureProbabilityCreateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FixtureProbabilityPayload>[]
+                }
+                delete: {
+                    args: Prisma.FixtureProbabilityDeleteArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FixtureProbabilityPayload>
+                }
+                update: {
+                    args: Prisma.FixtureProbabilityUpdateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FixtureProbabilityPayload>
+                }
+                deleteMany: {
+                    args: Prisma.FixtureProbabilityDeleteManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateMany: {
+                    args: Prisma.FixtureProbabilityUpdateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateManyAndReturn: {
+                    args: Prisma.FixtureProbabilityUpdateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FixtureProbabilityPayload>[]
+                }
+                upsert: {
+                    args: Prisma.FixtureProbabilityUpsertArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FixtureProbabilityPayload>
+                }
+                aggregate: {
+                    args: Prisma.FixtureProbabilityAggregateArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateFixtureProbability>
+                }
+                groupBy: {
+                    args: Prisma.FixtureProbabilityGroupByArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.FixtureProbabilityGroupByOutputType>[]
+                }
+                count: {
+                    args: Prisma.FixtureProbabilityCountArgs<ExtArgs>
+                    result:
+                        | runtime.Types.Utils.Optional<Prisma.FixtureProbabilityCountAggregateOutputType>
+                        | number
+                }
+            }
+        }
         FplPlayerMap: {
             payload: Prisma.$FplPlayerMapPayload<ExtArgs>
             fields: Prisma.FplPlayerMapFieldRefs
@@ -1721,6 +1879,82 @@ export type TypeMap<
                     args: Prisma.FplPlayerStatusCountArgs<ExtArgs>
                     result:
                         | runtime.Types.Utils.Optional<Prisma.FplPlayerStatusCountAggregateOutputType>
+                        | number
+                }
+            }
+        }
+        FplPlayerMatch: {
+            payload: Prisma.$FplPlayerMatchPayload<ExtArgs>
+            fields: Prisma.FplPlayerMatchFieldRefs
+            operations: {
+                findUnique: {
+                    args: Prisma.FplPlayerMatchFindUniqueArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FplPlayerMatchPayload> | null
+                }
+                findUniqueOrThrow: {
+                    args: Prisma.FplPlayerMatchFindUniqueOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FplPlayerMatchPayload>
+                }
+                findFirst: {
+                    args: Prisma.FplPlayerMatchFindFirstArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FplPlayerMatchPayload> | null
+                }
+                findFirstOrThrow: {
+                    args: Prisma.FplPlayerMatchFindFirstOrThrowArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FplPlayerMatchPayload>
+                }
+                findMany: {
+                    args: Prisma.FplPlayerMatchFindManyArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FplPlayerMatchPayload>[]
+                }
+                create: {
+                    args: Prisma.FplPlayerMatchCreateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FplPlayerMatchPayload>
+                }
+                createMany: {
+                    args: Prisma.FplPlayerMatchCreateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                createManyAndReturn: {
+                    args: Prisma.FplPlayerMatchCreateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FplPlayerMatchPayload>[]
+                }
+                delete: {
+                    args: Prisma.FplPlayerMatchDeleteArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FplPlayerMatchPayload>
+                }
+                update: {
+                    args: Prisma.FplPlayerMatchUpdateArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FplPlayerMatchPayload>
+                }
+                deleteMany: {
+                    args: Prisma.FplPlayerMatchDeleteManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateMany: {
+                    args: Prisma.FplPlayerMatchUpdateManyArgs<ExtArgs>
+                    result: BatchPayload
+                }
+                updateManyAndReturn: {
+                    args: Prisma.FplPlayerMatchUpdateManyAndReturnArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FplPlayerMatchPayload>[]
+                }
+                upsert: {
+                    args: Prisma.FplPlayerMatchUpsertArgs<ExtArgs>
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FplPlayerMatchPayload>
+                }
+                aggregate: {
+                    args: Prisma.FplPlayerMatchAggregateArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateFplPlayerMatch>
+                }
+                groupBy: {
+                    args: Prisma.FplPlayerMatchGroupByArgs<ExtArgs>
+                    result: runtime.Types.Utils.Optional<Prisma.FplPlayerMatchGroupByOutputType>[]
+                }
+                count: {
+                    args: Prisma.FplPlayerMatchCountArgs<ExtArgs>
+                    result:
+                        | runtime.Types.Utils.Optional<Prisma.FplPlayerMatchCountAggregateOutputType>
                         | number
                 }
             }
@@ -2734,6 +2968,40 @@ export const ModelEvaluationScalarFieldEnum = {
 export type ModelEvaluationScalarFieldEnum =
     (typeof ModelEvaluationScalarFieldEnum)[keyof typeof ModelEvaluationScalarFieldEnum]
 
+export const MatchProbabilityScalarFieldEnum = {
+    id: 'id',
+    modelVersion: 'modelVersion',
+    fixtureId: 'fixtureId',
+    playerId: 'playerId',
+    horizon: 'horizon',
+    pGoal: 'pGoal',
+    pAssist: 'pAssist',
+    pStart: 'pStart',
+    expectedMinutes: 'expectedMinutes',
+    expectedPoints: 'expectedPoints',
+    pointsBuckets: 'pointsBuckets',
+    createdAt: 'createdAt',
+} as const
+
+export type MatchProbabilityScalarFieldEnum =
+    (typeof MatchProbabilityScalarFieldEnum)[keyof typeof MatchProbabilityScalarFieldEnum]
+
+export const FixtureProbabilityScalarFieldEnum = {
+    id: 'id',
+    modelVersion: 'modelVersion',
+    fixtureId: 'fixtureId',
+    pHome: 'pHome',
+    pDraw: 'pDraw',
+    pAway: 'pAway',
+    xgHome: 'xgHome',
+    xgAway: 'xgAway',
+    leagueGoals: 'leagueGoals',
+    createdAt: 'createdAt',
+} as const
+
+export type FixtureProbabilityScalarFieldEnum =
+    (typeof FixtureProbabilityScalarFieldEnum)[keyof typeof FixtureProbabilityScalarFieldEnum]
+
 export const FplPlayerMapScalarFieldEnum = {
     id: 'id',
     fplId: 'fplId',
@@ -2798,11 +3066,31 @@ export const FplPlayerStatusScalarFieldEnum = {
     status: 'status',
     chanceOfPlaying: 'chanceOfPlaying',
     news: 'news',
+    penaltiesOrder: 'penaltiesOrder',
     updatedAt: 'updatedAt',
 } as const
 
 export type FplPlayerStatusScalarFieldEnum =
     (typeof FplPlayerStatusScalarFieldEnum)[keyof typeof FplPlayerStatusScalarFieldEnum]
+
+export const FplPlayerMatchScalarFieldEnum = {
+    id: 'id',
+    fplPlayerId: 'fplPlayerId',
+    fplFixtureId: 'fplFixtureId',
+    event: 'event',
+    minutes: 'minutes',
+    starts: 'starts',
+    goals: 'goals',
+    assists: 'assists',
+    xg: 'xg',
+    xa: 'xa',
+    totalPoints: 'totalPoints',
+    wasHome: 'wasHome',
+    updatedAt: 'updatedAt',
+} as const
+
+export type FplPlayerMatchScalarFieldEnum =
+    (typeof FplPlayerMatchScalarFieldEnum)[keyof typeof FplPlayerMatchScalarFieldEnum]
 
 export const FixtureScalarFieldEnum = {
     id: 'id',
@@ -3250,12 +3538,15 @@ export type GlobalOmitConfig = {
     playerGameweekStats?: Prisma.PlayerGameweekStatsOmit
     prediction?: Prisma.PredictionOmit
     modelEvaluation?: Prisma.ModelEvaluationOmit
+    matchProbability?: Prisma.MatchProbabilityOmit
+    fixtureProbability?: Prisma.FixtureProbabilityOmit
     fplPlayerMap?: Prisma.FplPlayerMapOmit
     fplPlayerMapRejection?: Prisma.FplPlayerMapRejectionOmit
     fplEvent?: Prisma.FplEventOmit
     fplGameSettings?: Prisma.FplGameSettingsOmit
     fplEventPoints?: Prisma.FplEventPointsOmit
     fplPlayerStatus?: Prisma.FplPlayerStatusOmit
+    fplPlayerMatch?: Prisma.FplPlayerMatchOmit
     fixture?: Prisma.FixtureOmit
     playerMatchStats?: Prisma.PlayerMatchStatsOmit
     paymentToken?: Prisma.PaymentTokenOmit

@@ -336,6 +336,7 @@ export type FixtureWhereInput = {
     homeTeam?: Prisma.XOR<Prisma.TeamScalarRelationFilter, Prisma.TeamWhereInput>
     awayTeam?: Prisma.XOR<Prisma.TeamScalarRelationFilter, Prisma.TeamWhereInput>
     playerStats?: Prisma.PlayerMatchStatsListRelationFilter
+    probabilities?: Prisma.FixtureProbabilityListRelationFilter
 }
 
 export type FixtureOrderByWithRelationInput = {
@@ -360,6 +361,7 @@ export type FixtureOrderByWithRelationInput = {
     homeTeam?: Prisma.TeamOrderByWithRelationInput
     awayTeam?: Prisma.TeamOrderByWithRelationInput
     playerStats?: Prisma.PlayerMatchStatsOrderByRelationAggregateInput
+    probabilities?: Prisma.FixtureProbabilityOrderByRelationAggregateInput
 }
 
 export type FixtureWhereUniqueInput = Prisma.AtLeast<
@@ -388,6 +390,7 @@ export type FixtureWhereUniqueInput = Prisma.AtLeast<
         homeTeam?: Prisma.XOR<Prisma.TeamScalarRelationFilter, Prisma.TeamWhereInput>
         awayTeam?: Prisma.XOR<Prisma.TeamScalarRelationFilter, Prisma.TeamWhereInput>
         playerStats?: Prisma.PlayerMatchStatsListRelationFilter
+        probabilities?: Prisma.FixtureProbabilityListRelationFilter
     },
     'id' | 'externalId' | 'fplFixtureId'
 >
@@ -459,6 +462,7 @@ export type FixtureCreateInput = {
     homeTeam: Prisma.TeamCreateNestedOneWithoutHomeFixturesInput
     awayTeam: Prisma.TeamCreateNestedOneWithoutAwayFixturesInput
     playerStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutFixtureInput
+    probabilities?: Prisma.FixtureProbabilityCreateNestedManyWithoutFixtureInput
 }
 
 export type FixtureUncheckedCreateInput = {
@@ -480,6 +484,7 @@ export type FixtureUncheckedCreateInput = {
     updatedAt?: Date | string
     createdAt?: Date | string
     playerStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutFixtureInput
+    probabilities?: Prisma.FixtureProbabilityUncheckedCreateNestedManyWithoutFixtureInput
 }
 
 export type FixtureUpdateInput = {
@@ -501,6 +506,7 @@ export type FixtureUpdateInput = {
     homeTeam?: Prisma.TeamUpdateOneRequiredWithoutHomeFixturesNestedInput
     awayTeam?: Prisma.TeamUpdateOneRequiredWithoutAwayFixturesNestedInput
     playerStats?: Prisma.PlayerMatchStatsUpdateManyWithoutFixtureNestedInput
+    probabilities?: Prisma.FixtureProbabilityUpdateManyWithoutFixtureNestedInput
 }
 
 export type FixtureUncheckedUpdateInput = {
@@ -522,6 +528,7 @@ export type FixtureUncheckedUpdateInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     playerStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutFixtureNestedInput
+    probabilities?: Prisma.FixtureProbabilityUncheckedUpdateManyWithoutFixtureNestedInput
 }
 
 export type FixtureCreateManyInput = {
@@ -589,6 +596,11 @@ export type FixtureListRelationFilter = {
 
 export type FixtureOrderByRelationAggregateInput = {
     _count?: Prisma.SortOrder
+}
+
+export type FixtureScalarRelationFilter = {
+    is?: Prisma.FixtureWhereInput
+    isNot?: Prisma.FixtureWhereInput
 }
 
 export type FixtureCountOrderByAggregateInput = {
@@ -669,11 +681,6 @@ export type FixtureSumOrderByAggregateInput = {
     fplFixtureId?: Prisma.SortOrder
     fplEvent?: Prisma.SortOrder
     statsAttempts?: Prisma.SortOrder
-}
-
-export type FixtureScalarRelationFilter = {
-    is?: Prisma.FixtureWhereInput
-    isNot?: Prisma.FixtureWhereInput
 }
 
 export type FixtureCreateNestedManyWithoutLeagueSeasonInput = {
@@ -934,6 +941,32 @@ export type FixtureUncheckedUpdateManyWithoutAwayTeamNestedInput = {
     deleteMany?: Prisma.FixtureScalarWhereInput | Prisma.FixtureScalarWhereInput[]
 }
 
+export type FixtureCreateNestedOneWithoutProbabilitiesInput = {
+    create?: Prisma.XOR<
+        Prisma.FixtureCreateWithoutProbabilitiesInput,
+        Prisma.FixtureUncheckedCreateWithoutProbabilitiesInput
+    >
+    connectOrCreate?: Prisma.FixtureCreateOrConnectWithoutProbabilitiesInput
+    connect?: Prisma.FixtureWhereUniqueInput
+}
+
+export type FixtureUpdateOneRequiredWithoutProbabilitiesNestedInput = {
+    create?: Prisma.XOR<
+        Prisma.FixtureCreateWithoutProbabilitiesInput,
+        Prisma.FixtureUncheckedCreateWithoutProbabilitiesInput
+    >
+    connectOrCreate?: Prisma.FixtureCreateOrConnectWithoutProbabilitiesInput
+    upsert?: Prisma.FixtureUpsertWithoutProbabilitiesInput
+    connect?: Prisma.FixtureWhereUniqueInput
+    update?: Prisma.XOR<
+        Prisma.XOR<
+            Prisma.FixtureUpdateToOneWithWhereWithoutProbabilitiesInput,
+            Prisma.FixtureUpdateWithoutProbabilitiesInput
+        >,
+        Prisma.FixtureUncheckedUpdateWithoutProbabilitiesInput
+    >
+}
+
 export type FixtureCreateNestedOneWithoutPlayerStatsInput = {
     create?: Prisma.XOR<
         Prisma.FixtureCreateWithoutPlayerStatsInput,
@@ -978,6 +1011,7 @@ export type FixtureCreateWithoutLeagueSeasonInput = {
     homeTeam: Prisma.TeamCreateNestedOneWithoutHomeFixturesInput
     awayTeam: Prisma.TeamCreateNestedOneWithoutAwayFixturesInput
     playerStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutFixtureInput
+    probabilities?: Prisma.FixtureProbabilityCreateNestedManyWithoutFixtureInput
 }
 
 export type FixtureUncheckedCreateWithoutLeagueSeasonInput = {
@@ -998,6 +1032,7 @@ export type FixtureUncheckedCreateWithoutLeagueSeasonInput = {
     updatedAt?: Date | string
     createdAt?: Date | string
     playerStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutFixtureInput
+    probabilities?: Prisma.FixtureProbabilityUncheckedCreateNestedManyWithoutFixtureInput
 }
 
 export type FixtureCreateOrConnectWithoutLeagueSeasonInput = {
@@ -1082,6 +1117,7 @@ export type FixtureCreateWithoutHomeTeamInput = {
     leagueSeason: Prisma.LeagueSeasonCreateNestedOneWithoutFixturesInput
     awayTeam: Prisma.TeamCreateNestedOneWithoutAwayFixturesInput
     playerStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutFixtureInput
+    probabilities?: Prisma.FixtureProbabilityCreateNestedManyWithoutFixtureInput
 }
 
 export type FixtureUncheckedCreateWithoutHomeTeamInput = {
@@ -1102,6 +1138,7 @@ export type FixtureUncheckedCreateWithoutHomeTeamInput = {
     updatedAt?: Date | string
     createdAt?: Date | string
     playerStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutFixtureInput
+    probabilities?: Prisma.FixtureProbabilityUncheckedCreateNestedManyWithoutFixtureInput
 }
 
 export type FixtureCreateOrConnectWithoutHomeTeamInput = {
@@ -1135,6 +1172,7 @@ export type FixtureCreateWithoutAwayTeamInput = {
     leagueSeason: Prisma.LeagueSeasonCreateNestedOneWithoutFixturesInput
     homeTeam: Prisma.TeamCreateNestedOneWithoutHomeFixturesInput
     playerStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutFixtureInput
+    probabilities?: Prisma.FixtureProbabilityCreateNestedManyWithoutFixtureInput
 }
 
 export type FixtureUncheckedCreateWithoutAwayTeamInput = {
@@ -1155,6 +1193,7 @@ export type FixtureUncheckedCreateWithoutAwayTeamInput = {
     updatedAt?: Date | string
     createdAt?: Date | string
     playerStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutFixtureInput
+    probabilities?: Prisma.FixtureProbabilityUncheckedCreateNestedManyWithoutFixtureInput
 }
 
 export type FixtureCreateOrConnectWithoutAwayTeamInput = {
@@ -1226,6 +1265,118 @@ export type FixtureUpdateManyWithWhereWithoutAwayTeamInput = {
     >
 }
 
+export type FixtureCreateWithoutProbabilitiesInput = {
+    id?: string
+    externalId: number
+    round: string
+    roundNumber?: number | null
+    kickoff: Date | string
+    status: string
+    homeGoals?: number | null
+    awayGoals?: number | null
+    fplFixtureId?: number | null
+    fplEvent?: number | null
+    statsSyncedAt?: Date | string | null
+    statsAttempts?: number
+    updatedAt?: Date | string
+    createdAt?: Date | string
+    leagueSeason: Prisma.LeagueSeasonCreateNestedOneWithoutFixturesInput
+    homeTeam: Prisma.TeamCreateNestedOneWithoutHomeFixturesInput
+    awayTeam: Prisma.TeamCreateNestedOneWithoutAwayFixturesInput
+    playerStats?: Prisma.PlayerMatchStatsCreateNestedManyWithoutFixtureInput
+}
+
+export type FixtureUncheckedCreateWithoutProbabilitiesInput = {
+    id?: string
+    externalId: number
+    leagueSeasonId: string
+    round: string
+    roundNumber?: number | null
+    kickoff: Date | string
+    status: string
+    homeTeamId: string
+    awayTeamId: string
+    homeGoals?: number | null
+    awayGoals?: number | null
+    fplFixtureId?: number | null
+    fplEvent?: number | null
+    statsSyncedAt?: Date | string | null
+    statsAttempts?: number
+    updatedAt?: Date | string
+    createdAt?: Date | string
+    playerStats?: Prisma.PlayerMatchStatsUncheckedCreateNestedManyWithoutFixtureInput
+}
+
+export type FixtureCreateOrConnectWithoutProbabilitiesInput = {
+    where: Prisma.FixtureWhereUniqueInput
+    create: Prisma.XOR<
+        Prisma.FixtureCreateWithoutProbabilitiesInput,
+        Prisma.FixtureUncheckedCreateWithoutProbabilitiesInput
+    >
+}
+
+export type FixtureUpsertWithoutProbabilitiesInput = {
+    update: Prisma.XOR<
+        Prisma.FixtureUpdateWithoutProbabilitiesInput,
+        Prisma.FixtureUncheckedUpdateWithoutProbabilitiesInput
+    >
+    create: Prisma.XOR<
+        Prisma.FixtureCreateWithoutProbabilitiesInput,
+        Prisma.FixtureUncheckedCreateWithoutProbabilitiesInput
+    >
+    where?: Prisma.FixtureWhereInput
+}
+
+export type FixtureUpdateToOneWithWhereWithoutProbabilitiesInput = {
+    where?: Prisma.FixtureWhereInput
+    data: Prisma.XOR<
+        Prisma.FixtureUpdateWithoutProbabilitiesInput,
+        Prisma.FixtureUncheckedUpdateWithoutProbabilitiesInput
+    >
+}
+
+export type FixtureUpdateWithoutProbabilitiesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    externalId?: Prisma.IntFieldUpdateOperationsInput | number
+    round?: Prisma.StringFieldUpdateOperationsInput | string
+    roundNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+    kickoff?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Prisma.StringFieldUpdateOperationsInput | string
+    homeGoals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+    awayGoals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+    fplFixtureId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+    fplEvent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+    statsSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statsAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    leagueSeason?: Prisma.LeagueSeasonUpdateOneRequiredWithoutFixturesNestedInput
+    homeTeam?: Prisma.TeamUpdateOneRequiredWithoutHomeFixturesNestedInput
+    awayTeam?: Prisma.TeamUpdateOneRequiredWithoutAwayFixturesNestedInput
+    playerStats?: Prisma.PlayerMatchStatsUpdateManyWithoutFixtureNestedInput
+}
+
+export type FixtureUncheckedUpdateWithoutProbabilitiesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string
+    externalId?: Prisma.IntFieldUpdateOperationsInput | number
+    leagueSeasonId?: Prisma.StringFieldUpdateOperationsInput | string
+    round?: Prisma.StringFieldUpdateOperationsInput | string
+    roundNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+    kickoff?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    status?: Prisma.StringFieldUpdateOperationsInput | string
+    homeTeamId?: Prisma.StringFieldUpdateOperationsInput | string
+    awayTeamId?: Prisma.StringFieldUpdateOperationsInput | string
+    homeGoals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+    awayGoals?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+    fplFixtureId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+    fplEvent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+    statsSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    statsAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    playerStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutFixtureNestedInput
+}
+
 export type FixtureCreateWithoutPlayerStatsInput = {
     id?: string
     externalId: number
@@ -1244,6 +1395,7 @@ export type FixtureCreateWithoutPlayerStatsInput = {
     leagueSeason: Prisma.LeagueSeasonCreateNestedOneWithoutFixturesInput
     homeTeam: Prisma.TeamCreateNestedOneWithoutHomeFixturesInput
     awayTeam: Prisma.TeamCreateNestedOneWithoutAwayFixturesInput
+    probabilities?: Prisma.FixtureProbabilityCreateNestedManyWithoutFixtureInput
 }
 
 export type FixtureUncheckedCreateWithoutPlayerStatsInput = {
@@ -1264,6 +1416,7 @@ export type FixtureUncheckedCreateWithoutPlayerStatsInput = {
     statsAttempts?: number
     updatedAt?: Date | string
     createdAt?: Date | string
+    probabilities?: Prisma.FixtureProbabilityUncheckedCreateNestedManyWithoutFixtureInput
 }
 
 export type FixtureCreateOrConnectWithoutPlayerStatsInput = {
@@ -1312,6 +1465,7 @@ export type FixtureUpdateWithoutPlayerStatsInput = {
     leagueSeason?: Prisma.LeagueSeasonUpdateOneRequiredWithoutFixturesNestedInput
     homeTeam?: Prisma.TeamUpdateOneRequiredWithoutHomeFixturesNestedInput
     awayTeam?: Prisma.TeamUpdateOneRequiredWithoutAwayFixturesNestedInput
+    probabilities?: Prisma.FixtureProbabilityUpdateManyWithoutFixtureNestedInput
 }
 
 export type FixtureUncheckedUpdateWithoutPlayerStatsInput = {
@@ -1332,6 +1486,7 @@ export type FixtureUncheckedUpdateWithoutPlayerStatsInput = {
     statsAttempts?: Prisma.IntFieldUpdateOperationsInput | number
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+    probabilities?: Prisma.FixtureProbabilityUncheckedUpdateManyWithoutFixtureNestedInput
 }
 
 export type FixtureCreateManyLeagueSeasonInput = {
@@ -1371,6 +1526,7 @@ export type FixtureUpdateWithoutLeagueSeasonInput = {
     homeTeam?: Prisma.TeamUpdateOneRequiredWithoutHomeFixturesNestedInput
     awayTeam?: Prisma.TeamUpdateOneRequiredWithoutAwayFixturesNestedInput
     playerStats?: Prisma.PlayerMatchStatsUpdateManyWithoutFixtureNestedInput
+    probabilities?: Prisma.FixtureProbabilityUpdateManyWithoutFixtureNestedInput
 }
 
 export type FixtureUncheckedUpdateWithoutLeagueSeasonInput = {
@@ -1391,6 +1547,7 @@ export type FixtureUncheckedUpdateWithoutLeagueSeasonInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     playerStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutFixtureNestedInput
+    probabilities?: Prisma.FixtureProbabilityUncheckedUpdateManyWithoutFixtureNestedInput
 }
 
 export type FixtureUncheckedUpdateManyWithoutLeagueSeasonInput = {
@@ -1468,6 +1625,7 @@ export type FixtureUpdateWithoutHomeTeamInput = {
     leagueSeason?: Prisma.LeagueSeasonUpdateOneRequiredWithoutFixturesNestedInput
     awayTeam?: Prisma.TeamUpdateOneRequiredWithoutAwayFixturesNestedInput
     playerStats?: Prisma.PlayerMatchStatsUpdateManyWithoutFixtureNestedInput
+    probabilities?: Prisma.FixtureProbabilityUpdateManyWithoutFixtureNestedInput
 }
 
 export type FixtureUncheckedUpdateWithoutHomeTeamInput = {
@@ -1488,6 +1646,7 @@ export type FixtureUncheckedUpdateWithoutHomeTeamInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     playerStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutFixtureNestedInput
+    probabilities?: Prisma.FixtureProbabilityUncheckedUpdateManyWithoutFixtureNestedInput
 }
 
 export type FixtureUncheckedUpdateManyWithoutHomeTeamInput = {
@@ -1527,6 +1686,7 @@ export type FixtureUpdateWithoutAwayTeamInput = {
     leagueSeason?: Prisma.LeagueSeasonUpdateOneRequiredWithoutFixturesNestedInput
     homeTeam?: Prisma.TeamUpdateOneRequiredWithoutHomeFixturesNestedInput
     playerStats?: Prisma.PlayerMatchStatsUpdateManyWithoutFixtureNestedInput
+    probabilities?: Prisma.FixtureProbabilityUpdateManyWithoutFixtureNestedInput
 }
 
 export type FixtureUncheckedUpdateWithoutAwayTeamInput = {
@@ -1547,6 +1707,7 @@ export type FixtureUncheckedUpdateWithoutAwayTeamInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
     playerStats?: Prisma.PlayerMatchStatsUncheckedUpdateManyWithoutFixtureNestedInput
+    probabilities?: Prisma.FixtureProbabilityUncheckedUpdateManyWithoutFixtureNestedInput
 }
 
 export type FixtureUncheckedUpdateManyWithoutAwayTeamInput = {
@@ -1574,12 +1735,14 @@ export type FixtureUncheckedUpdateManyWithoutAwayTeamInput = {
 
 export type FixtureCountOutputType = {
     playerStats: number
+    probabilities: number
 }
 
 export type FixtureCountOutputTypeSelect<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     playerStats?: boolean | FixtureCountOutputTypeCountPlayerStatsArgs
+    probabilities?: boolean | FixtureCountOutputTypeCountProbabilitiesArgs
 }
 
 /**
@@ -1601,6 +1764,15 @@ export type FixtureCountOutputTypeCountPlayerStatsArgs<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = {
     where?: Prisma.PlayerMatchStatsWhereInput
+}
+
+/**
+ * FixtureCountOutputType without action
+ */
+export type FixtureCountOutputTypeCountProbabilitiesArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    where?: Prisma.FixtureProbabilityWhereInput
 }
 
 export type FixtureSelect<
@@ -1628,6 +1800,7 @@ export type FixtureSelect<
         homeTeam?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
         awayTeam?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
         playerStats?: boolean | Prisma.Fixture$playerStatsArgs<ExtArgs>
+        probabilities?: boolean | Prisma.Fixture$probabilitiesArgs<ExtArgs>
         _count?: boolean | Prisma.FixtureCountOutputTypeDefaultArgs<ExtArgs>
     },
     ExtArgs['result']['fixture']
@@ -1738,6 +1911,7 @@ export type FixtureInclude<
     homeTeam?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
     awayTeam?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
     playerStats?: boolean | Prisma.Fixture$playerStatsArgs<ExtArgs>
+    probabilities?: boolean | Prisma.Fixture$probabilitiesArgs<ExtArgs>
     _count?: boolean | Prisma.FixtureCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FixtureIncludeCreateManyAndReturn<
@@ -1764,6 +1938,7 @@ export type $FixturePayload<
         homeTeam: Prisma.$TeamPayload<ExtArgs>
         awayTeam: Prisma.$TeamPayload<ExtArgs>
         playerStats: Prisma.$PlayerMatchStatsPayload<ExtArgs>[]
+        probabilities: Prisma.$FixtureProbabilityPayload<ExtArgs>[]
     }
     scalars: runtime.Types.Extensions.GetPayloadResult<
         {
@@ -2345,6 +2520,17 @@ export interface Prisma__FixtureClient<
           >
         | Null
     >
+    probabilities<T extends Prisma.Fixture$probabilitiesArgs<ExtArgs> = {}>(
+        args?: Prisma.Subset<T, Prisma.Fixture$probabilitiesArgs<ExtArgs>>,
+    ): Prisma.PrismaPromise<
+        | runtime.Types.Result.GetResult<
+              Prisma.$FixtureProbabilityPayload<ExtArgs>,
+              T,
+              'findMany',
+              GlobalOmitOptions
+          >
+        | Null
+    >
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2846,6 +3032,34 @@ export type Fixture$playerStatsArgs<
     take?: number
     skip?: number
     distinct?: Prisma.PlayerMatchStatsScalarFieldEnum | Prisma.PlayerMatchStatsScalarFieldEnum[]
+}
+
+/**
+ * Fixture.probabilities
+ */
+export type Fixture$probabilitiesArgs<
+    ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
+> = {
+    /**
+     * Select specific fields to fetch from the FixtureProbability
+     */
+    select?: Prisma.FixtureProbabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FixtureProbability
+     */
+    omit?: Prisma.FixtureProbabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.FixtureProbabilityInclude<ExtArgs> | null
+    where?: Prisma.FixtureProbabilityWhereInput
+    orderBy?:
+        | Prisma.FixtureProbabilityOrderByWithRelationInput
+        | Prisma.FixtureProbabilityOrderByWithRelationInput[]
+    cursor?: Prisma.FixtureProbabilityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Prisma.FixtureProbabilityScalarFieldEnum | Prisma.FixtureProbabilityScalarFieldEnum[]
 }
 
 /**

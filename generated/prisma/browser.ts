@@ -75,6 +75,16 @@ export type Prediction = Prisma.PredictionModel
  */
 export type ModelEvaluation = Prisma.ModelEvaluationModel
 /**
+ * Model MatchProbability
+ * Per-match player probabilities for the next horizon (1..5) fixtures.
+ */
+export type MatchProbability = Prisma.MatchProbabilityModel
+/**
+ * Model FixtureProbability
+ * Match outcome probabilities and expected goals of one fixture.
+ */
+export type FixtureProbability = Prisma.FixtureProbabilityModel
+/**
  * Model FplPlayerMap
  * Confirmed link between an FPL player and one of our players.
  */
@@ -104,6 +114,11 @@ export type FplEventPoints = Prisma.FplEventPointsModel
  * Availability of an FPL player as of the last bootstrap sync (a: available, d: doubtful, i: injured, s: suspended, u: unavailable, n: not in squad).
  */
 export type FplPlayerStatus = Prisma.FplPlayerStatusModel
+/**
+ * Model FplPlayerMatch
+ * One FPL player's line in one finished fixture (element-summary history); input of the probability models.
+ */
+export type FplPlayerMatch = Prisma.FplPlayerMatchModel
 /**
  * Model Fixture
  *

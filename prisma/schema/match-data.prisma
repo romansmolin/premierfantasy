@@ -17,10 +17,11 @@ model Fixture {
   updatedAt      DateTime  @updatedAt @map("updated_at")
   createdAt      DateTime  @default(now()) @map("created_at")
 
-  leagueSeason LeagueSeason       @relation(fields: [leagueSeasonId], references: [id], onDelete: Cascade)
-  homeTeam     Team               @relation("FixtureHomeTeam", fields: [homeTeamId], references: [id])
-  awayTeam     Team               @relation("FixtureAwayTeam", fields: [awayTeamId], references: [id])
-  playerStats  PlayerMatchStats[]
+  leagueSeason  LeagueSeason         @relation(fields: [leagueSeasonId], references: [id], onDelete: Cascade)
+  homeTeam      Team                 @relation("FixtureHomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam      Team                 @relation("FixtureAwayTeam", fields: [awayTeamId], references: [id])
+  playerStats   PlayerMatchStats[]
+  probabilities FixtureProbability[]
 
   @@index([leagueSeasonId, kickoff])
   @@index([fplEvent])

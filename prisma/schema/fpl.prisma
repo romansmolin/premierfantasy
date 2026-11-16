@@ -69,7 +69,31 @@ model FplPlayerStatus {
   status          String
   chanceOfPlaying Int?     @map("chance_of_playing")
   news            String
+  /// FPL penalties_order: 1 = first penalty taker.
+  penaltiesOrder  Int?     @map("penalties_order")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   @@map("fpl_player_status")
+}
+
+/// One FPL player's line in one finished fixture (element-summary history); input of the probability models.
+model FplPlayerMatch {
+  id           String   @id @default(uuid())
+  fplPlayerId  Int      @map("fpl_player_id")
+  fplFixtureId Int      @map("fpl_fixture_id")
+  event        Int
+  minutes      Int
+  /// 1 if the player started, else 0.
+  starts       Int
+  goals        Int
+  assists      Int
+  xg           Float?
+  xa           Float?
+  totalPoints  Int      @map("total_points")
+  wasHome      Boolean  @map("was_home")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@unique([fplPlayerId, fplFixtureId])
+  @@index([event])
+  @@map("fpl_player_matches")
 }

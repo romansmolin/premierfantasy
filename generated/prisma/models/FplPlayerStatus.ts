@@ -28,11 +28,13 @@ export type AggregateFplPlayerStatus = {
 export type FplPlayerStatusAvgAggregateOutputType = {
     fplId: number | null
     chanceOfPlaying: number | null
+    penaltiesOrder: number | null
 }
 
 export type FplPlayerStatusSumAggregateOutputType = {
     fplId: number | null
     chanceOfPlaying: number | null
+    penaltiesOrder: number | null
 }
 
 export type FplPlayerStatusMinAggregateOutputType = {
@@ -41,6 +43,7 @@ export type FplPlayerStatusMinAggregateOutputType = {
     status: string | null
     chanceOfPlaying: number | null
     news: string | null
+    penaltiesOrder: number | null
     updatedAt: Date | null
 }
 
@@ -50,6 +53,7 @@ export type FplPlayerStatusMaxAggregateOutputType = {
     status: string | null
     chanceOfPlaying: number | null
     news: string | null
+    penaltiesOrder: number | null
     updatedAt: Date | null
 }
 
@@ -59,6 +63,7 @@ export type FplPlayerStatusCountAggregateOutputType = {
     status: number
     chanceOfPlaying: number
     news: number
+    penaltiesOrder: number
     updatedAt: number
     _all: number
 }
@@ -66,11 +71,13 @@ export type FplPlayerStatusCountAggregateOutputType = {
 export type FplPlayerStatusAvgAggregateInputType = {
     fplId?: true
     chanceOfPlaying?: true
+    penaltiesOrder?: true
 }
 
 export type FplPlayerStatusSumAggregateInputType = {
     fplId?: true
     chanceOfPlaying?: true
+    penaltiesOrder?: true
 }
 
 export type FplPlayerStatusMinAggregateInputType = {
@@ -79,6 +86,7 @@ export type FplPlayerStatusMinAggregateInputType = {
     status?: true
     chanceOfPlaying?: true
     news?: true
+    penaltiesOrder?: true
     updatedAt?: true
 }
 
@@ -88,6 +96,7 @@ export type FplPlayerStatusMaxAggregateInputType = {
     status?: true
     chanceOfPlaying?: true
     news?: true
+    penaltiesOrder?: true
     updatedAt?: true
 }
 
@@ -97,6 +106,7 @@ export type FplPlayerStatusCountAggregateInputType = {
     status?: true
     chanceOfPlaying?: true
     news?: true
+    penaltiesOrder?: true
     updatedAt?: true
     _all?: true
 }
@@ -198,6 +208,7 @@ export type FplPlayerStatusGroupByOutputType = {
     status: string
     chanceOfPlaying: number | null
     news: string
+    penaltiesOrder: number | null
     updatedAt: Date
     _count: FplPlayerStatusCountAggregateOutputType | null
     _avg: FplPlayerStatusAvgAggregateOutputType | null
@@ -227,6 +238,7 @@ export type FplPlayerStatusWhereInput = {
     status?: Prisma.StringFilter<'FplPlayerStatus'> | string
     chanceOfPlaying?: Prisma.IntNullableFilter<'FplPlayerStatus'> | number | null
     news?: Prisma.StringFilter<'FplPlayerStatus'> | string
+    penaltiesOrder?: Prisma.IntNullableFilter<'FplPlayerStatus'> | number | null
     updatedAt?: Prisma.DateTimeFilter<'FplPlayerStatus'> | Date | string
 }
 
@@ -236,6 +248,7 @@ export type FplPlayerStatusOrderByWithRelationInput = {
     status?: Prisma.SortOrder
     chanceOfPlaying?: Prisma.SortOrderInput | Prisma.SortOrder
     news?: Prisma.SortOrder
+    penaltiesOrder?: Prisma.SortOrderInput | Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
 }
 
@@ -249,6 +262,7 @@ export type FplPlayerStatusWhereUniqueInput = Prisma.AtLeast<
         status?: Prisma.StringFilter<'FplPlayerStatus'> | string
         chanceOfPlaying?: Prisma.IntNullableFilter<'FplPlayerStatus'> | number | null
         news?: Prisma.StringFilter<'FplPlayerStatus'> | string
+        penaltiesOrder?: Prisma.IntNullableFilter<'FplPlayerStatus'> | number | null
         updatedAt?: Prisma.DateTimeFilter<'FplPlayerStatus'> | Date | string
     },
     'fplId'
@@ -260,6 +274,7 @@ export type FplPlayerStatusOrderByWithAggregationInput = {
     status?: Prisma.SortOrder
     chanceOfPlaying?: Prisma.SortOrderInput | Prisma.SortOrder
     news?: Prisma.SortOrder
+    penaltiesOrder?: Prisma.SortOrderInput | Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
     _count?: Prisma.FplPlayerStatusCountOrderByAggregateInput
     _avg?: Prisma.FplPlayerStatusAvgOrderByAggregateInput
@@ -281,6 +296,7 @@ export type FplPlayerStatusScalarWhereWithAggregatesInput = {
     status?: Prisma.StringWithAggregatesFilter<'FplPlayerStatus'> | string
     chanceOfPlaying?: Prisma.IntNullableWithAggregatesFilter<'FplPlayerStatus'> | number | null
     news?: Prisma.StringWithAggregatesFilter<'FplPlayerStatus'> | string
+    penaltiesOrder?: Prisma.IntNullableWithAggregatesFilter<'FplPlayerStatus'> | number | null
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<'FplPlayerStatus'> | Date | string
 }
 
@@ -290,6 +306,7 @@ export type FplPlayerStatusCreateInput = {
     status: string
     chanceOfPlaying?: number | null
     news: string
+    penaltiesOrder?: number | null
     updatedAt?: Date | string
 }
 
@@ -299,6 +316,7 @@ export type FplPlayerStatusUncheckedCreateInput = {
     status: string
     chanceOfPlaying?: number | null
     news: string
+    penaltiesOrder?: number | null
     updatedAt?: Date | string
 }
 
@@ -308,6 +326,7 @@ export type FplPlayerStatusUpdateInput = {
     status?: Prisma.StringFieldUpdateOperationsInput | string
     chanceOfPlaying?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
     news?: Prisma.StringFieldUpdateOperationsInput | string
+    penaltiesOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -317,6 +336,7 @@ export type FplPlayerStatusUncheckedUpdateInput = {
     status?: Prisma.StringFieldUpdateOperationsInput | string
     chanceOfPlaying?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
     news?: Prisma.StringFieldUpdateOperationsInput | string
+    penaltiesOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -326,6 +346,7 @@ export type FplPlayerStatusCreateManyInput = {
     status: string
     chanceOfPlaying?: number | null
     news: string
+    penaltiesOrder?: number | null
     updatedAt?: Date | string
 }
 
@@ -335,6 +356,7 @@ export type FplPlayerStatusUpdateManyMutationInput = {
     status?: Prisma.StringFieldUpdateOperationsInput | string
     chanceOfPlaying?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
     news?: Prisma.StringFieldUpdateOperationsInput | string
+    penaltiesOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -344,6 +366,7 @@ export type FplPlayerStatusUncheckedUpdateManyInput = {
     status?: Prisma.StringFieldUpdateOperationsInput | string
     chanceOfPlaying?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
     news?: Prisma.StringFieldUpdateOperationsInput | string
+    penaltiesOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -353,12 +376,14 @@ export type FplPlayerStatusCountOrderByAggregateInput = {
     status?: Prisma.SortOrder
     chanceOfPlaying?: Prisma.SortOrder
     news?: Prisma.SortOrder
+    penaltiesOrder?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
 }
 
 export type FplPlayerStatusAvgOrderByAggregateInput = {
     fplId?: Prisma.SortOrder
     chanceOfPlaying?: Prisma.SortOrder
+    penaltiesOrder?: Prisma.SortOrder
 }
 
 export type FplPlayerStatusMaxOrderByAggregateInput = {
@@ -367,6 +392,7 @@ export type FplPlayerStatusMaxOrderByAggregateInput = {
     status?: Prisma.SortOrder
     chanceOfPlaying?: Prisma.SortOrder
     news?: Prisma.SortOrder
+    penaltiesOrder?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
 }
 
@@ -376,12 +402,14 @@ export type FplPlayerStatusMinOrderByAggregateInput = {
     status?: Prisma.SortOrder
     chanceOfPlaying?: Prisma.SortOrder
     news?: Prisma.SortOrder
+    penaltiesOrder?: Prisma.SortOrder
     updatedAt?: Prisma.SortOrder
 }
 
 export type FplPlayerStatusSumOrderByAggregateInput = {
     fplId?: Prisma.SortOrder
     chanceOfPlaying?: Prisma.SortOrder
+    penaltiesOrder?: Prisma.SortOrder
 }
 
 export type FplPlayerStatusSelect<
@@ -393,6 +421,7 @@ export type FplPlayerStatusSelect<
         status?: boolean
         chanceOfPlaying?: boolean
         news?: boolean
+        penaltiesOrder?: boolean
         updatedAt?: boolean
     },
     ExtArgs['result']['fplPlayerStatus']
@@ -407,6 +436,7 @@ export type FplPlayerStatusSelectCreateManyAndReturn<
         status?: boolean
         chanceOfPlaying?: boolean
         news?: boolean
+        penaltiesOrder?: boolean
         updatedAt?: boolean
     },
     ExtArgs['result']['fplPlayerStatus']
@@ -421,6 +451,7 @@ export type FplPlayerStatusSelectUpdateManyAndReturn<
         status?: boolean
         chanceOfPlaying?: boolean
         news?: boolean
+        penaltiesOrder?: boolean
         updatedAt?: boolean
     },
     ExtArgs['result']['fplPlayerStatus']
@@ -432,13 +463,14 @@ export type FplPlayerStatusSelectScalar = {
     status?: boolean
     chanceOfPlaying?: boolean
     news?: boolean
+    penaltiesOrder?: boolean
     updatedAt?: boolean
 }
 
 export type FplPlayerStatusOmit<
     ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs,
 > = runtime.Types.Extensions.GetOmit<
-    'fplId' | 'teamId' | 'status' | 'chanceOfPlaying' | 'news' | 'updatedAt',
+    'fplId' | 'teamId' | 'status' | 'chanceOfPlaying' | 'news' | 'penaltiesOrder' | 'updatedAt',
     ExtArgs['result']['fplPlayerStatus']
 >
 
@@ -457,6 +489,10 @@ export type $FplPlayerStatusPayload<
             status: string
             chanceOfPlaying: number | null
             news: string
+            /**
+             * FPL penalties_order: 1 = first penalty taker.
+             */
+            penaltiesOrder: number | null
             updatedAt: Date
         },
         ExtArgs['result']['fplPlayerStatus']
@@ -1030,6 +1066,7 @@ export interface FplPlayerStatusFieldRefs {
     readonly status: Prisma.FieldRef<'FplPlayerStatus', 'String'>
     readonly chanceOfPlaying: Prisma.FieldRef<'FplPlayerStatus', 'Int'>
     readonly news: Prisma.FieldRef<'FplPlayerStatus', 'String'>
+    readonly penaltiesOrder: Prisma.FieldRef<'FplPlayerStatus', 'Int'>
     readonly updatedAt: Prisma.FieldRef<'FplPlayerStatus', 'DateTime'>
 }
 

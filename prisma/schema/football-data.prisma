@@ -31,13 +31,14 @@ model Player {
   teamId     String         @map("team_id")
   createdAt  DateTime       @default(now()) @map("created_at")
 
-  team          Team                  @relation(fields: [teamId], references: [id])
-  gameweekStats PlayerGameweekStats[]
-  seasonPrices  PlayerSeasonPrice[]
-  matchStats    PlayerMatchStats[]
-  fplMap        FplPlayerMap?
-  predictions   Prediction[]
-  squadPlayers  SquadPlayer[]
+  team               Team                  @relation(fields: [teamId], references: [id])
+  gameweekStats      PlayerGameweekStats[]
+  seasonPrices       PlayerSeasonPrice[]
+  matchStats         PlayerMatchStats[]
+  fplMap             FplPlayerMap?
+  predictions        Prediction[]
+  matchProbabilities MatchProbability[]
+  squadPlayers       SquadPlayer[]
 
   @@index([teamId])
   @@map("players")
