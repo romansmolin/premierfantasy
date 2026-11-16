@@ -26,6 +26,8 @@ export interface PoolPlayer {
     name: string
     clubId: string
     clubName: string
+    /** Club crest URL; null when unknown. */
+    clubLogo: string | null
     position: Position
     priceTenths: number | null
     minutes: number

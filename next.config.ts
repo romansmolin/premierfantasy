@@ -1,6 +1,8 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+    // e2e builds into its own folder so it never touches the dev server's files.
+    distDir: process.env.NEXT_DIST_DIR ?? '.next',
     reactCompiler: true,
     serverExternalPackages: ['reflect-metadata'],
     async redirects() {

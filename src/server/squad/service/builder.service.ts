@@ -32,6 +32,7 @@ export class BuilderService implements IBuilderService {
                 name: p.name,
                 clubId: p.club.id,
                 clubName: p.club.name,
+                clubLogo: p.club.logo,
                 position: p.position,
                 priceTenths: p.price === null ? null : Math.round(p.price * 10),
                 minutes: p.minutes,

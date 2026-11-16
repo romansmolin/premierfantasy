@@ -1,0 +1,5 @@
+export const PASSWORD = 'e2e-password-12345'
+export const RICH_EMAIL = 'e2e@example.com'
+export const POOR_EMAIL = 'e2e-poor@example.com'
+export const RICH_STATE = 'e2e/.auth/rich.json'
+export const POOR_STATE = 'e2e/.auth/poor.json'

@@ -30,6 +30,7 @@ function pool(overrides: Partial<BuilderPool> = {}, priceTenths: number | null =
                 name: `Player ${n}`,
                 clubId: `c${n % 10}`,
                 clubName: `Club ${n % 10}`,
+                clubLogo: null,
                 position,
                 priceTenths: priceTenths === null ? null : priceTenths + (n % 7) * 5,
                 minutes: 900,

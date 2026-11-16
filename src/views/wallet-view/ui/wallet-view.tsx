@@ -35,7 +35,7 @@ const CUSTOMER_FIELDS = [
     { name: 'birthDate', label: 'Date of birth (optional)', type: 'date', autoComplete: 'bday' },
 ] as const
 
-const AI_FEATURES = (['PLAYER_ANALYSIS', 'MATCH_PREDICTION'] as const).map((feature) => ({
+const AI_FEATURES = (Object.keys(AI_FEATURE_PRICES) as (keyof typeof AI_FEATURE_PRICES)[]).map((feature) => ({
     name: AI_FEATURE_LABELS[feature],
     cost: AI_FEATURE_PRICES[feature],
 }))

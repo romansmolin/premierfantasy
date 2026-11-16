@@ -133,4 +133,5 @@ Routes do not import controllers, services, repositories, or `auth.api.getSessio
 - `npx prisma db push` — push schema to DB
 - `npm run lint` — run ESLint
 - `npm test` — run the Vitest suite (`npm run test:watch` to watch)
+- `npm run e2e` — Playwright e2e (needs `E2E_DATABASE_URL` pointing at a **local** Postgres with the schema and synced data; builds the app into `.next-e2e` and serves it on port 3101; never run it against a shared database, it creates users and spends their credits)
 - `npm run sync -- <job|short|full>` — run data sync jobs (see [docs/server-architecture.md](./docs/server-architecture.md) §6.7); needs `STORAGE_DATABASE_URL`, `FOOTBAL_API_KEY`, `FOOTBAL_API_BASE_URL`

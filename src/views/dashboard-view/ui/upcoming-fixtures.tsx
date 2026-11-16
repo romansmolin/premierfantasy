@@ -151,12 +151,13 @@ export const UpcomingFixtures = ({ leagueExternalId, season, leagueName }: Upcom
                                         }
                                         onClick={() => matchPrediction.requestPrediction(fixture.id)}
                                         className="shrink-0"
+                                        title={`AI match prediction for ${matchPrediction.cost} Credits`}
                                     >
                                         <HugeiconsIcon icon={AiBrain01Icon} data-icon="inline-start" />
                                         {matchPrediction.isLoading &&
                                         matchPrediction.activeFixtureId === fixture.id
                                             ? 'Loading...'
-                                            : `${matchPrediction.cost}`}
+                                            : `Predict (${matchPrediction.cost})`}
                                     </Button>
                                 </div>
                             ))}

@@ -31,6 +31,7 @@ function pool(): BuilderPool {
                 name: `Player ${n}`,
                 clubId: `c${n % 10}`,
                 clubName: `Club ${n % 10}`,
+                clubLogo: null,
                 position,
                 priceTenths: 55,
                 minutes: 900,

@@ -8,7 +8,7 @@ import { useWallet } from '@/entities/wallet'
 
 import { useSession } from '@/shared/lib/auth-client'
 import { buttonVariants } from '@/shared/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 
 import { UpcomingFixtures } from './upcoming-fixtures'
 
@@ -39,19 +39,15 @@ export function DashboardView() {
                         <div className="flex-1 min-w-0">
                             <CardTitle>{isLoading ? '…' : `${balance} Credits`}</CardTitle>
                             <CardDescription>
-                                Credits pay for AI player analysis and match predictions.
+                                Credits pay for auto-build, squad review, player analysis and match
+                                predictions.
                             </CardDescription>
                         </div>
+                        <Link href="/wallet" className={buttonVariants({ variant: 'outline' })}>
+                            Get Credits
+                        </Link>
                     </div>
                 </CardHeader>
-                <CardContent>
-                    <Link
-                        href="/wallet"
-                        className={buttonVariants({ variant: 'outline', className: 'w-full' })}
-                    >
-                        Get Credits
-                    </Link>
-                </CardContent>
             </Card>
 
             <UpcomingFixtures />

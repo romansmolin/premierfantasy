@@ -6,32 +6,68 @@ import useSWR from 'swr'
 
 import { SquadAiPanel } from '@/features/ai'
 
-import { squadService, validateSquad } from '@/entities/squad'
-import type { AutoBuildResult, PoolPlayer, Position, SavedSquad, SquadPlayerInfo } from '@/entities/squad'
+import {
+    DEFAULT_FORMATION,
+    formationFromStarters,
+    formationLabel,
+    formationOptions,
+    slotsOf,
+    squadService,
+    validateSquad,
+} from '@/entities/squad'
+import type {
+    AutoBuildResult,
+    Formation,
+    PoolPlayer,
+    Position,
+    SavedSquad,
+    SquadPlayerInfo,
+} from '@/entities/squad'
 
 import { ApiError } from '@/shared/api/api-error'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/shared/ui/dropdown-menu'
 import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
 
+import { Pitch } from './pitch'
+import { POSITION_NAMES, priceLabel } from './player-card'
+import { PlayerPicker } from './player-picker'
+
+import type { Zone } from './pitch'
+import type { ReactNode } from 'react'
+
 const POSITIONS: Position[] = ['GK', 'DEF', 'MID', 'FWD']
-const price = (tenths: number | null) => (tenths === null ? '—' : `£${(tenths / 10).toFixed(1)}m`)
-const pts = (n: number | null) => (n === null ? '—' : n.toFixed(1))
+/** Pitch rows are drawn from the attack down to the goalkeeper. */
+const PITCH_ORDER: Position[] = ['FWD', 'MID', 'DEF', 'GK']
+
+interface PickerTarget {
+    zone: Zone
+    /** The player this pick replaces; null when filling an empty slot. */
+    replaceId: string | null
+}
 
 export function BuilderView() {
     const { data: pool, isLoading } = useSWR('builder-pool', () => squadService.getPool())
     const { data: saved, mutate: reloadSaved } = useSWR('squads', () => squadService.list())
     const [starters, setStarters] = useState<string[]>([])
     const [bench, setBench] = useState<string[]>([])
+    const [formation, setFormation] = useState<Formation>(DEFAULT_FORMATION)
     const [captainId, setCaptainId] = useState('')
     const [viceCaptainId, setViceCaptainId] = useState('')
     const [name, setName] = useState('My squad')
     const [editingId, setEditingId] = useState<string | null>(null)
     const [lockedIds, setLockedIds] = useState<string[]>([])
     const [excludedIds, setExcludedIds] = useState<string[]>([])
-    const [filters, setFilters] = useState({ position: '', club: '', q: '', sort: 'forecast' })
+    const [picker, setPicker] = useState<PickerTarget | null>(null)
 
     const byId = useMemo(() => new Map((pool?.players ?? []).map((p) => [p.id, p])), [pool])
     const infos = useMemo(
@@ -48,103 +84,134 @@ export function BuilderView() {
     if (isLoading || !pool) return <Skeleton className="h-96 rounded-xl" />
 
     const rules = pool.rules
+    const slots = slotsOf(formation)
+    const benchSlots = rules.squadSize - rules.startingSize
     const chosen = [...starters, ...bench]
     const players = chosen.map((id) => byId.get(id)).filter((p): p is PoolPlayer => Boolean(p))
     const complete = chosen.length === rules.squadSize
     const validation = validateSquad({ starters, bench, captainId, viceCaptainId }, infos, rules)
     const spent = players.reduce((sum, p) => sum + (p.priceTenths ?? 0), 0)
     const unpriced = players.some((p) => p.priceTenths === null)
+    const bank = rules.budgetTenths - spent
     const xiPoints = pool.forecastEnabled
         ? starters.reduce((sum, id) => sum + (byId.get(id)?.forecast ?? 0), 0) +
           (byId.get(captainId)?.forecast ?? 0)
         : null
+    const options = formationOptions(rules)
 
+    const positionOf = (id: string) => byId.get(id)?.position
     const countOf = (position: Position, ids: string[]) =>
-        ids.filter((id) => byId.get(id)?.position === position).length
+        ids.filter((id) => positionOf(id) === position).length
 
-    const add = (p: PoolPlayer) => {
-        if (chosen.includes(p.id)) return
+    /** Puts the squad into a formation: players move between the XI and the bench to fit its rows. */
+    const layout = (next: Formation, xi: string[], subs: string[]) => {
+        const want = slotsOf(next)
+        const everyone = [...xi, ...subs]
+        const nextXi = POSITIONS.flatMap((p) =>
+            everyone.filter((id) => positionOf(id) === p).slice(0, want[p]),
+        )
+        const inXi = new Set(nextXi)
+        const nextBench = [...subs.filter((id) => !inXi.has(id)), ...xi.filter((id) => !inXi.has(id))]
 
-        if (countOf(p.position, chosen) >= rules.positions[p.position].squadSelect) {
-            toast.error(`You already have ${rules.positions[p.position].squadSelect} ${p.position}`)
+        setFormation(next)
+        setStarters(nextXi)
+        setBench(nextBench)
 
-            return
-        }
+        if (!inXi.has(captainId)) setCaptainId('')
 
-        if (chosen.filter((id) => byId.get(id)?.clubId === p.clubId).length >= rules.teamLimit) {
-            toast.error(`At most ${rules.teamLimit} players from ${p.clubName}`)
+        if (!inXi.has(viceCaptainId)) setViceCaptainId('')
+    }
 
-            return
-        }
+    const changeFormation = (label: string) => {
+        const next = options.find((f) => formationLabel(f) === label)
 
-        const room =
-            starters.length < rules.startingSize &&
-            countOf(p.position, starters) < rules.positions[p.position].maxPlay
-
-        if (room) setStarters([...starters, p.id])
-        else if (bench.length < rules.squadSize - rules.startingSize) setBench([...bench, p.id])
-        else toast.error('The squad is full: remove a player first')
+        if (next) layout(next, starters, bench)
     }
 
     const remove = (id: string) => {
-        setLockedIds(lockedIds.filter((x) => x !== id))
         setStarters(starters.filter((x) => x !== id))
         setBench(bench.filter((x) => x !== id))
+        setLockedIds((ids) => ids.filter((x) => x !== id))
 
         if (captainId === id) setCaptainId('')
 
         if (viceCaptainId === id) setViceCaptainId('')
     }
 
-    const toBench = (id: string) => {
-        setStarters(starters.filter((x) => x !== id))
-        setBench([...bench, id])
+    /** Making the vice-captain the captain hands the vice role to the old captain, so nobody ends up with no role by accident. */
+    const makeCaptain = (id: string) => {
+        if (id === captainId) return
 
-        if (captainId === id) setCaptainId('')
+        if (id === viceCaptainId) setViceCaptainId(captainId)
 
-        if (viceCaptainId === id) setViceCaptainId('')
+        setCaptainId(id)
     }
 
-    const toStart = (id: string) => {
-        if (starters.length >= rules.startingSize)
-            return toast.error('The starting XI is full: move someone to the bench first')
+    const makeVice = (id: string) => {
+        if (id === viceCaptainId) return
 
-        const p = byId.get(id)
+        if (id === captainId) setCaptainId(viceCaptainId)
 
-        if (p && countOf(p.position, starters) >= rules.positions[p.position].maxPlay) {
-            return toast.error(`At most ${rules.positions[p.position].maxPlay} ${p.position} can start`)
-        }
+        setViceCaptainId(id)
+    }
 
+    const swap = (a: string, b: string) => {
+        const swapped = (ids: string[]) => ids.map((x) => (x === a ? b : x === b ? a : x))
+        const nextXi = swapped(starters)
+
+        setStarters(nextXi)
+        setBench(swapped(bench))
+
+        if (!nextXi.includes(captainId)) setCaptainId('')
+
+        if (!nextXi.includes(viceCaptainId)) setViceCaptainId('')
+    }
+
+    const startFromBench = (id: string) => {
         setBench(bench.filter((x) => x !== id))
         setStarters([...starters, id])
     }
 
-    const load = (s: SavedSquad) => {
-        setLockedIds([])
-        setStarters(s.starters)
-        setBench(s.bench)
-        setCaptainId(s.captainId)
-        setViceCaptainId(s.viceCaptainId)
-        setName(s.name)
-        setEditingId(s.id)
+    const pick = (player: PoolPlayer) => {
+        if (!picker) return
+
+        const { zone, replaceId } = picker
+        const put = (ids: string[]) =>
+            replaceId ? ids.map((x) => (x === replaceId ? player.id : x)) : [...ids, player.id]
+
+        if (replaceId) {
+            if (captainId === replaceId) setCaptainId(player.id)
+
+            if (viceCaptainId === replaceId) setViceCaptainId(player.id)
+
+            setLockedIds((ids) => ids.filter((x) => x !== replaceId))
+        }
+
+        if (replaceId ? starters.includes(replaceId) : zone.zone === 'xi') setStarters(put(starters))
+        else setBench(put(bench))
+
+        setPicker(null)
     }
 
     const applyAutoBuild = (result: AutoBuildResult) => {
-        setStarters(result.starters)
-        setBench(result.bench)
         setCaptainId(result.captainId)
         setViceCaptainId(result.viceCaptainId)
         setName('Auto-built squad')
         setEditingId(null)
+        setFormation(formationFromStarters(result.starters, infos) ?? DEFAULT_FORMATION)
+        setStarters(result.starters)
+        setBench(result.bench)
     }
 
-    const toggleLock = (id: string) =>
-        setLockedIds(lockedIds.includes(id) ? lockedIds.filter((x) => x !== id) : [...lockedIds, id])
-
-    const exclude = (id: string) => {
-        if (chosen.includes(id)) remove(id)
-
-        setExcludedIds([...excludedIds, id])
+    const load = (s: SavedSquad) => {
+        setLockedIds([])
+        setCaptainId(s.captainId)
+        setViceCaptainId(s.viceCaptainId)
+        setName(s.name)
+        setEditingId(s.id)
+        setFormation(formationFromStarters(s.starters, infos) ?? DEFAULT_FORMATION)
+        setStarters(s.starters)
+        setBench(s.bench)
     }
 
     const reset = () => {
@@ -172,128 +239,208 @@ export function BuilderView() {
         }
     }
 
-    const list = pool.players
-        .filter((p) => !filters.position || p.position === filters.position)
-        .filter((p) => !filters.club || p.clubId === filters.club)
-        .filter((p) => !filters.q || p.name.toLowerCase().includes(filters.q.toLowerCase()))
-        .sort((a, b) => {
-            const key =
-                filters.sort === 'price' ? 'priceTenths' : filters.sort === 'form' ? 'form' : 'forecast'
-            const av = a[key] ?? -1
-            const bv = b[key] ?? -1
+    const toggleLock = (id: string) =>
+        setLockedIds(lockedIds.includes(id) ? lockedIds.filter((x) => x !== id) : [...lockedIds, id])
 
-            return bv - av
-        })
-        .slice(0, 60)
-    const clubs = [...new Map(pool.players.map((p) => [p.clubId, p.clubName])).entries()].sort((a, b) =>
-        a[1].localeCompare(b[1]),
-    )
+    const toggleExclude = (id: string) =>
+        setExcludedIds(excludedIds.includes(id) ? excludedIds.filter((x) => x !== id) : [...excludedIds, id])
 
-    const row = (id: string, isStarter: boolean) => {
+    // What the open picker may offer.
+    const replaced = picker?.replaceId ? byId.get(picker.replaceId) : undefined
+    const after = chosen.filter((id) => id !== picker?.replaceId)
+    const benchRoom = (position: Position) =>
+        rules.positions[position].squadSelect -
+        slots[position] -
+        countOf(
+            position,
+            bench.filter((id) => id !== picker?.replaceId),
+        )
+    const pickerPositions: Position[] = !picker
+        ? []
+        : replaced
+          ? [replaced.position]
+          : picker.zone.zone === 'xi'
+            ? [picker.zone.position]
+            : POSITIONS.filter((p) => countOf(p, after) < rules.positions[p].squadSelect && benchRoom(p) > 0)
+
+    const reason = (p: PoolPlayer): string | null => {
+        if (chosen.includes(p.id)) return 'In squad'
+
+        if (countOf(p.position, after) >= rules.positions[p.position].squadSelect) return 'Position full'
+
+        if (after.filter((id) => byId.get(id)?.clubId === p.clubId).length >= rules.teamLimit)
+            return 'Club limit'
+
+        return null
+    }
+
+    const cardMenu = (id: string, zone: 'xi' | 'bench', card: ReactNode) => {
         const p = byId.get(id)
 
         if (!p) return null
 
+        const sameRow = (ids: string[]) => ids.filter((x) => x !== id && positionOf(x) === p.position)
+        const swaps = zone === 'xi' ? sameRow(bench) : sameRow(starters)
+        const canStart = zone === 'bench' && countOf(p.position, starters) < slots[p.position]
+
         return (
-            <div key={id} className="flex items-center justify-between gap-2 border-b py-1.5 text-sm">
-                <span className="min-w-0 truncate">
-                    <Badge variant="outline" className="mr-2">
-                        {p.position}
-                    </Badge>
-                    {p.name} <span className="text-xs text-muted-foreground">{p.clubName}</span>
-                    {captainId === id && <Badge className="ml-2">C</Badge>}
-                    {viceCaptainId === id && (
-                        <Badge variant="secondary" className="ml-2">
-                            V
-                        </Badge>
-                    )}
-                </span>
-                <span className="flex shrink-0 items-center gap-1">
-                    <span className="text-xs text-muted-foreground">{price(p.priceTenths)}</span>
-                    {isStarter && (
+            <DropdownMenu>
+                <DropdownMenuTrigger
+                    render={
+                        <button
+                            type="button"
+                            aria-label={`${p.name}, open actions`}
+                            className="rounded-t-xl rounded-b-[1.6rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                        />
+                    }
+                >
+                    {card}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-60" align="center">
+                    {zone === 'xi' && (
                         <>
-                            <Button
-                                size="xs"
-                                variant="ghost"
-                                onClick={() => setCaptainId(id === viceCaptainId ? '' : id)}
-                            >
-                                C
-                            </Button>
-                            <Button
-                                size="xs"
-                                variant="ghost"
-                                onClick={() => setViceCaptainId(id === captainId ? '' : id)}
-                            >
-                                V
-                            </Button>
+                            <DropdownMenuItem onClick={() => makeCaptain(id)}>Make captain</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => makeVice(id)}>
+                                Make vice-captain
+                            </DropdownMenuItem>
                         </>
                     )}
-                    <Button
-                        size="xs"
-                        variant="outline"
-                        onClick={() => (isStarter ? toBench(id) : toStart(id))}
+                    {canStart && (
+                        <DropdownMenuItem onClick={() => startFromBench(id)}>
+                            Move to the starting XI
+                        </DropdownMenuItem>
+                    )}
+                    {swaps.map((other) => (
+                        <DropdownMenuItem key={other} onClick={() => swap(id, other)}>
+                            Swap with {byId.get(other)?.name}
+                        </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuItem
+                        onClick={() =>
+                            setPicker({
+                                zone: zone === 'xi' ? { zone, position: p.position } : { zone },
+                                replaceId: id,
+                            })
+                        }
                     >
-                        {isStarter ? 'Bench' : 'Start'}
-                    </Button>
-                    <Button
-                        size="xs"
-                        variant={lockedIds.includes(id) ? 'secondary' : 'ghost'}
-                        onClick={() => toggleLock(id)}
-                        aria-label={lockedIds.includes(id) ? 'Unlock' : 'Lock for auto-build'}
-                    >
-                        {lockedIds.includes(id) ? 'Locked' : 'Lock'}
-                    </Button>
-                    <Button size="xs" variant="ghost" onClick={() => remove(id)}>
-                        ✕
-                    </Button>
-                </span>
-            </div>
+                        Replace with another {POSITION_NAMES[p.position]}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => toggleLock(id)}>
+                        {lockedIds.includes(id) ? 'Unlock for auto-build' : 'Keep in auto-build'}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive" onClick={() => remove(id)}>
+                        Remove from squad
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         )
     }
 
+    const pitchRows = PITCH_ORDER.map((position) => ({
+        position,
+        slots: slots[position],
+        ids: starters.filter((id) => positionOf(id) === position),
+    }))
+    const spentShare = Math.min(100, Math.round((spent / rules.budgetTenths) * 100))
+    const pickerTitle = picker
+        ? replaced
+            ? `Replace ${replaced.name}`
+            : picker.zone.zone === 'xi'
+              ? `Pick a ${POSITION_NAMES[picker.zone.position]}`
+              : 'Pick a substitute'
+        : ''
+
     return (
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+            <div className="space-y-3">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border bg-card px-4 py-3 text-sm">
+                    <label className="flex items-center gap-2">
+                        Formation
+                        <select
+                            className="h-8 rounded-md border bg-background px-2 font-medium"
+                            value={formationLabel(formation)}
+                            onChange={(e) => changeFormation(e.target.value)}
+                            aria-label="Formation"
+                        >
+                            {options.map((f) => (
+                                <option key={formationLabel(f)}>{formationLabel(f)}</option>
+                            ))}
+                        </select>
+                    </label>
+                    <div className="min-w-56 flex-1">
+                        <div className="flex justify-between text-xs">
+                            <span className="whitespace-nowrap">
+                                Spent {priceLabel(spent)} of {priceLabel(rules.budgetTenths)}
+                                {unpriced ? ' (a price is missing)' : ''}
+                            </span>
+                            <span
+                                className={
+                                    bank < 0
+                                        ? 'whitespace-nowrap font-semibold text-destructive'
+                                        : 'whitespace-nowrap text-muted-foreground'
+                                }
+                            >
+                                {bank < 0 ? 'Over by ' : 'Left '}
+                                {priceLabel(Math.abs(bank))}
+                            </span>
+                        </div>
+                        <div
+                            className="mt-1 h-2 overflow-hidden rounded-full bg-muted"
+                            role="progressbar"
+                            aria-label="Budget used"
+                            aria-valuenow={spentShare}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                        >
+                            <div
+                                className={bank < 0 ? 'h-full bg-destructive' : 'h-full bg-primary'}
+                                style={{ width: `${spentShare}%` }}
+                            />
+                        </div>
+                    </div>
+                    <div className="text-xs">
+                        <span className="font-semibold">{chosen.length}</span> of {rules.squadSize} players
+                    </div>
+                    {xiPoints !== null && (
+                        <div className="text-xs" title="Captain counted twice">
+                            Expected XI points{' '}
+                            <span className="font-audiowide text-base">{xiPoints.toFixed(1)}</span>
+                        </div>
+                    )}
+                </div>
+
+                <Pitch
+                    rows={pitchRows}
+                    bench={bench}
+                    benchSlots={benchSlots}
+                    players={byId}
+                    captainId={captainId}
+                    viceCaptainId={viceCaptainId}
+                    lockedIds={lockedIds}
+                    showForecast={pool.forecastEnabled}
+                    onEmpty={(zone) => setPicker({ zone, replaceId: null })}
+                    cardMenu={cardMenu}
+                />
+                {chosen.length === 0 && (
+                    <p className="text-center text-sm text-muted-foreground">
+                        Tap an empty card to pick a player, or let auto-build make a squad for you.
+                    </p>
+                )}
+            </div>
+
             <div className="space-y-4">
                 <Card>
                     <CardHeader>
                         <CardTitle>Your squad</CardTitle>
                         <CardDescription>
-                            {chosen.length}/{rules.squadSize} players ·{' '}
                             {POSITIONS.map(
                                 (p) => `${p} ${countOf(p, chosen)}/${rules.positions[p].squadSelect}`,
-                            ).join(' · ')}
+                            ).join(', ')}
+                            . Tap a card to set the captain, swap or replace a player.
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                        <div className="flex flex-wrap gap-2 text-sm">
-                            <Badge variant="secondary">
-                                Spent {price(spent)} of {price(rules.budgetTenths)}
-                                {unpriced ? ' (some prices unknown)' : ''}
-                            </Badge>
-                            {validation.formation && starters.length === rules.startingSize && (
-                                <Badge variant="outline">{validation.formation}</Badge>
-                            )}
-                            {xiPoints !== null && (
-                                <Badge variant="outline">
-                                    Forecast XI: {pts(xiPoints)} (captain doubled)
-                                </Badge>
-                            )}
-                        </div>
-                        <div>
-                            <p className="mb-1 text-xs font-medium uppercase text-muted-foreground">
-                                Starting XI
-                            </p>
-                            {starters.map((id) => row(id, true))}
-                            {starters.length === 0 && (
-                                <p className="text-sm text-muted-foreground">Add players from the list.</p>
-                            )}
-                        </div>
-                        <div>
-                            <p className="mb-1 text-xs font-medium uppercase text-muted-foreground">
-                                Bench (in order)
-                            </p>
-                            {bench.map((id) => row(id, false))}
-                        </div>
                         {complete && !validation.valid && (
                             <ul className="list-disc space-y-1 pl-5 text-sm text-destructive">
                                 {validation.errors.map((e) => (
@@ -306,8 +453,19 @@ export function BuilderView() {
                                 This squad follows the FPL rules. Enter it on the FPL site yourself.
                             </p>
                         )}
+                        {!complete && (
+                            <p className="text-sm text-muted-foreground">
+                                {rules.squadSize - chosen.length} more players to go. Captain and vice-captain
+                                come from the XI.
+                            </p>
+                        )}
                         <div className="flex gap-2">
-                            <Input value={name} onChange={(e) => setName(e.target.value)} maxLength={60} />
+                            <Input
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                maxLength={60}
+                                aria-label="Squad name"
+                            />
                             <Button onClick={save} disabled={!validation.valid || !name.trim()}>
                                 {editingId ? 'Update' : 'Save'}
                             </Button>
@@ -317,6 +475,18 @@ export function BuilderView() {
                         </div>
                     </CardContent>
                 </Card>
+
+                <SquadAiPanel
+                    key={editingId ?? 'new'}
+                    players={byId}
+                    lockedIds={lockedIds}
+                    excludedIds={excludedIds}
+                    onUnlock={(id) => setLockedIds(lockedIds.filter((x) => x !== id))}
+                    onInclude={(id) => setExcludedIds(excludedIds.filter((x) => x !== id))}
+                    onApply={applyAutoBuild}
+                    savedSquadId={editingId}
+                    forecastEnabled={pool.forecastEnabled}
+                />
 
                 <Card>
                     <CardHeader>
@@ -367,109 +537,24 @@ export function BuilderView() {
                         ))}
                     </CardContent>
                 </Card>
-
-                <SquadAiPanel
-                    key={editingId ?? 'new'}
-                    players={byId}
-                    lockedIds={lockedIds}
-                    excludedIds={excludedIds}
-                    onUnlock={(id) => setLockedIds(lockedIds.filter((x) => x !== id))}
-                    onInclude={(id) => setExcludedIds(excludedIds.filter((x) => x !== id))}
-                    onApply={applyAutoBuild}
-                    savedSquadId={editingId}
-                    forecastEnabled={pool.forecastEnabled}
-                />
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Players</CardTitle>
-                    <CardDescription>
-                        {pool.forecastEnabled
-                            ? `Forecast = expected FPL points in gameweek ${pool.nextEvent}.`
-                            : 'Forecast is off until it beats the baseline.'}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                    <div className="flex flex-wrap gap-2 text-sm">
-                        <Input
-                            className="w-40"
-                            placeholder="Search"
-                            value={filters.q}
-                            onChange={(e) => setFilters({ ...filters, q: e.target.value })}
-                        />
-                        <select
-                            className="h-9 rounded-md border bg-background px-2"
-                            value={filters.position}
-                            onChange={(e) => setFilters({ ...filters, position: e.target.value })}
-                        >
-                            <option value="">All positions</option>
-                            {POSITIONS.map((p) => (
-                                <option key={p}>{p}</option>
-                            ))}
-                        </select>
-                        <select
-                            className="h-9 rounded-md border bg-background px-2"
-                            value={filters.club}
-                            onChange={(e) => setFilters({ ...filters, club: e.target.value })}
-                        >
-                            <option value="">All clubs</option>
-                            {clubs.map(([id, clubName]) => (
-                                <option key={id} value={id}>
-                                    {clubName}
-                                </option>
-                            ))}
-                        </select>
-                        <select
-                            className="h-9 rounded-md border bg-background px-2"
-                            value={filters.sort}
-                            onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
-                        >
-                            {pool.forecastEnabled && <option value="forecast">Forecast</option>}
-                            <option value="form">Form</option>
-                            <option value="price">Price</option>
-                        </select>
-                    </div>
-                    <div className="max-h-[70vh] overflow-auto">
-                        {list.map((p) => (
-                            <div
-                                key={p.id}
-                                className="flex items-center justify-between gap-2 border-b py-1.5 text-sm"
-                            >
-                                <span className="min-w-0 truncate">
-                                    <Badge variant="outline" className="mr-2">
-                                        {p.position}
-                                    </Badge>
-                                    {p.name}{' '}
-                                    <span className="text-xs text-muted-foreground">{p.clubName}</span>
-                                    {p.availability && p.availability.status !== 'a' && (
-                                        <Badge variant="outline" className="ml-2">
-                                            {p.availability.status === 'd' ? 'Doubt' : 'Out'}
-                                        </Badge>
-                                    )}
-                                </span>
-                                <span className="flex shrink-0 items-center gap-2">
-                                    <span className="text-xs text-muted-foreground">
-                                        {price(p.priceTenths)} · form {pts(p.form)}
-                                        {pool.forecastEnabled ? ` · ${pts(p.forecast)}` : ''}
-                                    </span>
-                                    <Button
-                                        size="xs"
-                                        variant="ghost"
-                                        disabled={excludedIds.includes(p.id)}
-                                        onClick={() => exclude(p.id)}
-                                    >
-                                        Skip
-                                    </Button>
-                                    <Button size="xs" disabled={chosen.includes(p.id)} onClick={() => add(p)}>
-                                        Add
-                                    </Button>
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </CardContent>
-            </Card>
+            {picker && pickerPositions.length > 0 && (
+                <PlayerPicker
+                    key={`${picker.zone.zone}-${picker.replaceId ?? 'new'}`}
+                    open
+                    onOpenChange={(open) => !open && setPicker(null)}
+                    title={pickerTitle}
+                    players={pool.players}
+                    positions={pickerPositions}
+                    reason={reason}
+                    bankTenths={bank + (replaced?.priceTenths ?? 0)}
+                    showForecast={pool.forecastEnabled}
+                    excludedIds={excludedIds}
+                    onToggleExclude={toggleExclude}
+                    onPick={pick}
+                />
+            )}
         </div>
     )
 }

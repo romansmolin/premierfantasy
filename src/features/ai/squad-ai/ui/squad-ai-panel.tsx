@@ -108,10 +108,10 @@ export function SquadAiPanel(props: SquadAiPanelProps) {
                 )}
 
                 <div className="space-y-2">
-                    <p className="text-xs font-medium uppercase text-muted-foreground">Auto-build</p>
+                    <p className="font-semibold">Auto-build</p>
                     <p className="text-muted-foreground">
-                        Builds the best squad for the next gameweek under the FPL rules. Lock players with the
-                        lock button in your squad and exclude players from the list.
+                        Builds the best squad for the next gameweek under the FPL rules. Choose «Keep in
+                        auto-build» on a card to keep a player, or Exclude in the player list to rule one out.
                     </p>
                     <div className="flex flex-wrap gap-1">
                         {lockedIds.map((id) => (
@@ -171,7 +171,7 @@ export function SquadAiPanel(props: SquadAiPanelProps) {
                 </div>
 
                 <div className="space-y-2">
-                    <p className="text-xs font-medium uppercase text-muted-foreground">AI squad review</p>
+                    <p className="font-semibold">AI squad review</p>
                     <p className="text-muted-foreground">
                         Reviews the <em>saved</em> version of the squad you have open.
                     </p>
