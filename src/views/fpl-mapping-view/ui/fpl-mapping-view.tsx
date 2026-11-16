@@ -11,6 +11,7 @@ import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
+import { SelectField } from '@/shared/ui/select-field'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 
 const errorMessage = (error: unknown): string => {
@@ -116,26 +117,23 @@ export function FplMappingView() {
                                                     </span>
                                                 </TableCell>
                                                 <TableCell>
-                                                    <select
-                                                        className="h-9 w-full rounded-md border bg-background px-2 text-sm"
+                                                    <SelectField
+                                                        aria-label={`Replace the match for ${item.fplName}`}
                                                         value={chosen[item.fplId] ?? ''}
-                                                        onChange={(event) =>
+                                                        onValueChange={(value) =>
                                                             setChosen((prev) => ({
                                                                 ...prev,
-                                                                [item.fplId]: event.target.value,
+                                                                [item.fplId]: value,
                                                             }))
                                                         }
-                                                    >
-                                                        <option value="">Keep this match</option>
-                                                        {item.candidates.map((candidate) => (
-                                                            <option
-                                                                key={candidate.playerId}
-                                                                value={candidate.playerId}
-                                                            >
-                                                                {candidate.name}
-                                                            </option>
-                                                        ))}
-                                                    </select>
+                                                        options={[
+                                                            { value: '', label: 'Keep this match' },
+                                                            ...item.candidates.map((candidate) => ({
+                                                                value: candidate.playerId,
+                                                                label: candidate.name,
+                                                            })),
+                                                        ]}
+                                                    />
                                                 </TableCell>
                                                 <TableCell className="space-x-2 whitespace-nowrap">
                                                     <Button
@@ -197,29 +195,23 @@ export function FplMappingView() {
                                             <TableCell>{player.team}</TableCell>
                                             <TableCell>{player.position}</TableCell>
                                             <TableCell>
-                                                <select
-                                                    className="h-9 w-full rounded-md border bg-background px-2 text-sm"
+                                                <SelectField
+                                                    aria-label={`Choose a player for ${player.name}`}
                                                     value={chosen[player.fplId] ?? ''}
-                                                    onChange={(event) =>
+                                                    onValueChange={(value) =>
                                                         setChosen((prev) => ({
                                                             ...prev,
-                                                            [player.fplId]: event.target.value,
+                                                            [player.fplId]: value,
                                                         }))
                                                     }
-                                                >
-                                                    <option value="">Choose…</option>
-                                                    {player.candidates.map((candidate) => (
-                                                        <option
-                                                            key={candidate.playerId}
-                                                            value={candidate.playerId}
-                                                        >
-                                                            {candidate.name}
-                                                            {candidate.score > 0
-                                                                ? ` (${candidate.score})`
-                                                                : ''}
-                                                        </option>
-                                                    ))}
-                                                </select>
+                                                    options={[
+                                                        { value: '', label: 'Choose…' },
+                                                        ...player.candidates.map((candidate) => ({
+                                                            value: candidate.playerId,
+                                                            label: `${candidate.name}${candidate.score > 0 ? ` (${candidate.score})` : ''}`,
+                                                        })),
+                                                    ]}
+                                                />
                                             </TableCell>
                                             <TableCell className="space-x-2 whitespace-nowrap">
                                                 <Button

@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 
+import { choose } from './helpers'
+
 test.use({ storageState: { cookies: [], origins: [] } })
 
 test.describe('public pages (no login)', () => {
@@ -19,6 +21,32 @@ test.describe('public pages (no login)', () => {
 
         await expect(page).toHaveURL(/q=Haaland/)
         await expect(page.getByRole('row', { name: /Haaland/ })).toBeVisible()
+    })
+
+    test('the position and club filters use the select component and apply on submit', async ({ page }) => {
+        await page.goto('/players')
+        await page
+            .getByRole('button', { name: 'Essential only' })
+            .click({ timeout: 2000 })
+            .catch(() => undefined)
+
+        await choose(page, 'Position', 'FWD')
+        await choose(page, 'Club', 'Arsenal')
+        await page.getByRole('button', { name: 'Apply' }).click()
+
+        await expect(page).toHaveURL(/position=FWD/)
+        await expect(page).toHaveURL(/club=/)
+        await expect(page.getByRole('combobox', { name: 'Position' })).toHaveText('FWD')
+        await expect(page.getByRole('combobox', { name: 'Club' })).toHaveText('Arsenal')
+
+        const positions = await page
+            .getByRole('row')
+            .evaluateAll((rows) =>
+                rows.slice(1).map((row) => row.querySelectorAll('td')[2]?.textContent?.trim()),
+            )
+
+        expect(positions.length).toBeGreaterThan(0)
+        expect(new Set(positions)).toEqual(new Set(['FWD']))
     })
 
     test('fixtures and the method page load, and the method page states the accuracy bar', async ({

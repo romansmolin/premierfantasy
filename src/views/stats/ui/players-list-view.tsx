@@ -1,7 +1,10 @@
 import Link from 'next/link'
 
 import { Badge } from '@/shared/ui/badge'
+import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
+import { Input } from '@/shared/ui/input'
+import { SelectField } from '@/shared/ui/select-field'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 
 import { formatPoints, formatPrice } from './format'
@@ -56,62 +59,54 @@ export function PlayersListView({ data, params }: Props) {
             </div>
 
             <form method="get" action="/players" className="flex flex-wrap items-end gap-3 text-sm">
-                <label className="flex flex-col gap-1">
+                <label className="flex flex-col gap-1.5">
                     Search
-                    <input
+                    <Input
                         name="q"
                         defaultValue={params.q ?? ''}
-                        className="h-9 rounded-md border bg-background px-2"
+                        className="h-10 w-52 px-3 text-sm"
                         placeholder="Name"
                     />
                 </label>
-                <label className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1.5">
                     Position
-                    <select
+                    <SelectField
                         name="position"
+                        aria-label="Position"
                         defaultValue={params.position ?? ''}
-                        className="h-9 rounded-md border bg-background px-2"
-                    >
-                        <option value="">All</option>
-                        {POSITIONS.map((p) => (
-                            <option key={p} value={p}>
-                                {p}
-                            </option>
-                        ))}
-                    </select>
-                </label>
-                <label className="flex flex-col gap-1">
+                        className="w-28"
+                        options={[
+                            { value: '', label: 'All' },
+                            ...POSITIONS.map((p) => ({ value: p, label: p })),
+                        ]}
+                    />
+                </div>
+                <div className="flex flex-col gap-1.5">
                     Club
-                    <select
+                    <SelectField
                         name="club"
+                        aria-label="Club"
                         defaultValue={params.club ?? ''}
-                        className="h-9 rounded-md border bg-background px-2"
-                    >
-                        <option value="">All</option>
-                        {data.clubs.map((c) => (
-                            <option key={c.id} value={c.id}>
-                                {c.name}
-                            </option>
-                        ))}
-                    </select>
-                </label>
-                <label className="flex flex-col gap-1">
+                        className="w-52"
+                        options={[
+                            { value: '', label: 'All' },
+                            ...data.clubs.map((c) => ({ value: c.id, label: c.name })),
+                        ]}
+                    />
+                </div>
+                <div className="flex flex-col gap-1.5">
                     Sort by
-                    <select
+                    <SelectField
                         name="sort"
+                        aria-label="Sort by"
                         defaultValue={data.sort}
-                        className="h-9 rounded-md border bg-background px-2"
-                    >
-                        {SORTS.filter((s) => s.value !== 'forecast' || data.forecastEnabled).map((s) => (
-                            <option key={s.value} value={s.value}>
-                                {s.label}
-                            </option>
-                        ))}
-                    </select>
-                </label>
-                <button type="submit" className="h-9 rounded-md bg-primary px-4 text-primary-foreground">
+                        className="w-40"
+                        options={SORTS.filter((s) => s.value !== 'forecast' || data.forecastEnabled)}
+                    />
+                </div>
+                <Button type="submit" className="px-5">
                     Apply
-                </button>
+                </Button>
             </form>
 
             <Card>

@@ -1,8 +1,8 @@
 import { AI_FEATURE_LABELS, AI_FEATURE_PRICES } from '@/entities/ai/model/ai-pricing'
+import type { AiFeature } from '@/entities/ai/model/ai-pricing'
 
 import { Errors } from '@/shared/lib/http'
 
-import type { AiFeature } from '@/entities/ai/model/ai-pricing'
 import type { IAiReportRepository } from '../repository/ai-report.repository.interface'
 import type { IWalletService } from '@/server/wallet/service/wallet.service.interface'
 
