@@ -45,9 +45,9 @@ export default async function RootLayout({
     }
 
     return (
-        <html lang="en">
+        <html lang="en" className="dark">
             <body className={`${audiowide.variable} ${montserrat.variable} antialiased`}>
-                <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
                     <DashboardLayout>{children}</DashboardLayout>
                     <CookieNotice />
                     <Toaster richColors position="top-right" />
