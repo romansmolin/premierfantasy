@@ -7,6 +7,9 @@ export interface IFplSyncService {
     linkFixtures(seasonYear: number): Promise<JobOutcome>
     /** Actual points of finished events (and the latest two events again, FPL corrects points after the fact). */
     syncPoints(): Promise<JobOutcome>
-    /** Per-fixture xG, xA and starts for players that played; resumes over several runs (at most maxPlayers per run). */
-    syncPlayerMatches(maxPlayers?: number): Promise<JobOutcome>
+    /**
+     * Per-fixture xG, xA and starts for players that played; resumes over several runs (at most maxPlayers per run).
+     * Stops taking players once shouldStop() is true (time budget): status PARTIAL, stats.stoppedEarly 1.
+     */
+    syncPlayerMatches(maxPlayers?: number, shouldStop?: () => boolean): Promise<JobOutcome>
 }

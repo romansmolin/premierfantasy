@@ -7,7 +7,7 @@ import { matchTeams } from '../lib/team-matcher'
 
 import type { IFplSyncService } from './fpl-sync.service.interface'
 import type { IFplClient } from '../lib/fpl-client'
-import type { FplBootstrap } from '../lib/fpl.types'
+import type { FplBootstrap, FplElementSummary } from '../lib/fpl.types'
 import type {
     FixtureFplLink,
     FixtureForLinking,
@@ -21,6 +21,7 @@ const POSITIONS = { 1: 'GK', 2: 'DEF', 3: 'MID', 4: 'FWD' } as const
 const MIN_FPL_FIXTURES = 100
 const MIN_LIVE_ELEMENTS = 100
 const MAX_PLAYERS_PER_RUN = 350
+const MIN_ATTEMPTS_TO_JUDGE = 5
 const MAX_KICKOFF_DIFF_MS = 36 * 60 * 60 * 1000
 
 export class FplSyncService implements IFplSyncService {
@@ -180,50 +181,66 @@ export class FplSyncService implements IFplSyncService {
         return { status: 'OK', stats }
     }
 
-    async syncPlayerMatches(maxPlayers = MAX_PLAYERS_PER_RUN): Promise<JobOutcome> {
+    async syncPlayerMatches(
+        maxPlayers = MAX_PLAYERS_PER_RUN,
+        shouldStop?: () => boolean,
+    ): Promise<JobOutcome> {
         const ids = await this.repo.findPlayersNeedingMatches(maxPlayers, new Date())
-        const stats = { players: 0, rows: 0, failed: 0 }
+        const stats = { players: 0, rows: 0, failed: 0, stoppedEarly: 0 }
 
         for (const fplId of ids) {
-            let rows: FplPlayerMatchRow[]
+            if (shouldStop?.()) {
+                stats.stoppedEarly = 1
 
-            try {
-                const summary = await this.client.getElementSummary(fplId)
-
-                if (!Array.isArray(summary?.history)) throw new Error(`FPL player ${fplId} has no history`)
-
-                rows = summary.history.map((h) => ({
-                    fplPlayerId: fplId,
-                    fplFixtureId: h.fixture,
-                    event: h.round,
-                    minutes: h.minutes,
-                    starts: h.starts,
-                    goals: h.goals_scored,
-                    assists: h.assists,
-                    xg: parseDecimal(h.expected_goals),
-                    xa: parseDecimal(h.expected_assists),
-                    totalPoints: h.total_points,
-                    wasHome: h.was_home,
-                }))
-            } catch {
-                stats.failed += 1
-
-                continue
+                break
             }
 
-            await this.repo.savePlayerMatches(rows)
-            stats.players += 1
-            stats.rows += rows.length
+            const rows = await this.fetchPlayerMatches(fplId)
+
+            if (rows) {
+                await this.repo.savePlayerMatches(rows)
+                stats.players += 1
+                stats.rows += rows.length
+            } else {
+                stats.failed += 1
+            }
+
+            // One broken player is normal; most of them failing means FPL is blocking or changed the answer.
+            const attempted = stats.players + stats.failed
+
+            if (attempted >= MIN_ATTEMPTS_TO_JUDGE && stats.failed * 2 > attempted) {
+                throw new SuspiciousResponseError(
+                    `FPL player summaries failed for ${stats.failed} of ${attempted} attempted players`,
+                )
+            }
         }
 
-        // One broken player is normal; most of them failing means FPL is blocking or changed the answer.
-        if (stats.failed * 2 > ids.length) {
-            throw new SuspiciousResponseError(
-                `FPL player summaries failed for ${stats.failed} of ${ids.length} players`,
-            )
-        }
+        return { status: stats.stoppedEarly ? 'PARTIAL' : 'OK', stats }
+    }
 
-        return { status: 'OK', stats }
+    /** Null when the request fails or the answer is malformed: nothing of that player may be stored. */
+    private async fetchPlayerMatches(fplId: number): Promise<FplPlayerMatchRow[] | null> {
+        try {
+            const summary = await this.client.getElementSummary(fplId)
+
+            if (!Array.isArray(summary?.history) || !summary.history.every(isValidHistoryEntry)) return null
+
+            return summary.history.map((h) => ({
+                fplPlayerId: fplId,
+                fplFixtureId: h.fixture,
+                event: h.round,
+                minutes: h.minutes,
+                starts: h.starts,
+                goals: h.goals_scored,
+                assists: h.assists,
+                xg: parseDecimal(h.expected_goals),
+                xa: parseDecimal(h.expected_assists),
+                totalPoints: h.total_points,
+                wasHome: h.was_home,
+            }))
+        } catch {
+            return null
+        }
     }
 
     private pickFixture(candidates: FixtureForLinking[], kickoff: string | null): FixtureForLinking | null {
@@ -270,4 +287,20 @@ function parseDecimal(value: string): number | null {
     const n = Number.parseFloat(value)
 
     return Number.isFinite(n) ? n : null
+}
+
+const NUMERIC_HISTORY_FIELDS = [
+    'fixture',
+    'round',
+    'minutes',
+    'starts',
+    'goals_scored',
+    'assists',
+    'total_points',
+] as const
+
+function isValidHistoryEntry(entry: FplElementSummary['history'][number] | null): boolean {
+    if (!entry || typeof entry.was_home !== 'boolean') return false
+
+    return NUMERIC_HISTORY_FIELDS.every((field) => Number.isFinite(entry[field]))
 }

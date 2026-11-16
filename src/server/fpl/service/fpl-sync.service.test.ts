@@ -586,12 +586,15 @@ describe('FplSyncService.syncPlayerMatches', () => {
     })
 
     it('throws SuspiciousResponseError when more than half of the attempted players fail', async () => {
-        const { repo } = makeRepo({}, { findPlayersNeedingMatches: vi.fn().mockResolvedValue([1, 2, 3, 4]) })
+        const { repo } = makeRepo(
+            {},
+            { findPlayersNeedingMatches: vi.fn().mockResolvedValue([1, 2, 3, 4, 5, 6]) },
+        )
         const client = makeClient({
             getElementSummary: vi.fn().mockImplementation(async (id: number) => {
-                if (id !== 1) throw new Error('boom')
+                if (id === 1) return { history: [entry(101, 12)] }
 
-                return { history: [entry(101, 12)] }
+                throw new Error('boom')
             }),
         })
 
@@ -607,5 +610,65 @@ describe('FplSyncService.syncPlayerMatches', () => {
         await new FplSyncService(repo, makeClient()).syncPlayerMatches(40)
 
         expect(find).toHaveBeenCalledWith(40, expect.any(Date))
+    })
+
+    it('stops at the deadline and reports stoppedEarly', async () => {
+        const { repo } = makeRepo({}, { findPlayersNeedingMatches: vi.fn().mockResolvedValue([1, 2, 3]) })
+        const client = makeClient({
+            getElementSummary: vi.fn().mockResolvedValue({ history: [entry(101, 12)] }),
+        })
+        let calls = 0
+        const shouldStop = () => calls++ >= 1
+
+        const result = await new FplSyncService(repo, client).syncPlayerMatches(10, shouldStop)
+
+        expect(client.getElementSummary).toHaveBeenCalledTimes(1)
+        expect(result.stats).toMatchObject({ players: 1, stoppedEarly: 1 })
+        expect(savedRows(repo)).toHaveLength(1)
+    })
+
+    it('reports stoppedEarly 0 when it was not stopped', async () => {
+        const { repo } = makeRepo({}, { findPlayersNeedingMatches: vi.fn().mockResolvedValue([1]) })
+        const client = makeClient({
+            getElementSummary: vi.fn().mockResolvedValue({ history: [entry(101, 12)] }),
+        })
+
+        const result = await new FplSyncService(repo, client).syncPlayerMatches(10, () => false)
+
+        expect(result.stats.stoppedEarly).toBe(0)
+    })
+
+    it('aborts after the 5th attempt when all fail, without calling the client for the rest', async () => {
+        const ids = Array.from({ length: 20 }, (_, i) => i + 1)
+        const { repo } = makeRepo({}, { findPlayersNeedingMatches: vi.fn().mockResolvedValue(ids) })
+        const client = makeClient({ getElementSummary: vi.fn().mockRejectedValue(new Error('blocked')) })
+
+        await expect(new FplSyncService(repo, client).syncPlayerMatches()).rejects.toBeInstanceOf(
+            SuspiciousResponseError,
+        )
+        expect(client.getElementSummary).toHaveBeenCalledTimes(5)
+    })
+
+    it('does not throw when only 1-4 players were attempted and all failed', async () => {
+        const { repo } = makeRepo({}, { findPlayersNeedingMatches: vi.fn().mockResolvedValue([1, 2, 3, 4]) })
+        const client = makeClient({ getElementSummary: vi.fn().mockRejectedValue(new Error('404')) })
+
+        const result = await new FplSyncService(repo, client).syncPlayerMatches()
+
+        expect(result.stats).toMatchObject({ players: 0, failed: 4 })
+    })
+
+    it('skips a player with a malformed history entry and stores nothing for them', async () => {
+        const { repo } = makeRepo({}, { findPlayersNeedingMatches: vi.fn().mockResolvedValue([1, 2]) })
+        const client = makeClient({
+            getElementSummary: vi.fn().mockImplementation(async (id: number) => ({
+                history: id === 2 ? [entry(101, 12), { ...entry(102, 12), minutes: null }] : [entry(101, 12)],
+            })),
+        })
+
+        const result = await new FplSyncService(repo, client).syncPlayerMatches()
+
+        expect(savedRows(repo).map((r: { fplPlayerId: number }) => r.fplPlayerId)).toEqual([1])
+        expect(result.stats).toMatchObject({ players: 1, failed: 1 })
     })
 })

@@ -16,7 +16,7 @@ export function buildJobs(container: SyncContainer, budget: RequestBudget): Reco
         'fpl-bootstrap': () => container.fplSyncService.syncBootstrap(SEASON),
         'fpl-fixtures': () => container.fplSyncService.linkFixtures(SEASON),
         'fpl-points': () => container.fplSyncService.syncPoints(),
-        'fpl-matches': () => container.fplSyncService.syncPlayerMatches(),
+        'fpl-matches': () => container.fplSyncService.syncPlayerMatches(undefined, () => budget.timeUp()),
         forecast: () => container.forecastService.run(),
     }
 }

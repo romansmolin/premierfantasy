@@ -41,6 +41,11 @@ export class RequestBudget {
         return true
     }
 
+    /** True once the time limit has passed. Does not count a request. */
+    timeUp(): boolean {
+        return this.deadline !== null && this.now() >= this.deadline
+    }
+
     get used(): number {
         return this.count
     }
