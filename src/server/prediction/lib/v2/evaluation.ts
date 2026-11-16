@@ -4,7 +4,7 @@ import { mean } from '../math'
 import { expectedGoals } from '../team-strength'
 
 import { buildInputsV2 } from './inputs'
-import { brier, brierMulti, calibrationBuckets } from './metrics'
+import { brier, brierMulti, calibrationBuckets, playerSeed } from './metrics'
 import { bucketDistribution, predictPlayerMatches } from './model'
 import { outcomeProbabilities } from './outcome'
 import { bucketOfPoints, DEFAULT_V2, GATE, MODEL_VERSION_V2 } from './params'
@@ -142,13 +142,6 @@ const isFinished = (f: DatasetFixture): boolean =>
 
 /** 0 home win, 1 draw, 2 away win. */
 const resultOf = (f: DatasetFixture): number => 1 - Math.sign((f.homeGoals ?? 0) - (f.awayGoals ?? 0))
-
-/** FNV-1a of the player id over the run seed: players draw independent samples, whatever the iteration order. */
-const playerSeed = (seed: number, playerId: string): number =>
-    [...playerId].reduce(
-        (h, ch) => Math.imul(h ^ ch.charCodeAt(0), 0x01000193) >>> 0,
-        (seed ^ 0x811c9dc5) >>> 0,
-    )
 
 /** Finished fixtures of events N…N+4 played after the cutoff, against league home/draw/away shares before it. */
 function outcomeRows(data: ForecastDataset, event: number, cutoff: Date, strengths: TeamStrengths): Scored[] {

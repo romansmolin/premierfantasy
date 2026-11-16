@@ -6,7 +6,9 @@ import { FixtureSyncService } from '@/server/match-data/service/fixture-sync.ser
 import { MatchStatsSyncService } from '@/server/match-data/service/match-stats-sync.service'
 import { ForecastDataRepository } from '@/server/prediction/repository/forecast-data.repository'
 import { ForecastRepository } from '@/server/prediction/repository/forecast.repository'
+import { ProbabilityRepository } from '@/server/prediction/repository/probability.repository'
 import { ForecastService } from '@/server/prediction/service/forecast.service'
+import { ProbabilityService } from '@/server/prediction/service/probability.service'
 
 import { createApiFootballHttpFromEnv } from '@/shared/api/api-football-http'
 
@@ -38,6 +40,10 @@ export function createSyncContainer() {
     const matchStatsSyncService = new MatchStatsSyncService(matchDataRepository, apiFootball)
     const fplSyncService = new FplSyncService(new FplRepository(), createFplClient())
     const forecastService = new ForecastService(new ForecastDataRepository(), new ForecastRepository())
+    const probabilityService = new ProbabilityService(
+        new ForecastDataRepository(),
+        new ProbabilityRepository(),
+    )
 
     return {
         syncRunRepository,
@@ -47,6 +53,7 @@ export function createSyncContainer() {
         matchStatsSyncService,
         fplSyncService,
         forecastService,
+        probabilityService,
     }
 }
 

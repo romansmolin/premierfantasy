@@ -86,3 +86,10 @@ export function samplePoisson(lambda: number, rng: () => number): number {
 
     return k
 }
+
+/** FNV-1a of the player id over the run seed: players draw independent samples, whatever the iteration order. */
+export const playerSeed = (seed: number, playerId: string): number =>
+    [...playerId].reduce(
+        (h, ch) => Math.imul(h ^ ch.charCodeAt(0), 0x01000193) >>> 0,
+        (seed ^ 0x811c9dc5) >>> 0,
+    )

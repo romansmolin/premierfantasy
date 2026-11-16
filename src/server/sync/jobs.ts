@@ -18,8 +18,17 @@ export function buildJobs(container: SyncContainer, budget: RequestBudget): Reco
         'fpl-points': () => container.fplSyncService.syncPoints(),
         'fpl-matches': () => container.fplSyncService.syncPlayerMatches(undefined, () => budget.timeUp()),
         forecast: () => container.forecastService.run(),
+        probability: () => container.probabilityService.run(),
     }
 }
 
-export const SHORT_JOBS = ['fixtures', 'match-stats', 'fpl-fixtures', 'fpl-points', 'fpl-matches', 'forecast']
+export const SHORT_JOBS = [
+    'fixtures',
+    'match-stats',
+    'fpl-fixtures',
+    'fpl-points',
+    'fpl-matches',
+    'forecast',
+    'probability',
+]
 export const FULL_JOBS = ['fpl-bootstrap', ...SHORT_JOBS]

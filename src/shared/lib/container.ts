@@ -21,7 +21,9 @@ import { PaymentRepository } from '@/server/payment/repository/payment.repositor
 import { PaymentService } from '@/server/payment/service/payment.service'
 import { ForecastDataRepository } from '@/server/prediction/repository/forecast-data.repository'
 import { ForecastRepository } from '@/server/prediction/repository/forecast.repository'
+import { ProbabilityRepository } from '@/server/prediction/repository/probability.repository'
 import { ForecastService } from '@/server/prediction/service/forecast.service'
+import { ProbabilityService } from '@/server/prediction/service/probability.service'
 import { PricingController } from '@/server/pricing/controller/pricing.controller'
 import { PricingRepository } from '@/server/pricing/repository/pricing.repository'
 import { PricingService } from '@/server/pricing/service/pricing.service'
@@ -71,6 +73,7 @@ const paymentService = new PaymentService(paymentRepository, walletRepository)
 const fplMappingService = new FplMappingService(fplMappingRepository, createFplClient())
 const syncContainer = createSyncContainer()
 const forecastService = new ForecastService(new ForecastDataRepository(), new ForecastRepository())
+const probabilityService = new ProbabilityService(new ForecastDataRepository(), new ProbabilityRepository())
 const statsService = new StatsService(new StatsRepository(), forecastService)
 const squadRepository = new SquadRepository()
 const squadService = new SquadService(squadRepository)
@@ -115,6 +118,7 @@ export const container = {
     syncCronController,
     statsService,
     forecastService,
+    probabilityService,
     squadController,
     builderController,
     squadService,

@@ -35,6 +35,7 @@ const allOk = {
     'fpl-points': ok,
     'fpl-matches': ok,
     forecast: ok,
+    probability: ok,
 }
 
 describe('SyncCronController', () => {
@@ -73,6 +74,7 @@ describe('SyncCronController', () => {
             'fpl-points': track('fpl-points'),
             'fpl-matches': track('fpl-matches'),
             forecast: track('forecast'),
+            probability: track('probability'),
         })
 
         const response = await controller.run(request('Bearer cron-secret'), ctx)
@@ -86,6 +88,7 @@ describe('SyncCronController', () => {
             'fpl-points',
             'fpl-matches',
             'forecast',
+            'probability',
         ])
         expect(Object.keys(await response.json())).toEqual(order)
     })
