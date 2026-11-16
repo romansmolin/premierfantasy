@@ -75,9 +75,9 @@ export function MinutesChart({ matches }: { matches: FormMatch[] }) {
             title="Does he play the full match?"
             question="Minutes played in each recent match: filled = started, hatched = came off the bench, small outline = did not play."
             legend={[
-                { label: 'Started', kind: 'solid', color: 'var(--chart-4)' },
-                { label: 'Came off the bench', kind: 'hatch', color: 'var(--chart-4)' },
-                { label: 'Did not play', kind: 'outline', color: 'var(--chart-4)' },
+                { label: 'Fact: started', kind: 'solid', color: 'var(--chart-4)' },
+                { label: 'Fact: came off the bench', kind: 'hatch', color: 'var(--chart-4)' },
+                { label: 'Fact: did not play', kind: 'outline', color: 'var(--chart-4)' },
             ]}
             table={{
                 columns: ['Match', 'Role', 'Minutes'],

@@ -45,7 +45,7 @@ export function FormChart({ matches }: { matches: FormMatch[] }) {
                     String(r.goals),
                     num(r.xg, 'no xG data'),
                     String(r.assists),
-                    num(r.xa, 'no xG data'),
+                    num(r.xa, 'no xA data'),
                 ]),
             }}
             actions={
@@ -107,7 +107,7 @@ export function FormChart({ matches }: { matches: FormMatch[] }) {
                                                   { label: 'Goals', value: String(row.goals) },
                                                   { label: 'xG', value: num(row.xg, 'no xG data') },
                                                   { label: 'Assists', value: String(row.assists) },
-                                                  { label: 'xA', value: num(row.xa, 'no xG data') },
+                                                  { label: 'xA', value: num(row.xa, 'no xA data') },
                                               ]
                                             : []
                                     }

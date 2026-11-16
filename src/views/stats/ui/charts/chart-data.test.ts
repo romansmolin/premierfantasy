@@ -7,7 +7,7 @@ import type { FormMatch, PlayerProbabilityCard } from '@/server/stats/service/st
 const match = (i: number, over: Partial<FormMatch> = {}): FormMatch => ({
     fixtureId: `f${i}`,
     kickoff: new Date(Date.UTC(2026, 0, 1 + i)),
-    opponentName: i % 2 ? 'ARS' : 'CHE',
+    opponentName: `T${i}`,
     isHome: i % 2 === 1,
     minutes: 90,
     started: true,
@@ -18,30 +18,34 @@ const match = (i: number, over: Partial<FormMatch> = {}): FormMatch => ({
     ...over,
 })
 
+const labelOf = (i: number) => (i % 2 === 1 ? `vs T${i} (H)` : `at T${i} (A)`)
+// Deliberately not in kickoff order, so a missing or reversed sort fails.
+const SHUFFLED = [7, 2, 10, 4, 1, 9, 6, 3, 8, 5]
+
 describe('formSeries', () => {
     it('keeps both matches of a double gameweek', () => {
-        const rows = formSeries(
-            [match(1), match(2, { kickoff: new Date(Date.UTC(2026, 0, 1, 12)) }), match(3)],
-            10,
-        )
+        // Same gameweek, kickoffs hours apart, different opponents; passed late-first.
+        const late = match(2, { kickoff: new Date(Date.UTC(2026, 0, 10, 20)) })
+        const early = match(1, { kickoff: new Date(Date.UTC(2026, 0, 10, 12)) })
+        const rows = formSeries([match(3, { kickoff: new Date(Date.UTC(2026, 0, 17, 15)) }), late, early], 10)
 
-        expect(rows).toHaveLength(3)
+        expect(rows.map((r) => r.label)).toEqual([labelOf(1), labelOf(2), labelOf(3)])
     })
 
     it('last 5 of 10 keeps kickoff order', () => {
         const rows = formSeries(
-            Array.from({ length: 10 }, (_, i) => match(i + 1)),
+            SHUFFLED.map((i) => match(i)),
             5,
         )
 
-        expect(rows.map((r) => r.label)).toEqual([
-            'at CHE (A)',
-            'vs ARS (H)',
-            'at CHE (A)',
-            'vs ARS (H)',
-            'at CHE (A)',
-        ])
-        expect(rows).toHaveLength(5)
+        expect(rows.map((r) => r.label)).toEqual([6, 7, 8, 9, 10].map(labelOf))
+    })
+
+    it('marks hasXg true when xg is present', () => {
+        const [row] = formSeries([match(1, { xg: 0.4 })], 10)
+
+        expect(row.hasXg).toBe(true)
+        expect(row.xg).toBe(0.4)
     })
 
     it('marks hasXg false when xg is null and never substitutes 0', () => {
@@ -98,5 +102,11 @@ describe('minutesSeries', () => {
         ])
 
         expect(rows.map((r) => r.role)).toEqual(['unused', 'sub', 'start'])
+    })
+
+    it('keeps kickoff order', () => {
+        const rows = minutesSeries(SHUFFLED.map((i) => match(i)))
+
+        expect(rows.map((r) => r.label)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(labelOf))
     })
 })
