@@ -27,7 +27,7 @@ import type {
 import { ApiError } from '@/shared/api/api-error'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -354,39 +354,62 @@ export function BuilderView() {
     return (
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
             <div className="space-y-3">
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border bg-card px-4 py-3 text-sm">
-                    <label className="flex items-center gap-2">
-                        Formation
-                        <select
-                            className="h-8 rounded-md border bg-background px-2 font-medium"
-                            value={formationLabel(formation)}
-                            onChange={(e) => changeFormation(e.target.value)}
-                            aria-label="Formation"
-                        >
-                            {options.map((f) => (
-                                <option key={formationLabel(f)}>{formationLabel(f)}</option>
-                            ))}
-                        </select>
-                    </label>
-                    <div className="min-w-56 flex-1">
-                        <div className="flex justify-between text-xs">
-                            <span className="whitespace-nowrap">
-                                Spent {priceLabel(spent)} of {priceLabel(rules.budgetTenths)}
-                                {unpriced ? ' (a price is missing)' : ''}
+                <div className="space-y-3 rounded-2xl border bg-card p-4">
+                    <div className="grid grid-cols-3 gap-3">
+                        <label className="flex flex-col gap-1">
+                            <span className="text-xs text-muted-foreground">Formation</span>
+                            <select
+                                className="h-9 rounded-lg border bg-background px-2 text-sm font-semibold"
+                                value={formationLabel(formation)}
+                                onChange={(e) => changeFormation(e.target.value)}
+                                aria-label="Formation"
+                            >
+                                {options.map((f) => (
+                                    <option key={formationLabel(f)}>{formationLabel(f)}</option>
+                                ))}
+                            </select>
+                        </label>
+                        <div className="flex flex-col gap-1">
+                            <span className="text-xs text-muted-foreground">Players</span>
+                            <span className="text-lg font-semibold leading-9" data-testid="player-count">
+                                {chosen.length}
+                                <span className="text-sm font-normal text-muted-foreground">
+                                    {' '}
+                                    / {rules.squadSize}
+                                </span>
+                            </span>
+                        </div>
+                        <div className="flex flex-col gap-1" title="Captain counted twice">
+                            <span className="text-xs text-muted-foreground">Expected XI points</span>
+                            <span className="font-audiowide text-xl leading-9">
+                                {xiPoints === null ? '—' : xiPoints.toFixed(1)}
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="mb-1.5 flex items-baseline justify-between gap-2">
+                            <span className="text-sm">
+                                <span className="font-semibold">{priceLabel(spent)}</span>
+                                <span className="text-muted-foreground">
+                                    {' '}
+                                    of {priceLabel(rules.budgetTenths)} spent
+                                </span>
+                                {unpriced && (
+                                    <span className="text-muted-foreground">, a price is missing</span>
+                                )}
                             </span>
                             <span
                                 className={
                                     bank < 0
-                                        ? 'whitespace-nowrap font-semibold text-destructive'
-                                        : 'whitespace-nowrap text-muted-foreground'
+                                        ? 'whitespace-nowrap text-sm font-semibold text-destructive'
+                                        : 'whitespace-nowrap text-sm text-muted-foreground'
                                 }
                             >
-                                {bank < 0 ? 'Over by ' : 'Left '}
-                                {priceLabel(Math.abs(bank))}
+                                {priceLabel(Math.abs(bank))} {bank < 0 ? 'over' : 'left'}
                             </span>
                         </div>
                         <div
-                            className="mt-1 h-2 overflow-hidden rounded-full bg-muted"
+                            className="h-2 overflow-hidden rounded-full bg-muted"
                             role="progressbar"
                             aria-label="Budget used"
                             aria-valuenow={spentShare}
@@ -399,15 +422,6 @@ export function BuilderView() {
                             />
                         </div>
                     </div>
-                    <div className="text-xs">
-                        <span className="font-semibold">{chosen.length}</span> of {rules.squadSize} players
-                    </div>
-                    {xiPoints !== null && (
-                        <div className="text-xs" title="Captain counted twice">
-                            Expected XI points{' '}
-                            <span className="font-audiowide text-base">{xiPoints.toFixed(1)}</span>
-                        </div>
-                    )}
                 </div>
 
                 <Pitch
@@ -433,43 +447,71 @@ export function BuilderView() {
                 <Card>
                     <CardHeader>
                         <CardTitle>Your squad</CardTitle>
-                        <CardDescription>
-                            {POSITIONS.map(
-                                (p) => `${p} ${countOf(p, chosen)}/${rules.positions[p].squadSelect}`,
-                            ).join(', ')}
-                            . Tap a card to set the captain, swap or replace a player.
-                        </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-3">
-                        {complete && !validation.valid && (
-                            <ul className="list-disc space-y-1 pl-5 text-sm text-destructive">
-                                {validation.errors.map((e) => (
-                                    <li key={e}>{e}</li>
-                                ))}
-                            </ul>
-                        )}
-                        {complete && validation.valid && (
-                            <p className="text-sm text-green-600">
-                                This squad follows the FPL rules. Enter it on the FPL site yourself.
-                            </p>
-                        )}
-                        {!complete && (
-                            <p className="text-sm text-muted-foreground">
-                                {rules.squadSize - chosen.length} more players to go. Captain and vice-captain
-                                come from the XI.
-                            </p>
-                        )}
+                    <CardContent className="space-y-4">
+                        <div className="grid grid-cols-4 gap-2">
+                            {POSITIONS.map((p) => {
+                                const have = countOf(p, chosen)
+                                const need = rules.positions[p].squadSelect
+
+                                return (
+                                    <div
+                                        key={p}
+                                        className={
+                                            have === need
+                                                ? 'rounded-lg border border-green-600/50 bg-green-600/10 px-2 py-1.5 text-center'
+                                                : 'rounded-lg border px-2 py-1.5 text-center'
+                                        }
+                                    >
+                                        <div className="text-xs text-muted-foreground">{p}</div>
+                                        <div className="text-sm font-semibold">
+                                            {have}/{need}
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                        <div className="text-sm">
+                            {complete && !validation.valid && (
+                                <ul className="list-disc space-y-1 pl-5 text-destructive">
+                                    {validation.errors.map((e) => (
+                                        <li key={e}>{e}</li>
+                                    ))}
+                                </ul>
+                            )}
+                            {complete && validation.valid && (
+                                <p className="font-medium text-green-600 dark:text-green-500">
+                                    This squad follows the FPL rules. Enter it on the FPL site yourself.
+                                </p>
+                            )}
+                            {!complete && (
+                                <p>
+                                    <span className="font-medium">
+                                        {rules.squadSize - chosen.length} more players to go.
+                                    </span>{' '}
+                                    <span className="text-muted-foreground">
+                                        Captain and vice-captain come from the XI. Tap a card to set them,
+                                        swap or replace a player.
+                                    </span>
+                                </p>
+                            )}
+                        </div>
                         <div className="flex gap-2">
                             <Input
+                                className="h-10 flex-1 px-3 text-sm"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 maxLength={60}
                                 aria-label="Squad name"
                             />
-                            <Button onClick={save} disabled={!validation.valid || !name.trim()}>
+                            <Button
+                                className="px-4"
+                                onClick={save}
+                                disabled={!validation.valid || !name.trim()}
+                            >
                                 {editingId ? 'Update' : 'Save'}
                             </Button>
-                            <Button variant="outline" onClick={reset}>
+                            <Button className="px-4" variant="outline" onClick={reset}>
                                 New
                             </Button>
                         </div>

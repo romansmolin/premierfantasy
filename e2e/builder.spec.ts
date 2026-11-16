@@ -21,7 +21,7 @@ test.describe('building a squad by hand', () => {
         await expect(slotsIn(page, 'DEF')).toHaveCount(4)
         await expect(slotsIn(page, 'GK')).toHaveCount(1)
         await expect(slotsIn(page, 'bench')).toHaveCount(4)
-        await expect(page.getByText('0 of 15 players')).toBeVisible()
+        await expect(page.getByTestId('player-count')).toHaveText(/^0\s*\/\s*15$/)
         await expect(page.getByRole('button', { name: 'Save' })).toBeDisabled()
     })
 
@@ -53,9 +53,9 @@ test.describe('building a squad by hand', () => {
     test('picking a player puts a card on the pitch and spends budget', async ({ page }) => {
         await fillSlot(page, 'Add GK', 'priciest')
 
-        await expect(page.getByText('1 of 15 players')).toBeVisible()
+        await expect(page.getByTestId('player-count')).toHaveText(/^1\s*\/\s*15$/)
         await expect(slotsIn(page, 'GK').getByRole('button', { name: /open actions/ })).toHaveCount(1)
-        await expect(page.getByText(/Spent £[1-9]/)).toBeVisible()
+        await expect(page.getByText(/£[1-9][\d.]*m of £100\.0m spent/)).toBeVisible()
     })
 
     test('a card shows the player photo', async ({ page }) => {
@@ -171,13 +171,13 @@ test.describe('building a squad by hand', () => {
             .click()
         await page.getByRole('menuitem', { name: 'Remove from squad' }).click()
         await expect(page.getByRole('button', { name: 'Add GK', exact: true })).toBeVisible()
-        await expect(page.getByText('0 of 15 players')).toBeVisible()
+        await expect(page.getByTestId('player-count')).toHaveText(/^0\s*\/\s*15$/)
     })
 
     test('an over-budget squad is flagged and cannot be saved', async ({ page }) => {
         await fillWholeSquad(page, 'priciest')
 
-        await expect(page.getByText(/Over by £/)).toBeVisible()
+        await expect(page.getByText(/£[\d.]+m over/)).toBeVisible()
         await expect(page.getByText('Over the budget of £100.0m')).toBeVisible()
         await expect(page.getByRole('button', { name: 'Save' })).toBeDisabled()
     })
@@ -196,7 +196,7 @@ test.describe('building a squad by hand', () => {
             .click()
         await page.getByRole('menuitem', { name: 'Make vice-captain' }).click()
 
-        await expect(page.getByText('15 of 15 players')).toBeVisible()
+        await expect(page.getByTestId('player-count')).toHaveText(/^15\s*\/\s*15$/)
         await expect(page.getByText('This squad follows the FPL rules.')).toBeVisible()
 
         await page.getByLabel('Squad name').fill('E2E squad')
@@ -215,7 +215,7 @@ test.describe('building a squad by hand', () => {
             .catch(() => undefined)
         await page.getByRole('button', { name: 'Open' }).first().click()
 
-        await expect(page.getByText('15 of 15 players')).toBeVisible()
+        await expect(page.getByTestId('player-count')).toHaveText(/^15\s*\/\s*15$/)
         await expect(page.getByRole('button', { name: /open actions/ })).toHaveCount(15)
 
         const reopened = await page

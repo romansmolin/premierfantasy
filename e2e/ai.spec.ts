@@ -20,7 +20,7 @@ test.describe('auto-build and squad review (rich user, 1000 credits)', () => {
         await page.getByRole('button', { name: /Auto-build \(300 Credits\)/ }).click()
         await expect(page.getByText(/Loaded into the builder/)).toBeVisible({ timeout: 60_000 })
 
-        await expect(page.getByText('15 of 15 players')).toBeVisible()
+        await expect(page.getByTestId('player-count')).toHaveText(/^15\s*\/\s*15$/)
         await expect(page.getByText('This squad follows the FPL rules.')).toBeVisible()
         await expect(page.getByRole('button', { name: /open actions/ })).toHaveCount(15)
         await expect(page.getByRole('button', { name: 'Save' })).toBeEnabled()
