@@ -291,7 +291,7 @@ export function BuilderView() {
                         <button
                             type="button"
                             aria-label={`${p.name}, open actions`}
-                            className="rounded-t-xl rounded-b-[1.6rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                            className="rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                         />
                     }
                 >

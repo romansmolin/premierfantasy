@@ -41,7 +41,7 @@ export function PlayerCard({ player, role = null, locked = false, showForecast }
         <div className={cn('relative', SIZE)}>
             <div
                 className={cn(
-                    'relative flex size-full flex-col overflow-hidden rounded-t-xl rounded-b-[1.6rem] border border-amber-700/40 bg-gradient-to-b from-amber-50 via-amber-200 to-amber-400 text-amber-950 shadow-[0_6px_14px_-4px_rgba(0,0,0,0.5)] transition-transform group-hover:-translate-y-0.5',
+                    'relative flex size-full flex-col overflow-hidden rounded-xl border border-amber-700/40 bg-gradient-to-b from-amber-50 via-amber-200 to-amber-400 text-amber-950 shadow-[0_6px_14px_-4px_rgba(0,0,0,0.5)] transition-transform group-hover:-translate-y-0.5',
                     out && 'saturate-50 ring-2 ring-red-500',
                     doubt && 'ring-2 ring-orange-400',
                 )}
@@ -120,7 +120,7 @@ export function EmptySlot({ label, onClick }: { label: string; onClick: () => vo
             onClick={onClick}
             aria-label={`Add ${label}`}
             className={cn(
-                'group flex flex-col items-center justify-center gap-1 rounded-t-xl rounded-b-[1.6rem] border-2 border-dashed border-white/60 bg-white/5 text-white/90 transition hover:border-white hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white',
+                'group flex flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-white/60 bg-white/5 text-white/90 transition hover:border-white hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white',
                 SIZE,
             )}
         >
