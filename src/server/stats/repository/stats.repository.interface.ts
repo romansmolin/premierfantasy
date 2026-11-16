@@ -33,6 +33,24 @@ export interface StatsFixture {
     away: ClubRef
 }
 
+/** One FPL per-match line of a player; `xg`/`xa` are null when FPL has no value (never 0). */
+export interface FormMatch {
+    fixtureId: string
+    kickoff: Date
+    opponentName: string
+    isHome: boolean
+    minutes: number
+    started: boolean
+    goals: number
+    xg: number | null
+    assists: number
+    xa: number | null
+}
+
+export interface UpcomingFixture extends StatsFixture {
+    event: number
+}
+
 export interface PredictionView {
     playerId: string
     expectedPoints: number
@@ -47,4 +65,13 @@ export interface IStatsRepository {
     findLines(playerId?: string): Promise<StatsLineRow[]>
     findNextEventFixtures(): Promise<{ event: number | null; fixtures: StatsFixture[] }>
     findPredictions(event: number): Promise<PredictionView[]>
+    /** FPL per-match rows of the player in kickoff order; rows whose fixture is unknown are dropped. */
+    findFplMatches(playerId: string): Promise<FormMatch[]>
+    /** FPL penalties_order of the player; null when unmapped or unset. */
+    findPenaltyOrder(playerId: string): Promise<number | null>
+    /** Matches with minutes played over every stored season (what the v2 model counts as appearances). */
+    countAppearances(playerId: string): Promise<number>
+    findFixturesByIds(ids: string[]): Promise<StatsFixture[]>
+    /** Fixtures of the next `events` gameweeks, starting at the next one. */
+    findUpcomingFixtures(events: number): Promise<UpcomingFixture[]>
 }

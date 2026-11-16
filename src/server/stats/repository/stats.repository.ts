@@ -7,9 +7,11 @@ import type {
     ClubRef,
     IStatsRepository,
     PredictionView,
+    FormMatch,
     StatsFixture,
     StatsLineRow,
     StatsPlayer,
+    UpcomingFixture,
 } from './stats.repository.interface'
 import type { Position } from '@/server/prediction/lib/scoring-rules'
 
@@ -17,6 +19,24 @@ import type { Position } from '@/server/prediction/lib/scoring-rules'
 const PRICE_MAX_AGE_MS = 3 * 24 * 60 * 60 * 1000
 
 const currentSeason = { year: SEASON, league: { externalId: LEAGUE_ID } }
+/** The v2 model reads the current and the previous stored season. */
+const storedSeasons = { year: { in: [SEASON, SEASON - 1] }, league: { externalId: LEAGUE_ID } }
+
+const fixtureSelect = {
+    id: true,
+    kickoff: true,
+    status: true,
+    homeTeam: { select: { id: true, name: true, logo: true } },
+    awayTeam: { select: { id: true, name: true, logo: true } },
+} as const
+
+const toFixture = (f: {
+    id: string
+    kickoff: Date
+    status: string
+    homeTeam: ClubRef
+    awayTeam: ClubRef
+}): StatsFixture => ({ id: f.id, kickoff: f.kickoff, status: f.status, home: f.homeTeam, away: f.awayTeam })
 
 export class StatsRepository implements IStatsRepository {
     async findPlayers(): Promise<StatsPlayer[]> {
@@ -134,7 +154,7 @@ export class StatsRepository implements IStatsRepository {
         })
     }
 
-    async findNextEventFixtures(): Promise<{ event: number | null; fixtures: StatsFixture[] }> {
+    private async nextEventId(): Promise<number | null> {
         const next =
             (await prisma.fplEvent.findFirst({ where: { isNext: true }, select: { id: true } })) ??
             (await prisma.fplEvent.findFirst({
@@ -143,30 +163,104 @@ export class StatsRepository implements IStatsRepository {
                 select: { id: true },
             }))
 
-        if (!next) return { event: null, fixtures: [] }
+        return next?.id ?? null
+    }
+
+    async findNextEventFixtures(): Promise<{ event: number | null; fixtures: StatsFixture[] }> {
+        const event = await this.nextEventId()
+
+        if (event === null) return { event: null, fixtures: [] }
 
         const fixtures = await prisma.fixture.findMany({
-            where: { fplEvent: next.id },
+            where: { fplEvent: event },
             orderBy: { kickoff: 'asc' },
+            select: fixtureSelect,
+        })
+
+        return { event, fixtures: fixtures.map(toFixture) }
+    }
+
+    async findUpcomingFixtures(events: number): Promise<UpcomingFixture[]> {
+        const first = await this.nextEventId()
+
+        if (first === null) return []
+
+        const rows = await prisma.fixture.findMany({
+            where: { fplEvent: { gte: first, lt: first + events } },
+            orderBy: { kickoff: 'asc' },
+            select: { ...fixtureSelect, fplEvent: true },
+        })
+
+        return rows.flatMap((r) => (r.fplEvent === null ? [] : [{ ...toFixture(r), event: r.fplEvent }]))
+    }
+
+    async findFixturesByIds(ids: string[]): Promise<StatsFixture[]> {
+        if (ids.length === 0) return []
+
+        const rows = await prisma.fixture.findMany({ where: { id: { in: ids } }, select: fixtureSelect })
+
+        return rows.map(toFixture)
+    }
+
+    async findFplMatches(playerId: string): Promise<FormMatch[]> {
+        const map = await prisma.fplPlayerMap.findUnique({ where: { playerId }, select: { fplId: true } })
+
+        if (!map) return []
+
+        const rows = await prisma.fplPlayerMatch.findMany({ where: { fplPlayerId: map.fplId } })
+        const fixtures = await prisma.fixture.findMany({
+            where: { fplFixtureId: { in: rows.map((r) => r.fplFixtureId) } },
             select: {
                 id: true,
                 kickoff: true,
-                status: true,
-                homeTeam: { select: { id: true, name: true, logo: true } },
-                awayTeam: { select: { id: true, name: true, logo: true } },
+                fplFixtureId: true,
+                homeTeam: { select: { name: true } },
+                awayTeam: { select: { name: true } },
             },
         })
+        const byFpl = new Map(fixtures.map((f) => [f.fplFixtureId, f]))
 
-        return {
-            event: next.id,
-            fixtures: fixtures.map((f) => ({
-                id: f.id,
-                kickoff: f.kickoff,
-                status: f.status,
-                home: f.homeTeam,
-                away: f.awayTeam,
-            })),
-        }
+        return rows
+            .flatMap((r) => {
+                const f = byFpl.get(r.fplFixtureId)
+
+                return f
+                    ? [
+                          {
+                              fixtureId: f.id,
+                              kickoff: f.kickoff,
+                              opponentName: r.wasHome ? f.awayTeam.name : f.homeTeam.name,
+                              isHome: r.wasHome,
+                              minutes: r.minutes,
+                              started: r.starts > 0,
+                              goals: r.goals,
+                              xg: r.xg,
+                              assists: r.assists,
+                              xa: r.xa,
+                          },
+                      ]
+                    : []
+            })
+            .sort((a, b) => a.kickoff.getTime() - b.kickoff.getTime())
+    }
+
+    async findPenaltyOrder(playerId: string): Promise<number | null> {
+        const map = await prisma.fplPlayerMap.findUnique({ where: { playerId }, select: { fplId: true } })
+
+        if (!map) return null
+
+        const status = await prisma.fplPlayerStatus.findUnique({
+            where: { fplId: map.fplId },
+            select: { penaltiesOrder: true },
+        })
+
+        return status?.penaltiesOrder ?? null
+    }
+
+    countAppearances(playerId: string): Promise<number> {
+        return prisma.playerMatchStats.count({
+            where: { playerId, minutes: { gt: 0 }, fixture: { leagueSeason: storedSeasons } },
+        })
     }
 
     async findPredictions(event: number): Promise<PredictionView[]> {
