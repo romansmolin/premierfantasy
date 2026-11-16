@@ -528,7 +528,6 @@ export function BuilderView() {
                 </Card>
 
                 <SquadAiPanel
-                    key={editingId ?? 'new'}
                     players={byId}
                     lockedIds={lockedIds}
                     excludedIds={excludedIds}

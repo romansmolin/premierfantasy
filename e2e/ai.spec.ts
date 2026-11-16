@@ -26,6 +26,11 @@ test.describe('auto-build and squad review (rich user, 1000 credits)', () => {
         await expect(page.getByRole('button', { name: 'Save' })).toBeEnabled()
         expect(await balanceOf(page)).toBe(before - 300)
 
+        // Saving the squad must not throw away the result that was just paid for.
+        await page.getByRole('button', { name: 'Save' }).click()
+        await expect(page.getByText('Squad saved')).toBeVisible()
+        await expect(page.getByText(/Loaded into the builder/)).toBeVisible()
+
         // Same constraints, same gameweek: shown again without paying.
         await page.getByRole('button', { name: /Auto-build \(300 Credits\)/ }).click()
         await expect(page.getByText(/Loaded into the builder/)).toBeVisible({ timeout: 60_000 })

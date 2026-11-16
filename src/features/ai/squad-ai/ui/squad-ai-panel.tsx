@@ -10,7 +10,6 @@ import type { AutoBuildResult, PoolPlayer, SquadReview } from '@/entities/squad'
 import { useWallet } from '@/entities/wallet'
 
 import { ApiError } from '@/shared/api/api-error'
-import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 
@@ -42,6 +41,14 @@ export function SquadAiPanel(props: SquadAiPanelProps) {
     const [reviewing, setReviewing] = useState(false)
     const [built, setBuilt] = useState<AutoBuildResult | null>(null)
     const [review, setReview] = useState<SquadReview | null>(null)
+    const [reviewedSquad, setReviewedSquad] = useState(savedSquadId)
+
+    // A review belongs to one saved squad; the auto-build result stays when the squad is saved or edited.
+    if (reviewedSquad !== savedSquadId) {
+        setReviewedSquad(savedSquadId)
+        setReview(null)
+    }
+
     const name = (id: string) => players.get(id)?.name ?? id
 
     const runBuild = async (refresh: boolean) => {
@@ -89,107 +96,142 @@ export function SquadAiPanel(props: SquadAiPanelProps) {
         }
     }
 
+    const chip = 'inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs'
+
     return (
         <Card>
             <CardHeader>
                 <CardTitle>AI tools</CardTitle>
                 <CardDescription>
-                    Paid with Credits. Repeating the same request in the same gameweek is free.{' '}
-                    <Link href="/wallet" className="underline underline-offset-4">
-                        Credits
+                    Paid with Credits. The same request twice in a gameweek is paid once.{' '}
+                    <Link
+                        href="/wallet"
+                        className="font-medium whitespace-nowrap text-foreground underline underline-offset-4"
+                    >
+                        Get Credits
                     </Link>
                 </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm">
+            <CardContent className="space-y-3 text-sm">
                 {!forecastEnabled && (
-                    <p className="text-muted-foreground">
-                        Auto-build and the squad review are off until the forecast beats the baseline.
+                    <p className="rounded-lg border border-dashed px-3 py-2 text-muted-foreground">
+                        Both tools are off until the forecast beats the baseline.
                     </p>
                 )}
 
-                <div className="space-y-2">
-                    <p className="font-semibold">Auto-build</p>
-                    <p className="text-muted-foreground">
-                        Builds the best squad for the next gameweek under the FPL rules. Choose «Keep in
-                        auto-build» on a card to keep a player, or Exclude in the player list to rule one out.
-                    </p>
-                    <div className="flex flex-wrap gap-1">
-                        {lockedIds.map((id) => (
-                            <Badge key={id} variant="secondary">
-                                locked: {name(id)}
-                                <button
-                                    className="ml-1"
-                                    onClick={() => props.onUnlock(id)}
-                                    aria-label="Unlock"
-                                >
-                                    ✕
-                                </button>
-                            </Badge>
-                        ))}
-                        {excludedIds.map((id) => (
-                            <Badge key={id} variant="outline">
-                                excluded: {name(id)}
-                                <button
-                                    className="ml-1"
-                                    onClick={() => props.onInclude(id)}
-                                    aria-label="Include"
-                                >
-                                    ✕
-                                </button>
-                            </Badge>
-                        ))}
+                <section className="space-y-3 rounded-xl border bg-muted/30 p-4">
+                    <div>
+                        <h3 className="font-semibold">Auto-build</h3>
+                        <p className="mt-1 text-muted-foreground">
+                            Builds the best legal squad for the next gameweek.
+                        </p>
                     </div>
-                    <Button onClick={() => runBuild(false)} disabled={building || !forecastEnabled}>
+                    {lockedIds.length + excludedIds.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5">
+                            {lockedIds.map((id) => (
+                                <span key={id} className={`${chip} bg-secondary`}>
+                                    locked: {name(id)}
+                                    <button
+                                        type="button"
+                                        className="text-muted-foreground hover:text-foreground"
+                                        onClick={() => props.onUnlock(id)}
+                                        aria-label={`Unlock ${name(id)}`}
+                                    >
+                                        ✕
+                                    </button>
+                                </span>
+                            ))}
+                            {excludedIds.map((id) => (
+                                <span key={id} className={chip}>
+                                    excluded: {name(id)}
+                                    <button
+                                        type="button"
+                                        className="text-muted-foreground hover:text-foreground"
+                                        onClick={() => props.onInclude(id)}
+                                        aria-label={`Include ${name(id)}`}
+                                    >
+                                        ✕
+                                    </button>
+                                </span>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-xs text-muted-foreground">
+                            Keep a player from the menu of their card, or rule one out with Exclude in the
+                            player list.
+                        </p>
+                    )}
+                    <Button
+                        className="w-full"
+                        onClick={() => runBuild(false)}
+                        disabled={building || !forecastEnabled}
+                    >
                         {building ? 'Building...' : `Auto-build (${AI_FEATURE_PRICES.AUTO_BUILD} Credits)`}
                     </Button>
                     {built && (
-                        <div className="space-y-2 rounded-md border p-3">
-                            <p>
-                                Gameweek {built.event} · cost £{(built.totalTenths / 10).toFixed(1)}m ·
-                                forecast XI {built.expectedXi.toFixed(1)} (captain doubled). Loaded into the
-                                builder above: save it if you like it.
+                        <div className="space-y-3 border-t pt-3">
+                            <dl className="grid grid-cols-3 gap-2">
+                                <div>
+                                    <dt className="text-xs text-muted-foreground">Gameweek</dt>
+                                    <dd className="font-semibold">{built.event}</dd>
+                                </div>
+                                <div>
+                                    <dt className="text-xs text-muted-foreground">Cost</dt>
+                                    <dd className="font-semibold">£{(built.totalTenths / 10).toFixed(1)}m</dd>
+                                </div>
+                                <div>
+                                    <dt className="text-xs text-muted-foreground">Expected XI points</dt>
+                                    <dd className="font-audiowide">{built.expectedXi.toFixed(1)}</dd>
+                                </div>
+                            </dl>
+                            <p className="text-xs text-muted-foreground">
+                                Loaded into the builder. Save it if you like it.
                             </p>
-                            {built.explanation && (
-                                <p className="text-muted-foreground">{built.explanation}</p>
-                            )}
+                            {built.explanation && <p>{built.explanation}</p>}
                             {built.forecastUpdated && (
-                                <p>
-                                    <Badge variant="outline">Forecast updated</Badge> This squad was built
-                                    from an earlier forecast.{' '}
+                                <div className="flex flex-wrap items-center gap-2 rounded-lg bg-muted px-3 py-2">
+                                    <span className="text-xs">
+                                        The forecast was updated after this squad was built.
+                                    </span>
                                     <Button
-                                        size="xs"
+                                        size="sm"
                                         variant="outline"
                                         disabled={building}
                                         onClick={() => runBuild(true)}
                                     >
                                         Recompute ({AI_FEATURE_PRICES.AUTO_BUILD} Credits)
                                     </Button>
-                                </p>
+                                </div>
                             )}
                         </div>
                     )}
-                </div>
+                </section>
 
-                <div className="space-y-2">
-                    <p className="font-semibold">AI squad review</p>
-                    <p className="text-muted-foreground">
-                        Reviews the <em>saved</em> version of the squad you have open.
-                    </p>
+                <section className="space-y-3 rounded-xl border bg-muted/30 p-4">
+                    <div>
+                        <h3 className="font-semibold">AI squad review</h3>
+                        <p className="mt-1 text-muted-foreground">
+                            Strengths, risks and swap ideas for the saved version of your squad.
+                        </p>
+                    </div>
                     <Button
+                        className="w-full"
                         variant="outline"
                         onClick={() => runReview(false)}
                         disabled={reviewing || !savedSquadId || !forecastEnabled}
                     >
                         {reviewing ? 'Reviewing...' : `AI review (${AI_FEATURE_PRICES.SQUAD_REVIEW} Credits)`}
                     </Button>
-                    {!savedSquadId && <p className="text-muted-foreground">Save the squad first.</p>}
+                    {!savedSquadId && (
+                        <p className="text-xs text-muted-foreground">Save the squad to enable the review.</p>
+                    )}
                     {review && (
-                        <div className="space-y-2 rounded-md border p-3">
+                        <div className="space-y-3 border-t pt-3">
                             <p>{review.summary}</p>
                             {review.strengths.length > 0 && (
                                 <div>
-                                    <p className="font-medium">Strengths</p>
-                                    <ul className="list-disc pl-5">
+                                    <h4 className="font-medium">Strengths</h4>
+                                    <ul className="mt-1 list-disc space-y-0.5 pl-5 text-muted-foreground">
                                         {review.strengths.map((s) => (
                                             <li key={s}>{s}</li>
                                         ))}
@@ -198,8 +240,8 @@ export function SquadAiPanel(props: SquadAiPanelProps) {
                             )}
                             {review.risks.length > 0 && (
                                 <div>
-                                    <p className="font-medium">Risks</p>
-                                    <ul className="list-disc pl-5">
+                                    <h4 className="font-medium">Risks</h4>
+                                    <ul className="mt-1 list-disc space-y-0.5 pl-5 text-muted-foreground">
                                         {review.risks.map((s) => (
                                             <li key={s}>{s}</li>
                                         ))}
@@ -208,32 +250,37 @@ export function SquadAiPanel(props: SquadAiPanelProps) {
                             )}
                             {review.suggestions.length > 0 && (
                                 <div>
-                                    <p className="font-medium">Suggested swaps</p>
-                                    <ul className="list-disc pl-5">
+                                    <h4 className="font-medium">Suggested swaps</h4>
+                                    <ul className="mt-1 space-y-1 text-muted-foreground">
                                         {review.suggestions.map((s) => (
                                             <li key={`${s.out}-${s.in}`}>
-                                                {name(s.out)} → {name(s.in)}: {s.reason}
+                                                <span className="font-medium text-foreground">
+                                                    {name(s.out)} → {name(s.in)}
+                                                </span>
+                                                : {s.reason}
                                             </li>
                                         ))}
                                     </ul>
                                 </div>
                             )}
                             {review.forecastUpdated && (
-                                <p>
-                                    <Badge variant="outline">Forecast updated</Badge>{' '}
+                                <div className="flex flex-wrap items-center gap-2 rounded-lg bg-muted px-3 py-2">
+                                    <span className="text-xs">
+                                        The forecast was updated after this review.
+                                    </span>
                                     <Button
-                                        size="xs"
+                                        size="sm"
                                         variant="outline"
                                         disabled={reviewing}
                                         onClick={() => runReview(true)}
                                     >
                                         Review again ({AI_FEATURE_PRICES.SQUAD_REVIEW} Credits)
                                     </Button>
-                                </p>
+                                </div>
                             )}
                         </div>
                     )}
-                </div>
+                </section>
             </CardContent>
         </Card>
     )
