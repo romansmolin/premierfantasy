@@ -79,7 +79,25 @@ describe('predictPlayerMatches', () => {
             opts,
         )!
 
+        const lowXg = predictPlayerMatches(
+            input({ appearances: [1, 2, 3].map(() => line({ xg: 0.2, goals: 1 })) }),
+            blended,
+            opts,
+        )!
+
         expect(noXg[0].pGoal).toBeCloseTo(withXg[0].pGoal, 12)
+        expect(Math.abs(lowXg[0].pGoal - noXg[0].pGoal)).toBeGreaterThan(0.01)
+    })
+
+    it('pGoal mixes P(at least one) over start and absent roles', () => {
+        const half = [1, 2, 3, 4, 5, 6].map((n) => ({ minutes: n % 2 ? 90 : 0, started: n % 2 === 1 }))
+        const [f] = predictPlayerMatches(input({ teamMatches: half }), params, opts)!
+        // One role: starts 90 minutes with probability pStart; rate 0.9 per 90, attack 1, so λ_start = 0.9.
+        const lambdaStart = 0.9
+
+        expect(f.pStart).toBeCloseTo(f.pPlay, 12)
+        expect(f.pGoal).toBeCloseTo(f.pStart * (1 - Math.exp(-lambdaStart)), 12)
+        expect(f.pGoal - (1 - Math.exp(-f.pStart * lambdaStart))).toBeLessThan(-0.02)
     })
 
     it('availability 0 gives pStart 0 and pGoal 0', () => {

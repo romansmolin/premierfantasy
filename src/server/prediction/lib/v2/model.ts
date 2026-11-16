@@ -183,8 +183,9 @@ export function predictPlayerMatches(
                 ? clamp(f.teamGoalsFor / f.teamBaselineGoals, params.attackClamp[0], params.attackClamp[1])
                 : 1
         const lambdas = roles.map((role) => roleLambdas(r, role.minutes, attack, f.teamGoalsAgainst))
-        const lambdaGoals = roles.reduce((sum, role, k) => sum + role.p * lambdas[k].goals, 0)
-        const lambdaAssists = roles.reduce((sum, role, k) => sum + role.p * lambdas[k].assists, 0)
+        // P(≥1) mixed over start/sub/absent roles, consistent with the simulation.
+        const pAtLeastOne = (key: 'goals' | 'assists') =>
+            roles.reduce((sum, role, k) => sum + role.p * atLeastOne(lambdas[k][key]), 0)
         const rawPoints = roles.reduce(
             (sum, role, k) => sum + role.p * expectedRolePoints(position, role.minutes, lambdas[k]),
             0,
@@ -209,9 +210,8 @@ export function predictPlayerMatches(
             pStart,
             pPlay,
             expectedMinutes,
-            // λ = rate · expectedMinutes/90 · attack, the role-weighted sum above.
-            pGoal: atLeastOne(lambdaGoals),
-            pAssist: atLeastOne(lambdaAssists),
+            pGoal: pAtLeastOne('goals'),
+            pAssist: pAtLeastOne('assists'),
             rawPoints,
             pointsSamples,
         }
