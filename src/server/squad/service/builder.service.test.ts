@@ -15,6 +15,7 @@ const stats = (price: number | null) =>
             items: [
                 {
                     id: 'p1',
+                    externalId: 1100,
                     name: 'A',
                     club: { id: 'c', name: 'C', logo: null },
                     position: 'MID',
@@ -37,6 +38,13 @@ describe('BuilderService.getPool', () => {
 
         expect(pool.players[0]).toMatchObject({ priceTenths: 62, clubName: 'C', forecast: 5 })
         expect(pool.rules).toEqual(DEFAULT_SQUAD_RULES)
+    })
+
+    it('gives every player a head shot url built from the api-football id', async () => {
+        const squads = { findRules: vi.fn().mockResolvedValue(null) } as unknown as ISquadRepository
+        const pool = await new BuilderService(stats(6.2), squads).getPool()
+
+        expect(pool.players[0].photoUrl).toBe('https://media.api-sports.io/football/players/1100.png')
     })
 
     it('keeps a missing price as null and uses stored rules when present', async () => {

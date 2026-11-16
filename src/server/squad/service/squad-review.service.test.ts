@@ -29,6 +29,7 @@ function pool(): BuilderPool {
             players.push({
                 id: `p${n}`,
                 name: `Player ${n}`,
+                photoUrl: '',
                 clubId: `c${n % 10}`,
                 clubName: `Club ${n % 10}`,
                 clubLogo: null,

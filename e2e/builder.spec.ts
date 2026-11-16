@@ -58,6 +58,38 @@ test.describe('building a squad by hand', () => {
         await expect(page.getByText(/Spent £[1-9]/)).toBeVisible()
     })
 
+    test('a card shows the player photo', async ({ page }) => {
+        const png = Buffer.from(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+            'base64',
+        )
+
+        // The image optimizer would fetch from api-sports.io; stub it so the test does not need the internet.
+        await page.route('**/_next/image**', (route) =>
+            route.fulfill({ contentType: 'image/png', body: png }),
+        )
+        await fillSlot(page, 'Add GK', 'priciest')
+
+        const card = slotsIn(page, 'GK').getByRole('button', { name: /open actions/ })
+        const photo = card.locator('img[src*="players"]')
+
+        await expect(photo).toBeVisible()
+        expect(decodeURIComponent((await photo.getAttribute('src')) ?? '')).toMatch(
+            /media\.api-sports\.io\/football\/players\/\d+\.png/,
+        )
+    })
+
+    test('a card falls back to a silhouette when the photo cannot be loaded', async ({ page }) => {
+        await page.route('**/_next/image**', (route) => route.fulfill({ status: 404 }))
+        await fillSlot(page, 'Add GK', 'priciest')
+
+        const card = slotsIn(page, 'GK').getByRole('button', { name: /open actions/ })
+
+        await expect(card).toBeVisible()
+        await expect(card.locator('img[src*="players"]')).toHaveCount(0)
+        await expect(card.locator('svg').first()).toBeVisible()
+    })
+
     test('a player already in the squad cannot be added twice', async ({ page }) => {
         await fillSlot(page, 'Add MID', 'priciest')
         await page.getByRole('button', { name: 'Add MID', exact: true }).first().click()

@@ -6,6 +6,8 @@ import type { PoolPlayer, Position } from '@/entities/squad'
 
 import { cn } from '@/shared/lib/utils'
 
+import { PlayerPhoto } from './player-photo'
+
 export const priceLabel = (tenths: number | null) => (tenths === null ? '—' : `£${(tenths / 10).toFixed(1)}m`)
 
 /** "J. van Hecke" → "van Hecke": the card has room for a surname, not for initials. */
@@ -18,7 +20,7 @@ export const POSITION_NAMES: Record<Position, string> = {
     FWD: 'forward',
 }
 
-const SIZE = 'h-[6.75rem] w-[4.9rem] sm:h-[7.5rem] sm:w-[5.5rem]'
+const SIZE = 'h-[7.5rem] w-[4.9rem] sm:h-[8.5rem] sm:w-[5.5rem]'
 
 interface PlayerCardProps {
     player: PoolPlayer
@@ -44,26 +46,31 @@ export function PlayerCard({ player, role = null, locked = false, showForecast }
                     doubt && 'ring-2 ring-orange-400',
                 )}
             >
-                <div className="flex items-start justify-between px-2 pt-1.5">
-                    <div className="leading-none">
-                        <div className="font-audiowide text-xl sm:text-2xl">
+                <div className="flex flex-1 items-center gap-0.5 px-1.5 pt-1.5">
+                    <div className="flex flex-col items-center gap-0.5 leading-none">
+                        <div className="font-audiowide text-base sm:text-lg">
                             {value === null ? '—' : value.toFixed(1)}
                         </div>
-                        <div className="mt-0.5 text-[10px] font-semibold text-amber-900/70">
+                        <div className="text-[9px] font-semibold text-amber-900/70">
                             {showForecast ? 'pts' : 'form'}
                         </div>
+                        {player.clubLogo ? (
+                            <Image
+                                src={player.clubLogo}
+                                alt={player.clubName}
+                                width={18}
+                                height={18}
+                                className="size-[18px] object-contain"
+                            />
+                        ) : (
+                            <span className="text-[9px] font-bold">{player.clubName.slice(0, 3)}</span>
+                        )}
                     </div>
-                    {player.clubLogo ? (
-                        <Image
-                            src={player.clubLogo}
-                            alt={player.clubName}
-                            width={22}
-                            height={22}
-                            className="size-[22px] object-contain"
-                        />
-                    ) : (
-                        <span className="text-[10px] font-bold">{player.clubName.slice(0, 3)}</span>
-                    )}
+                    <PlayerPhoto
+                        src={player.photoUrl}
+                        name={player.name}
+                        className="ml-auto size-[2.6rem] sm:size-[3.1rem]"
+                    />
                 </div>
                 <div className="mt-auto space-y-0.5 pb-1.5 text-center">
                     <div className="flex items-center justify-center gap-1 text-[10px] font-bold text-amber-900/80">
@@ -84,7 +91,7 @@ export function PlayerCard({ player, role = null, locked = false, showForecast }
                 {(out || doubt) && (
                     <span
                         className={cn(
-                            'absolute bottom-[3.1rem] left-1.5 rounded px-1 text-[9px] font-bold text-white',
+                            'absolute bottom-[3.1rem] left-1 rounded px-1 text-[9px] font-bold text-white',
                             out ? 'bg-red-600' : 'bg-orange-500',
                         )}
                     >

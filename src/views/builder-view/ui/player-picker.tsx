@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from '@/shared/ui/input'
 
 import { POSITION_NAMES, priceLabel } from './player-card'
+import { PlayerPhoto } from './player-photo'
 
 interface PlayerPickerProps {
     open: boolean
@@ -139,17 +140,7 @@ export function PlayerPicker(props: PlayerPickerProps) {
                                 className="flex items-center gap-3 border-b py-2"
                                 data-player={p.name}
                             >
-                                {p.clubLogo ? (
-                                    <Image
-                                        src={p.clubLogo}
-                                        alt=""
-                                        width={24}
-                                        height={24}
-                                        className="size-6 object-contain"
-                                    />
-                                ) : (
-                                    <span className="size-6" />
-                                )}
+                                <PlayerPhoto src={p.photoUrl} name={p.name} className="size-9" />
                                 <div className="min-w-0 flex-1">
                                     <p className="truncate text-sm font-medium">
                                         {p.name}
@@ -159,7 +150,16 @@ export function PlayerPicker(props: PlayerPickerProps) {
                                             </Badge>
                                         )}
                                     </p>
-                                    <p className="truncate text-xs text-muted-foreground">
+                                    <p className="flex items-center gap-1 truncate text-xs text-muted-foreground">
+                                        {p.clubLogo && (
+                                            <Image
+                                                src={p.clubLogo}
+                                                alt=""
+                                                width={14}
+                                                height={14}
+                                                className="size-3.5 object-contain"
+                                            />
+                                        )}
                                         {p.clubName}
                                         {p.availability &&
                                         p.availability.status !== 'a' &&

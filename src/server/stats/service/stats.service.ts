@@ -55,6 +55,7 @@ export class StatsService implements IStatsService {
 
             return {
                 id: p.id,
+                externalId: p.externalId,
                 name: p.name,
                 club: p.club,
                 position: p.position,

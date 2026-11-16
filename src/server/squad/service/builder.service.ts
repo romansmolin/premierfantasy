@@ -1,6 +1,8 @@
 import { DEFAULT_SQUAD_RULES } from '@/entities/squad/model/rules'
 import type { BuilderPool } from '@/entities/squad/model/squad.types'
 
+import { playerPhotoUrl } from '@/shared/config/player-photo'
+
 import type { ISquadRepository } from '../repository/squad.repository.interface'
 import type { IStatsService } from '@/server/stats/service/stats.service.interface'
 
@@ -30,6 +32,7 @@ export class BuilderService implements IBuilderService {
             players: items.map((p) => ({
                 id: p.id,
                 name: p.name,
+                photoUrl: playerPhotoUrl(p.externalId),
                 clubId: p.club.id,
                 clubName: p.club.name,
                 clubLogo: p.club.logo,

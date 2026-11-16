@@ -15,6 +15,8 @@ export interface PlayerListQuery {
 
 export interface PlayerListItem {
     id: string
+    /** API-Football player id. */
+    externalId: number
     name: string
     club: ClubRef
     position: Position

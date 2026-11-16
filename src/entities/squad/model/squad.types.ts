@@ -24,6 +24,8 @@ export interface SavedSquad {
 export interface PoolPlayer {
     id: string
     name: string
+    /** Head shot URL. */
+    photoUrl: string
     clubId: string
     clubName: string
     /** Club crest URL; null when unknown. */
