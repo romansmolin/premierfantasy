@@ -62,7 +62,7 @@ export interface ForecastDataset {
     events: { id: number; finished: boolean; isNext: boolean; isCurrent: boolean }[]
 }
 
-const FINISHED = new Set(['FT', 'AET', 'PEN'])
+export const FINISHED = new Set(['FT', 'AET', 'PEN'])
 
 export const TEAM_MATCHES = 6
 export const MAX_APPEARANCES = 10
