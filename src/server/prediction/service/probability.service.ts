@@ -127,15 +127,18 @@ export class ProbabilityService implements IProbabilityService {
     }
 
     async getStatus(): Promise<ProbabilityStatus> {
-        const latest = await this.repo.findLatestEvaluation()
+        const [latest, updatedAt] = await Promise.all([
+            this.repo.findLatestEvaluation(),
+            this.repo.findLatestUpdate(),
+        ])
 
         return {
             evaluatedAt: latest?.createdAt ?? null,
             eventsEvaluated: latest?.eventsEvaluated ?? 0,
             gates: latest?.gates ?? [],
             pointsMeanOn: latest?.pointsMean.passed ?? false,
-            // The evaluation and the probabilities are written by the same run.
-            updatedAt: latest?.createdAt ?? null,
+            // The evaluation is saved before the rows, so only the rows say how fresh the data is.
+            updatedAt,
         }
     }
 

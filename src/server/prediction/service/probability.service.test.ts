@@ -139,6 +139,7 @@ const make = (ds: ForecastDataset, latest: ReturnType<typeof stored> = null) => 
         replaceFixtureProbabilities: vi.fn().mockResolvedValue(undefined),
         findMatchProbabilities: vi.fn().mockResolvedValue([]),
         findFixtureProbabilities: vi.fn().mockResolvedValue([]),
+        findLatestUpdate: vi.fn().mockResolvedValue(null),
     } satisfies IProbabilityRepository
 
     return { service: new ProbabilityService(dataRepo, repo, () => NOW), repo }
@@ -278,6 +279,24 @@ describe('ProbabilityService.getStatus', () => {
             pointsMeanOn: false,
             updatedAt: null,
         })
+    })
+
+    it('updatedAt is the newest stored match row time, not the evaluation time', async () => {
+        const { service, repo } = make(dataset(SEVEN), stored(true))
+        const rowsAt = new Date('2026-11-10T00:00:00Z')
+
+        repo.findLatestUpdate.mockResolvedValue(rowsAt)
+
+        const status = await service.getStatus()
+
+        expect(status.updatedAt).toEqual(rowsAt)
+        expect(status.evaluatedAt).toEqual(new Date('2026-11-15T00:00:00Z'))
+    })
+
+    it('updatedAt is null when no rows are stored', async () => {
+        const { service } = make(dataset(SEVEN), stored(true))
+
+        expect((await service.getStatus()).updatedAt).toBeNull()
     })
 })
 

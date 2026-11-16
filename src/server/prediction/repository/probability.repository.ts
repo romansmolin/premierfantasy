@@ -15,6 +15,9 @@ import type { PointsMean } from '../lib/v2/points-mean'
 
 const INSERT_CHUNK = 200
 
+/** The scalar columns are non-nullable floats: an empty backtest yields NaN, stored as 0. */
+const finite = (x: number): number => (Number.isFinite(x) ? x : 0)
+
 interface StoredDetails {
     gates: GateResult[]
     pointsMean: PointsMean
@@ -34,13 +37,13 @@ export class ProbabilityRepository implements IProbabilityRepository {
                 modelVersion: MODEL_VERSION_V2,
                 eventsEvaluated: e.eventsEvaluated,
                 playerEvents: e.pointsMean.n,
-                mae: e.pointsMean.maeV2,
+                mae: finite(e.pointsMean.maeV2),
                 // v1 is the benchmark of the points mean.
-                baselineMae: e.pointsMean.maeV1,
-                rankCorr: e.pointsMean.rankCorrV2,
-                baselineRankCorr: e.pointsMean.rankCorrV1,
+                baselineMae: finite(e.pointsMean.maeV1),
+                rankCorr: finite(e.pointsMean.rankCorrV2),
+                baselineRankCorr: finite(e.pointsMean.rankCorrV1),
                 passed: e.pointsMean.passed,
-                // Through JSON so NaN (an empty backtest) is stored as null instead of failing the insert.
+                // Through JSON so a NaN inside the details becomes null.
                 details: JSON.parse(JSON.stringify(details)),
             },
         })
@@ -64,6 +67,15 @@ export class ProbabilityRepository implements IProbabilityRepository {
             pointsMean: details.pointsMean,
             calibration: details.calibration as Record<keyof typeof details.calibration, Calibration>,
         }
+    }
+
+    async findLatestUpdate(): Promise<Date | null> {
+        const { _max } = await prisma.matchProbability.aggregate({
+            _max: { createdAt: true },
+            where: { modelVersion: MODEL_VERSION_V2 },
+        })
+
+        return _max.createdAt
     }
 
     async replaceMatchProbabilities(rows: PlayerMatchProbability[]): Promise<void> {

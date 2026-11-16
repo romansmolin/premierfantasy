@@ -28,6 +28,8 @@ export interface FixtureProbabilityRow {
 export interface IProbabilityRepository {
     saveEvaluation(e: ProbabilityEvaluation): Promise<void>
     findLatestEvaluation(): Promise<(ProbabilityEvaluation & { createdAt: Date }) | null>
+    /** Creation time of the newest stored match row; null when there are none. */
+    findLatestUpdate(): Promise<Date | null>
     /** Replaces all rows of the v2 model in one transaction. */
     replaceMatchProbabilities(rows: PlayerMatchProbability[]): Promise<void>
     /** Replaces all rows of the v2 model in one transaction. */
