@@ -67,7 +67,7 @@ export function PlayerPicker(props: PlayerPickerProps) {
 
     return (
         <Dialog open={props.open} onOpenChange={props.onOpenChange}>
-            <DialogContent className="flex max-h-[85vh] flex-col sm:max-w-2xl">
+            <DialogContent className="flex max-h-[85vh] flex-col rounded-lg sm:max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-base">{props.title}</DialogTitle>
                     <DialogDescription>

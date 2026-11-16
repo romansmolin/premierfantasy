@@ -46,7 +46,7 @@ export function Pitch(props: PitchProps) {
     }
 
     return (
-        <div className="overflow-hidden rounded-3xl bg-green-800 shadow-inner ring-1 ring-black/20">
+        <div className="overflow-hidden rounded-lg bg-green-800 shadow-inner ring-1 ring-black/20">
             <div className="relative bg-[repeating-linear-gradient(180deg,#15803d_0,#15803d_56px,#16a34a_56px,#16a34a_112px)] px-2 py-5 sm:px-6">
                 <svg
                     aria-hidden

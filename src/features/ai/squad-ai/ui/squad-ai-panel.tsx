@@ -119,7 +119,7 @@ export function SquadAiPanel(props: SquadAiPanelProps) {
                     </p>
                 )}
 
-                <section className="space-y-3 rounded-xl border bg-muted/30 p-4">
+                <section className="space-y-3 rounded-lg border bg-muted/30 p-4">
                     <div>
                         <h3 className="font-semibold">Auto-build</h3>
                         <p className="mt-1 text-muted-foreground">
@@ -207,7 +207,7 @@ export function SquadAiPanel(props: SquadAiPanelProps) {
                     )}
                 </section>
 
-                <section className="space-y-3 rounded-xl border bg-muted/30 p-4">
+                <section className="space-y-3 rounded-lg border bg-muted/30 p-4">
                     <div>
                         <h3 className="font-semibold">AI squad review</h3>
                         <p className="mt-1 text-muted-foreground">

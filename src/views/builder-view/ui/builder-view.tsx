@@ -82,7 +82,7 @@ export function BuilderView() {
         [pool],
     )
 
-    if (isLoading || !pool) return <Skeleton className="h-96 rounded-xl" />
+    if (isLoading || !pool) return <Skeleton className="h-96 rounded-lg" />
 
     const rules = pool.rules
     const slots = slotsOf(formation)
@@ -355,7 +355,7 @@ export function BuilderView() {
     return (
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
             <div className="space-y-3">
-                <div className="space-y-3 rounded-2xl border bg-card p-4">
+                <div className="space-y-3 rounded-lg border bg-card p-4">
                     <div className="grid grid-cols-3 gap-3">
                         <div className="flex flex-col gap-1">
                             <span className="text-xs text-muted-foreground">Formation</span>
