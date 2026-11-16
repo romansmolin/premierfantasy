@@ -1,7 +1,6 @@
-import { baselineFor, fitCalibration, passesBar } from '../evaluation'
-import { buildInputsForEvent, FINISHED } from '../inputs'
-import { mae, mean, spearman } from '../math'
-import { DEFAULT_PARAMS, predictPlayer } from '../model'
+import { fitCalibration, walkForwardRecords } from '../evaluation'
+import { FINISHED } from '../inputs'
+import { mean } from '../math'
 import { expectedGoals } from '../team-strength'
 
 import { buildInputsV2 } from './inputs'
@@ -9,12 +8,14 @@ import { brier, brierMulti, calibrationBuckets } from './metrics'
 import { bucketDistribution, predictPlayerMatches } from './model'
 import { outcomeProbabilities } from './outcome'
 import { bucketOfPoints, DEFAULT_V2, GATE, MODEL_VERSION_V2 } from './params'
+import { pointsMeanCheck } from './points-mean'
 
 import type { Calibration } from '../evaluation'
 import type { DatasetFixture, ForecastDataset, FplMatchRow } from '../inputs'
 import type { Position } from '../scoring-rules'
 import type { TeamStrengths } from '../team-strength'
 import type { V2Params } from './params'
+import type { PointsMean, PointsRecord } from './points-mean'
 
 export type Metric = 'goal' | 'assist' | 'start' | 'outcome' | 'points'
 export type Horizon = 'next' | 'later'
@@ -35,15 +36,7 @@ export interface ProbabilityEvaluation {
     modelVersion: string
     eventsEvaluated: number
     gates: GateResult[]
-    pointsMean: {
-        passed: boolean
-        maeV2: number
-        maeV1: number
-        rankCorrV2: number
-        rankCorrV1: number
-        n: number
-        reasons: string[]
-    }
+    pointsMean: PointsMean
     calibration: Record<Position, Calibration>
 }
 
@@ -53,10 +46,9 @@ const MIN_EXPECTED_MINUTES = 30
 const BASELINE_ROWS = 10
 const MIN_BASELINE_ROWS = 5
 const BACKTEST_SIMS = 400
-const MIN_GROUP_SIZE = 10
 
 /** One scored forecast: model and baseline probabilities per class (one probability for binary metrics) and the actual class. */
-interface Scored {
+export interface Scored {
     metric: Metric
     horizon: Horizon
     position: Position | 'ALL'
@@ -66,13 +58,12 @@ interface Scored {
     actual: number
 }
 
-/** Event-level expected points of v1 and v2 on the same player-event, for the points-mean check. */
-interface PointsRecord {
-    event: number
+export interface CalibrationRow {
+    playerId: string
+    fixtureId: string
+    kickoff: Date
     position: Position
-    v1: number
-    v2: number
-    baseline: number
+    raw: number
     actual: number
 }
 
@@ -186,93 +177,20 @@ function outcomeRows(data: ForecastDataset, event: number, cutoff: Date, strengt
         })
 }
 
-/** v1 records of one event exactly as `evaluateWalkForward` builds them (raw points, baseline, actual). */
-function v1Records(data: ForecastDataset, event: number) {
-    const result = new Map<string, { position: Position; raw: number; baseline: number; actual: number }>()
-
-    for (const { playerId, input } of buildInputsForEvent(data, event, { useAvailability: false }).inputs) {
-        if (input.fixtures.length === 0) continue
-
-        // v1 as it ships, whatever v2 params are being tried.
-        const forecast = predictPlayer(input, DEFAULT_PARAMS)
-
-        if (forecast.expectedMinutes < MIN_EXPECTED_MINUTES) continue
-
-        const points = data.fplPoints.get(playerId)
-        const actual = points?.get(event)
-        const baseline = points ? baselineFor(points, event) : null
-
-        if (!actual || baseline === null) continue
-
-        result.set(playerId, {
-            position: input.position,
-            raw: forecast.rawPoints,
-            baseline,
-            actual: actual.totalPoints,
-        })
-    }
-
-    return result
-}
-
-function pointsMeanCheck(records: PointsRecord[]): ProbabilityEvaluation['pointsMean'] {
-    const groups = new Map<string, PointsRecord[]>()
-
-    for (const r of records) {
-        const key = `${r.event}:${r.position}`
-
-        groups.set(key, [...(groups.get(key) ?? []), r])
-    }
-
-    const ranked = [...groups.values()].filter((g) => g.length >= MIN_GROUP_SIZE)
-    const maeOf = (pick: (r: PointsRecord) => number) =>
-        mae(
-            records.map(pick),
-            records.map((r) => r.actual),
-        )
-    const rankOf = (pick: (r: PointsRecord) => number) =>
-        mean(
-            ranked.map((g) =>
-                spearman(
-                    g.map(pick),
-                    g.map((r) => r.actual),
-                ),
-            ),
-        )
-    const result = {
-        maeV2: maeOf((r) => r.v2),
-        maeV1: maeOf((r) => r.v1),
-        rankCorrV2: rankOf((r) => r.v2),
-        rankCorrV1: rankOf((r) => r.v1),
-        n: records.length,
-    }
-    // v2 points must clear the stage-2 bar and be no worse than v1 on the same records.
-    const { reasons } = passesBar({
-        eventsEvaluated: new Set(records.map((r) => r.event)).size,
-        playerEvents: records.length,
-        mae: result.maeV2,
-        baselineMae: maeOf((r) => r.baseline),
-        rankCorr: result.rankCorrV2,
-        baselineRankCorr: rankOf((r) => r.baseline),
-    })
-
-    if (!(result.maeV2 <= result.maeV1)) reasons.push('v2 MAE is worse than v1 on the same records')
-
-    if (!(result.rankCorrV2 >= result.rankCorrV1)) {
-        reasons.push('v2 rank correlation is worse than v1 on the same records')
-    }
-
-    return { ...result, passed: reasons.length === 0, reasons }
-}
-
 /**
- * Walk-forward backtest of v2 probabilities against FPL per-match facts: every forecast for event N uses data
- * before N's first kickoff only; expected points are calibrated per position on earlier matches only.
+ * Walk-forward records of v2 against FPL per-match facts: every forecast for event N uses data before N's first
+ * kickoff only; expected points are calibrated per position on earlier matches only. Exported for tests;
+ * `calibrationMinRows` lets small test datasets exercise a fitted calibration.
  */
-export function evaluateProbabilities(
+export function scoreEvents(
     data: ForecastDataset,
-    opts: { lastEvents?: number; params?: V2Params } = {},
-): ProbabilityEvaluation {
+    opts: { lastEvents?: number; params?: V2Params; calibrationMinRows?: number } = {},
+): {
+    scored: Scored[]
+    calibrationByEvent: Map<number, Record<Position, Calibration>>
+    calibrationRows: CalibrationRow[]
+    pointsRecords: PointsRecord[]
+} {
     const base = opts.params ?? DEFAULT_V2
     const params = { ...base, sims: Math.min(base.sims, BACKTEST_SIMS) }
     const fixtureById = new Map(data.fixtures.map((f) => [f.fixtureId, f]))
@@ -282,10 +200,18 @@ export function evaluateProbabilities(
         .map((e) => e.id)
         .sort((a, b) => a - b)
         .slice(-(opts.lastEvents ?? 10))
+    // v1 picks its events by FPL points, not FPL match rows; the comparison keeps only player-events both have.
+    const v1 = new Map(
+        walkForwardRecords(data, { lastEvents: opts.lastEvents }).records.map((r) => [
+            `${r.event}:${r.playerId}`,
+            r,
+        ]),
+    )
     const scored: Scored[] = []
-    // Per-match calibration rows from team match 1 only: the horizon the points are shown for first.
-    const calibrationRows: { kickoff: Date; position: Position; raw: number; actual: number }[] = []
-    const v1Rows: { position: Position; raw: number; actual: number }[] = []
+    // Per-match calibration rows from team match 1 only, keyed by player and fixture: a team that blanks an
+    // event has the same match 1 at two cutoffs, and the later forecast replaces the earlier one.
+    const calibrationRows = new Map<string, CalibrationRow>()
+    const calibrationByEvent = new Map<number, Record<Position, Calibration>>()
     const pointsRecords: PointsRecord[] = []
 
     for (const event of events) {
@@ -294,10 +220,12 @@ export function evaluateProbabilities(
         if (!cutoff || !strengths) continue
 
         // Rows of earlier events whose match was played after this cutoff would leak, so filter by kickoff.
-        const calibration = fitCalibration(calibrationRows.filter((r) => r.kickoff < cutoff))
-        const v1Calibration = fitCalibration(v1Rows)
-        const v1 = v1Records(data, event)
+        const calibration = fitCalibration(
+            [...calibrationRows.values()].filter((r) => r.kickoff < cutoff),
+            opts.calibrationMinRows,
+        )
 
+        calibrationByEvent.set(event, calibration)
         scored.push(...outcomeRows(data, event, cutoff, strengths))
 
         for (const { playerId, input } of inputs) {
@@ -317,15 +245,13 @@ export function evaluateProbabilities(
                 .sort((a, b) => kickoffOf(b) - kickoffOf(a))
                 .slice(0, BASELINE_ROWS)
             const inEvent = plain.filter((f) => fixtureById.get(f.fixtureId)?.fplEvent === event)
-            const v1Record = v1.get(playerId)
+            const v1Record = v1.get(`${event}:${playerId}`)
 
             if (v1Record && inEvent.length > 0) {
-                const v1c = v1Calibration[position]
-
                 pointsRecords.push({
                     event,
                     position,
-                    v1: v1c.intercept + v1c.slope * v1Record.raw,
+                    v1: v1Record.predicted,
                     v2: inEvent.reduce((sum, f) => sum + calibrated(f.rawPoints), 0),
                     baseline: v1Record.baseline,
                     actual: v1Record.actual,
@@ -340,7 +266,9 @@ export function evaluateProbabilities(
             })
 
             for (const f of targets.filter((t) => t.horizon === 1)) {
-                calibrationRows.push({
+                calibrationRows.set(`${playerId}:${f.fixtureId}`, {
+                    playerId,
+                    fixtureId: f.fixtureId,
                     kickoff: fixtureById.get(f.fixtureId)?.kickoff ?? cutoff,
                     position,
                     raw: f.rawPoints,
@@ -380,10 +308,17 @@ export function evaluateProbabilities(
                 })
             }
         }
-
-        for (const r of v1.values()) v1Rows.push(r)
     }
 
+    return { scored, calibrationByEvent, calibrationRows: [...calibrationRows.values()], pointsRecords }
+}
+
+/** Walk-forward backtest of v2 probabilities with a gate per metric × horizon × position. */
+export function evaluateProbabilities(
+    data: ForecastDataset,
+    opts: { lastEvents?: number; params?: V2Params } = {},
+): ProbabilityEvaluation {
+    const { scored, calibrationRows, pointsRecords } = scoreEvents(data, opts)
     const gates: GateResult[] = []
     const of = (metric: Metric, horizon: Horizon, position: Position | 'ALL') =>
         scored.filter(

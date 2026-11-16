@@ -99,8 +99,9 @@ export function passesBar(
     return { passed: reasons.length === 0, reasons }
 }
 
-interface Record_ {
+export interface WalkForwardRecord {
     event: number
+    playerId: string
     position: Position
     raw: number
     predicted: number
@@ -109,13 +110,13 @@ interface Record_ {
 }
 
 /**
- * Backtest against FPL actual points: for every one of the last finished events the forecast is built from data
- * before that event only and calibrated on earlier events only.
+ * Walk-forward v1 records against FPL actual points: for every one of the last finished events the forecast is
+ * built from data before that event only and calibrated on earlier events only.
  */
-export function evaluateWalkForward(
+export function walkForwardRecords(
     data: ForecastDataset,
     opts: { lastEvents?: number; params?: ModelParams } = {},
-): { evaluation: Evaluation; calibration: Record<Position, Calibration> } {
+): { events: number[]; records: WalkForwardRecord[]; calibration: Record<Position, Calibration> } {
     const params = opts.params ?? DEFAULT_PARAMS
     const withPoints = new Set<number>()
 
@@ -126,13 +127,13 @@ export function evaluateWalkForward(
         .map((e) => e.id)
         .sort((a, b) => a - b)
         .slice(-(opts.lastEvents ?? 10))
-    const records: Record_[] = []
-    const rawRows: { position: Position; raw: number; actual: number }[] = []
+    const records: WalkForwardRecord[] = []
 
     for (const event of events) {
-        const calibration = fitCalibration(rawRows)
+        // Every earlier record is a calibration row; this event's records are added only after the loop body.
+        const calibration = fitCalibration(records)
         const built = buildInputsForEvent(data, event, { useAvailability: false })
-        const added: typeof rawRows = []
+        const added: WalkForwardRecord[] = []
 
         for (const { playerId, input } of built.inputs) {
             if (input.fixtures.length === 0) continue
@@ -149,59 +150,73 @@ export function evaluateWalkForward(
 
             const c = calibration[input.position]
 
-            records.push({
+            added.push({
                 event,
+                playerId,
                 position: input.position,
                 raw: forecast.rawPoints,
                 predicted: c.intercept + c.slope * forecast.rawPoints,
                 baseline,
                 actual: actual.totalPoints,
             })
-            added.push({ position: input.position, raw: forecast.rawPoints, actual: actual.totalPoints })
         }
 
-        rawRows.push(...added)
+        records.push(...added)
     }
 
-    const groups = new Map<string, Record_[]>()
+    return { events, records, calibration: fitCalibration(records) }
+}
 
-    for (const r of records)
+/** MAE over all rows and mean Spearman over event × position groups of at least `MIN_GROUP_SIZE` rows. */
+export function pointsAccuracy<T extends { event: number; position: Position; actual: number }>(
+    rows: T[],
+    pick: (r: T) => number,
+): { mae: number; rankCorr: number; rankGroups: number } {
+    const groups = new Map<string, T[]>()
+
+    for (const r of rows)
         groups.set(`${r.event}:${r.position}`, [...(groups.get(`${r.event}:${r.position}`) ?? []), r])
 
     const ranked = [...groups.values()].filter((g) => g.length >= MIN_GROUP_SIZE)
-    const evaluation: Evaluation = {
-        modelVersion: MODEL_VERSION,
-        eventsEvaluated: new Set(records.map((r) => r.event)).size,
-        playerEvents: records.length,
+
+    return {
         mae: mae(
-            records.map((r) => r.predicted),
-            records.map((r) => r.actual),
-        ),
-        baselineMae: mae(
-            records.map((r) => r.baseline),
-            records.map((r) => r.actual),
+            rows.map(pick),
+            rows.map((r) => r.actual),
         ),
         rankCorr: mean(
             ranked.map((g) =>
                 spearman(
-                    g.map((r) => r.predicted),
+                    g.map(pick),
                     g.map((r) => r.actual),
                 ),
             ),
         ),
-        baselineRankCorr: mean(
-            ranked.map((g) =>
-                spearman(
-                    g.map((r) => r.baseline),
-                    g.map((r) => r.actual),
-                ),
-            ),
-        ),
+        rankGroups: ranked.length,
+    }
+}
+
+/** Backtest of v1 against FPL actual points with the stage-2 bar. */
+export function evaluateWalkForward(
+    data: ForecastDataset,
+    opts: { lastEvents?: number; params?: ModelParams } = {},
+): { evaluation: Evaluation; calibration: Record<Position, Calibration> } {
+    const { events, records, calibration } = walkForwardRecords(data, opts)
+    const model = pointsAccuracy(records, (r) => r.predicted)
+    const baseline = pointsAccuracy(records, (r) => r.baseline)
+    const evaluation: Evaluation = {
+        modelVersion: MODEL_VERSION,
+        eventsEvaluated: new Set(records.map((r) => r.event)).size,
+        playerEvents: records.length,
+        mae: model.mae,
+        baselineMae: baseline.mae,
+        rankCorr: model.rankCorr,
+        baselineRankCorr: baseline.rankCorr,
         passed: false,
         reasons: [],
         details: {
             events,
-            rankGroups: ranked.length,
+            rankGroups: model.rankGroups,
             byPosition: Object.fromEntries(
                 POSITIONS.map((p) => {
                     const mine = records.filter((r) => r.position === p)
@@ -210,14 +225,8 @@ export function evaluateWalkForward(
                         p,
                         {
                             n: mine.length,
-                            mae: mae(
-                                mine.map((r) => r.predicted),
-                                mine.map((r) => r.actual),
-                            ),
-                            baselineMae: mae(
-                                mine.map((r) => r.baseline),
-                                mine.map((r) => r.actual),
-                            ),
+                            mae: pointsAccuracy(mine, (r) => r.predicted).mae,
+                            baselineMae: pointsAccuracy(mine, (r) => r.baseline).mae,
                         },
                     ]
                 }),
@@ -229,5 +238,5 @@ export function evaluateWalkForward(
     evaluation.passed = bar.passed
     evaluation.reasons = bar.reasons
 
-    return { evaluation, calibration: fitCalibration(rawRows) }
+    return { evaluation, calibration }
 }

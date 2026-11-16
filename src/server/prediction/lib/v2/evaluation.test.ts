@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { evaluateProbabilities, isGateOn, passesGate } from './evaluation'
+import { evaluateProbabilities, isGateOn, passesGate, scoreEvents } from './evaluation'
 
 import type { DatasetFixture, ForecastDataset, FplMatchRow, StoredMatch } from '../inputs'
-import type { GateResult } from './evaluation'
+import type { GateResult, Scored } from './evaluation'
 
 const good = {
     n: 1000,
@@ -194,5 +194,132 @@ describe('evaluateProbabilities', () => {
         expect(playerGates(ra.gates).some((g) => g.n > 0)).toBe(true)
         expect(playerGates(rb.gates)).toEqual(playerGates(ra.gates))
         expect(ra.eventsEvaluated).toBe(3)
+    })
+})
+
+/** Everything played at or after `from`: FPL rows, fixture scores and match lines all change. */
+function mutateFrom(data: ForecastDataset, from: Date): void {
+    const later = new Set(data.fixtures.filter((f) => f.kickoff >= from).map((f) => f.fixtureId))
+
+    for (const f of data.fixtures.filter((x) => later.has(x.fixtureId))) {
+        f.homeGoals = 6
+        f.awayGoals = 0
+    }
+
+    for (const m of data.matches.filter((x) => later.has(x.fixtureId))) {
+        m.goals = 3
+        m.minutes = 15
+        m.isStarter = false
+    }
+
+    for (const rows of data.fplMatches.values()) {
+        for (const r of rows.filter((x) => later.has(x.fixtureId))) {
+            r.totalPoints += 10
+            r.goals = 3
+            r.xg = 2.5
+            r.started = !r.started
+        }
+    }
+}
+
+const N = 8
+const cutoffAfterN = day((N + 1) * 7)
+const predictions = (rows: Scored[]) =>
+    rows.map(({ metric, horizon, position, p, base }) => ({ metric, horizon, position, p, base }))
+const ofEvent = (data: ForecastDataset, metric: (m: Scored['metric']) => boolean) =>
+    scoreEvents(data, { calibrationMinRows: 1 }).scored.filter((r) => r.event === N && metric(r.metric))
+
+describe('scoreEvents leakage', () => {
+    it('event N player predictions and baselines ignore everything played after event N + 1 starts', () => {
+        // Guards FPL-row leaks into the baseline history and v2 inputs (xG), and match-line leaks into inputs.
+        const a = world(12, () => true)
+        const b = world(12, () => true)
+
+        mutateFrom(b, cutoffAfterN)
+
+        const ra = ofEvent(a, (m) => m !== 'outcome')
+        const rb = ofEvent(b, (m) => m !== 'outcome')
+
+        expect(ra.some((r) => r.horizon === 'later')).toBe(true)
+        expect(predictions(rb)).toEqual(predictions(ra))
+        // The mutation does reach these records: their later-match actuals changed.
+        expect(rb.map((r) => r.actual)).not.toEqual(ra.map((r) => r.actual))
+    })
+
+    it('event N calibration ignores later FPL rows and follows earlier ones', () => {
+        // Guards calibration leaks: fitting on rows of matches played at or after event N's cutoff. Event 7's
+        // match is postponed past event N's start, so its row exists before event N but must not be used.
+        const postponed = () => {
+            const data = world(12, () => true)
+
+            for (const x of [...data.fixtures, ...data.matches]) {
+                if (x.fixtureId === fixtureId(7)) x.kickoff = day(N * 7 + 4)
+            }
+
+            return data
+        }
+
+        const a = postponed()
+        const later = postponed()
+        const earlier = postponed()
+
+        mutateFrom(later, day(N * 7))
+
+        for (const r of earlier.fplMatches.get('p1') ?? []) if (r.event === 5) r.totalPoints += 10
+
+        const cal = (data: ForecastDataset) =>
+            scoreEvents(data, { calibrationMinRows: 1 }).calibrationByEvent.get(N)?.MID
+        const points = (data: ForecastDataset) => predictions(ofEvent(data, (m) => m === 'points'))
+
+        expect(cal(a)).not.toEqual({ intercept: 0, slope: 1 })
+        expect(cal(later)).toEqual(cal(a))
+        expect(points(later)).toEqual(points(a))
+        expect(cal(earlier)).not.toEqual(cal(a))
+    })
+
+    it('event N outcome probabilities and league baseline ignore later scores', () => {
+        // Guards outcome leaks: later results feeding team strengths or the league home/draw/away shares.
+        const a = world(12, () => true)
+        const later = world(12, () => true)
+        const earlier = world(12, () => true)
+
+        mutateFrom(later, cutoffAfterN)
+        ;(earlier.fixtures.find((f) => f.fixtureId === fixtureId(5)) as DatasetFixture).homeGoals = 5
+
+        const outcome = (data: ForecastDataset) => predictions(ofEvent(data, (m) => m === 'outcome'))
+
+        expect(outcome(a).length).toBeGreaterThan(1)
+        expect(outcome(later)).toEqual(outcome(a))
+        expect(outcome(earlier)).not.toEqual(outcome(a))
+    })
+
+    it('keeps one calibration row per player and fixture when a blank makes a match team match 1 twice', () => {
+        const data = world(10, () => true)
+        const blank = data.fixtures.find((f) => f.fixtureId === fixtureId(6)) as DatasetFixture
+
+        // A and B blank event 6; C plays D, and p3 (C) gives the event an FPL row.
+        Object.assign(blank, { fixtureId: 'x6', homeTeamId: 'C', awayTeamId: 'D' })
+        data.matches = data.matches.filter((m) => m.fixtureId !== fixtureId(6))
+        data.matches.push({
+            ...data.matches[0],
+            kickoff: day(42),
+            fixtureId: 'x6',
+            teamId: 'C',
+            playerId: 'p3',
+        })
+        data.players.push({ playerId: 'p3', fplId: 3, position: 'MID', currentTeamId: 'C' })
+        data.fplMatches.set('p3', [{ ...(data.fplMatches.get('p1') ?? [])[0], fixtureId: 'x6', event: 6 }])
+
+        for (const pid of ['p1', 'p2']) {
+            data.fplMatches.set(
+                pid,
+                (data.fplMatches.get(pid) ?? []).filter((r) => r.fixtureId !== fixtureId(6)),
+            )
+        }
+
+        const keys = scoreEvents(data).calibrationRows.map((r) => `${r.playerId}:${r.fixtureId}`)
+
+        expect(keys).toContain(`p1:${fixtureId(7)}`)
+        expect(new Set(keys).size).toBe(keys.length)
     })
 })
