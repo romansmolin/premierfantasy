@@ -5,6 +5,13 @@ import { describe, expect, it } from 'vitest'
 
 const css = readFileSync(join(process.cwd(), 'src/app/globals.css'), 'utf8')
 const block = /\.dark\s*\{([^}]*)\}/.exec(css)?.[1] ?? ''
+const rootBlock = /:root\s*\{([^}]*)\}/.exec(css)?.[1] ?? ''
+
+function colorTokens(source: string): Record<string, string> {
+    return Object.fromEntries(
+        [...source.matchAll(/--([\w-]+):\s*(#[0-9a-fA-F]{6})\s*;/g)].map((m) => [m[1], m[2].toLowerCase()]),
+    )
+}
 
 function token(name: string): string {
     const match = new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{6})\\s*;`).exec(block)
@@ -32,13 +39,19 @@ function contrast(a: string, b: string): number {
 
 describe('dark theme contrast', () => {
     it.each([
-        ['foreground', 'background'],
-        ['card-foreground', 'card'],
-        ['muted-foreground', 'background'],
-        ['primary-foreground', 'primary'],
-        ['accent-foreground', 'accent'],
-    ])('%s on %s is at least 4.5:1', (fg, bg) => {
-        expect(contrast(token(fg), token(bg))).toBeGreaterThanOrEqual(4.5)
+        ['foreground', 'background', 4.5],
+        ['card-foreground', 'card', 4.5],
+        ['muted-foreground', 'background', 4.5],
+        ['primary-foreground', 'primary', 4.5],
+        ['accent-foreground', 'accent', 4.5],
+        ['input', 'background', 3],
+        ['input', 'card', 3],
+    ])('%s on %s is at least %d:1', (fg, bg, min) => {
+        expect(contrast(token(fg), token(bg))).toBeGreaterThanOrEqual(min)
+    })
+
+    it(':root colour tokens are identical to the .dark ones', () => {
+        expect(colorTokens(rootBlock)).toEqual(colorTokens(block))
     })
 
     it.each([1, 2, 3, 4, 5])('--chart-%i is at least 3:1 against --card', (n) => {

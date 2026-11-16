@@ -1,15 +1,8 @@
 'use client'
 
-import {
-    Door01FreeIcons,
-    FootballPitchIcon,
-    Menu01Icon,
-    Moon01Icon,
-    Sun01Icon,
-} from '@hugeicons/core-free-icons'
+import { Door01FreeIcons, FootballPitchIcon, Menu01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import Link from 'next/link'
-import { useTheme } from 'next-themes'
 import { useState } from 'react'
 
 import { cn } from '@/shared/lib/utils'
@@ -27,7 +20,6 @@ const links = [
 
 export function FloatingHeader() {
     const [open, setOpen] = useState(false)
-    const { theme, setTheme } = useTheme()
 
     return (
         <header
@@ -59,15 +51,6 @@ export function FloatingHeader() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                    >
-                        <HugeiconsIcon icon={Sun01Icon} size={16} className="block dark:hidden" />
-                        <HugeiconsIcon icon={Moon01Icon} size={16} className="hidden dark:block" />
-                    </Button>
-
                     <Link href="/sign-in">
                         <Button size="lg" className={'w-20'}>
                             <HugeiconsIcon icon={Door01FreeIcons} size={20} />
