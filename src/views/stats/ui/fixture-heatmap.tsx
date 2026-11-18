@@ -63,7 +63,8 @@ export function FixtureHeatmap({ data, metric }: { data: Heatmap; metric: Heatma
                 </nav>
             </div>
             <p className="text-sm text-muted-foreground">
-                {active.meaning}. H = home, A = away. This is a forecast, not a fact: <HowWeCalculate />.
+                {active.meaning}. H = home, A = away, – = no match, n/a = forecast switched off or not enough
+                data. This is a forecast, not a fact: <HowWeCalculate />.
             </p>
             <Table>
                 <TableHeader>
@@ -89,17 +90,17 @@ export function FixtureHeatmap({ data, metric }: { data: Heatmap; metric: Heatma
                             </TableHead>
                             {club.cells.map((cell) => (
                                 <TableCell key={cell.event} className="p-1 text-center align-middle">
-                                    {cell.matches.length === 0 ? (
-                                        <span
-                                            title={cell.hidden ? 'No forecast' : 'No match'}
-                                            className="text-muted-foreground"
-                                        >
-                                            <span aria-hidden="true">–</span>
+                                    {cell.matches.length === 0 && cell.hidden ? (
+                                        <span title="No forecast" className="text-xs text-muted-foreground">
+                                            <span aria-hidden="true">n/a</span>
                                             <span className="sr-only">
-                                                {cell.hidden
-                                                    ? 'No forecast for this match (switched off or not enough data)'
-                                                    : 'No match'}
+                                                No forecast for this match (switched off or not enough data)
                                             </span>
+                                        </span>
+                                    ) : cell.matches.length === 0 ? (
+                                        <span title="No match" className="text-muted-foreground">
+                                            <span aria-hidden="true">–</span>
+                                            <span className="sr-only">No match</span>
                                         </span>
                                     ) : (
                                         <div className="flex flex-col gap-1">
@@ -125,7 +126,7 @@ export function FixtureHeatmap({ data, metric }: { data: Heatmap; metric: Heatma
                                                     title="Another match has no forecast"
                                                     className="text-xs text-muted-foreground"
                                                 >
-                                                    <span aria-hidden="true">+ hidden</span>
+                                                    <span aria-hidden="true">+ n/a</span>
                                                     <span className="sr-only">
                                                         another match has no forecast
                                                     </span>

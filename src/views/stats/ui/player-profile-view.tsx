@@ -39,7 +39,7 @@ export function PlayerProfileView({ profile }: { profile: PlayerProfile }) {
                 )}
             </div>
 
-            <ProbabilityCard card={profile.probabilities} forecastOn={profile.forecastEnabled} />
+            <ProbabilityCard card={profile.probabilities} />
 
             <section className="space-y-4">
                 <div className="flex items-center gap-2">

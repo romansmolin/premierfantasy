@@ -44,22 +44,7 @@ function Figure({ label, value, wide }: { label: string; value: string; wide?: b
 }
 
 /** Forecast block of the player page: next-match figures, explanation and the two forecast charts. */
-export function ProbabilityCard({
-    card,
-    forecastOn,
-}: {
-    card: PlayerProbabilityCard | null
-    forecastOn: boolean
-}) {
-    if (!forecastOn) {
-        return (
-            <Note>
-                The forecast is switched off until it beats a simple baseline. Facts are below.{' '}
-                <HowWeCalculate />.
-            </Note>
-        )
-    }
-
+export function ProbabilityCard({ card }: { card: PlayerProbabilityCard | null }) {
     if (card === null || (card.matches.length === 0 && !card.lowData)) {
         return (
             <Note>
@@ -120,13 +105,18 @@ export function ProbabilityCard({
                             <Figure key={label} label={label} value={value} wide={wide} />
                         ))}
                     </div>
-                    {hidden && card.offReasons.length > 0 && (
-                        <ul className="list-disc space-y-1 pl-4 text-xs text-muted-foreground">
-                            {card.offReasons.map((reason) => (
-                                <li key={reason}>{reason}</li>
-                            ))}
-                        </ul>
-                    )}
+                    {hidden &&
+                        (card.offReasons.length > 0 ? (
+                            <ul className="list-disc space-y-1 pl-4 text-xs text-muted-foreground">
+                                {card.offReasons.map((reason) => (
+                                    <li key={reason}>{reason}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-xs text-muted-foreground">
+                                Some numbers are switched off or unavailable; see <HowWeCalculate />.
+                            </p>
+                        ))}
                     <p className="text-xs text-muted-foreground">
                         Forecast · model {card.modelVersion} · updated {formatDate(card.updatedAt)} ·{' '}
                         <HowWeCalculate />

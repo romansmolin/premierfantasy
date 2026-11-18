@@ -99,6 +99,11 @@ describe('FixtureHeatmap', () => {
         expect(html).toContain('No forecast for this match (switched off or not enough data)')
         expect(html).toContain('title="No match"')
         expect(html).toContain('another match has no forecast')
+        // Sighted users see the difference too, not only in a tooltip.
+        expect(html).toContain('<span aria-hidden="true">n/a</span>')
+        expect(html).toContain('<span aria-hidden="true">–</span>')
+        expect(html).toContain('<span aria-hidden="true">+ n/a</span>')
+        expect(html).toContain('– = no match, n/a = forecast switched off or not enough')
     })
 
     it('falls back to the empty state when no cell shows a match', () => {

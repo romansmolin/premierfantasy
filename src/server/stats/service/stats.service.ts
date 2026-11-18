@@ -328,7 +328,10 @@ export class StatsService implements IStatsService {
         const horizons = fixtureHorizons(
             upcoming.map((f) => ({ id: f.id, kickoff: f.kickoff, homeId: f.home.id, awayId: f.away.id })),
         )
-        const shown = upcoming.filter(
+        const now = new Date()
+        // The in-progress gameweek also lists matches already played: they are neither shown nor hidden.
+        const live = upcoming.filter((f) => isUpcoming(f, now))
+        const shown = live.filter(
             (f) => probs.has(f.id) && isGateOn(status.gates, 'outcome', gateHorizon(horizons.get(f.id) ?? 1)),
         )
         const shownIds = new Set(shown.map((f) => f.id))
@@ -343,7 +346,7 @@ export class StatsService implements IStatsService {
 
                 return {
                     event,
-                    hidden: upcoming.some((f) => mine(f) && !shownIds.has(f.id)),
+                    hidden: live.some((f) => mine(f) && !shownIds.has(f.id)),
                     matches: shown.filter(mine).map((f) => {
                         const p = probs.get(f.id) as NonNullable<ReturnType<typeof probs.get>>
                         const isHome = f.home.id === clubId

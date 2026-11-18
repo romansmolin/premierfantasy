@@ -480,6 +480,37 @@ describe('StatsService probabilities', () => {
         expect(card?.matches.map((m) => m.fixtureId)).toEqual(['fx1'])
     })
 
+    it('hides a postponed or live fixture whose kickoff has passed', async () => {
+        const past = (id: string, status: string) => ({
+            ...fixture(id, 1),
+            kickoff: new Date(Date.UTC(2020, 0, 1)),
+            status,
+        })
+        const setup = evaluated({
+            rows: {
+                p1: [prob('p1', 'pst', 1), prob('p1', 'live', 2), prob('p1', 'fx1', 3)],
+            },
+            fixtures: [past('pst', 'PST'), past('live', '2H'), f1],
+            next: new Map([['p1', prob('p1', 'pst', 1)]]),
+        })
+        const service = make(true, setup)
+
+        expect((await service.getPlayer('p1'))?.probabilities?.matches.map((m) => m.fixtureId)).toEqual([
+            'fx1',
+        ])
+        expect((await service.getPlayers({ search: 'salah' })).items[0].next).toBeNull()
+    })
+
+    it('says why expected points are missing when neither forecast can give them', async () => {
+        const setup = evaluated({ status: meanOff, rows: { p1: [prob('p1', 'fx1', 1)] }, fixtures: [f1] })
+        const card = (await make(false, setup).getPlayer('p1'))?.probabilities
+
+        expect(card?.matches[0]).toMatchObject({ expectedPoints: null, pGoal: 0.3 })
+        expect(card?.offReasons).toContain(
+            'Expected points: the points forecast is switched off or not available for this match',
+        )
+    })
+
     it('the card is null when every stored row is stale', async () => {
         const finished = { ...fixture('fx0', 1), kickoff: new Date(Date.UTC(2020, 0, 1)), status: 'FT' }
         const setup = evaluated({ rows: { p1: [prob('p1', 'fx0', 1)] }, fixtures: [finished] })
@@ -634,6 +665,22 @@ describe('StatsService probabilities', () => {
             [0, false],
             [1, true],
         ])
+    })
+
+    it('heatmap does not mark a match already played in the in-progress gameweek as hidden', async () => {
+        const played = { ...fixture('fx0', 1), kickoff: new Date(Date.UTC(2020, 0, 1)), status: 'FT' }
+        const upcoming: UpcomingFixture[] = [
+            { ...played, event: 11 },
+            { ...fixture('fx3', 5, 'MCI', 'CHE'), event: 11 },
+        ]
+        const heat = await make(
+            true,
+            evaluated({ upcoming, fixtureProbs: [fixtureProb('fx0'), fixtureProb('fx3')] }),
+        ).getHeatmap()
+        const liv = heat.clubs.find((c) => c.clubId === 'LIV')
+
+        expect(liv?.cells[0]).toMatchObject({ matches: [], hidden: false })
+        expect(heat.clubs.find((c) => c.clubId === 'MCI')?.cells[0].matches).toHaveLength(1)
     })
 
     it('heatmap is empty without an evaluation', async () => {

@@ -1,4 +1,3 @@
-import { FINISHED } from '@/server/prediction/lib/inputs'
 import { isGateOn } from '@/server/prediction/lib/v2/evaluation'
 import { MODEL_VERSION_V2 } from '@/server/prediction/lib/v2/params'
 
@@ -16,9 +15,9 @@ import type {
 } from '@/server/prediction/repository/probability.repository.interface'
 import type { ProbabilityStatus } from '@/server/prediction/service/probability.service.interface'
 
-/** A stored fixture is worth showing when it is still to be played (the table keeps old rows when no event is upcoming). */
+/** A stored fixture is worth showing only before kickoff, like the job that writes it (postponed or live matches drop out). */
 export const isUpcoming = (f: StatsFixture | undefined, now: Date): f is StatsFixture =>
-    f !== undefined && (f.kickoff.getTime() > now.getTime() || !FINISHED.has(f.status))
+    f !== undefined && f.kickoff.getTime() > now.getTime()
 
 const METRIC_LABEL: Record<Metric, string> = {
     goal: 'Goal chance',
@@ -105,6 +104,18 @@ export function buildProbabilityCard(input: CardInput): PlayerProbabilityCard | 
         if (show && !pointsMeanOn)
             off.add('Points distribution: the new points model is not better than the current forecast')
 
+        // Horizon 1: v2 when it beats v1, else the v1 forecast (already null when v1 is off); later horizons need the points gate.
+        const expectedPoints = !show
+            ? null
+            : r.horizon === 1
+              ? pointsMeanOn
+                  ? r.expectedPoints
+                  : v1Fallback(r.fixtureId)
+              : gated(r.expectedPoints, pointsOn)
+
+        if (show && expectedPoints === null && !pointsMeanOn)
+            off.add('Expected points: the points forecast is switched off or not available for this match')
+
         return {
             fixtureId: r.fixtureId,
             kickoff: f.kickoff,
@@ -115,14 +126,7 @@ export function buildProbabilityCard(input: CardInput): PlayerProbabilityCard | 
             pAssist: gated(r.pAssist, show && on('assist', r.horizon)),
             pStart: gated(r.pStart, start),
             expectedMinutes: gated(r.expectedMinutes, start),
-            // Horizon 1: v2 when it beats v1, else the v1 forecast (already null when v1 is off); later horizons need the points gate.
-            expectedPoints: !show
-                ? null
-                : r.horizon === 1
-                  ? pointsMeanOn
-                      ? r.expectedPoints
-                      : v1Fallback(r.fixtureId)
-                  : gated(r.expectedPoints, pointsOn),
+            expectedPoints,
             pointsBuckets: pointsOn ? r.pointsBuckets : null,
             pWin: fp ? gated(isHome ? fp.pHome : fp.pAway, outcome) : null,
             pDraw: fp ? gated(fp.pDraw, outcome) : null,

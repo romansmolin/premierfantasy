@@ -110,3 +110,27 @@ describe('minutesSeries', () => {
         expect(rows.map((r) => r.label)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(labelOf))
     })
 })
+
+describe('cached kickoffs (unstable_cache returns ISO strings)', () => {
+    const cached = (rows: FormMatch[]): FormMatch[] => JSON.parse(JSON.stringify(rows)) as FormMatch[]
+
+    it('formSeries sorts string kickoffs, keeping a double gameweek as two entries', () => {
+        const dgw = [
+            match(2, { kickoff: new Date(Date.UTC(2026, 0, 10, 20)) }),
+            match(1, { kickoff: new Date(Date.UTC(2026, 0, 10, 12)) }),
+        ]
+        const rows = formSeries(
+            cached([...SHUFFLED.filter((i) => i > 2).map((i) => match(i + 10)), ...dgw]),
+            10,
+        )
+
+        expect(typeof cached(dgw)[0].kickoff).toBe('string')
+        expect(rows.map((r) => r.label)).toEqual([1, 2, 13, 14, 15, 16, 17, 18, 19, 20].map(labelOf))
+    })
+
+    it('minutesSeries sorts string kickoffs', () => {
+        const rows = minutesSeries(cached(SHUFFLED.map((i) => match(i))))
+
+        expect(rows.map((r) => r.label)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(labelOf))
+    })
+})

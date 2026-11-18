@@ -37,8 +37,7 @@ const card = (
         ...over,
     }) satisfies PlayerProbabilityCard
 
-const html = (c: PlayerProbabilityCard | null, forecastOn = true) =>
-    renderToStaticMarkup(<ProbabilityCard card={c} forecastOn={forecastOn} />)
+const html = (c: PlayerProbabilityCard | null) => renderToStaticMarkup(<ProbabilityCard card={c} />)
 
 describe('ProbabilityCard', () => {
     it('shows a dash with the reason for a null figure, never 0%', () => {
@@ -96,12 +95,26 @@ describe('ProbabilityCard', () => {
         expect(out).not.toContain('Chance to score')
     })
 
-    it('forecastOn=false shows facts-only note linking to the method page', () => {
-        const out = html(card(), false)
+    it('shows the probabilities on their own gates, whatever the v1 points forecast does', () => {
+        const out = html(card({}, { expectedPoints: null }))
 
-        expect(out).toContain('switched off')
+        expect(out).toContain('Chance to score')
+        expect(out).toContain('90%')
+        expect(out).not.toContain('The forecast is switched off')
+    })
+
+    it('a hidden figure without listed reasons still gets a visible fallback line', () => {
+        const out = html(card({ offReasons: [] }))
+
+        expect(out).toContain('Some numbers are switched off or unavailable; see')
         expect(out).toContain('href="/how-we-calculate"')
-        expect(out).not.toContain('Chance to score')
+    })
+
+    it('renders a card whose dates came back from the cache as strings', () => {
+        const cached = JSON.parse(JSON.stringify(card())) as PlayerProbabilityCard
+
+        expect(() => html(cached)).not.toThrow()
+        expect(html(cached)).toContain('Sat 21 Nov')
     })
 
     it('null card or empty matches is facts-only', () => {
