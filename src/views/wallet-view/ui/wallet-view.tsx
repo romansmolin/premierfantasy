@@ -9,31 +9,20 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 
-import { CustomTopupCard } from '@/features/wallet'
+import { BillingDetailsCard, CustomTopupCard } from '@/features/wallet'
 
 import { AI_FEATURE_LABELS, AI_FEATURE_PRICES } from '@/entities/ai'
+import { billingService, sameCustomer, useBillingProfile } from '@/entities/billing'
 import { useWallet, walletService, WITHDRAWAL_CONSENT_TEXT, checkoutCustomerSchema } from '@/entities/wallet'
 import type { CheckoutCustomer, ICoinPack, TransactionType } from '@/entities/wallet'
 
+import { ApiError } from '@/shared/api/api-error'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Checkbox } from '@/shared/ui/checkbox'
-import { Input } from '@/shared/ui/input'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
-
-const CUSTOMER_FIELDS = [
-    { name: 'firstName', label: 'First name', autoComplete: 'given-name' },
-    { name: 'lastName', label: 'Last name', autoComplete: 'family-name' },
-    { name: 'email', label: 'Email', type: 'email', autoComplete: 'email' },
-    { name: 'phone', label: 'Phone number', type: 'tel', autoComplete: 'tel' },
-    { name: 'address', label: 'Billing address', autoComplete: 'street-address' },
-    { name: 'city', label: 'City', autoComplete: 'address-level2' },
-    { name: 'country', label: 'Country code', autoComplete: 'country', placeholder: 'e.g. PL' },
-    { name: 'zip', label: 'Postal code', autoComplete: 'postal-code' },
-    { name: 'birthDate', label: 'Date of birth (optional)', type: 'date', autoComplete: 'bday' },
-] as const
 
 const AI_FEATURES = (Object.keys(AI_FEATURE_PRICES) as (keyof typeof AI_FEATURE_PRICES)[]).map((feature) => ({
     name: AI_FEATURE_LABELS[feature],
@@ -72,6 +61,18 @@ export const WalletView = () => {
         },
     })
 
+    const { profile: savedProfile, mutate: mutateProfile } = useBillingProfile()
+    const { reset, formState } = customerForm
+    const [isSaving, setIsSaving] = useState(false)
+    const [saveError, setSaveError] = useState<string | null>(null)
+    const values = customerForm.watch()
+    const isSaved = savedProfile !== null && sameCustomer(savedProfile, values)
+
+    // Prefill saved details, but never overwrite what the user is already typing.
+    useEffect(() => {
+        if (savedProfile && !formState.isDirty) reset(savedProfile)
+    }, [savedProfile, formState.isDirty, reset])
+
     const { data: coinPacks, isLoading: isPacksLoading } = useSWR<ICoinPack[]>('/api/wallet/packs', () =>
         walletService.getCoinPacks(),
     )
@@ -91,12 +92,54 @@ export const WalletView = () => {
         }
     }, [searchParams, mutate])
 
+    const persistCustomer = async (customer: CheckoutCustomer): Promise<boolean> => {
+        setIsSaving(true)
+        setSaveError(null)
+
+        try {
+            const saved = await billingService.saveProfile(customer)
+
+            await mutateProfile(saved, { revalidate: false })
+            reset(customer)
+
+            return true
+        } catch (error) {
+            setSaveError(
+                ApiError.isApiError(error) && error.status < 500
+                    ? error.message
+                    : 'Could not save your details. Please try again later.',
+            )
+
+            return false
+        } finally {
+            setIsSaving(false)
+        }
+    }
+
+    const handleSaveDetails = async () => {
+        if (!(await customerForm.trigger(undefined, { shouldFocus: true }))) return
+
+        const result = checkoutCustomerSchema.safeParse(customerForm.getValues())
+
+        if (result.success && (await persistCustomer(result.data))) toast.success('Billing details saved')
+    }
+
     const getCustomer = async (): Promise<CheckoutCustomer | null> => {
         if (!(await customerForm.trigger(undefined, { shouldFocus: true }))) return null
 
         const result = checkoutCustomerSchema.safeParse(customerForm.getValues())
 
-        return result.success ? result.data : null
+        if (!result.success) return null
+
+        // Remember the details for next time; a failed save must not block the payment.
+        if (!savedProfile || !sameCustomer(savedProfile, result.data)) {
+            // Awaited so the request is not cut off by the redirect to the payment page.
+            if (!(await persistCustomer(result.data))) {
+                toast.warning('Could not save your billing details for next time.')
+            }
+        }
+
+        return result.data
     }
 
     const handleBuyCoins = async (coinAmount: number) => {
@@ -162,40 +205,15 @@ export const WalletView = () => {
                 </Card>
             )}
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Billing details</CardTitle>
-                    <CardDescription>Enter the details of the person making the payment.</CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-4 sm:grid-cols-2">
-                    {CUSTOMER_FIELDS.map((field) => {
-                        const error = customerForm.formState.errors[field.name]
-                        const id = `billing-${field.name}`
-
-                        return (
-                            <div key={field.name} className="space-y-1.5">
-                                <label htmlFor={id} className="text-sm font-medium">
-                                    {field.label}
-                                </label>
-                                <Input
-                                    id={id}
-                                    type={'type' in field ? field.type : 'text'}
-                                    autoComplete={field.autoComplete}
-                                    placeholder={'placeholder' in field ? field.placeholder : undefined}
-                                    aria-invalid={Boolean(error)}
-                                    aria-describedby={error ? `${id}-error` : undefined}
-                                    {...customerForm.register(field.name)}
-                                />
-                                {error && (
-                                    <p id={`${id}-error`} className="text-sm text-destructive">
-                                        {error.message}
-                                    </p>
-                                )}
-                            </div>
-                        )
-                    })}
-                </CardContent>
-            </Card>
+            <BillingDetailsCard
+                control={customerForm.control}
+                register={customerForm.register}
+                errors={customerForm.formState.errors}
+                onSave={handleSaveDetails}
+                isSaving={isSaving}
+                isSaved={isSaved}
+                saveError={saveError}
+            />
             <div className="flex items-start gap-3 rounded-xl border p-4">
                 <Checkbox
                     id="withdrawal-consent"

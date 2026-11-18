@@ -1,0 +1,18 @@
+// Saved checkout details, one row per user. Personal data: never log, return only to the owner.
+model BillingProfile {
+  userId    String   @id @map("user_id")
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  email     String
+  phone     String
+  address   String
+  city      String
+  country   String // ISO 3166-1 alpha-2
+  zip       String
+  birthDate String?  @map("birth_date") // YYYY-MM-DD
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("billing_profiles")
+}

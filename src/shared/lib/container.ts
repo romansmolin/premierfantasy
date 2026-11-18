@@ -6,6 +6,9 @@ import { BilledRunner } from '@/server/ai/service/billed-runner'
 import { AutoBuildController } from '@/server/autobuild/controller/autobuild.controller'
 import { AutoBuildExplainer } from '@/server/autobuild/service/autobuild-explainer'
 import { AutoBuildService } from '@/server/autobuild/service/autobuild.service'
+import { BillingController } from '@/server/billing/controller/billing.controller'
+import { BillingRepository } from '@/server/billing/repository/billing.repository'
+import { BillingService } from '@/server/billing/service/billing.service'
 import { FixtureController } from '@/server/fixtures/controller/fixture.controller'
 import { FixtureRepository } from '@/server/fixtures/repository/fixture.repository'
 import { FixtureService } from '@/server/fixtures/service/fixture.service'
@@ -54,6 +57,7 @@ import { WalletService } from '@/server/wallet/service/wallet.service'
 // Repositories — instantiated once each, shared across services that need them.
 const aiReportRepository = new AiReportRepository()
 const fplMappingRepository = new FplMappingRepository()
+const billingRepository = new BillingRepository()
 const fixtureRepository = new FixtureRepository()
 const gameweekRepository = new GameweekRepository()
 const paymentRepository = new PaymentRepository()
@@ -64,6 +68,7 @@ const walletRepository = new WalletRepository()
 
 // Services
 const walletService = new WalletService(walletRepository)
+const billingService = new BillingService(billingRepository)
 const userService = new UserService(userRepository)
 const gameweekService = new GameweekService(gameweekRepository)
 const pricingService = new PricingService(pricingRepository)
@@ -102,6 +107,7 @@ const squadController = new SquadController(squadService)
 const scoutController = new ScoutController(scoutService)
 
 // Controllers
+const billingController = new BillingController(billingService)
 const aiController = new AIController(aiInsightsService)
 const autoBuildController = new AutoBuildController(autoBuildService, squadReviewService)
 const fixtureController = new FixtureController(fixtureService)
@@ -119,6 +125,7 @@ const walletController = new WalletController(walletService)
 export const container = {
     aiController,
     autoBuildController,
+    billingController,
     fixtureController,
     fplMappingController,
     syncCronController,
