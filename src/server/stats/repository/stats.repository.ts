@@ -14,6 +14,7 @@ import type {
     UpcomingFixture,
 } from './stats.repository.interface'
 import type { Position } from '@/server/prediction/lib/scoring-rules'
+import type { SeasonLine } from '@/server/scout/lib/radar'
 
 /** A price older than this is treated as missing (the sync runs daily). */
 const PRICE_MAX_AGE_MS = 3 * 24 * 60 * 60 * 1000
@@ -279,5 +280,72 @@ export class StatsRepository implements IStatsRepository {
         })
 
         return rows.map((r) => ({ ...r, components: r.components as Record<string, number> }))
+    }
+
+    async findSeasonLines(): Promise<SeasonLine[]> {
+        const rows = await prisma.playerMatchStats.findMany({
+            where: { fixture: { leagueSeason: currentSeason } },
+            select: {
+                playerId: true,
+                teamId: true,
+                minutes: true,
+                goals: true,
+                assists: true,
+                shotsOn: true,
+                passesKey: true,
+                tackles: true,
+                blocks: true,
+                interceptions: true,
+                duelsTotal: true,
+                duelsWon: true,
+                saves: true,
+                penaltySaved: true,
+                fixture: { select: { homeTeamId: true, homeGoals: true, awayGoals: true } },
+            },
+        })
+
+        return rows.map((r) => {
+            const isHome = r.teamId === r.fixture.homeTeamId
+            // As in `findLines`: the player-level "conceded" field is only filled for goalkeepers.
+            const conceded = (isHome ? r.fixture.awayGoals : r.fixture.homeGoals) ?? 0
+
+            return {
+                playerId: r.playerId,
+                minutes: r.minutes,
+                goals: r.goals,
+                assists: r.assists,
+                shotsOn: r.shotsOn,
+                passesKey: r.passesKey,
+                defActions: r.tackles + r.blocks + r.interceptions,
+                duelsTotal: r.duelsTotal,
+                duelsWon: r.duelsWon,
+                saves: r.saves,
+                goalsConceded: conceded,
+                penaltySaved: r.penaltySaved,
+                cleanSheet: r.minutes >= 60 && conceded === 0,
+            }
+        })
+    }
+
+    async findFplSeasonTotals(): Promise<Map<string, { xg: number | null; xa: number | null }>> {
+        const [maps, rows] = await Promise.all([
+            prisma.fplPlayerMap.findMany({ select: { playerId: true, fplId: true } }),
+            prisma.fplPlayerMatch.findMany({ select: { fplPlayerId: true, xg: true, xa: true } }),
+        ])
+        const playerOf = new Map(maps.map((m) => [m.fplId, m.playerId]))
+        const totals = new Map<string, { xg: number | null; xa: number | null }>()
+        const plus = (a: number | null, b: number | null): number | null => (b === null ? a : (a ?? 0) + b)
+
+        for (const r of rows) {
+            const playerId = playerOf.get(r.fplPlayerId)
+
+            if (!playerId) continue
+
+            const t = totals.get(playerId) ?? { xg: null, xa: null }
+
+            totals.set(playerId, { xg: plus(t.xg, r.xg), xa: plus(t.xa, r.xa) })
+        }
+
+        return totals
     }
 }

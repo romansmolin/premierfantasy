@@ -1,5 +1,6 @@
 import type { StatsLine } from '../lib/player-form'
 import type { Position } from '@/server/prediction/lib/scoring-rules'
+import type { SeasonLine } from '@/server/scout/lib/radar'
 
 export interface ClubRef {
     id: string
@@ -76,4 +77,8 @@ export interface IStatsRepository {
     findFixturesByIds(ids: string[]): Promise<StatsFixture[]>
     /** Fixtures of the next `events` gameweeks, starting at the next one. */
     findUpcomingFixtures(events: number): Promise<UpcomingFixture[]>
+    /** Every match line of the current season, shaped for the scout radar; goals conceded and clean sheets come from the fixture score. */
+    findSeasonLines(): Promise<SeasonLine[]>
+    /** Season xG and xA per player id from FPL; a player without any FPL value is absent, a missing one of the two is null. */
+    findFplSeasonTotals(): Promise<Map<string, { xg: number | null; xa: number | null }>>
 }

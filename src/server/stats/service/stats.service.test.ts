@@ -192,6 +192,8 @@ const make = (enabled: boolean, setup: Setup = {}) => {
             .fn()
             .mockImplementation(async (ids: string[]) => fixtures.filter((f) => ids.includes(f.id))),
         findUpcomingFixtures: vi.fn().mockResolvedValue(setup.upcoming ?? []),
+        findSeasonLines: vi.fn().mockResolvedValue([]),
+        findFplSeasonTotals: vi.fn().mockResolvedValue(new Map()),
     } satisfies IStatsRepository
     const forecast = {
         run: vi.fn(),
