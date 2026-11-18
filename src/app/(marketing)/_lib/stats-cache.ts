@@ -31,6 +31,11 @@ export const getFixturesCached = unstable_cache(
     },
 )
 
+export const getHeatmapCached = unstable_cache(() => container.statsService.getHeatmap(), ['stats-heatmap'], {
+    revalidate: REVALIDATE_SECONDS,
+    tags: ['stats'],
+})
+
 export const getForecastStatusCached = unstable_cache(
     () => container.statsService.getForecastStatus(),
     ['stats-forecast-status'],

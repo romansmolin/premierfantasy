@@ -17,7 +17,18 @@ export const metadata: Metadata = {
 }
 
 const POSITIONS = ['GK', 'DEF', 'MID', 'FWD']
-const SORTS = ['forecast', 'form', 'price', 'minutes', 'goals', 'assists', 'name']
+const SORTS = [
+    'forecast',
+    'form',
+    'price',
+    'minutes',
+    'goals',
+    'assists',
+    'pGoal',
+    'pAssist',
+    'pStart',
+    'name',
+]
 
 type Params = { position?: string; club?: string; q?: string; sort?: string; page?: string }
 

@@ -1,6 +1,6 @@
 import { FixturesView } from '@/views/stats'
 
-import { getFixturesCached } from '../_lib/stats-cache'
+import { getFixturesCached, getHeatmapCached } from '../_lib/stats-cache'
 
 import type { Metadata } from 'next'
 
@@ -9,10 +9,14 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
     title: 'Premier League fixtures for the next gameweek',
-    description: 'Kick-off times of the next Premier League gameweek.',
+    description:
+        'Kick-offs and win chances of the next Premier League gameweek, plus a forecast heatmap of the next eight gameweeks.',
     alternates: { canonical: '/fixtures' },
 }
 
-export default async function FixturesPage() {
-    return <FixturesView data={await getFixturesCached()} />
+export default async function FixturesPage({ searchParams }: { searchParams: Promise<{ metric?: string }> }) {
+    const { metric } = await searchParams
+    const [fixtures, heatmap] = await Promise.all([getFixturesCached(), getHeatmapCached()])
+
+    return <FixturesView data={fixtures} heatmap={heatmap} metric={metric === 'cs' ? 'cs' : 'xg'} />
 }

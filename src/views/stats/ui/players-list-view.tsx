@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/shared/ui/card'
 import { Input } from '@/shared/ui/input'
 import { SelectField } from '@/shared/ui/select-field'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
+import { formatChance } from '@/shared/utils/format-chance'
 
 import { formatPoints, formatPrice } from './format'
 
@@ -23,8 +24,13 @@ const SORTS: { value: PlayerSort; label: string }[] = [
     { value: 'minutes', label: 'Minutes' },
     { value: 'goals', label: 'Goals' },
     { value: 'assists', label: 'Assists' },
+    { value: 'pGoal', label: 'Goal chance' },
+    { value: 'pAssist', label: 'Assist chance' },
+    { value: 'pStart', label: 'Start chance' },
     { value: 'name', label: 'Name' },
 ]
+
+const CHANCE_SORTS: PlayerSort[] = ['pGoal', 'pAssist', 'pStart']
 
 const POSITIONS = ['GK', 'DEF', 'MID', 'FWD']
 
@@ -43,8 +49,18 @@ function pageHref(params: Props['params'], sort: PlayerSort, page: number): stri
     return `/players?${search.toString()}`
 }
 
+function Chance({ value }: { value: number | null | undefined }) {
+    if (value == null) return <span title="Switched off or not enough data">—</span>
+
+    return <>{formatChance(value)}</>
+}
+
 export function PlayersListView({ data, params }: Props) {
     const pages = Math.max(1, Math.ceil(data.total / data.pageSize))
+    const chancesOn = data.items.some((p) => p.next !== null) || CHANCE_SORTS.includes(data.sort)
+    const hasDash = data.items.some(
+        (p) => p.next === null || p.next.pGoal === null || p.next.pAssist === null || p.next.pStart === null,
+    )
 
     return (
         <div className="mx-auto w-full max-w-5xl space-y-6 px-6 py-10">
@@ -101,7 +117,11 @@ export function PlayersListView({ data, params }: Props) {
                         aria-label="Sort by"
                         defaultValue={data.sort}
                         className="w-40"
-                        options={SORTS.filter((s) => s.value !== 'forecast' || data.forecastEnabled)}
+                        options={SORTS.filter(
+                            (s) =>
+                                (s.value !== 'forecast' || data.forecastEnabled) &&
+                                (chancesOn || !CHANCE_SORTS.includes(s.value)),
+                        )}
                     />
                 </div>
                 <Button type="submit" className="px-5">
@@ -122,6 +142,9 @@ export function PlayersListView({ data, params }: Props) {
                                 <TableHead className="text-right">G</TableHead>
                                 <TableHead className="text-right">A</TableHead>
                                 <TableHead className="text-right">Form</TableHead>
+                                <TableHead className="text-right">Goal %</TableHead>
+                                <TableHead className="text-right">Assist %</TableHead>
+                                <TableHead className="text-right">Start %</TableHead>
                                 {data.forecastEnabled && (
                                     <TableHead className="text-right">GW{data.nextEvent}</TableHead>
                                 )}
@@ -150,6 +173,15 @@ export function PlayersListView({ data, params }: Props) {
                                     <TableCell className="text-right">{p.goals}</TableCell>
                                     <TableCell className="text-right">{p.assists}</TableCell>
                                     <TableCell className="text-right">{formatPoints(p.form)}</TableCell>
+                                    <TableCell className="text-right tabular-nums">
+                                        <Chance value={p.next?.pGoal} />
+                                    </TableCell>
+                                    <TableCell className="text-right tabular-nums">
+                                        <Chance value={p.next?.pAssist} />
+                                    </TableCell>
+                                    <TableCell className="text-right tabular-nums">
+                                        <Chance value={p.next?.pStart} />
+                                    </TableCell>
                                     {data.forecastEnabled && (
                                         <TableCell className="text-right font-medium">
                                             {formatPoints(p.forecast)}
@@ -161,6 +193,19 @@ export function PlayersListView({ data, params }: Props) {
                     </Table>
                     {data.items.length === 0 && (
                         <p className="py-6 text-sm text-muted-foreground">No players match.</p>
+                    )}
+                    {hasDash && (
+                        <p className="pt-4 text-xs text-muted-foreground">
+                            Goal %, Assist % and Start % are forecasts for the next match. — means this number
+                            is switched off or there is not enough data; see{' '}
+                            <Link
+                                href="/how-we-calculate"
+                                className="underline underline-offset-4 hover:text-foreground"
+                            >
+                                How we calculate
+                            </Link>
+                            .
+                        </p>
                     )}
                 </CardContent>
             </Card>
