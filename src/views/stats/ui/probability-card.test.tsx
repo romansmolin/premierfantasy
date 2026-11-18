@@ -44,10 +44,40 @@ describe('ProbabilityCard', () => {
     it('shows a dash with the reason for a null figure, never 0%', () => {
         const out = html(card())
 
-        expect(out).toContain('title="Assist chance is off until it beats a baseline."')
+        expect(out).toContain('Assist chance is off until it beats a baseline.')
         expect(out).toContain('>—<')
         expect(out).not.toContain('>0%<')
         expect(out).toContain('90%')
+    })
+
+    it('lists off reasons visibly (not only in a title) when a figure is hidden', () => {
+        const out = html(card({ offReasons: ['Reason one.', 'Reason two.'] }))
+
+        expect(out).toContain('<li>Reason one.</li>')
+        expect(out).toContain('<li>Reason two.</li>')
+        expect(out).not.toContain('title=')
+    })
+
+    it('omits the reasons list when no figure is hidden', () => {
+        const out = html(card({}, { pAssist: 0.2 }))
+
+        expect(out).not.toContain('<li>Assist chance')
+        expect(out).not.toContain('<ul class="list-disc')
+    })
+
+    it('says the figures are for the next match only when two matches are listed', () => {
+        const two = card()
+
+        two.matches = [two.matches[0], { ...two.matches[0], fixtureId: 'f2', horizon: 2 }]
+
+        expect(html(two)).toContain('Figures are for the next match only')
+        expect(html(card())).not.toContain('Figures are for the next match only')
+    })
+
+    it('has a Forecast h2 and a No forecast badge on the facts-only note', () => {
+        expect(html(card())).toContain('<h2')
+        expect(html(null)).toContain('No forecast</span>')
+        expect(html(null)).not.toContain('>Forecast</span>')
     })
 
     it('formats tiny chances as <1%', () => expect(html(card())).toContain('&lt;1%'))

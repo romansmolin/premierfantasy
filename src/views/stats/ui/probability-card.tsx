@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import { Badge } from '@/shared/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import { Card, CardContent, CardDescription, CardHeader } from '@/shared/ui/card'
 import { formatChance } from '@/shared/utils/format-chance'
 
 import { bucketBars } from './charts/chart-data'
@@ -10,6 +10,14 @@ import { PointsDistributionChart } from './charts/points-distribution-chart'
 import { formatDate, formatMinutes, formatPoints } from './format'
 
 import type { PlayerProbabilityCard } from '@/server/stats/service/stats.service.interface'
+
+function ForecastTitle() {
+    return (
+        <h2 data-slot="card-title" className="text-sm font-medium">
+            Forecast · next match
+        </h2>
+    )
+}
 
 const HowWeCalculate = () => (
     <Link href="/how-we-calculate" className="underline underline-offset-4 hover:text-foreground">
@@ -20,28 +28,15 @@ const HowWeCalculate = () => (
 function Note({ children }: { children: React.ReactNode }) {
     return (
         <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-            <Badge variant="secondary">Forecast</Badge>
+            <Badge variant="outline">No forecast</Badge>
             <span>{children}</span>
         </p>
     )
 }
 
-function Figure({
-    label,
-    value,
-    why,
-    wide,
-}: {
-    label: string
-    value: string
-    why: string | undefined
-    wide?: boolean
-}) {
+function Figure({ label, value, wide }: { label: string; value: string; wide?: boolean }) {
     return (
-        <div
-            className={wide ? 'col-span-2 space-y-1 sm:col-span-1' : 'space-y-1'}
-            title={value === '—' ? why : undefined}
-        >
+        <div className={wide ? 'col-span-2 space-y-1 sm:col-span-1' : 'space-y-1'}>
             <p className="text-2xl font-semibold tabular-nums">{value}</p>
             <p className="text-xs text-muted-foreground">{label}</p>
         </div>
@@ -79,7 +74,7 @@ export function ProbabilityCard({
             <Card>
                 <CardHeader>
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                        <CardTitle>Forecast · next match</CardTitle>
+                        <ForecastTitle />
                         <Badge variant="secondary">Forecast</Badge>
                     </div>
                     <CardDescription>Not enough data yet: fewer than 3 appearances</CardDescription>
@@ -89,11 +84,19 @@ export function ProbabilityCard({
     }
 
     const next = card.matches[0]
-    const why = card.offReasons.length > 0 ? card.offReasons.join(' ') : undefined
     const outcome = [next.pWin, next.pDraw, next.pLose]
     const outcomeText = outcome.every((p) => p === null)
         ? '—'
         : `${formatChance(next.pWin)} / ${formatChance(next.pDraw)} / ${formatChance(next.pLose)}`
+    const figures: [string, string, boolean?][] = [
+        ['Chance to score', formatChance(next.pGoal)],
+        ['Chance to assist', formatChance(next.pAssist)],
+        ['Chance to start', formatChance(next.pStart)],
+        ['Expected minutes', formatMinutes(next.expectedMinutes)],
+        ['Expected points', formatPoints(next.expectedPoints)],
+        ['Team win / draw / lose', outcomeText, true],
+    ]
+    const hidden = figures.some(([, value]) => value === '—')
     const nextLabel = `${next.isHome ? 'vs' : 'at'} ${next.opponentName}`
     const bars = bucketBars(next.pointsBuckets)
 
@@ -102,26 +105,28 @@ export function ProbabilityCard({
             <Card>
                 <CardHeader>
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                        <CardTitle>Forecast · next match</CardTitle>
+                        <ForecastTitle />
                         <Badge variant="secondary">Forecast</Badge>
                     </div>
                     <CardDescription>
                         {nextLabel} ({next.isHome ? 'home' : 'away'}) · {formatDate(next.kickoff)}
+                        {card.matches.length > 1 &&
+                            '. Figures are for the next match only; later matches are in the chart below.'}
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                        <Figure label="Chance to score" value={formatChance(next.pGoal)} why={why} />
-                        <Figure label="Chance to assist" value={formatChance(next.pAssist)} why={why} />
-                        <Figure label="Chance to start" value={formatChance(next.pStart)} why={why} />
-                        <Figure
-                            label="Expected minutes"
-                            value={formatMinutes(next.expectedMinutes)}
-                            why={why}
-                        />
-                        <Figure label="Expected points" value={formatPoints(next.expectedPoints)} why={why} />
-                        <Figure label="Team win / draw / lose" value={outcomeText} why={why} wide />
+                        {figures.map(([label, value, wide]) => (
+                            <Figure key={label} label={label} value={value} wide={wide} />
+                        ))}
                     </div>
+                    {hidden && card.offReasons.length > 0 && (
+                        <ul className="list-disc space-y-1 pl-4 text-xs text-muted-foreground">
+                            {card.offReasons.map((reason) => (
+                                <li key={reason}>{reason}</li>
+                            ))}
+                        </ul>
+                    )}
                     <p className="text-xs text-muted-foreground">
                         Forecast · model {card.modelVersion} · updated {formatDate(card.updatedAt)} ·{' '}
                         <HowWeCalculate />
