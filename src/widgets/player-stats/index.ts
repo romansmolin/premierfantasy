@@ -9,3 +9,4 @@ export {
 export { FormChart } from './ui/charts/form-chart'
 export { MinutesChart } from './ui/charts/minutes-chart'
 export { ProbabilityCard } from './ui/probability-card'
+export type { SwatchKind } from './ui/charts/chart-frame'

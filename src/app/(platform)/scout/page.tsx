@@ -7,6 +7,6 @@ export const metadata: Metadata = {
     description: 'Compare Premier League players by form, value and chances.',
 }
 
-export default function ScoutPage() {
-    return <ScoutListView />
+export default async function ScoutPage({ searchParams }: { searchParams: Promise<{ with?: string }> }) {
+    return <ScoutListView withId={(await searchParams).with} />
 }

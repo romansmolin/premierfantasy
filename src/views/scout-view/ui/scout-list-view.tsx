@@ -61,27 +61,38 @@ function Chance({ value }: { value: number | null | undefined }) {
     return <>{formatChance(value)}</>
 }
 
-export function ScoutListView() {
+/** `withId`: a player to start the comparison with, as sent by the profile page. */
+export function ScoutListView({ withId }: { withId?: string }) {
     const { data, error, isLoading } = useSWR('scout-list', () => scoutService.getList(), {
         revalidateOnFocus: false,
     })
-    const [filters, setFilters] = useState<ScoutFilters>({
+    const [own, setOwn] = useState<Omit<ScoutFilters, 'position'>>({
         q: '',
-        position: '',
         clubId: '',
         maxPrice: null,
         sort: 'form',
     })
+    // null = untouched: follow the player the profile page sent us with.
+    const [positionChoice, setPositionChoice] = useState<Position | '' | null>(null)
     const [page, setPage] = useState(1)
-    const [selected, setSelected] = useState<TrayPlayer[]>([])
+    const [picked, setPicked] = useState<TrayPlayer[] | null>(null)
     const [notice, setNotice] = useState<string | null>(null)
+
+    const start = data?.items.find((p) => p.id === withId)
+    const selected: TrayPlayer[] =
+        picked ?? (start ? [{ id: start.id, name: start.name, position: start.position }] : [])
+    const setSelected = (next: (current: TrayPlayer[]) => TrayPlayer[]) => setPicked(next(selected))
+    const position = positionChoice ?? start?.position ?? ''
+    const filters = useMemo<ScoutFilters>(() => ({ ...own, position }), [own, position])
 
     const filtered = useMemo(() => queryPlayers(data?.items ?? [], filters), [data, filters])
     const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
     const visible = filtered.slice((Math.min(page, pages) - 1) * PAGE_SIZE, Math.min(page, pages) * PAGE_SIZE)
 
-    const update = (patch: Partial<ScoutFilters>) => {
-        setFilters((current) => ({ ...current, ...patch }))
+    const update = ({ position, ...patch }: Partial<ScoutFilters>) => {
+        if (position !== undefined) setPositionChoice(position)
+
+        setOwn((current) => ({ ...current, ...patch }))
         setPage(1)
     }
 
@@ -298,7 +309,7 @@ export function ScoutListView() {
                 players={selected}
                 onRemove={(id) => setSelected((s) => s.filter((x) => x.id !== id))}
                 onClear={() => {
-                    setSelected([])
+                    setPicked([])
                     setNotice(null)
                 }}
             />
