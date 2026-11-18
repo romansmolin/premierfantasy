@@ -59,7 +59,21 @@ export class ForecastDataRepository implements IForecastDataRepository {
                 select: { fplPlayerId: true, event: true, totalPoints: true, minutes: true },
             }),
             prisma.fplEvent.findMany({ select: { id: true, finished: true, isNext: true, isCurrent: true } }),
-            prisma.fplPlayerMatch.findMany(),
+            prisma.fplPlayerMatch.findMany({
+                select: {
+                    fplPlayerId: true,
+                    fplFixtureId: true,
+                    event: true,
+                    minutes: true,
+                    starts: true,
+                    goals: true,
+                    assists: true,
+                    xg: true,
+                    xa: true,
+                    totalPoints: true,
+                    wasHome: true,
+                },
+            }),
         ])
 
         const statusByFpl = new Map(statuses.map((s) => [s.fplId, s]))

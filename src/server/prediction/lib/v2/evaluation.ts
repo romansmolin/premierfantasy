@@ -42,9 +42,15 @@ export interface ProbabilityEvaluation {
 
 const POSITIONS: Position[] = ['GK', 'DEF', 'MID', 'FWD']
 const BINARY: Metric[] = ['goal', 'assist', 'start']
-const MIN_EXPECTED_MINUTES = 30
+
+/** Backtest records only include players expected to play at least this many minutes. */
+export const MIN_EXPECTED_MINUTES = 30
+
 const BASELINE_ROWS = 10
-const MIN_BASELINE_ROWS = 5
+
+/** Backtest records only include players with at least this many earlier matches (the baseline needs them). */
+export const MIN_BASELINE_ROWS = 5
+
 const BACKTEST_SIMS = 400
 
 /** One scored forecast: model and baseline probabilities per class (one probability for binary metrics) and the actual class. */

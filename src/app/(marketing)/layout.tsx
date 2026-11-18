@@ -57,7 +57,7 @@ export default function RootMarketingLayout({
     children: React.ReactNode
 }>) {
     return (
-        <html lang="en" className="dark">
+        <html lang="en" className="dark" suppressHydrationWarning>
             <body className={`${audiowide.variable} ${montserrat.variable} antialiased`}>
                 <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
                     <FloatingHeader />

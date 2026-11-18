@@ -65,6 +65,9 @@ export interface MethodParams {
     sims: number
     horizonMatches: number
     minAppearances: number
+    /** Scope of the accuracy check: expected minutes and earlier matches a player needs to be a record. */
+    minExpectedMinutes: number
+    minHistoryMatches: number
     gate: {
         minEvents: number
         minRecords: number

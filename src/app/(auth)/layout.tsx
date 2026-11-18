@@ -44,7 +44,7 @@ export default async function RootLayout({
     }
 
     return (
-        <html lang="en" className="dark">
+        <html lang="en" className="dark" suppressHydrationWarning>
             <body className={`${audiowide.variable} ${montserrat.variable} antialiased`}>
                 <main className="h-svh flex items-center justify-center">
                     <section className="flex p-2 border border-primary rounded-2xl min-h-[70vh] max-h-125 w-full max-w-5xl">

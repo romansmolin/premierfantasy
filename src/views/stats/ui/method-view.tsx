@@ -1,7 +1,6 @@
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
-import { formatChance } from '@/shared/utils/format-chance'
 
 import { formatDate } from './format'
 import { calibrationRows, groupGates } from './method-data'
@@ -138,8 +137,21 @@ export function MethodView({
                     holds: at least {g.minEvents} gameweeks were checked; at least {g.minRecords} records
                     exist; the model&apos;s Brier score beats the baseline by at least {g.minBrierEdge}; and
                     no calibration bucket with at least {g.minBucketN} records is off by more than{' '}
-                    {formatChance(g.maxBucketGap)} points. The Brier score is the mean squared error of the
-                    probabilities, so lower is better. Otherwise the number is hidden with a dash.
+                    {Math.round(g.maxBucketGap * 100)} percentage points. The Brier score is the mean squared
+                    error of the probabilities, so lower is better. Otherwise the number is hidden with a
+                    dash.
+                </p>
+                <p className={P}>
+                    What the check covers: its records only include players expected to play at least{' '}
+                    {params.minExpectedMinutes} minutes and with at least {params.minHistoryMatches} earlier
+                    matches. Players outside that scope (rotation players, newcomers) are shown with the same
+                    model, but their figures were not part of the check.
+                </p>
+                <p className={P}>
+                    The fixtures heatmap shows expected goals and the clean-sheet chance from the same
+                    team-strength model as the win / draw / loss chances, and shows them when that match
+                    result check passes. The check covers each club&apos;s next {params.horizonMatches}{' '}
+                    matches; heatmap gameweeks further ahead are extrapolated beyond what it covers.
                 </p>
                 {evaluated ? (
                     <div className="space-y-5">

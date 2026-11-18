@@ -1,3 +1,4 @@
+import { MIN_BASELINE_ROWS, MIN_EXPECTED_MINUTES } from '@/server/prediction/lib/v2/evaluation'
 import { DEFAULT_V2, GATE, HORIZON_MATCHES, MIN_APPEARANCES } from '@/server/prediction/lib/v2/params'
 
 import { MethodView } from '@/views/stats'
@@ -24,6 +25,8 @@ const params = {
     sims: DEFAULT_V2.sims,
     horizonMatches: HORIZON_MATCHES,
     minAppearances: MIN_APPEARANCES,
+    minExpectedMinutes: MIN_EXPECTED_MINUTES,
+    minHistoryMatches: MIN_BASELINE_ROWS,
     gate: GATE,
 }
 

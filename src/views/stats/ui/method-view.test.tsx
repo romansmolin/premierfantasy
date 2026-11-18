@@ -15,6 +15,8 @@ const params: MethodParams = {
     sims: 2000,
     horizonMatches: 5,
     minAppearances: 3,
+    minExpectedMinutes: 30,
+    minHistoryMatches: 5,
     gate: { minEvents: 8, minRecords: 300, minBucketN: 30, maxBucketGap: 0.07, minBrierEdge: 0.001 },
 }
 
@@ -79,5 +81,29 @@ describe('MethodView', () => {
         expect(html).toContain('When we say 44%, it happened 41% of the time')
         expect(html).toContain('450')
         expect(html).toContain('>2000<')
+    })
+
+    it('states the scope of the check and the gap in percentage points', () => {
+        const html = render({})
+
+        expect(html).toContain('7 percentage points')
+        expect(html).not.toContain('7% points')
+        expect(html).toContain('expected to play at least 30 minutes and with at least 5 earlier')
+        expect(html).toContain('were not part of the check')
+        expect(html).toContain('extrapolated beyond what it covers')
+    })
+
+    it('renders a status whose dates came back from the cache as strings', () => {
+        const cached = JSON.parse(
+            JSON.stringify({
+                evaluatedAt: new Date(Date.UTC(2026, 10, 16, 3)),
+                updatedAt: new Date(Date.UTC(2026, 10, 16, 4)),
+                eventsEvaluated: 10,
+                gates: [gate({})],
+            }),
+        ) as Partial<ProbabilityStatus>
+
+        expect(typeof cached.evaluatedAt).toBe('string')
+        expect(render(cached)).toContain('Mon 16 Nov, 03:00 UTC')
     })
 })
