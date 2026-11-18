@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { FULL_JOBS, SHORT_JOBS } from '../jobs'
+
 import { SyncCronController } from './sync-cron.controller'
 
 import type { JobFn } from '../jobs'
@@ -66,16 +68,9 @@ describe('SyncCronController', () => {
         const track =
             (name: string): JobFn =>
             async () => (order.push(name), { status: 'OK', stats: {} })
-        const { controller } = makeController({
-            'fpl-bootstrap': track('fpl-bootstrap'),
-            fixtures: track('fixtures'),
-            'match-stats': track('match-stats'),
-            'fpl-fixtures': track('fpl-fixtures'),
-            'fpl-points': track('fpl-points'),
-            'fpl-matches': track('fpl-matches'),
-            forecast: track('forecast'),
-            probability: track('probability'),
-        })
+        const { controller } = makeController(
+            Object.fromEntries(Object.keys(allOk).map((name) => [name, track(name)])),
+        )
 
         const response = await controller.run(request('Bearer cron-secret'), ctx)
 
@@ -86,9 +81,8 @@ describe('SyncCronController', () => {
             'match-stats',
             'fpl-fixtures',
             'fpl-points',
-            'fpl-matches',
             'forecast',
-            'probability',
+            'fpl-matches',
         ])
         expect(Object.keys(await response.json())).toEqual(order)
     })
@@ -118,5 +112,71 @@ describe('SyncCronController', () => {
         await makeController(allOk).controller.run(request('Bearer secret'), ctx)
 
         expect(revalidateTag).toHaveBeenCalledWith('stats', { expire: 0 })
+    })
+
+    it('keeps the slow probability job out of the 60 s sync cron and runs fpl-matches after forecast', () => {
+        expect(FULL_JOBS).not.toContain('probability')
+        expect(SHORT_JOBS).not.toContain('probability')
+        expect(FULL_JOBS.indexOf('fpl-matches')).toBeGreaterThan(FULL_JOBS.indexOf('forecast'))
+    })
+})
+
+describe('SyncCronController.runProbability', () => {
+    afterEach(() => {
+        vi.unstubAllEnvs()
+    })
+
+    const tracked = () => {
+        const order: string[] = []
+        const jobs = Object.fromEntries(
+            Object.keys(allOk).map((name): [string, JobFn] => [
+                name,
+                async () => (order.push(name), { status: 'OK', stats: {} }),
+            ]),
+        )
+
+        return { order, ...makeController(jobs) }
+    }
+
+    it('runs only the probability job, purges the stats cache and returns 200', async () => {
+        vi.stubEnv('CRON_SECRET', 'cron-secret')
+        revalidateTag.mockClear()
+
+        const { controller, order } = tracked()
+        const response = await controller.runProbability(request('Bearer cron-secret'), ctx)
+
+        expect(response.status).toBe(200)
+        expect(order).toEqual(['probability'])
+        expect(Object.keys(await response.json())).toEqual(['probability'])
+        expect(revalidateTag).toHaveBeenCalledWith('stats', { expire: 0 })
+    })
+
+    it('needs the same cron secret and runs nothing without it', async () => {
+        vi.stubEnv('CRON_SECRET', 'cron-secret')
+
+        const { controller, buildJobs, order } = tracked()
+
+        expect((await controller.runProbability(request(), ctx)).status).toBe(401)
+        expect((await controller.runProbability(request('Bearer nope'), ctx)).status).toBe(401)
+        expect(buildJobs).not.toHaveBeenCalled()
+        expect(order).toEqual([])
+
+        vi.stubEnv('CRON_SECRET', '')
+        expect((await controller.runProbability(request('Bearer x'), ctx)).status).toBe(500)
+    })
+
+    it('returns 500 when the probability job fails', async () => {
+        vi.stubEnv('CRON_SECRET', 'cron-secret')
+
+        const { controller } = makeController({
+            ...allOk,
+            probability: async () => {
+                throw new Error('boom')
+            },
+        })
+        const response = await controller.runProbability(request('Bearer cron-secret'), ctx)
+
+        expect(response.status).toBe(500)
+        expect((await response.json()).probability.status).toBe('FAILED')
     })
 })

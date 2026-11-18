@@ -3,6 +3,10 @@
         {
             "path": "/api/cron/sync",
             "schedule": "0 6 * * *"
+        },
+        {
+            "path": "/api/cron/probability",
+            "schedule": "30 6 * * *"
         }
     ]
 }

@@ -22,13 +22,10 @@ export function buildJobs(container: SyncContainer, budget: RequestBudget): Reco
     }
 }
 
-export const SHORT_JOBS = [
-    'fixtures',
-    'match-stats',
-    'fpl-fixtures',
-    'fpl-points',
-    'fpl-matches',
-    'forecast',
-    'probability',
-]
+/**
+ * Nightly cron order. `fpl-matches` runs after `forecast` so its backfill cannot eat v1's time budget;
+ * `probability` is too slow for the 60 s sync cron and has its own (see `PROBABILITY_JOBS`).
+ */
+export const SHORT_JOBS = ['fixtures', 'match-stats', 'fpl-fixtures', 'fpl-points', 'forecast', 'fpl-matches']
 export const FULL_JOBS = ['fpl-bootstrap', ...SHORT_JOBS]
+export const PROBABILITY_JOBS = ['probability']

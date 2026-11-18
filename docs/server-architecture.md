@@ -160,7 +160,12 @@ A repeat of the same request in the same gameweek is free; `refresh: true` pays 
 
 ## 6.7. Sync jobs and their composition root
 
-Data sync (API-Football and FPL into our database) runs as plain Node scripts, not as HTTP routes: `npm run sync -- <fixtures|match-stats|fpl-bootstrap|fpl-fixtures|fpl-points|short|full> [--max-requests N]`, scheduled by Vercel Cron: `vercel.json` calls `GET /api/cron/sync` daily (06:00 UTC), which runs the `full` group with a 45 s / 300-request budget (`SyncCronController`, auth `Authorization: Bearer ${CRON_SECRET}`; Vercel sends it when the `CRON_SECRET` env var is set on the project). The first big load is run by hand from a machine with `npm run sync -- full --max-requests 1000`.
+Data sync (API-Football and FPL into our database) runs as plain Node scripts, not as HTTP routes: `npm run sync -- <fixtures|match-stats|fpl-bootstrap|fpl-fixtures|fpl-points|fpl-matches|forecast|probability|short|full> [--max-requests N]`. Groups: `short` = `fixtures`, `match-stats`, `fpl-fixtures`, `fpl-points`, `forecast`, `fpl-matches`; `full` = `fpl-bootstrap` + `short`. `probability` is in no group. The first big load is run by hand from a machine with `npm run sync -- full --max-requests 1000`.
+
+Vercel Cron (`vercel.json`, both routes need `Authorization: Bearer ${CRON_SECRET}`; Vercel sends it when the `CRON_SECRET` env var is set on the project; both purge the `stats` cache tag after the run and answer 500 when a job FAILED):
+
+- `GET /api/cron/sync` daily at 06:00 UTC runs `full` with one shared 45 s / 300-request budget (`SyncCronController.run`, route `maxDuration = 60`). `fpl-matches` runs **after** `forecast`: its backfill is time-budgeted and would otherwise eat the window the v1 forecast had before.
+- `GET /api/cron/probability` daily at 06:30 UTC runs only `probability` (`SyncCronController.runProbability`, route `maxDuration = 300`). It has its own cron because the walk-forward Monte Carlo backtest does not fit the 60 s sync function and is not time-budgeted. `maxDuration = 300` needs a Vercel plan that allows it (Fluid compute).
 
 - Job services follow the usual Service → Repository split under `src/server/<entity>/`, but they are wired in a **second composition root**, `src/server/sync/sync.container.ts`. It must not import controllers, `next/*`, `server-only` or `@/shared/lib/http` (scripts cannot load them). `src/shared/lib/container.ts` stays the only root for HTTP.
 - Every job is wrapped by `runJob` (`src/server/sync/service/job-runner.ts`), which records a `SyncRun` row and never throws. A job returns `OK`, `PARTIAL` (stopped early on the request budget or daily quota) or throws (`FAILED`, exit code 1).
@@ -170,7 +175,18 @@ Data sync (API-Football and FPL into our database) runs as plain Node scripts, n
 - FPL owns player prices: every successful `fpl-bootstrap` deletes all non-FPL rows of `player_season_prices` for the season. The old admin CSV upload (`POST /api/admin/pricing/{seasonYear}`) still works but its rows disappear on the next sync, so do not use it for prices.
 - Wrong automatic player matches are reviewed at `/admin/fpl-mapping` («Automatic matches to review»: replace or remove). Removing rejects the FPL id so the sync does not bring the same wrong pair back.
 - **Forecast (`forecast` job, last in `short`/`full`).** `ForecastService.run()` (`src/server/prediction/`) loads match stats, fixtures and FPL mappings/availability/points with a few queries, backtests the model walk-forward against FPL actual points of the last finished events, stores a `ModelEvaluation`, and stores `Prediction` rows (calibrated expected points, minutes, components) for the next event. **Forecasts are shown only while the latest evaluation of the current model version passed** (`ForecastService.getStatus().enabled`): the model must beat the baseline «average points of the last 5 appearances» on both MAE and within-position rank correlation, over at least 8 events and 500 player-events. The bar is recomputed on every run. Predictions are stored even when the bar failed; consumers must check `enabled`. FPL rules for points live in `src/server/prediction/lib/scoring-rules.ts`.
+- **FPL per-match facts (`fpl-matches` job).** Stores per-fixture xG, xA, minutes and starts from FPL `element-summary` into `fpl_player_matches`. It resumes over several runs (a capped number of players per run, stops on the time budget with `PARTIAL`), so the first backfill takes several runs.
+- **Probabilities (`probability` job).** `ProbabilityService.run()` (model `ewma-poisson-v2`) stores, for the next 5 matches of every player, goal/assist/start chances, expected minutes and points with a points distribution (`match_probabilities`), plus win/draw/lose and expected goals per fixture. It backtests over the last 10 finished events and stores gates per metric (goal, assist, start, outcome, points), horizon (next match / later matches) and position: a gate passes only with enough events and records, a Brier score better than a simple baseline, and calibration within bounds (`GATE` in `src/server/prediction/lib/v2/params.ts`); `pointsMeanOn` says whether the v2 points mean beats v1. **Probabilities are stored even when their gate failed; gating happens on read** (`src/server/stats/lib/`): a gated-off number is returned as null and shown as a dash with the reason. Only fixtures that have not kicked off are shown.
 - `src/server/fpl/lib/sanity.ts` holds the thresholds; admin review of player matches is at `/admin/fpl-mapping` (`Authorization: Bearer ${ADMIN_SECRET}` API under `/api/admin/fpl/mapping`).
+
+### Deploy order for the probability release
+
+Migration `20261116030000_add_probabilities` is additive (new tables and the `fpl_player_status.penalties_order` column). The build only runs `prisma generate`; nothing applies migrations automatically. So, in this order:
+
+1. Apply the migration to production (`prisma migrate deploy`) **before** deploying code that selects `fpl_player_status.penalties_order` or reads `fpl_player_matches` / `match_probabilities` / `fixture_probabilities`; otherwise those pages fail.
+2. Deploy the code.
+3. Run `npm run sync -- fpl-matches` repeatedly until it no longer stops early (the backfill is done).
+4. Run `npm run sync -- probability` once; after that the 06:30 UTC cron keeps it fresh.
 
 ## 7. Validation
 
