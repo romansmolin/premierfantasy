@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     return {
         title: `${profile.player.name}: stats, form and forecast`,
-        description: `${profile.player.name} (${profile.player.club.name}, ${profile.player.position}): season statistics, recent matches, FPL price and expected points.`,
+        description: `${profile.player.name} (${profile.player.club.name}, ${profile.player.position}): season statistics, recent matches, FPL price, chances to score, assist and start, and expected points.`,
         alternates: { canonical: `/players/${profile.player.id}` },
     }
 }

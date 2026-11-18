@@ -92,27 +92,30 @@ export function ChartFrame({ title, question, legend, table, actions, children }
                 <div role="img" aria-label={`${title}. ${question} The data is in the table below.`}>
                     {children}
                 </div>
-                <table className="sr-only">
-                    <caption>{title}</caption>
-                    <thead>
-                        <tr>
-                            {table.columns.map((column) => (
-                                <th key={column} scope="col">
-                                    {column}
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {table.rows.map((row, i) => (
-                            <tr key={i}>
-                                {row.map((cell, j) => (
-                                    <td key={j}>{cell}</td>
+                {/* The wrapper clips: an absolutely positioned table ignores overflow and widens the page on phones. */}
+                <div className="sr-only">
+                    <table>
+                        <caption>{title}</caption>
+                        <thead>
+                            <tr>
+                                {table.columns.map((column) => (
+                                    <th key={column} scope="col">
+                                        {column}
+                                    </th>
                                 ))}
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {table.rows.map((row, i) => (
+                                <tr key={i}>
+                                    {row.map((cell, j) => (
+                                        <td key={j}>{cell}</td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </CardContent>
         </Card>
     )
@@ -153,6 +156,13 @@ export function HatchPattern({ id, color }: { id: string; color: string }) {
     )
 }
 
+/** Long club names ("Manchester United") would clip when rotated: shorten the name, keep the "vs/at" and "(H)/(A)" marks. */
+const shortenTick = (label: string): string =>
+    label.replace(
+        /^(vs |at )(.{9,}?)( \([HA]\))$/,
+        (_, lead: string, name: string, tail: string) => `${lead}${name.slice(0, 7)}…${tail}`,
+    )
+
 /** Rotated compact category tick that fits 10 matches at 375px. */
 export function AngledTick({
     x,
@@ -171,7 +181,7 @@ export function AngledTick({
             transform={`rotate(-40 ${Number(x)} ${Number(y)})`}
             className="fill-muted-foreground text-[10px]"
         >
-            {payload?.value}
+            {payload ? shortenTick(payload.value) : null}
         </text>
     )
 }

@@ -2,6 +2,9 @@ export const formatPrice = (price: number | null): string => (price === null ? '
 
 export const formatPoints = (points: number | null): string => (points === null ? '—' : points.toFixed(1))
 
+export const formatMinutes = (minutes: number | null): string =>
+    minutes === null ? '—' : String(Math.round(minutes))
+
 export const formatDate = (value: Date | string): string =>
     new Date(value).toLocaleString('en-GB', {
         weekday: 'short',

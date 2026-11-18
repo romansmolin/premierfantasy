@@ -93,7 +93,7 @@ export function MinutesChart({ matches }: { matches: FormMatch[] }) {
                     <XAxis
                         dataKey="label"
                         interval={0}
-                        height={64}
+                        height={76}
                         tick={<AngledTick />}
                         tickLine={false}
                         label={{

@@ -41,7 +41,7 @@ export function GoalOutlookChart({ matches }: { matches: PlayerProbabilityCard['
                     <XAxis
                         dataKey="label"
                         interval={0}
-                        height={64}
+                        height={76}
                         tick={<AngledTick />}
                         tickLine={false}
                         label={{
