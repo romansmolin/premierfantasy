@@ -604,6 +604,38 @@ describe('StatsService probabilities', () => {
         expect(heat.clubs.find((c) => c.clubId === 'LIV')?.cells.map((c) => c.matches.length)).toEqual([1, 0])
     })
 
+    it('heatmap flags a hidden match apart from a real blank gameweek', async () => {
+        const upcoming: UpcomingFixture[] = [
+            { ...f1, event: 11 },
+            { ...f2, event: 12 },
+            { ...fixture('fx3', 19, 'MCI', 'CHE'), event: 13 },
+            { ...fixture('fx4', 20, 'MCI', 'CHE'), event: 13 },
+        ]
+        const heat = await make(
+            true,
+            evaluated({
+                gates: allGates(['outcome:later:ALL']),
+                upcoming,
+                fixtureProbs: [fixtureProb('fx1'), fixtureProb('fx2'), fixtureProb('fx3')],
+            }),
+        ).getHeatmap()
+        const cells = (id: string) =>
+            heat.clubs.find((c) => c.clubId === id)?.cells.map((c) => [c.matches.length, c.hidden])
+
+        // LIV: shown, hidden by the later-horizon gate, no fixture at all.
+        expect(cells('LIV')).toEqual([
+            [1, false],
+            [0, true],
+            [0, false],
+        ])
+        // MCI: double gameweek where the second match has no probability row.
+        expect(cells('MCI')).toEqual([
+            [0, false],
+            [0, false],
+            [1, true],
+        ])
+    })
+
     it('heatmap is empty without an evaluation', async () => {
         const upcoming: UpcomingFixture[] = [{ ...f1, event: 11 }]
 

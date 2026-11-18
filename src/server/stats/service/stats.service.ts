@@ -331,16 +331,20 @@ export class StatsService implements IStatsService {
         const shown = upcoming.filter(
             (f) => probs.has(f.id) && isGateOn(status.gates, 'outcome', gateHorizon(horizons.get(f.id) ?? 1)),
         )
+        const shownIds = new Set(shown.map((f) => f.id))
         const events = [...new Set(upcoming.map((f) => f.event))].sort((a, b) => a - b)
         const clubs = new Map(upcoming.flatMap((f) => [f.home, f.away]).map((c) => [c.id, c.name]))
         const result: HeatmapClub[] = [...clubs].map(([clubId, name]) => ({
             clubId,
             name,
-            cells: events.map((event) => ({
-                event,
-                matches: shown
-                    .filter((f) => f.event === event && (f.home.id === clubId || f.away.id === clubId))
-                    .map((f) => {
+            cells: events.map((event) => {
+                const mine = (f: (typeof upcoming)[number]) =>
+                    f.event === event && (f.home.id === clubId || f.away.id === clubId)
+
+                return {
+                    event,
+                    hidden: upcoming.some((f) => mine(f) && !shownIds.has(f.id)),
+                    matches: shown.filter(mine).map((f) => {
                         const p = probs.get(f.id) as NonNullable<ReturnType<typeof probs.get>>
                         const isHome = f.home.id === clubId
                         const against = isHome ? p.xgAway : p.xgHome
@@ -353,7 +357,8 @@ export class StatsService implements IStatsService {
                             pCleanSheet: Math.exp(-against),
                         }
                     }),
-            })),
+                }
+            }),
         }))
 
         return { events, clubs: result.sort((a, b) => a.name.localeCompare(b.name)) }

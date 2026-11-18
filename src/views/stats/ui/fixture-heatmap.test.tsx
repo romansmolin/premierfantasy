@@ -17,6 +17,7 @@ const data: Data = {
                 {
                     event: 12,
                     matches: [{ opponent: 'Chelsea', isHome: true, xgFor: 1.94, pCleanSheet: 0.31 }],
+                    hidden: false,
                 },
                 {
                     event: 13,
@@ -24,8 +25,9 @@ const data: Data = {
                         { opponent: 'Spurs', isHome: false, xgFor: 2.5, pCleanSheet: 0.004 },
                         { opponent: 'Fulham', isHome: true, xgFor: 0.8, pCleanSheet: 0.5 },
                     ],
+                    hidden: false,
                 },
-                { event: 14, matches: [] },
+                { event: 14, matches: [], hidden: false },
             ],
         },
     ],
@@ -57,6 +59,63 @@ describe('FixtureHeatmap', () => {
 
         expect(html).toContain('title="No match"')
         expect(html).toContain('No match</span>')
+    })
+
+    it('tells a hidden forecast from a real blank gameweek', () => {
+        const hiddenData: Data = {
+            events: [12, 13, 14],
+            clubs: [
+                {
+                    clubId: 'a',
+                    name: 'Arsenal',
+                    cells: [
+                        {
+                            event: 12,
+                            matches: [{ opponent: 'Chelsea', isHome: true, xgFor: 1.94, pCleanSheet: 0.31 }],
+                            hidden: false,
+                        },
+                        { event: 13, matches: [], hidden: true },
+                        { event: 14, matches: [], hidden: false },
+                    ],
+                },
+                {
+                    clubId: 'b',
+                    name: 'Spurs',
+                    cells: [
+                        {
+                            event: 12,
+                            matches: [{ opponent: 'Fulham', isHome: false, xgFor: 1.1, pCleanSheet: 0.2 }],
+                            hidden: true,
+                        },
+                        { event: 13, matches: [], hidden: false },
+                        { event: 14, matches: [], hidden: false },
+                    ],
+                },
+            ],
+        }
+        const html = renderToStaticMarkup(<FixtureHeatmap data={hiddenData} metric="xg" />)
+
+        expect(html).toContain('title="No forecast"')
+        expect(html).toContain('No forecast for this match (switched off or not enough data)')
+        expect(html).toContain('title="No match"')
+        expect(html).toContain('another match has no forecast')
+    })
+
+    it('falls back to the empty state when no cell shows a match', () => {
+        const html = renderToStaticMarkup(
+            <FixtureHeatmap
+                data={{
+                    events: [12],
+                    clubs: [
+                        { clubId: 'a', name: 'Arsenal', cells: [{ event: 12, matches: [], hidden: true }] },
+                    ],
+                }}
+                metric="xg"
+            />,
+        )
+
+        expect(html).toContain('Forecasts are not available yet')
+        expect(html).not.toContain('<table')
     })
 
     it('shows an empty state without clubs', () => {

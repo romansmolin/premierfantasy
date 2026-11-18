@@ -120,7 +120,10 @@ export interface HeatmapClub {
     name: string
     cells: {
         event: number
+        /** Only the matches whose forecast is shown (outcome gate on and a stored row). */
         matches: { opponent: string; isHome: boolean; xgFor: number; pCleanSheet: number }[]
+        /** True when the club has a fixture in this event that was left out of `matches` (gate off or no row); false with empty `matches` is a real blank gameweek. */
+        hidden: boolean
     }[]
 }
 
@@ -130,7 +133,7 @@ export interface IStatsService {
     /** Every listed player with form and forecast, unpaged (the builder pool). */
     getAllPlayers(): Promise<{ items: PlayerListItem[]; forecastEnabled: boolean; nextEvent: number | null }>
     getFixtures(): Promise<{ event: number | null; fixtures: FixtureWithChances[]; forecastEnabled: boolean }>
-    /** Expected goals and clean-sheet chance per club for the next 8 events; matches with the outcome gate off are left out. */
+    /** Expected goals and clean-sheet chance per club for the next 8 events; matches with the outcome gate off are left out of `matches` and flagged by `hidden`. */
     getHeatmap(): Promise<{ events: number[]; clubs: HeatmapClub[] }>
     getForecastStatus(): Promise<ForecastStatus>
     listPlayerIds(): Promise<string[]>

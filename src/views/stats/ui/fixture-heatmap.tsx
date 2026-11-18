@@ -32,7 +32,7 @@ const HowWeCalculate = () => (
 
 /** Next-8-gameweeks grid, clubs by rows; the number is always printed, the shade is secondary. */
 export function FixtureHeatmap({ data, metric }: { data: Heatmap; metric: HeatmapMetric }) {
-    if (data.clubs.length === 0) {
+    if (!data.clubs.some((c) => c.cells.some((cell) => cell.matches.length > 0))) {
         return (
             <p className="text-sm text-muted-foreground">
                 Forecasts are not available yet. See <HowWeCalculate />.
@@ -90,9 +90,16 @@ export function FixtureHeatmap({ data, metric }: { data: Heatmap; metric: Heatma
                             {club.cells.map((cell) => (
                                 <TableCell key={cell.event} className="p-1 text-center align-middle">
                                     {cell.matches.length === 0 ? (
-                                        <span title="No match" className="text-muted-foreground">
+                                        <span
+                                            title={cell.hidden ? 'No forecast' : 'No match'}
+                                            className="text-muted-foreground"
+                                        >
                                             <span aria-hidden="true">–</span>
-                                            <span className="sr-only">No match</span>
+                                            <span className="sr-only">
+                                                {cell.hidden
+                                                    ? 'No forecast for this match (switched off or not enough data)'
+                                                    : 'No match'}
+                                            </span>
                                         </span>
                                     ) : (
                                         <div className="flex flex-col gap-1">
@@ -107,12 +114,23 @@ export function FixtureHeatmap({ data, metric }: { data: Heatmap; metric: Heatma
                                                     title={`${match.isHome ? 'Home' : 'Away'} v ${match.opponent}`}
                                                 >
                                                     {cellValue(match, metric)}{' '}
-                                                    <span className="text-xs text-foreground/80">
+                                                    <span className="text-xs text-foreground">
                                                         {match.isHome ? 'H' : 'A'}
                                                         <span className="sr-only"> v {match.opponent}</span>
                                                     </span>
                                                 </div>
                                             ))}
+                                            {cell.hidden && (
+                                                <span
+                                                    title="Another match has no forecast"
+                                                    className="text-xs text-muted-foreground"
+                                                >
+                                                    <span aria-hidden="true">+ hidden</span>
+                                                    <span className="sr-only">
+                                                        another match has no forecast
+                                                    </span>
+                                                </span>
+                                            )}
                                         </div>
                                     )}
                                 </TableCell>

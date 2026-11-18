@@ -50,7 +50,14 @@ function pageHref(params: Props['params'], sort: PlayerSort, page: number): stri
 }
 
 function Chance({ value }: { value: number | null | undefined }) {
-    if (value == null) return <span title="Switched off or not enough data">—</span>
+    if (value == null) {
+        return (
+            <span title="Switched off, not enough data, or no match">
+                <span aria-hidden="true">—</span>
+                <span className="sr-only">Switched off, not enough data, or no match</span>
+            </span>
+        )
+    }
 
     return <>{formatChance(value)}</>
 }
@@ -197,7 +204,7 @@ export function PlayersListView({ data, params }: Props) {
                     {hasDash && (
                         <p className="pt-4 text-xs text-muted-foreground">
                             Goal %, Assist % and Start % are forecasts for the next match. — means this number
-                            is switched off or there is not enough data; see{' '}
+                            is switched off, there is not enough data, or the player has no match; see{' '}
                             <Link
                                 href="/how-we-calculate"
                                 className="underline underline-offset-4 hover:text-foreground"
