@@ -82,7 +82,6 @@ describe('SyncCronController', () => {
             'fpl-fixtures',
             'fpl-points',
             'forecast',
-            'fpl-matches',
         ])
         expect(Object.keys(await response.json())).toEqual(order)
     })
@@ -114,10 +113,11 @@ describe('SyncCronController', () => {
         expect(revalidateTag).toHaveBeenCalledWith('stats', { expire: 0 })
     })
 
-    it('keeps the slow probability job out of the 60 s sync cron and runs fpl-matches after forecast', () => {
-        expect(FULL_JOBS).not.toContain('probability')
-        expect(SHORT_JOBS).not.toContain('probability')
-        expect(FULL_JOBS.indexOf('fpl-matches')).toBeGreaterThan(FULL_JOBS.indexOf('forecast'))
+    it('keeps the slow fpl-matches and probability jobs out of the 60 s sync cron', () => {
+        for (const name of ['fpl-matches', 'probability']) {
+            expect(FULL_JOBS).not.toContain(name)
+            expect(SHORT_JOBS).not.toContain(name)
+        }
     })
 })
 
@@ -138,7 +138,7 @@ describe('SyncCronController.runProbability', () => {
         return { order, ...makeController(jobs) }
     }
 
-    it('runs only the probability job, purges the stats cache and returns 200', async () => {
+    it('runs fpl-matches then probability, purges the stats cache and returns 200', async () => {
         vi.stubEnv('CRON_SECRET', 'cron-secret')
         revalidateTag.mockClear()
 
@@ -146,8 +146,8 @@ describe('SyncCronController.runProbability', () => {
         const response = await controller.runProbability(request('Bearer cron-secret'), ctx)
 
         expect(response.status).toBe(200)
-        expect(order).toEqual(['probability'])
-        expect(Object.keys(await response.json())).toEqual(['probability'])
+        expect(order).toEqual(['fpl-matches', 'probability'])
+        expect(Object.keys(await response.json())).toEqual(['fpl-matches', 'probability'])
         expect(revalidateTag).toHaveBeenCalledWith('stats', { expire: 0 })
     })
 

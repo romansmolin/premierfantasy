@@ -22,10 +22,8 @@ export function buildJobs(container: SyncContainer, budget: RequestBudget): Reco
     }
 }
 
-/**
- * Nightly cron order. `fpl-matches` runs after `forecast` so its backfill cannot eat v1's time budget;
- * `probability` is too slow for the 60 s sync cron and has its own (see `PROBABILITY_JOBS`).
- */
-export const SHORT_JOBS = ['fixtures', 'match-stats', 'fpl-fixtures', 'fpl-points', 'forecast', 'fpl-matches']
+/** Nightly 60 s sync cron. `fpl-matches` (about 1 s per player) and `probability` do not fit it: see `PROBABILITY_JOBS`. */
+export const SHORT_JOBS = ['fixtures', 'match-stats', 'fpl-fixtures', 'fpl-points', 'forecast']
 export const FULL_JOBS = ['fpl-bootstrap', ...SHORT_JOBS]
-export const PROBABILITY_JOBS = ['probability']
+/** Own cron with a 300 s limit: `fpl-matches` stops on the time budget and resumes next run, then `probability` runs on what it stored. */
+export const PROBABILITY_JOBS = ['fpl-matches', 'probability']
