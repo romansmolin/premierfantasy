@@ -36,7 +36,7 @@ const navGroups = [
     {
         label: 'Stats',
         items: [
-            { title: 'Players', icon: UserGroupIcon, href: '/players' },
+            { title: 'Players', icon: UserGroupIcon, href: '/scout' },
             { title: 'Builder', icon: NoteEditIcon, href: '/builder' },
         ],
     },
