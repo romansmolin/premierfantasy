@@ -27,6 +27,8 @@ import { ProbabilityService } from '@/server/prediction/service/probability.serv
 import { PricingController } from '@/server/pricing/controller/pricing.controller'
 import { PricingRepository } from '@/server/pricing/repository/pricing.repository'
 import { PricingService } from '@/server/pricing/service/pricing.service'
+import { ScoutController } from '@/server/scout/controller/scout.controller'
+import { ScoutService } from '@/server/scout/service/scout.service'
 import { BuilderController } from '@/server/squad/controller/builder.controller'
 import { SquadController } from '@/server/squad/controller/squad.controller'
 import { SquadRepository } from '@/server/squad/repository/squad.repository'
@@ -75,7 +77,9 @@ const syncContainer = createSyncContainer()
 const forecastDataRepository = new ForecastDataRepository()
 const forecastService = new ForecastService(forecastDataRepository, new ForecastRepository())
 const probabilityService = new ProbabilityService(forecastDataRepository, new ProbabilityRepository())
-const statsService = new StatsService(new StatsRepository(), forecastService, probabilityService)
+const statsRepository = new StatsRepository()
+const statsService = new StatsService(statsRepository, forecastService, probabilityService)
+const scoutService = new ScoutService(statsService, statsRepository)
 const squadRepository = new SquadRepository()
 const squadService = new SquadService(squadRepository)
 const builderService = new BuilderService(statsService, squadRepository)
@@ -95,6 +99,7 @@ const squadReviewService = new SquadReviewService(
     new SquadReviewGenerator(),
 )
 const squadController = new SquadController(squadService)
+const scoutController = new ScoutController(scoutService)
 
 // Controllers
 const aiController = new AIController(aiInsightsService)
@@ -118,6 +123,7 @@ export const container = {
     fplMappingController,
     syncCronController,
     statsService,
+    scoutController,
     forecastService,
     probabilityService,
     squadController,
