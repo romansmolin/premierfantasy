@@ -1,6 +1,8 @@
+import { DEFAULT_V2, GATE, HORIZON_MATCHES, MIN_APPEARANCES } from '@/server/prediction/lib/v2/params'
+
 import { MethodView } from '@/views/stats'
 
-import { getForecastStatusCached } from '../_lib/stats-cache'
+import { getForecastStatusCached, getProbabilityStatusCached } from '../_lib/stats-cache'
 
 import type { Metadata } from 'next'
 
@@ -14,6 +16,19 @@ export const metadata: Metadata = {
     alternates: { canonical: '/how-we-calculate' },
 }
 
+const params = {
+    decay: DEFAULT_V2.decay,
+    minutesDecay: DEFAULT_V2.minutesDecay,
+    priorMinutes90: DEFAULT_V2.priorMinutes90,
+    xgWeight: DEFAULT_V2.xgWeight,
+    sims: DEFAULT_V2.sims,
+    horizonMatches: HORIZON_MATCHES,
+    minAppearances: MIN_APPEARANCES,
+    gate: GATE,
+}
+
 export default async function HowWeCalculatePage() {
-    return <MethodView status={await getForecastStatusCached()} />
+    const [status, probability] = await Promise.all([getForecastStatusCached(), getProbabilityStatusCached()])
+
+    return <MethodView status={status} probability={probability} params={params} />
 }

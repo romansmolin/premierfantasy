@@ -2,6 +2,7 @@ import type { seasonTotals } from '../lib/player-form'
 import type { ClubRef, FormMatch, StatsFixture, StatsPlayer } from '../repository/stats.repository.interface'
 import type { Position } from '@/server/prediction/lib/scoring-rules'
 import type { ForecastStatus } from '@/server/prediction/service/forecast.service.interface'
+import type { ProbabilityStatus } from '@/server/prediction/service/probability.service.interface'
 
 export type { FormMatch }
 
@@ -136,5 +137,6 @@ export interface IStatsService {
     /** Expected goals and clean-sheet chance per club for the next 8 events; matches with the outcome gate off are left out of `matches` and flagged by `hidden`. */
     getHeatmap(): Promise<{ events: number[]; clubs: HeatmapClub[] }>
     getForecastStatus(): Promise<ForecastStatus>
+    getProbabilityStatus(): Promise<ProbabilityStatus>
     listPlayerIds(): Promise<string[]>
 }

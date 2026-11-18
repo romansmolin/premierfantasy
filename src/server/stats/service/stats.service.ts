@@ -368,6 +368,10 @@ export class StatsService implements IStatsService {
         return this.forecast.getStatus()
     }
 
+    getProbabilityStatus() {
+        return this.probabilities.getStatus()
+    }
+
     async listPlayerIds(): Promise<string[]> {
         return (await this.repo.findPlayers()).map((p) => p.id)
     }

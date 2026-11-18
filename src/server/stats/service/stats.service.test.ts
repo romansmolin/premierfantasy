@@ -645,3 +645,17 @@ describe('StatsService probabilities', () => {
         })
     })
 })
+
+describe('StatsService.getProbabilityStatus', () => {
+    it('passes the probability status through', async () => {
+        const status = await make(true, evaluated()).getProbabilityStatus()
+
+        expect(status.eventsEvaluated).toBe(10)
+        expect(status.gates.length).toBeGreaterThan(0)
+        expect(status.pointsMeanOn).toBe(true)
+    })
+
+    it('reports an empty state before the first evaluation', async () => {
+        expect(await make(true).getProbabilityStatus()).toMatchObject({ evaluatedAt: null, gates: [] })
+    })
+})

@@ -42,6 +42,12 @@ export const getForecastStatusCached = unstable_cache(
     { revalidate: REVALIDATE_SECONDS, tags: ['stats'] },
 )
 
+export const getProbabilityStatusCached = unstable_cache(
+    () => container.statsService.getProbabilityStatus(),
+    ['stats-probability-status'],
+    { revalidate: REVALIDATE_SECONDS, tags: ['stats'] },
+)
+
 export const listPlayerIdsCached = unstable_cache(
     () => container.statsService.listPlayerIds(),
     ['stats-player-ids'],
