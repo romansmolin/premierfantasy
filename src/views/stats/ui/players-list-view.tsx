@@ -7,8 +7,7 @@ import { Input } from '@/shared/ui/input'
 import { SelectField } from '@/shared/ui/select-field'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 import { formatChance } from '@/shared/utils/format-chance'
-
-import { formatPoints, formatPrice } from './format'
+import { formatPoints, formatPrice } from '@/shared/utils/format-stats'
 
 import type { PlayerListResult, PlayerSort } from '@/server/stats/service/stats.service.interface'
 

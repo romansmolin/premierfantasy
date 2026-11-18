@@ -3,11 +3,11 @@ import Link from 'next/link'
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader } from '@/shared/ui/card'
 import { formatChance } from '@/shared/utils/format-chance'
+import { formatDate, formatMinutes, formatPoints } from '@/shared/utils/format-stats'
 
 import { bucketBars } from './charts/chart-data'
 import { GoalOutlookChart } from './charts/goal-outlook-chart'
 import { PointsDistributionChart } from './charts/points-distribution-chart'
-import { formatDate, formatMinutes, formatPoints } from './format'
 
 import type { PlayerProbabilityCard } from '@/server/stats/service/stats.service.interface'
 

@@ -1,15 +1,13 @@
 import Link from 'next/link'
 
+import { FormChart, MinutesChart, ProbabilityCard } from '@/widgets/player-stats'
+
 import { PlayerAiAnalysis } from '@/features/ai'
 
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
-
-import { FormChart } from './charts/form-chart'
-import { MinutesChart } from './charts/minutes-chart'
-import { formatDate, formatPoints, formatPrice } from './format'
-import { ProbabilityCard } from './probability-card'
+import { formatDate, formatPoints, formatPrice } from '@/shared/utils/format-stats'
 
 import type { PlayerProfile } from '@/server/stats/service/stats.service.interface'
 

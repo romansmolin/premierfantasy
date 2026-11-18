@@ -1,8 +1,8 @@
 import { Card, CardContent } from '@/shared/ui/card'
 import { formatChance } from '@/shared/utils/format-chance'
+import { formatDate } from '@/shared/utils/format-stats'
 
 import { FixtureHeatmap } from './fixture-heatmap'
-import { formatDate } from './format'
 
 import type { HeatmapMetric } from './heatmap-data'
 import type { IStatsService } from '@/server/stats/service/stats.service.interface'

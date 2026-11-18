@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { formatMinutes, formatPoints } from './format'
+import { formatMinutes, formatPoints } from './format-stats'
 
 describe('formatMinutes', () => {
     it('rounds to whole minutes', () => expect(formatMinutes(78.4)).toBe('78'))
